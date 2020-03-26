@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://codewithzichao.github.io').hostname,
+    root: '/',
+    scheme: 'Muse',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="朴素贝叶斯模型(naive bayes)属于分类模型，也是最为简单的概率图模型，对于之后理解HMM、CRF等模型，大有裨益。本篇博客将对朴素贝叶斯模型的原理进行详细的讲解，并采用纯python实现以及调用scikit-learn库实现，这两种方式对朴素贝叶斯模型进行实现。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="统计学习方法|朴素贝叶斯模型详解与实现">
+<meta property="og:url" content="http://codewithzichao.github.io/2020/02/18/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/index.html">
+<meta property="og:site_name" content="codewithzichao">
+<meta property="og:description" content="朴素贝叶斯模型(naive bayes)属于分类模型，也是最为简单的概率图模型，对于之后理解HMM、CRF等模型，大有裨益。本篇博客将对朴素贝叶斯模型的原理进行详细的讲解，并采用纯python实现以及调用scikit-learn库实现，这两种方式对朴素贝叶斯模型进行实现。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/02/18/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/0.jpeg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/02/18/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/1.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/02/18/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/2.jpg">
+<meta property="article:published_time" content="2020-02-18T14:14:42.000Z">
+<meta property="article:modified_time" content="2020-03-12T07:37:10.377Z">
+<meta property="article:author" content="zichao">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="统计学习方法">
+<meta property="article:tag" content="scikit-learn">
+<meta property="article:tag" content="naive bayes">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://codewithzichao.github.io/2020/02/18/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/0.jpeg">
+
+<link rel="canonical" href="http://codewithzichao.github.io/2020/02/18/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>统计学习方法|朴素贝叶斯模型详解与实现 | codewithzichao</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">codewithzichao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">Confident，Modest，Patient</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/02/18/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="name" content="zichao">
+      <meta itemprop="description" content="Just learning">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="codewithzichao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          统计学习方法|朴素贝叶斯模型详解与实现
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+
+            
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-02-18 22:14:42" itemprop="dateCreated datePublished" datetime="2020-02-18T22:14:42+08:00">2020-02-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-03-12 15:37:10" itemprop="dateModified" datetime="2020-03-12T15:37:10+08:00">2020-03-12</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" itemprop="url" rel="index">
+                    <span itemprop="name">统计学习方法</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>朴素贝叶斯模型(naive bayes)属于分类模型，也是最为简单的概率图模型，对于之后理解HMM、CRF等模型，大有裨益。本篇博客将对朴素贝叶斯模型的原理进行详细的讲解，并采用纯python实现以及调用scikit-learn库实现，这两种方式对朴素贝叶斯模型进行实现。</p>
+<a id="more"></a>
+<h2 id="朴素贝叶斯模型概述"><a href="#朴素贝叶斯模型概述" class="headerlink" title="朴素贝叶斯模型概述"></a>朴素贝叶斯模型概述</h2><p>在朴素贝叶斯中，我们最终的目标是：给定实例的特征向量$X=x$，求得实例的类别标签$Y$，即<strong>求令$ P(Y=c_k|X) $值最大的类别标签$c_k$。</strong>那么怎么做呢？我们会通过求<strong>先验概率</strong>$P(Y)$与<strong>条件概率</strong>$P(X|Y)$，得到联合概率分布(也就是说朴素贝叶斯模型属于生成模型)，最后根据<strong>贝叶斯定理</strong>求得$P(Y|X)$，从中选择$P(Y=c_k|X)$的值最大的类别标签$c_k$，整个过程就结束了。如果我们仔细观察这个过程的话，我们会发现有几个问题需要解决：<strong>1.先验概率$P(Y)$与条件概率$P(X|Y)$怎么求出的？ 2. 如果实例的特征向量特别多的话，会造成计算量特别大，怎么解决的？</strong>下面我们将一一介绍。</p>
+<h2 id="朴素贝叶斯的两大前提条件"><a href="#朴素贝叶斯的两大前提条件" class="headerlink" title="朴素贝叶斯的两大前提条件"></a>朴素贝叶斯的两大前提条件</h2><p><strong>贝叶斯定理</strong>。贝叶斯定理，相信大家应该特别熟悉。假设$X$是特征向量，$Y$是类别标签，有$K$种取值，我们要通过$X$来预测$Y$。那么如下：</p>
+<script type="math/tex; mode=display">
+P(Y|X)=\frac {P(X|Y)P(Y)}{P(X)}.</script><p>其中，$P(Y)$叫做先验概率，$P(X|Y)$叫做条件概率，$P(Y|X)$叫做后验概率。</p>
+<p><strong>条件独立性假设</strong>。假设每个实例特征向量有$n$维的话，第$j$个特征有$S_j$个取值。我们假设特征之间都是相互独立的，那么有</p>
+<script type="math/tex; mode=display">
+P(X=x|Y=c_k)=\prod _{i=1}^{n}P(X^{(i)}=x^{(i)}|Y=c_k)</script><p>条件独立性假设是非常强的假设，主要目的就是为了简化运算，实际上，特征之间应该是有关系的才更合理一些。而如果没有这个假设的话，那么上式的参数实际有:$K\prod_{j=1}^{n}S_j$，当特征维度特别大的时候，这个参数量是非常大的。当采用了这个假设之后，参数量就变为：$K\sum_{j=1}^{n}S_j$，这样就小很多。如果采用概率图来表示的话，如下图：</p>
+<p><img src="/2020/02/18/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/0.jpeg" style="zoom: 25%;"></p>
+<p>我们可以简单理解为：给定$Y=c_k$，两个特征之间，由于被$Y$给阻断了，所以彼此独立。</p>
+<p>那么，根据上面两大前提条件，我们可以得到朴素贝叶斯模型。实际上我们就是要最大化后验概率，从而得到类别标签。如下：</p>
+<script type="math/tex; mode=display">
+P(Y=c_k|X=x)=\frac {P(X=x|Y=c_k)P(Y=c_k)}{P(X=x)}=\frac {P(Y=c_k)\prod_{j=1}^{n}P(X=x^{(i)}|Y=c_k)}{P(X=x)}</script><p>由于$P(X=x)$对于所有的类别标签来说的话，都是一样的，所以可以去掉，最终得到的公式如下:</p>
+<script type="math/tex; mode=display">
+y=argmax_{c_k}P(Y=c_k){\prod_{j=1}^{n}P(X=x^{(i)}|Y=c_k)}</script><p>这就是朴素贝叶斯公式，是不是非常简单～</p>
+<h2 id="先验概率与条件概率的计算"><a href="#先验概率与条件概率的计算" class="headerlink" title="先验概率与条件概率的计算"></a>先验概率与条件概率的计算</h2><p>当得到了朴素贝叶斯的公式后，那么其中的$P(Y=c_k)$与$P(X=x|Y=c_k)$怎么求呢？在这里，我们需要分情况讨论：得看特征本身是离散的还是连续的。当特征是离散的时候，我们使用极大似然估计，叫做<strong>多项式模型</strong>；当特征是连续的时候，我们让其满足高斯分布，叫做<strong>高斯模型</strong>。下面就一一介绍。</p>
+<h3 id="多项式模型"><a href="#多项式模型" class="headerlink" title="多项式模型"></a>多项式模型</h3><p>当特征是离散的时候，我们使用极大似然估计去得到先验概率与条件概率。（公式太难敲了，我就直接贴图了😭图片来源：《统计学习方法》）</p>
+<p><img src="/2020/02/18/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/1.jpg" style="zoom: 50%;"></p>
+<p>但是，在计算先验概率与条件概率的时候，我们会做一些平滑处理，以防出现为0的情况，从而影响到后验概率的计算。这种操作叫做laplace平滑。（图片来源：《统计学习方法》）</p>
+<p><img src="/2020/02/18/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/2.jpg" style="zoom:50%;"></p>
+<h3 id="高斯模型"><a href="#高斯模型" class="headerlink" title="高斯模型"></a>高斯模型</h3><p>当特征为连续值的时候，我们就不能采取多项式模型来估计先验概率与条件概率了，因为会导致很多$P(X=x_i|Y=c_k)$等于0。所以需要采用高斯模型。高斯模型的思想是：<strong>让特征的每一维都满足高斯分布(正态分布)，从而来处理连续特征</strong>。注意，先验概率的计算与多项式模型相同。公式如下：</p>
+<script type="math/tex; mode=display">
+P(X^{(j)}=a|Y=c_k)=\frac {1}{\sqrt {2\pi \sigma^{2}_{c_k,j}}}e^{-\frac {({a-\mu_{c_k,j}})^2}{2\sigma^{2}_{c_k,j}}}</script><p>其中，$\sigma^{2}_{c_k,j}$表示类别是$c_k$的实例中，第$j$维特征的方差，$\mu_{c_k,j}$表示类别是$c_k$的实例中，第$j$维特征的均值。</p>
+<p>当求出先验概率与条件概率之后，再带入到朴素贝叶斯公式中，就可以得到实例的类别标签了。到此，朴素贝叶斯的理论部分就讲完啦，相较于HMM、CRF等模型，真的可以说是非常简单了🎉～</p>
+<h2 id="朴素贝叶斯模型的实现"><a href="#朴素贝叶斯模型的实现" class="headerlink" title="朴素贝叶斯模型的实现"></a>朴素贝叶斯模型的实现</h2><p>把模型实现一遍才算是真正的吃透了这个模型呀。在这里，我采取了两种方式来实现朴素贝叶斯模型：纯python实现以及调用scikit-learn库来实现。我的github里面可以下载到所有的代码，欢迎访问我的github，也欢迎大家star和fork。附上<strong>GitHub地址: <a href="https://github.com/codewithzichao/Machine_Learning_Code" target="_blank" rel="noopener">《统计学习方法》及常规机器学习模型实现</a></strong>。具体代码如下：</p>
+<h3 id="python实现"><a href="#python实现" class="headerlink" title="python实现"></a>python实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="comment"># Author:codewithzichao</span></span><br><span class="line"><span class="comment"># E-mail:lizichao@pku.edu.cn</span></span><br><span class="line"><span class="comment"># Date:2019-12-30</span></span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">数据集：Mnist</span></span><br><span class="line"><span class="string">准确率：0.8433</span></span><br><span class="line"><span class="string">时间：130.05937218666077</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy  <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loadData</span><span class="params">(fileName)</span>:</span></span><br><span class="line">    data_list = []</span><br><span class="line">    label_list = []</span><br><span class="line">    <span class="keyword">with</span> open(fileName, <span class="string">"r"</span>) <span class="keyword">as</span> f:</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> f.readlines():</span><br><span class="line">            curline = line.strip().split(<span class="string">","</span>)</span><br><span class="line">            label_list.append(int(curline[<span class="number">0</span>]))</span><br><span class="line">            data_list.append([int(int(feature) &gt; <span class="number">128</span>) <span class="keyword">for</span> feature <span class="keyword">in</span> curline[<span class="number">1</span>:]])  <span class="comment"># 二值化，保证每一个特征只能取到0和1两个值</span></span><br><span class="line"></span><br><span class="line">    data_matrix = np.array(data_list)</span><br><span class="line">    label_matrix = np.array(label_list)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> data_matrix, label_matrix</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Naive_Bayes</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, train_data, train_label)</span>:</span></span><br><span class="line">        <span class="string">'''</span></span><br><span class="line"><span class="string">        构造函数</span></span><br><span class="line"><span class="string">        :param train_data:训练集的特征向量</span></span><br><span class="line"><span class="string">        :param train_label: 训练集的类别标签</span></span><br><span class="line"><span class="string">        '''</span></span><br><span class="line">        self.train_data = train_data</span><br><span class="line">        self.train_label = train_label</span><br><span class="line">        self.input_num, self.feature_num = self.train_data.shape  <span class="comment"># input_num、feature_num表示训练集数目、特征数目</span></span><br><span class="line">        self.classes_num = self.count_classes()</span><br><span class="line">        self.p_y, self.p_x_y = self.get_probabilities()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">count_classes</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">'''</span></span><br><span class="line"><span class="string">        计算类别数目</span></span><br><span class="line"><span class="string">        :return:类别数</span></span><br><span class="line"><span class="string">        '''</span></span><br><span class="line">        s = set()</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> self.train_label:</span><br><span class="line">            <span class="keyword">if</span> i <span class="keyword">not</span> <span class="keyword">in</span> s:</span><br><span class="line">                s.add(i)</span><br><span class="line">        <span class="keyword">return</span> len(s)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_probabilities</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">'''</span></span><br><span class="line"><span class="string">        计算先验概率与条件概率</span></span><br><span class="line"><span class="string">        :return: 返回先验概率与条件概率</span></span><br><span class="line"><span class="string">        '''</span></span><br><span class="line">        print(<span class="string">"start training"</span>)</span><br><span class="line">        p_y = np.zeros(self.classes_num)</span><br><span class="line">        p_x_y = np.zeros((self.classes_num, self.input_num, <span class="number">2</span>))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 计算先验概率p_y</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(self.classes_num):</span><br><span class="line">            p_y[i] = (np.sum((self.train_label == i)) + <span class="number">1</span>) / (self.input_num + self.classes_num)</span><br><span class="line">        p_y = np.log(p_y)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 计算条件概率</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(self.input_num):</span><br><span class="line">            label = self.train_label[i]</span><br><span class="line">            x = self.train_data[i]</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(self.feature_num):</span><br><span class="line">                p_x_y[label][j][x[j]] += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(self.classes_num):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(self.feature_num):</span><br><span class="line">                p_x_y_0 = p_x_y[i][j][<span class="number">0</span>]</span><br><span class="line">                p_x_y_1 = p_x_y[i][j][<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">                p_x_y[i][j][<span class="number">0</span>] = np.log((p_x_y_0 + <span class="number">1</span>) / (p_x_y_0 + p_x_y_1 + <span class="number">2</span>))</span><br><span class="line">                p_x_y[i][j][<span class="number">1</span>] = np.log((p_x_y_1 + <span class="number">1</span>) / (p_x_y_0 + p_x_y_1 + <span class="number">2</span>))</span><br><span class="line">        print(<span class="string">"finished training."</span>)</span><br><span class="line">        <span class="keyword">return</span> p_y, p_x_y</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">naive_bayes_predict</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        <span class="string">'''</span></span><br><span class="line"><span class="string">        预测单个实例x的类别标签</span></span><br><span class="line"><span class="string">        :param x: 特征向量</span></span><br><span class="line"><span class="string">        :return: x的类别标签</span></span><br><span class="line"><span class="string">        '''</span></span><br><span class="line"></span><br><span class="line">        p = np.zeros(self.classes_num)</span><br><span class="line">        p_y, p_x_y = self.p_y, self.p_x_y</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(self.classes_num):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(self.feature_num):</span><br><span class="line">                p[i] += p_x_y[i][j][x[j]]</span><br><span class="line">            p[i] += p_y[i]</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> np.argmax(p)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">test_model</span><span class="params">(self, test_train, test_label)</span>:</span></span><br><span class="line">        <span class="string">'''</span></span><br><span class="line"><span class="string">        在整个测试集上测试模型</span></span><br><span class="line"><span class="string">        :param test_train: 测试集的特征向量</span></span><br><span class="line"><span class="string">        :param test_label: 测试集的类别标签</span></span><br><span class="line"><span class="string">        :return: 准确率</span></span><br><span class="line"><span class="string">        '''</span></span><br><span class="line">        print(<span class="string">"start testing"</span>)</span><br><span class="line">        error = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(len(test_label)):</span><br><span class="line">            <span class="keyword">if</span> (self.naive_bayes_predict(test_train[i]) != test_label[i]):</span><br><span class="line">                error += <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">        accuarcy = (len(test_label) - error) / (len(test_label))</span><br><span class="line">        print(<span class="string">"finished testing."</span>)</span><br><span class="line">        <span class="keyword">return</span> accuarcy</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    start = time.time()</span><br><span class="line"></span><br><span class="line">    print(<span class="string">"start loading data."</span>)</span><br><span class="line">    train_data, train_label = loadData(<span class="string">"../MnistData/mnist_train.csv"</span>)</span><br><span class="line">    test_data, test_label = loadData(<span class="string">"../MnistData/mnist_test.csv"</span>)</span><br><span class="line">    print(<span class="string">"finished load data."</span>)</span><br><span class="line"></span><br><span class="line">    a = Naive_Bayes(train_data, train_label)</span><br><span class="line">    accuracy = a.test_model(test_data, test_label)</span><br><span class="line">    print(<span class="string">f"the accuracy is <span class="subst">&#123;accuracy&#125;</span>."</span>)</span><br><span class="line"></span><br><span class="line">    end = time.time()</span><br><span class="line">    print(<span class="string">f"the total time is <span class="subst">&#123;end - start&#125;</span>."</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="sckit-learn实现"><a href="#sckit-learn实现" class="headerlink" title="sckit-learn实现"></a>sckit-learn实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding=utf-8</span></span><br><span class="line"><span class="comment"># Author:codewithzichao</span></span><br><span class="line"><span class="comment"># E-mail:lizichao@pku.edu.cn</span></span><br><span class="line"><span class="comment"># Date:2019-12-30</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sklearn.naive_bayes <span class="keyword">import</span> MultinomialNB</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> classification_report</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loadData</span><span class="params">(fileName)</span>:</span></span><br><span class="line">    data_list = []</span><br><span class="line">    label_list = []</span><br><span class="line">    <span class="keyword">with</span> open(fileName, <span class="string">"r"</span>) <span class="keyword">as</span> f:</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> f.readlines():</span><br><span class="line">            curline = line.strip().split(<span class="string">","</span>)</span><br><span class="line">            label_list.append(int(curline[<span class="number">0</span>]))</span><br><span class="line">            data_list.append([int(int(feature) &gt; <span class="number">128</span>) <span class="keyword">for</span> feature <span class="keyword">in</span> curline[<span class="number">1</span>:]])  <span class="comment"># 二值化，保证每一个特征只能取到0和1两个值</span></span><br><span class="line"></span><br><span class="line">    data_matrix = np.array(data_list)</span><br><span class="line">    label_matrix = np.array(label_list)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> data_matrix, label_matrix</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">"__main__"</span>:</span><br><span class="line"></span><br><span class="line">    print(<span class="string">"start loading data."</span>)</span><br><span class="line">    train_data, train_label = loadData(<span class="string">"../MnistData/mnist_train.csv"</span>)</span><br><span class="line">    test_data, test_label = loadData(<span class="string">"../MnistData/mnist_test.csv"</span>)</span><br><span class="line">    print(<span class="string">"finished load data."</span>)</span><br><span class="line"></span><br><span class="line">    clf=MultinomialNB()</span><br><span class="line">    clf.fit(train_data,train_label)</span><br><span class="line"></span><br><span class="line">    accuracy=clf.score(test_data,test_label)</span><br><span class="line"></span><br><span class="line">    print(<span class="string">f"the accuracy is <span class="subst">&#123;accuracy&#125;</span>."</span>)</span><br><span class="line"></span><br><span class="line">    test_predict=clf.predict(test_data)</span><br><span class="line">    print(classification_report(test_label, test_predict))</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Would you like to buy me a cup of coffee☕️～</div>
+  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="zichao Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+              <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" rel="tag"># 统计学习方法</a>
+              <a href="/tags/scikit-learn/" rel="tag"># scikit-learn</a>
+              <a href="/tags/naive-bayes/" rel="tag"># naive bayes</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/02/17/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/" rel="prev" title="统计学习方法|支持向量机模型原理详解与实现">
+      <i class="fa fa-chevron-left"></i> 统计学习方法|支持向量机模型原理详解与实现
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/02/20/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9C%80%E5%A4%A7%E7%86%B5%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/" rel="next" title="统计学习方法|最大熵模型原理详解与实现">
+      统计学习方法|最大熵模型原理详解与实现 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#朴素贝叶斯模型概述"><span class="nav-number">1.</span> <span class="nav-text">朴素贝叶斯模型概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#朴素贝叶斯的两大前提条件"><span class="nav-number">2.</span> <span class="nav-text">朴素贝叶斯的两大前提条件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#先验概率与条件概率的计算"><span class="nav-number">3.</span> <span class="nav-text">先验概率与条件概率的计算</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#多项式模型"><span class="nav-number">3.1.</span> <span class="nav-text">多项式模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#高斯模型"><span class="nav-number">3.2.</span> <span class="nav-text">高斯模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#朴素贝叶斯模型的实现"><span class="nav-number">4.</span> <span class="nav-text">朴素贝叶斯模型的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#python实现"><span class="nav-number">4.1.</span> <span class="nav-text">python实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sckit-learn实现"><span class="nav-number">4.2.</span> <span class="nav-text">sckit-learn实现</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zichao"
+      src="/images/photo.jpg">
+  <p class="site-author-name" itemprop="name">zichao</p>
+  <div class="site-description" itemprop="description">Just learning</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">61</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zichao</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.6.0
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"live2d-widget-model-hijiki"},"display":{"position":"right","width":225,"height":450},"mobile":{"show":false}});</script></body>
+</html>

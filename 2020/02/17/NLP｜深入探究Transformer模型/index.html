@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://codewithzichao.github.io').hostname,
+    root: '/',
+    scheme: 'Muse',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="目前为止，已经学了很多东西，但是没有输出，总感觉似乎少了点什么。这片博客将回顾经典的Transformer模型。Transformer模型是Google在2017年所提出的模型。该模型抛弃了传统的RNN与CNN，全部采用Attention机制，结果证明其在当时取得了SOTA的效果，得到了广泛的应用。Transformer也是后来大火的BERT中的核心组成部分，所以Transformer模型的提出是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NLP|深入探究Transformer模型">
+<meta property="og:url" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:site_name" content="codewithzichao">
+<meta property="og:description" content="目前为止，已经学了很多东西，但是没有输出，总感觉似乎少了点什么。这片博客将回顾经典的Transformer模型。Transformer模型是Google在2017年所提出的模型。该模型抛弃了传统的RNN与CNN，全部采用Attention机制，结果证明其在当时取得了SOTA的效果，得到了广泛的应用。Transformer也是后来大火的BERT中的核心组成部分，所以Transformer模型的提出是">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/0.0..png">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/0.%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84%E6%A6%82%E8%A7%88.png">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/1.encoder-decoder%E5%86%85%E9%83%A8%E6%9E%B6%E6%9E%84.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/2.scaled%20-dot-product%20%20.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/3.qkv%E7%9A%84%E8%AE%A1%E7%AE%97.png">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/4.QKscore.png">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/5.softmax.png">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/6.sum.png">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/7.%E7%9F%A9%E9%98%B5%E8%AE%A1%E7%AE%97.png">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/8.%E7%9F%A9%E9%98%B5%E8%AE%A1%E7%AE%97.png">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/9.multihead.png">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/10..png">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/11.png">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/12.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/13.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/14.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/15.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/16.png">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/17.png">
+<meta property="article:published_time" content="2020-02-17T05:14:34.000Z">
+<meta property="article:modified_time" content="2020-02-27T12:27:22.368Z">
+<meta property="article:author" content="zichao">
+<meta property="article:tag" content="NLP">
+<meta property="article:tag" content="Transformer">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="Attention">
+<meta property="article:tag" content="self-attention">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/0.0..png">
+
+<link rel="canonical" href="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>NLP|深入探究Transformer模型 | codewithzichao</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">codewithzichao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">Confident，Modest，Patient</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="name" content="zichao">
+      <meta itemprop="description" content="Just learning">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="codewithzichao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          NLP|深入探究Transformer模型
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+
+            
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-02-17 13:14:34" itemprop="dateCreated datePublished" datetime="2020-02-17T13:14:34+08:00">2020-02-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-02-27 20:27:22" itemprop="dateModified" datetime="2020-02-27T20:27:22+08:00">2020-02-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index">
+                    <span itemprop="name">NLP</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>目前为止，已经学了很多东西，但是没有输出，总感觉似乎少了点什么。这片博客将回顾经典的Transformer模型。Transformer模型是Google在2017年所提出的模型。该模型抛弃了传统的RNN与CNN，全部采用Attention机制，结果证明其在当时取得了SOTA的效果，得到了广泛的应用。Transformer也是后来大火的BERT中的核心组成部分，所以Transformer模型的提出是非常具有开创性的工作。本文将首先介绍Transformer提出的背景，紧接着详细讲解其内部架构，最后对Transformer做一个小小的总结。</p>
+<a id="more"></a>
+<h2 id="Transformer模型提出的原因"><a href="#Transformer模型提出的原因" class="headerlink" title="Transformer模型提出的原因"></a>Transformer模型提出的原因</h2><p>在基于RNN的seq2seq+attention模型中，由于attention机制的加入，能够很好地解决信息损失与句子长距离依赖问题，但是它存在与普通RNN同样的问题。其t时刻的hidden state依赖于t-1时刻的hidden state与t时刻的输入，只有t-1时刻的hidden state计算完成后，才能够去计算t时刻的hidden state。这样固定的顺序计算在训练时会非常缓慢，无法并行计算，计算效率低下；此外，当训练集非常大的时候，网络的计算量也会变得非常庞大。</p>
+<p>后来，基于CNN的seq2seq+attention模型被提出，它具有基于RNN的seq2seq+attention模型的捕捉长距离依赖的能力，并且可以并行化实现，但是缺点是：输入序列与输出序列越长，计算量越大。</p>
+<p>所以，Transformer模型的提出主要是想在不损害性能的情况下，减少计算量并提高并行效率。</p>
+<h2 id="Transformer模型分析"><a href="#Transformer模型分析" class="headerlink" title="Transformer模型分析"></a>Transformer模型分析</h2><h3 id="Transformer模型概览"><a href="#Transformer模型概览" class="headerlink" title="Transformer模型概览"></a>Transformer模型概览</h3><p>首先，没错，Transformer模型还是encoder-decoder架构，输入序列$(x_1,x_2,x_3,…,x_{T_X})$经过encoder，输出$(h_1,h_2,h_3,…,h_{T_X})$作为decoder的输入，最后经过decoder得到最终的输出序列$(y_1,y_2,y_3,..,y_{T_Y})$。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/0.0..png" alt></p>
+<p>那么再具体一点，在Transformer中，Encoder部分由多个encoder堆叠组成，Decoder部分也是由多个decoder堆叠而成。需要注意的是：<strong>Encoder部分的输出会与Decoder部分的每一个decoder相结合，这是不同的地方。</strong></p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/0.模型架构概览.png" alt></p>
+<p>宏观上的结构我们知道了，最后来看每一个encoder与decoder的内部结构。</p>
+<p><strong>encoder层：</strong>每一个encoder层由两个子层构成。</p>
+<p><strong>第一个子层(multi-head attention layer)：</strong>其输入是前一个encoder层的输出，输入首先进入multi-head attention机制，再接一个残差连接与层归一化；</p>
+<p><strong>第二个子层(FFN layer)：</strong>其输入是第一个子层的输出，将第一个子层的输出输入到一个全连接的前馈神经网络，再接一个残差连接与层归一化，最后作为该encoder层的输出。</p>
+<p><strong>decoder层：</strong>每一个decoder层由三个子层构成。</p>
+<p><strong>第一个子层(masked multi-head attention layer)：</strong>其输入是前一个decoder层的输出，输入进入Masked multi-head attention机制，再接一个残差连接与层归一化；</p>
+<p><strong>第二个子层(encoder-decoder attention layer)：</strong>其输入有两个：<strong>Encoder的输出与第一个子层的输出</strong>，经过multi-head attention机制，再接一个残差连接与层归一化；</p>
+<p><strong>第三个子层(FFN layer)：</strong>其输入是第二个子层的输出，将第二个子层的输出输入到一个全连接的前馈神经网络，再接一个残差连接与层归一化，之后需要再接一个线性转换层，最后通过softmax，得到该decoder层输出的单词。</p>
+<p><strong>这里需要明确的是：在decoder部分，并不是最后一次性把所有的序列全部decode出来，而是像RNN一样，一次只decode一个单词，因为下一个decoder层还需要用到前一个的输出作为输入。</strong></p>
+<p>下面将一一讲解每一个部分。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/1.encoder-decoder内部架构.jpg" alt></p>
+<h3 id="核心—Scaled-Dot-Product-Attention与Multi-Head-Attention"><a href="#核心—Scaled-Dot-Product-Attention与Multi-Head-Attention" class="headerlink" title="核心—Scaled Dot-Product Attention与Multi-Head Attention"></a>核心—Scaled Dot-Product Attention与Multi-Head Attention</h3><p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/2.scaled -dot-product  .jpg" alt></p>
+<blockquote>
+<p>在这里，首先要理解，传统的attention机制的本质其实可以理解为：输入序列中的元素可以想象为<key,value>对，那么给定target中某个要预测的元素Q，通过计算Q与每个key的相关性，得到每一个key对应value的权重系数（attention weights），再对value进行加和平均，就是最终的attention值（context vector）。在NLP中，key和value常常看做一个值（hidden state）。参看：<a href="https://blog.csdn.net/malefactor/article/details/78767781" target="_blank" rel="noopener">attention机制本质</a></key,value></p>
+</blockquote>
+<p>直接放公式：</p>
+<script type="math/tex; mode=display">
+Attention(Q,K,V)=softmax(\frac {QK^{T}}{\sqrt{d_k}})V,</script><script type="math/tex; mode=display">
+MultiHead(Q,K,V)=Concat(head_1,...,head_h)W^O,其中 head_i=Attention(QW_i^Q,KW_i^K,VW_i^V).</script><ol>
+<li>首先理解Scaled Dot-Product Attention中的Q、K、V是怎么得来的。比如给出输入序列的word embedding$x=\{x_1,x_2\}$，通过线性变换，得到Q、K、V。公式表达如下：</li>
+</ol>
+<script type="math/tex; mode=display">
+Q=xW^Q,
+K=xW^K,
+V=xW^V.</script><p>其中参数$W^Q,W^K,W^V$通过网络的训练得出。以下图为例：</p>
+<p>输入：两个单词，Thinking, Machines. 通过嵌入变换会$x_1,x_2$两个向量[1 x 4]。分别与 $W^Q,W^K,W^V$ 三个矩阵[4x3]做点乘得到，${q_1,q_2},{k_1,k_2},{v_2,v_2} $6个向量[1x3]。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/3.qkv的计算.png" alt></p>
+<ol>
+<li>接着，计算self-attention的分数值。该分数表示当我们在encode一个词的时候，对句子其他词的关注程度。我们通过Q与K做点乘得到分数值。以下图为例：</li>
+</ol>
+<p>我们需要计算其他词相对于thinking这个词的分数。首先是thinking自己: $q_1·k_1$；machines相对于thinking的分数：$q_1·k_2$。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/4.QKscore.png" alt></p>
+<ol>
+<li>对score进行缩放，即规范化，并对score使用softmax，得到分布。以下图为例：</li>
+</ol>
+<p>score之所以需要进行缩放是因为：要使梯度更加稳定。因为当$d_k$非常大的时候，点乘结果会非常大，如果不做缩放，那么经过sofmax归一化之后，二者差距会非常大，从而使得在反向传播的时候，梯度会非常小，难以训练。譬如：如果不进行缩放，经过softmax的结果是：0.99999…，0.0000000…，这显然不利于之后的计算。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/5.softmax.png" alt></p>
+<ol>
+<li>将归一化的score与v相乘，得到attention值，并对加权向量值求和， 这将在此位置（对于第一个单词thinking）产生self-attention层的输出。以下图为例：</li>
+</ol>
+<p>最终的输出：$z_1=0.88v_1+0.12v_2$.</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/6.sum.png" alt></p>
+<p>上述是计算的一个单词的attention值，在实际操作中，往往以矩阵形式操作。如下：</p>
+<p>输入是一个[2x4]的矩阵（单词嵌入），每个运算是[4x3]的矩阵，求得Q,K,V。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/7.矩阵计算.png" alt></p>
+<p>Q对K转制做点乘，除以dk的平方根。做一个softmax得到合为1的比例，对V做点乘得到输出Z。那么这个Z就是self-attention的输出，Z的第一行就是thinking的self-attention值，第二行就是machines的self-attention值。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/8.矩阵计算.png" alt></p>
+<p>Scaled Dot-Product Attention大致就讲完了，那么对于Multi-Head Attention，其实就很简单了，就是将上述过程重复H次，然后再concat，最后输出。主要是为了能够并行运算，加快计算效率，看图👇。</p>
+<p>在Multi-Head attention中，我们为每个head维护单独的Q / K / V权重矩阵，从而导致不同的Q / K / V矩阵。 在transformer原文中，使用了8个head，所以最后会得到8个矩阵。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/9.multihead.png" alt></p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/10..png" alt></p>
+<p>得到8个矩阵之后，再concat变成一个矩阵，与$W^O$做点乘后，输入到FFN中。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/11.png" alt></p>
+<p>Multi-Head Attention部分就讲完了。然而还有一些细节需要关注。我们再回顾一下self-attention的计算公式：</p>
+<script type="math/tex; mode=display">
+Attention(Q,K,V)=softmax(\frac {QK^{T}}{\sqrt{d_k}})V,</script><p>Q、K、V是由输入与W相乘得到的，输入的维度为：(m,512)，m是一个句子的单词数，512是word embedding的维度，那么Q、K、V的维度是：(m,64)，那么$QK^T$的维度是：(m,m)。也就是一个attention map，比如说输入是一句话 “i have a dream” 总共4个单词， 这里就会形成一张4x4的注意力机制的图，每一个格子就对应一个权重，如下👇。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/12.jpg" style="zoom:50%;"></p>
+<p><strong>需要注意的是，在encoder中，叫做self-attention，在decoder中，叫做masked self-attention</strong>。所谓的mask，意思就是不给模型看到未来的信息。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/13.jpg" style="zoom:50%;"></p>
+<p>就比如说，i作为第一个单词，只能有和i自己的attention。have作为第二个单词，有和i, have 两个attention。 a 作为第三个单词，有和i,have,a 前面三个单词的attention。到了最后一个单词dream的时候，才有对整个句子4个单词的attention。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/14.jpg" style="zoom:50%;"></p>
+<p>这是做完softmax之后的结果。</p>
+<p>对与self-attention来说，就会出现一个问题，如果输入的句子特别长，那就为形成一个 NxN的attention map，这就会导致内存爆炸…所以要么减少batch size多gpu训练，要么剪断输入的长度，还有一个方法是用conv对K,V做卷积减少长度。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/15.jpg" style="zoom:50%;"></p>
+<p>对K,V做卷积和stride（stride的话(n,1)是对seq_len单边进行跳跃），会减少seq_len的长度而不会减少hid_dim的长度。所以最后的结果Z还是和原先一样（因为Q没有改变）。mask的话比较麻烦了，作者用的是local attention。</p>
+<p>Encoder和Decoder部分的区别如下：<br>1、 Encoder部分的self-attention计算的是两两单词之间attention。然后decoder部分计算的就是当前的单词和它前面单词的attention了。<br>2、 Decoder部分多了一层，Encoder-Decoder的attention，就是将decoder的self attention部分和Encoder部分output进行attention。然后再去Feed Forward。</p>
+<h3 id="Positional-Encoding"><a href="#Positional-Encoding" class="headerlink" title="Positional Encoding"></a>Positional Encoding</h3><p>在transformer中，由于舍弃了CNN与RNN，那么就单词的位置信息就没有被考虑到，这是不合理的。因此，为了解决这个问题，transformer中在encoder与decoder的输入中，添加了positional encoding。维度和embedding的维度一样，这个向量采用了一种很独特的方法来让模型学习到这个值，这个向量能决定当前词的位置，或者说在一个句子中不同的词之间的距离。这个位置向量的具体计算方法有很多种，论文中的计算方法如下：</p>
+<script type="math/tex; mode=display">
+PE_{(pos,2i)}=sin(pos/10000^{2i/d_{model}}),</script><script type="math/tex; mode=display">
+PE_{(pos,2i+1)}=cos(pos/10000^{2i/d_{model}}).</script><p>其中pos是指当前词在句子中的位置，i是指向量中每个值的index，可以看出，在<strong>偶数位置，使用正弦编码，在奇数位置，使用余弦编码</strong>。</p>
+<p>最后把这个Positional Encoding与embedding的值相加，作为输入送到下一层。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/16.png" alt></p>
+<h3 id="Layer-Normalization"><a href="#Layer-Normalization" class="headerlink" title="Layer Normalization"></a>Layer Normalization</h3><p>在transformer中，每一个子层（self-attetion，ffnn）之后都会接一个残缺模块，并且有一个Layer normalization。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/17.png" alt></p>
+<p>残差连接很简单，在这里，主要讲解一下Layer normalization。其实所有的normalization都是为了解决covariate shfit问题。就是如果在训练集上已经建立好了x到y的映射，那么如果test set的分布与training set的分布不一样，那么模型效果不会很好。比较著名的就是Batch normalization。通过将输入数据转化为固定均值与方差的数据，从而能够加速训练。而Layer Normalization与BN最大的不同在于，LN是固定住每一层的均值和方差，从而降低covariate shift带来的影响。参看链接：<a href="https://blog.csdn.net/zhangjunhit/article/details/53169308" target="_blank" rel="noopener">Layer Normalization</a></p>
+<h3 id="Position-wise-Feed-Forward-Networks"><a href="#Position-wise-Feed-Forward-Networks" class="headerlink" title="Position-wise Feed-Forward Networks"></a>Position-wise Feed-Forward Networks</h3><p>在multi-head attention后，会接一个FFN层，计算公式如下：</p>
+<script type="math/tex; mode=display">
+FFN(x)=max(0,xW_1+b_1)W_2+b_2.</script><h3 id="MASK"><a href="#MASK" class="headerlink" title="MASK"></a>MASK</h3><p>mask 表示掩码，它对某些值进行掩盖，使其在参数更新时不产生效果。Transformer 模型里面涉及两种 mask，分别是 padding mask 和 sequence mask。其中，padding mask 在所有的 scaled dot-product attention 里面都需要用到，而 sequence mask 只有在 decoder 的 self-attention 里面用到。</p>
+<p><strong>Padding Mask</strong></p>
+<p>什么是 padding mask 呢？因为每个批次输入序列长度是不一样的也就是说，我们要对输入序列进行对齐。具体来说，就是给在较短的序列后面填充 0。但是如果输入的序列太长，则是截取左边的内容，把多余的直接舍弃。因为这些填充的位置，其实是没什么意义的，所以我们的attention机制不应该把注意力放在这些位置上，所以我们需要进行一些处理。</p>
+<p>具体的做法是，把这些位置的值加上一个非常大的负数(负无穷)，这样的话，经过 softmax，这些位置的概率就会接近0！</p>
+<p>而我们的 padding mask 实际上是一个张量，每个值都是一个Boolean，值为 false 的地方就是我们要进行处理的地方。</p>
+<p><strong>Sequence mask</strong></p>
+<p>文章前面也提到，sequence mask 是为了使得 decoder 不能看见未来的信息。也就是对于一个序列，在 time_step 为 t 的时刻，我们的解码输出应该只能依赖于 t 时刻之前的输出，而不能依赖 t 之后的输出。因此我们需要想一个办法，把 t 之后的信息给隐藏起来。</p>
+<p>那么具体怎么做呢？也很简单：产生一个上三角矩阵，上三角的值全为0。把这个矩阵作用在每一个序列上，就可以达到我们的目的。</p>
+<p>对于 decoder 的 self-attention，里面使用到的 scaled dot-product attention，同时需要padding mask 和 sequence mask 作为 attn_mask，具体实现就是两个mask相加作为attn_mask。<br>其他情况，attn_mask 一律等于 padding mask。</p>
+<h2 id="重要的细节"><a href="#重要的细节" class="headerlink" title="重要的细节"></a>重要的细节</h2><ol>
+<li><strong>Mask是怎么工作的？是否只有在decoder的时候，才会用到mask？如果不是，请详细描述encoder与decoder的mask的工作状况。</strong></li>
+</ol>
+<p>答：其实如果看源码的话，这个问题非常简单明了（padding mask 与sentence mask）。这里先不写，放一个连接：<a href="https://blog.csdn.net/u012526436/article/details/86295971" target="_blank" rel="noopener">Mask</a></p>
+<ol>
+<li><strong>最后一层的encoder输出了什么？是输出了Z还是输出了K与V？如果是输出了K与V，那么与前面的encoder层的计算是否有区别？</strong></li>
+</ol>
+<p>答：答案是输出K、V到每个decoder层，而且K与V是同一个矩阵，还记得我说的attention本质吗？具体过程，还是看源码，先不写了，码字太难受了。</p>
+<ol>
+<li><strong>在训练过程中，是teacher forcing还是free run？</strong></li>
+</ol>
+<p>答：论文说的是free run，但是实际操作还是会有teacher forcing。一般会设置一个teacher_forcing_prob，不会一直都是teacher forcing，这样效果会好些。</p>
+<ol>
+<li><strong>什么是BPE？在transformer中起到了什么作用？</strong></li>
+</ol>
+<p>答：之后再写吧，这是一种编码方式，特简单，但是很多地方都会用到，之后应该会专门写一篇文章介绍～</p>
+<ol>
+<li><strong>为什么要使用multi-head self-attention？</strong></li>
+</ol>
+<p>答：其实这个原文里也没有讲的特别清楚，个人理解是：multi-head就像是cnn中的多个filter，不同的head可以关注句子中不同位置的信息（位置信息、句法信息、罕见字信息等等），可以更加综合地利用各方面的信息，提取出更加丰富的特征。</p>
+<ol>
+<li><strong>transformer的优点和缺点？</strong></li>
+</ol>
+<p>答：优点：相比rnn来说，能够并行计算；相比cnn来说，不需要叠加非常多的层来扩大感受野。</p>
+<p>​       缺点：因为抛弃了rnn，所以失去了句子之间的位置信息，虽然加了positional encoding，但是仍然无法做到像rnn那样，完全地考虑单词之间的位置关系。此外，transformer的空间复杂度非常大，如果句子长度为$L$，那么每一个head都需要存储$L^2$的score，当$L$非常大的时候，那么就会出现OOM的情况，那么，这种情况下，就需要讲句子非常多个句子，但是一旦分割句子，那么句子之间的前后关系就没有了，那么模型结果也会受影响。</p>
+<ol>
+<li><strong>为什么要使用label-smoothing？</strong></li>
+</ol>
+<p>答：<a href="https://zhuanlan.zhihu.com/p/60821628" target="_blank" rel="noopener">transformer细节</a></p>
+<p>​    </p>
+<p>我的这片博文只是详细地剖析transformer的原理，但是有很多细节的地方（譬如上述两个问题），原论文其中讲的并不清楚🤷‍♂️。anyway，需要看源码，然后自己亲自调试才能真正地看懂，所以，RTFSC，源码链接：<a href="http://nlp.seas.harvard.edu/2018/04/03/attention.html" target="_blank" rel="noopener">pytorch-transformer</a>、<a href="https://github.com/tensorflow/tensor2tensor" target="_blank" rel="noopener">tensorflow-transformer</a></p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ol>
+<li>《Attention Is All You Need》</li>
+<li><a href="https://jalammar.github.io/illustrated-transformer/" target="_blank" rel="noopener">https://jalammar.github.io/illustrated-transformer/</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/39034683" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/39034683</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/60821628" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/60821628</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Would you like to buy me a cup of coffee☕️～</div>
+  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="zichao Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/NLP/" rel="tag"># NLP</a>
+              <a href="/tags/Transformer/" rel="tag"># Transformer</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+              <a href="/tags/Attention/" rel="tag"># Attention</a>
+              <a href="/tags/self-attention/" rel="tag"># self-attention</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/" rel="prev" title="NLP|Bahdanau Attention与Luong Attention">
+      <i class="fa fa-chevron-left"></i> NLP|Bahdanau Attention与Luong Attention
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/02/17/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%EF%BD%9C%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/" rel="next" title="统计学习方法|感知机模型原理详解与实现">
+      统计学习方法|感知机模型原理详解与实现 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Transformer模型提出的原因"><span class="nav-number">1.</span> <span class="nav-text">Transformer模型提出的原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Transformer模型分析"><span class="nav-number">2.</span> <span class="nav-text">Transformer模型分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Transformer模型概览"><span class="nav-number">2.1.</span> <span class="nav-text">Transformer模型概览</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#核心—Scaled-Dot-Product-Attention与Multi-Head-Attention"><span class="nav-number">2.2.</span> <span class="nav-text">核心—Scaled Dot-Product Attention与Multi-Head Attention</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Positional-Encoding"><span class="nav-number">2.3.</span> <span class="nav-text">Positional Encoding</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Layer-Normalization"><span class="nav-number">2.4.</span> <span class="nav-text">Layer Normalization</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Position-wise-Feed-Forward-Networks"><span class="nav-number">2.5.</span> <span class="nav-text">Position-wise Feed-Forward Networks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MASK"><span class="nav-number">2.6.</span> <span class="nav-text">MASK</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重要的细节"><span class="nav-number">3.</span> <span class="nav-text">重要的细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zichao"
+      src="/images/photo.jpg">
+  <p class="site-author-name" itemprop="name">zichao</p>
+  <div class="site-description" itemprop="description">Just learning</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">61</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zichao</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.2.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.6.0
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"live2d-widget-model-hijiki"},"display":{"position":"right","width":225,"height":450},"mobile":{"show":false}});</script></body>
+</html>
