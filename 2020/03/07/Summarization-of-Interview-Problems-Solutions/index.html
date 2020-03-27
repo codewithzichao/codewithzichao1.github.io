@@ -54,7 +54,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/03/07/Summarization-of-Interview-Problems-Solutions/l1l2.jpg">
 <meta property="article:published_time" content="2020-03-07T05:01:56.000Z">
-<meta property="article:modified_time" content="2020-03-25T13:51:40.170Z">
+<meta property="article:modified_time" content="2020-03-27T02:14:26.257Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="面试题">
 <meta name="twitter:card" content="summary">
@@ -224,7 +224,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-03-25 21:51:40" itemprop="dateModified" datetime="2020-03-25T21:51:40+08:00">2020-03-25</time>
+                <time title="Modified: 2020-03-27 10:14:26" itemprop="dateModified" datetime="2020-03-27T10:14:26+08:00">2020-03-27</time>
               </span>
 
           
@@ -253,10 +253,11 @@
 </ul>
 <p>答：看自己写的关于CRF的那篇博文。从HMM-&gt;MEMM-&gt;CRF。</p>
 <ul>
-<li><p>ROC曲线？AUC的计算？</p>
-</li>
-<li><p>bagging vs boosting?</p>
-</li>
+<li>ROC曲线？AUC的计算？</li>
+</ul>
+<p>答：</p>
+<ul>
+<li>bagging vs boosting?</li>
 </ul>
 <p>答：1. bagging叫做重采样，譬如说，给定一个含有m个样本的训练集，我们从中随机抽取一个样本，然后再放回，依次循环，直到得到T个含有m个元素的训练集，然后，我们就在这T个训练集中训练T个模型，最后在畸形模型融合。bagging降低的是方差。值得注意的是，在RF中，我们种子进行决策树分裂的时候，我们不是从所有属性中选取最优属性，而是从一个属性子集中选取最优属性，这也是为了降低各个弱分类器之间的相关性。重采样也是为了降低各个弱分类器之间的相关性。</p>
 <p>​        2. boosting是提升方法。它的思路是每次上一次的残差作为下一次的输入。它关注的是降低偏差。因为，各个弱分类器之间具有强相关性。</p>
@@ -282,7 +283,7 @@
 <li>单向双向 BERT 与BiLSTM 有什么不同？其实问的就是ELMo与BERT的区别。</li>
 <li>如何解决梯度消失弥散 ？</li>
 </ul>
-<p>答：在一般的NN中，我们主要是在随机出实话参数的时候，需要留意一下。</p>
+<p>答：在一般的NN中，我们主要是在随机初始化参数的时候，需要留意一下。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">w=np.random.randn(shape)*np.sqrt(<span class="number">1</span>/n)</span><br></pre></td></tr></table></figure>
 <p>这个叫做Xavier初始化。其中，n表示前一层的神经元的数目。当然还可以替换激活函数，譬如使用relu。还有BN，正则化等等。</p>
 <p>在RNN中，使用LSTM或者GRU单元来代替普通的RNN单元，解决梯度消失问题。对于梯度爆炸问题，我们使用梯度裁剪来解决。具体来说，就是当梯度超过某个阈值的时候，我们对齐进行归一化操作，使其活在某个区间范围内。在tf中，使用tf.clip_by_norm().</p>
@@ -309,13 +310,12 @@
 <ul>
 <li>Sigmoid，Tanh，Relu等激活函数的优缺点</li>
 </ul>
-<p>答：sigmoid函数的优点：1.将数据压缩到（0，1）范围内；2.sigmoid函数是光滑的，也就是它处处可导；3. sigmoid函数的值域为（0，1）,那么可以被作为概率，很好的解释模型；</p>
-<p>sigmoid函数的缺点：1.容易发生梯度消失问题；2.不是关于原点中心对称，所以模型收敛速度会比较慢。<a href="https://liam.page/2018/04/17/zero-centered-active-function/" target="_blank" rel="noopener">中心对称</a>；3. 计算量大。</p>
-<p>tanh函数的优点：解决了sigmoid函数不是中心对称的问题；缺点：仍然存在梯度消失的问题。</p>
-<p>relu函数的优点：导数稳定，计算量小</p>
-<p>relu函数的缺点：容易发生dead relu的情况。也就是当输入小于0的时候，经过relu之后，输出为0，这样的倒数也会为0，梯度很难传递。</p>
-<p>leaky relu：解决了dead relu问题。但是参数是人为指定的。</p>
-<p>pRELU：让参数也跟着网络一块训练，得到的参数更加合理。</p>
+<p>答：<strong>sigmoid函数的优点：</strong>1.将数据压缩到（0，1）范围内；2.sigmoid函数是光滑的，也就是它处处可导；3. sigmoid函数的值域为（0，1）,那么可以被作为概率，很好的解释模型；<strong>sigmoid函数的缺点：</strong>1.容易发生梯度消失问题；2.不是关于原点中心对称，所以模型收敛速度会比较慢。<a href="https://liam.page/2018/04/17/zero-centered-active-function/" target="_blank" rel="noopener">中心对称</a>；3. 计算量大。</p>
+<p><strong>tanh函数的优点：</strong>解决了sigmoid函数不是中心对称的问题；<strong>缺点：</strong>仍然存在梯度消失的问题。</p>
+<p><strong>relu函数的优点：</strong>导数稳定，计算量小；<strong>relu函数的缺点：</strong>容易发生dead relu的情况。也就是当输入小于0的时候，经过relu之后，输出为0，这样的倒数也会为0，梯度很难传递。</p>
+<p><strong>leaky relu：</strong>解决了dead relu问题。但是参数是人为指定的。</p>
+<p><strong>pRELU：</strong>让参数也跟着网络一块训练，得到的参数更加合理。</p>
+<p><a href="https://blog.csdn.net/qq_18310041/article/details/91042085" target="_blank" rel="noopener">激活函数的比较</a></p>
 <ul>
 <li>讲讲subword算法？</li>
 </ul>
@@ -323,11 +323,11 @@
 <ul>
 <li>label smoothing？</li>
 </ul>
-<p>答：LSR通常用于softmax中。</p>
-<p><a href="https://blog.csdn.net/qq_18310041/article/details/91042085" target="_blank" rel="noopener">激活函数的比较</a></p>
+<p>答：LSR通常用于softmax中。在普通的softmax中，只会关注正确标签位置的损失，而不去考虑其他位置的损失，这就就会导致模型过于关注增大正确标签位置的概率，而不去关于减小预测错误标签的概率，这样的结果，就是模型在训练集上拟合的很好，而在测试集上表现的不好，也就是会导致过拟合。</p>
+<p>而在LSR中，我们引入一个平滑因子 $\epsilon$，那么 $\hat y=(1-\epsilon)<em>y+\epsilon</em>u$，其中$u$表示一个均匀分布。实际上LSR就是引入噪声。从而，让模型不仅考虑在标签正确位置的损失，也考虑在标签错误位置的损失，让导致模型的损失增大，从而导致模型的学习能力提高。也就是说，要降低损失，就必须学习的更好，也就是迫使模型向增大正确分类的概率以及减小错误分类的概率的方向前进。<strong>LSR在transformer中有使用。</strong><a href="https://blog.csdn.net/sinat_36618660/article/details/100166957?depth_1-utm_source=distribute.pc_relevant.none-task&amp;utm_source=distribute.pc_relevant.none-task" target="_blank" rel="noopener">LSR的介绍</a></p>
 <h2 id="Mathematics"><a href="#Mathematics" class="headerlink" title="Mathematics"></a>Mathematics</h2><p><strong>ByteDance AI LAB</strong></p>
 <ul>
-<li>x, y是独立的随机变量，方差期望已知，那么如何求 xy 的方差</li>
+<li>x, y是独立的随机变量，方差期望已知，那么如何求 xy 的方差？</li>
 <li></li>
 </ul>
 <h2 id="Algorithm"><a href="#Algorithm" class="headerlink" title="Algorithm"></a>Algorithm</h2><p><strong>ByteDance AI LAB</strong></p>
@@ -358,7 +358,8 @@
 <h2 id="IQ-Tests"><a href="#IQ-Tests" class="headerlink" title="IQ Tests"></a>IQ Tests</h2><p>现在有三枚硬币，一个是一正一反，一个是两面都是正，一个是两面都是反，现在随机抛出一枚硬币是正面，那么这枚硬币的反面也是正面的概率；（2/3）</p>
 <p>解答：$\frac {1/3}{1/3*1/2+1/3}=2/3$</p>
 <h2 id="Python-C"><a href="#Python-C" class="headerlink" title="Python/C++"></a>Python/C++</h2><ul>
-<li>python的多</li>
+<li>python的多线程？(假的多线程)</li>
+<li>python的浅拷贝与深拷贝。</li>
 </ul>
 <h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>1 <a href="https://blog.csdn.net/qq_28031525/article/details/80028055?depth_1-utm_source=distribute.pc_relevant.none-task&amp;utm_source=distribute.pc_relevant.none-task" target="_blank" rel="noopener">https://blog.csdn.net/qq_28031525/article/details/80028055?depth_1-utm_source=distribute.pc_relevant.none-task&amp;utm_source=distribute.pc_relevant.none-task</a></p>
 
