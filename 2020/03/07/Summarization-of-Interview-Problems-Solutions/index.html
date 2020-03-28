@@ -54,7 +54,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/03/07/Summarization-of-Interview-Problems-Solutions/l1l2.jpg">
 <meta property="article:published_time" content="2020-03-07T05:01:56.000Z">
-<meta property="article:modified_time" content="2020-03-27T15:19:42.037Z">
+<meta property="article:modified_time" content="2020-03-28T12:06:43.663Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="面试题">
 <meta name="twitter:card" content="summary">
@@ -224,7 +224,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-03-27 23:19:42" itemprop="dateModified" datetime="2020-03-27T23:19:42+08:00">2020-03-27</time>
+                <time title="Modified: 2020-03-28 20:06:43" itemprop="dateModified" datetime="2020-03-28T20:06:43+08:00">2020-03-28</time>
               </span>
 
           
@@ -325,6 +325,17 @@
 </ul>
 <p>答：LSR通常用于softmax中。在普通的softmax中，只会关注正确标签位置的损失，而不去考虑其他位置的损失，这就就会导致模型过于关注增大正确标签位置的概率，而不去关于减小预测错误标签的概率，这样的结果，就是模型在训练集上拟合的很好，而在测试集上表现的不好，也就是会导致过拟合。</p>
 <p>而在LSR中，我们引入一个平滑因子 $\epsilon$，那么 $\hat y=(1-\epsilon)<em>y+\epsilon</em>u$，其中$u$表示一个均匀分布。实际上LSR就是引入噪声。从而，让模型不仅考虑在标签正确位置的损失，也考虑在标签错误位置的损失，让导致模型的损失增大，从而导致模型的学习能力提高。也就是说，要降低损失，就必须学习的更好，也就是迫使模型向增大正确分类的概率以及减小错误分类的概率的方向前进。<strong>LSR在transformer中有使用。</strong><a href="https://blog.csdn.net/sinat_36618660/article/details/100166957?depth_1-utm_source=distribute.pc_relevant.none-task&amp;utm_source=distribute.pc_relevant.none-task" target="_blank" rel="noopener">LSR的介绍</a></p>
+<ul>
+<li>Xavier初始化和He初始化</li>
+</ul>
+<p>答：<a href="https://blog.csdn.net/xxy0118/article/details/84333635" target="_blank" rel="noopener">Xavier初始化和He初始化</a></p>
+<ul>
+<li><p>L1优化方法？（坐标下降法、LARS角回归）</p>
+</li>
+<li><p>SVM算法核函数的选择</p>
+</li>
+</ul>
+<p>答：1.当没有任何先验知识的时候，选择RBF核函数；2.当特征数远远大于样本数的时候，选择线性核，因为此时，如果选择高斯核的话，我们会将特征映射到更加复杂的空间中，会导致模型容易过拟合；3.当样本数远远大于特征数的时候，选择线性核；当样本数一般大小，特征数较小的时候，选择高斯核。</p>
 <h2 id="Mathematics"><a href="#Mathematics" class="headerlink" title="Mathematics"></a>Mathematics</h2><p><strong>ByteDance AI LAB</strong></p>
 <ul>
 <li>x, y是独立的随机变量，方差期望已知，那么如何求 xy 的方差？</li>
@@ -362,6 +373,11 @@
 </ul>
 <p>解答：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">longestCommonSubsequence</span><span class="params">(<span class="built_in">string</span> text1, <span class="built_in">string</span> text2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(text1.<span class="built_in">size</span>()==<span class="number">0</span> || text2.<span class="built_in">size</span>()==<span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">       <span class="function"><span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &gt; <span class="title">dp</span><span class="params">(text1.<span class="built_in">size</span>()+<span class="number">1</span>,<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;(text2.<span class="built_in">size</span>()+<span class="number">1</span>,<span class="number">0</span>))</span></span></span><br><span class="line"><span class="function">      </span></span><br><span class="line"><span class="function">       <span class="title">for</span><span class="params">(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=text1.<span class="built_in">size</span>();i++)</span></span>&#123;</span><br><span class="line">           <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=text2.<span class="built_in">size</span>();j++)&#123;</span><br><span class="line">               <span class="keyword">if</span>(text1[i<span class="number">-1</span>]==text2[j<span class="number">-1</span>])&#123;</span><br><span class="line">                   dp[i][j]=dp[i<span class="number">-1</span>][j<span class="number">-1</span>]+<span class="number">1</span>;</span><br><span class="line">               &#125;</span><br><span class="line">               <span class="keyword">else</span>&#123;</span><br><span class="line">                   dp[i][j]=<span class="built_in">max</span>(dp[i<span class="number">-1</span>][j],dp[i][j<span class="number">-1</span>]);</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> dp[text1.<span class="built_in">size</span>()][text2.<span class="built_in">size</span>()];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>10亿int，4GB内存，找出所有不重复数字？</p>
+<p><a href="https://blog.csdn.net/jacke121/article/details/78336275/" target="_blank" rel="noopener">答案</a></p>
+</li>
+</ul>
 <p>统计词频</p>
 <p>bash命令：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat words.txt | tr -s <span class="string">' '</span> <span class="string">'\n'</span> | sort | uniq -c | sort -r | awk <span class="string">'&#123;print $2" "$1&#125;'</span></span><br></pre></td></tr></table></figure>
