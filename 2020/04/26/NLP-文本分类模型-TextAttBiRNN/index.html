@@ -45,16 +45,19 @@
   };
 </script>
 
-  <meta name="description" content="Just learning">
+  <meta name="description" content="最近在看文本分类系列模型，应该会陆续更新几篇有关文本分类模型的博客，大概一周内更新完成，之后开始做文本匹配的东西。虽然这些模型网上有很多解读了，但是只有自己写出来了，才算是自己的呀。本篇博客讲解最为经典的TextAttBiRNN模型，并采用tensorflow2来进行实现。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NLP|文本分类模型-TextAttBiRNN">
 <meta property="og:url" content="http://codewithzichao.github.io/2020/04/26/NLP-%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E6%A8%A1%E5%9E%8B-TextAttBiRNN/index.html">
 <meta property="og:site_name" content="codewithzichao">
-<meta property="og:description" content="Just learning">
+<meta property="og:description" content="最近在看文本分类系列模型，应该会陆续更新几篇有关文本分类模型的博客，大概一周内更新完成，之后开始做文本匹配的东西。虽然这些模型网上有很多解读了，但是只有自己写出来了，才算是自己的呀。本篇博客讲解最为经典的TextAttBiRNN模型，并采用tensorflow2来进行实现。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-04-26T04:14:21.000Z">
-<meta property="article:modified_time" content="2020-04-26T04:14:21.277Z">
+<meta property="article:modified_time" content="2020-04-26T11:13:00.358Z">
 <meta property="article:author" content="zichao">
+<meta property="article:tag" content="NLP">
+<meta property="article:tag" content="tensorflow2">
+<meta property="article:tag" content="TextAttBiRNN">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/04/26/NLP-%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E6%A8%A1%E5%9E%8B-TextAttBiRNN/">
@@ -213,8 +216,26 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2020-04-26 12:14:21" itemprop="dateCreated datePublished" datetime="2020-04-26T12:14:21+08:00">2020-04-26</time>
+              <time title="Created: 2020-04-26 12:14:21 / Modified: 19:13:00" itemprop="dateCreated datePublished" datetime="2020-04-26T12:14:21+08:00">2020-04-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index">
+                    <span itemprop="name">NLP</span>
+                  </a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index">
+                    <span itemprop="name">文本分类模型</span>
+                  </a>
+                </span>
             </span>
 
           
@@ -235,7 +256,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <p>最近在看文本分类系列模型，应该会陆续更新几篇有关文本分类模型的博客，大概一周内更新完成，之后开始做文本匹配的东西。虽然这些模型网上有很多解读了，但是只有自己写出来了，才算是自己的呀。本篇博客讲解最为经典的TextAttBiRNN模型，并采用tensorflow2来进行实现。</p>
+<a id="more"></a>
+<h2 id="TextAttBiRNN模型简介"><a href="#TextAttBiRNN模型简介" class="headerlink" title="TextAttBiRNN模型简介"></a>TextAttBiRNN模型简介</h2><h2 id="TextAttBiRNN模型实现"><a href="#TextAttBiRNN模型实现" class="headerlink" title="TextAttBiRNN模型实现"></a>TextAttBiRNN模型实现</h2><h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>Hierarchical Attention Networks for Document Classiﬁcation</p>
+
     </div>
 
     
@@ -263,6 +287,11 @@
 
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/NLP/" rel="tag"># NLP</a>
+              <a href="/tags/tensorflow2/" rel="tag"># tensorflow2</a>
+              <a href="/tags/TextAttBiRNN/" rel="tag"># TextAttBiRNN</a>
+          </div>
 
         
 
@@ -311,6 +340,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#TextAttBiRNN模型简介"><span class="nav-number">1.</span> <span class="nav-text">TextAttBiRNN模型简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TextAttBiRNN模型实现"><span class="nav-number">2.</span> <span class="nav-text">TextAttBiRNN模型实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -339,7 +369,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">63</span>
+        <span class="site-state-item-count">64</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
