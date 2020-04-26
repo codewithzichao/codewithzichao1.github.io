@@ -53,7 +53,7 @@
 <meta property="og:description" content="这篇文章主要是记录使用tensorflow2的一些笔记吧，因为有时候是真的容易忘。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-04-25T03:54:31.000Z">
-<meta property="article:modified_time" content="2020-04-25T10:25:21.263Z">
+<meta property="article:modified_time" content="2020-04-26T03:33:15.980Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="tensorflow2">
 <meta name="twitter:card" content="summary">
@@ -214,10 +214,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2020-04-25 11:54:31 / Modified: 18:25:21" itemprop="dateCreated datePublished" datetime="2020-04-25T11:54:31+08:00">2020-04-25</time>
+              <time title="Created: 2020-04-25 11:54:31" itemprop="dateCreated datePublished" datetime="2020-04-25T11:54:31+08:00">2020-04-25</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-04-26 11:33:15" itemprop="dateModified" datetime="2020-04-26T11:33:15+08:00">2020-04-26</time>
+              </span>
 
           
             <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
@@ -263,6 +269,14 @@
 </ul>
 <blockquote>
 <p>其中，monitor表示要检测的指标，min_delta表示在被监测的数据中被认为是提升的最小变化，即绝对变化小于min_delta，将被视为没有提升；patience表示没有进步的训练轮数，在这之后训练就会被停止。</p>
+</blockquote>
+<p><strong>tf.keras.layers.Conv1D(filters=250,kernel_size=3,padding=’same’,strides=1)</strong></p>
+<blockquote>
+<p>一维卷积，输入的维度为（batch_size, steps, input_dim），输出维度为（batch_size, new_steps, filters）。</p>
+</blockquote>
+<p><strong>tf.keras.layers.MaxPooling1D(pool_size=2,strides=1,padding=’valid’)</strong></p>
+<blockquote>
+<p>输入维度为(batch_size, steps, features)，输出维度为(batch_size, downsampled_steps, features)。</p>
 </blockquote>
 <p><strong>打开tensorboard的方法</strong></p>
 
