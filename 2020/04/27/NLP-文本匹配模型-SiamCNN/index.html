@@ -45,15 +45,15 @@
   };
 </script>
 
-  <meta name="description" content="正式开始看文本匹配的东西啦！文本匹配对NLPer来说是很重要的，不管是最后是做对话、推荐、搜索，文本匹配都是必不可少的。当然啦，BERT系列的模型出来之后，其实传统的深度学习模型效果是远远比不上的。但是这些预训练模型虽然效果好，但是训练代价昂贵，当然啦，有人会说，现在已经有剪枝、量化、蒸馏这样的方法来减小预训练模型的大小，从而降低训练所需的代价(所以说模型压缩、加速这个方向还是很有前景的🤩咦，好">
+  <meta name="description" content="正式开始看文本匹配的东西啦！文本匹配对NLPer来说是很重要的，不管是最后是做对话、推荐、搜索，文本匹配都是必不可少的。当然啦，BERT系列的模型出来之后，其实传统的深度学习模型效果是远远比不上的。b不过这些预训练模型效果好是好，但是训练代价昂贵，当然啦，有人会说，现在已经有剪枝、量化、蒸馏这样的方法来减小预训练模型的大小，从而降低训练所需的代价(所以说模型压缩、加速这个方向还是很有前景的🤩咦，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NLP|文本匹配模型-SiamCNN">
 <meta property="og:url" content="http://codewithzichao.github.io/2020/04/27/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-SiamCNN/index.html">
 <meta property="og:site_name" content="codewithzichao">
-<meta property="og:description" content="正式开始看文本匹配的东西啦！文本匹配对NLPer来说是很重要的，不管是最后是做对话、推荐、搜索，文本匹配都是必不可少的。当然啦，BERT系列的模型出来之后，其实传统的深度学习模型效果是远远比不上的。但是这些预训练模型虽然效果好，但是训练代价昂贵，当然啦，有人会说，现在已经有剪枝、量化、蒸馏这样的方法来减小预训练模型的大小，从而降低训练所需的代价(所以说模型压缩、加速这个方向还是很有前景的🤩咦，好">
+<meta property="og:description" content="正式开始看文本匹配的东西啦！文本匹配对NLPer来说是很重要的，不管是最后是做对话、推荐、搜索，文本匹配都是必不可少的。当然啦，BERT系列的模型出来之后，其实传统的深度学习模型效果是远远比不上的。b不过这些预训练模型效果好是好，但是训练代价昂贵，当然啦，有人会说，现在已经有剪枝、量化、蒸馏这样的方法来减小预训练模型的大小，从而降低训练所需的代价(所以说模型压缩、加速这个方向还是很有前景的🤩咦，">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-04-27T11:42:05.000Z">
-<meta property="article:modified_time" content="2020-04-27T11:53:07.796Z">
+<meta property="article:modified_time" content="2020-04-27T11:54:32.922Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="tensorflow2">
@@ -218,7 +218,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-04-27 19:42:05 / Modified: 19:53:07" itemprop="dateCreated datePublished" datetime="2020-04-27T19:42:05+08:00">2020-04-27</time>
+              <time title="Created: 2020-04-27 19:42:05 / Modified: 19:54:32" itemprop="dateCreated datePublished" datetime="2020-04-27T19:42:05+08:00">2020-04-27</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -256,7 +256,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>正式开始看文本匹配的东西啦！文本匹配对NLPer来说是很重要的，不管是最后是做对话、推荐、搜索，文本匹配都是必不可少的。当然啦，BERT系列的模型出来之后，其实传统的深度学习模型效果是远远比不上的。但是这些预训练模型虽然效果好，但是训练代价昂贵，当然啦，有人会说，现在已经有剪枝、量化、蒸馏这样的方法来减小预训练模型的大小，从而降低训练所需的代价(所以说模型压缩、加速这个方向还是很有前景的🤩咦，好像跑偏了，anyway)，但是这仍然远远不够，所以熟悉传统的文本匹配模型是非常有必要的。本篇博客讲解经典的SiamCNN模型，并采用tensorflow2实现。</p>
+        <p>正式开始看文本匹配的东西啦！文本匹配对NLPer来说是很重要的，不管是最后是做对话、推荐、搜索，文本匹配都是必不可少的。当然啦，BERT系列的模型出来之后，其实传统的深度学习模型效果是远远比不上的。b不过这些预训练模型效果好是好，但是训练代价昂贵，当然啦，有人会说，现在已经有剪枝、量化、蒸馏这样的方法来减小预训练模型的大小，从而降低训练所需的代价(所以说模型压缩、加速这个方向还是很有前景的🤩咦，好像跑偏了，anyway)，但是这仍然远远不够，所以熟悉传统的文本匹配模型是非常有必要的。本篇博客讲解经典的SiamCNN模型，并采用tensorflow2实现。</p>
 <a id="more"></a>
 <h2 id="SiamCNN模型介绍"><a href="#SiamCNN模型介绍" class="headerlink" title="SiamCNN模型介绍"></a>SiamCNN模型介绍</h2><h2 id="SiamCNN模型实现"><a href="#SiamCNN模型实现" class="headerlink" title="SiamCNN模型实现"></a>SiamCNN模型实现</h2><h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2>
     </div>
