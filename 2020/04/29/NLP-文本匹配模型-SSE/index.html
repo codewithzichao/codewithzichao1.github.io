@@ -61,7 +61,7 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/04/29/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-SSE/Xnip2020-05-02_16-01-47.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/04/29/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-SSE/Xnip2020-05-02_16-01-53.jpg">
 <meta property="article:published_time" content="2020-04-29T14:55:05.000Z">
-<meta property="article:modified_time" content="2020-05-02T08:04:15.949Z">
+<meta property="article:modified_time" content="2020-05-02T08:10:10.928Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="tensorflow2">
@@ -233,7 +233,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-05-02 16:04:15" itemprop="dateModified" datetime="2020-05-02T16:04:15+08:00">2020-05-02</time>
+                <time title="Modified: 2020-05-02 16:10:10" itemprop="dateModified" datetime="2020-05-02T16:10:10+08:00">2020-05-02</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -286,7 +286,7 @@
 <h3 id="entailment-classifier"><a href="#entailment-classifier" class="headerlink" title="entailment classifier"></a>entailment classifier</h3><p>通过sentence encoder，我们得到两个句子的向量化表示$v_p$与$v_h$，首先要对其进行concat，得到matching vector $m$，公式如下：</p>
 <script type="math/tex; mode=display">
 m=[v_p,v_h,|v_p-v_h|,v_p\bigotimes v_h]</script><p>然后将concat之后$m$输入一个dense层，使用relu进行激活，然后输入到softmax，得到最终的结果。</p>
-<p>training details：数据集使用Multi-SNLI；优化器为Adam；batch size为32；初始学习率为0.0002，每两个epoch衰减一半；dense层的输出维度为1600，对dense层输出的结果使用dropout，rate为0.1；使用Glove词向量，并在训练过程中微调；<strong>实验证明，使用3层的biLSTM的效果最好，每一层的输出维度依次是：512，1024，2048。</strong>下面是实验结果。</p>
+<p><strong>training details：</strong>数据集使用Multi-SNLI；优化器为Adam；batch size为32；初始学习率为0.0002，每两个epoch衰减一半；dense层的输出维度为1600，对dense层输出的结果使用dropout，rate为0.1；使用Glove词向量，并在训练过程中微调；<strong>实验证明，使用3层的biLSTM的效果最好，每一层的输出维度依次是：512，1024，2048。</strong>下面是实验结果。</p>
 <p><img src="/2020/04/29/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-SSE/Xnip2020-05-02_16-00-48.jpg" style="zoom:50%;"></p>
 <p><img src="/2020/04/29/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-SSE/Xnip2020-05-02_16-01-39.jpg" style="zoom:50%;"></p>
 <p><img src="/2020/04/29/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-SSE/Xnip2020-05-02_16-01-47.jpg" style="zoom:50%;"></p>
