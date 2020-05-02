@@ -45,15 +45,15 @@
   };
 </script>
 
-  <meta name="description" content="最近在复现一些模型的时候，基本上都使用了word2vec或者是Glove等word embedding模型的pre-train的词向量，然后在此基础上，进行fine tune。这些word embedding模型实现起来也不是很难，但是我的主要目的又不是去实践这些模型🥺，实现起来也比较繁琐，还不如开源的效果好。所以，想要好的效果并且又不想花费太多时间在pre-train词向量上面的话，学习gen">
+  <meta name="description" content="我最近在复现一些模型的时候，发现这些模型基本上都使用了word2vec或者是Glove等word embedding模型的pre-train的词向量来初始化，然后在此基础上进行fine tune。这些word embedding模型实现起来也不是很难，但是我的主要目的又不是去实践这些模型🥺，关键是自己实现的还不如开源的效果好，毕竟别人的代码做了很多很多的优化啦。所以，想要好的效果并且又不想花费太">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NLP|gensim boy的修炼之路">
 <meta property="og:url" content="http://codewithzichao.github.io/2020/05/02/NLP-gensim-boy%E7%9A%84%E4%BF%AE%E7%82%BC%E4%B9%8B%E8%B7%AF/index.html">
 <meta property="og:site_name" content="codewithzichao">
-<meta property="og:description" content="最近在复现一些模型的时候，基本上都使用了word2vec或者是Glove等word embedding模型的pre-train的词向量，然后在此基础上，进行fine tune。这些word embedding模型实现起来也不是很难，但是我的主要目的又不是去实践这些模型🥺，实现起来也比较繁琐，还不如开源的效果好。所以，想要好的效果并且又不想花费太多时间在pre-train词向量上面的话，学习gen">
+<meta property="og:description" content="我最近在复现一些模型的时候，发现这些模型基本上都使用了word2vec或者是Glove等word embedding模型的pre-train的词向量来初始化，然后在此基础上进行fine tune。这些word embedding模型实现起来也不是很难，但是我的主要目的又不是去实践这些模型🥺，关键是自己实现的还不如开源的效果好，毕竟别人的代码做了很多很多的优化啦。所以，想要好的效果并且又不想花费太">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-05-02T11:59:21.000Z">
-<meta property="article:modified_time" content="2020-05-02T12:07:06.299Z">
+<meta property="article:modified_time" content="2020-05-02T12:08:44.650Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="gensim">
@@ -217,7 +217,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-05-02 19:59:21 / Modified: 20:07:06" itemprop="dateCreated datePublished" datetime="2020-05-02T19:59:21+08:00">2020-05-02</time>
+              <time title="Created: 2020-05-02 19:59:21 / Modified: 20:08:44" itemprop="dateCreated datePublished" datetime="2020-05-02T19:59:21+08:00">2020-05-02</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -249,7 +249,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>最近在复现一些模型的时候，基本上都使用了word2vec或者是Glove等word embedding模型的pre-train的词向量，然后在此基础上，进行fine tune。这些word embedding模型实现起来也不是很难，但是我的主要目的又不是去实践这些模型🥺，实现起来也比较繁琐，还不如开源的效果好。所以，想要好的效果并且又不想花费太多时间在pre-train词向量上面的话，学习gensim就显得非常重要了。所以，这篇文章主要是记录gensim的基本使用方法，帮助大家快速的构建vocab，得到pre-train的词向量。</p>
+        <p>我最近在复现一些模型的时候，发现这些模型基本上都使用了word2vec或者是Glove等word embedding模型的pre-train的词向量来初始化，然后在此基础上进行fine tune。这些word embedding模型实现起来也不是很难，但是我的主要目的又不是去实践这些模型🥺，关键是自己实现的还不如开源的效果好，毕竟别人的代码做了很多很多的优化啦。所以，想要好的效果并且又不想花费太多时间在pre-train词向量上面的话，学习gensim就显得非常重要了。所以，这篇文章主要是记录gensim的基本使用方法，帮助大家快速的构建vocab，得到pre-train的词向量。</p>
 <a id="more"></a>
 
     </div>
