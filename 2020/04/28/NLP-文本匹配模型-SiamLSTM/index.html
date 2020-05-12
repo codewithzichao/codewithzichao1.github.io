@@ -54,7 +54,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/04/28/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-SiamLSTM/Siam.jpg">
 <meta property="article:published_time" content="2020-04-28T06:47:50.000Z">
-<meta property="article:modified_time" content="2020-04-29T14:02:14.647Z">
+<meta property="article:modified_time" content="2020-05-12T12:26:34.312Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="tensorflow2">
@@ -226,7 +226,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-04-29 22:02:14" itemprop="dateModified" datetime="2020-04-29T22:02:14+08:00">2020-04-29</time>
+                <time title="Modified: 2020-05-12 20:26:34" itemprop="dateModified" datetime="2020-05-12T20:26:34+08:00">2020-05-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -273,8 +273,7 @@
 g(h_{T_a}^{(a)},h_{T_b}^{(b)})=exp(-||h_{T_a}^{(a)},h_{T_b}^{(b)}||_1)\in[0,1]</script><p>最后，SiamLSTM模型使用的是SemEval 2014数据集。训练集：SemEval 2014 train data，共5000条<br>测试集：SemEval 2014 test data， 共4927条。每条数据的形式是：<code>[“I like playing basketball.”,”My favourite sports is basketball.”, 3.4]</code>。由于SiamLSTM使用的相似度计算方法，导致结果是在$[0,1]$区间的，所以最后需要对结果进行缩放，从而在$[1,5]$之间。SiamLSTM模型使用的损失函数是MSE。</p>
 <p>论文提到的训练的一些details：<strong>使用AdaDelta，使用梯度裁剪，使用SGD，LSTM的输出维度是50。</strong></p>
 <p>以上就是SiamLSTM模型模型的全部内容啦🥰（说实话，最近看文本匹配的论文，真的感觉不难，比起之前看reformer、BERT等的文章，真的是太轻松啦，希望之后不要打脸🥰）</p>
-<h2 id="SiamLSTM模型实现"><a href="#SiamLSTM模型实现" class="headerlink" title="SiamLSTM模型实现"></a>SiamLSTM模型实现</h2><p>由于目前tensorflow的部署还是无人能敌，所以模型采用tensorflow2实现，也算锻炼了自己的工程能力。<strong>具体的代码可以到我的github<a href="https://github.com/codewithzichao/Text_Classification_Programs" target="_blank" rel="noopener">链接</a>，可以下载到我所有的代码。</strong>在这里，我只放上SiamLSTM的核心代码。</p>
-<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>Siamese Recurrent Architectures for Learning Sentence Similarity</p>
+<h2 id="SiamLSTM模型实现"><a href="#SiamLSTM模型实现" class="headerlink" title="SiamLSTM模型实现"></a>SiamLSTM模型实现</h2><h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>Siamese Recurrent Architectures for Learning Sentence Similarity</p>
 
     </div>
 
