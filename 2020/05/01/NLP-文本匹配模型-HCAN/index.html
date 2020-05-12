@@ -62,7 +62,7 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-HCAN/%E7%BB%93%E6%9E%9C1.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-HCAN/jieguo2.jpg">
 <meta property="article:published_time" content="2020-05-01T10:29:26.000Z">
-<meta property="article:modified_time" content="2020-05-12T12:26:04.095Z">
+<meta property="article:modified_time" content="2020-05-12T12:49:31.484Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="tensorflow2">
@@ -234,7 +234,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-05-12 20:26:04" itemprop="dateModified" datetime="2020-05-12T20:26:04+08:00">2020-05-12</time>
+                <time title="Modified: 2020-05-12 20:49:31" itemprop="dateModified" datetime="2020-05-12T20:49:31+08:00">2020-05-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -276,7 +276,7 @@
 <a id="more"></a>
 <h2 id="HCAN模型介绍"><a href="#HCAN模型介绍" class="headerlink" title="HCAN模型介绍"></a>HCAN模型介绍</h2><p>HCAN模型来源于2019年的《Bridging the Gap Between Relevance Matching and Semantic Matching for Short Text Similarity Modeling》论文。整体来说不算太难。</p>
 <h3 id="HCAN模型提出的原因"><a href="#HCAN模型提出的原因" class="headerlink" title="HCAN模型提出的原因"></a>HCAN模型提出的原因</h3><p>在NLP中，存在着两大任务：relevance matching(RM)与semantic matching(SM)。所谓的RM常见于信息检索中，其目的在于根据query与documents的relevance，对documents进行排序，其核心是关键字匹配；而SM，其目的在于计算两个句子的相似度或者匹配度，其核心是句子语义上的匹配。从这个定义中，可以看出RM本质上也是语义匹配，所以RM与SM有一定的相似性。那么问题来了：<strong>能不能提出一种模型，在RM与SM上都能取得非常好的效果呢？</strong>这就是HCAN模型提出的原因。</p>
-<h3 id="HCAN模型架构"><a href="#HCAN模型架构" class="headerlink" title="HCAN模型架构"></a>HCAN模型架构</h3><p>整个架构比较简单：word embedding层、hybird encoder层、relevance matching与semantic matching层、最后的分类层。直接放图吧～</p>
+<h3 id="HCAN模型架构"><a href="#HCAN模型架构" class="headerlink" title="HCAN模型架构"></a>HCAN模型架构</h3><p>整个架构比较简单：word embedding层、hybrid encoder层、relevance matching与semantic matching层、最后的分类层。直接放图吧～</p>
 <p><img src="/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-HCAN/HCAN模型架构.jpg" style="zoom:50%;"></p>
 <h4 id="Embedding-layer"><a href="#Embedding-layer" class="headerlink" title="Embedding layer"></a>Embedding layer</h4><p>输入句子对，记作$(q,c)$，在QA任务中，其表示question与answer，在信息检索中，其表示query与document。其中，$q、c$均表示句子的token的集合，它们的embedding记作：$\{w_1^q,w_2^q,w_3^q,…,w_n^q\}$与$\{w_1^c,w_2^c,w_3^c,…,w_m^c\}$，embeddding的维度为$L$，$n、m$是句子的长度，所以，$q\in R^{n\times L}、c\in R^{m\times L}$。</p>
 <h4 id="Hybrid-Encoders"><a href="#Hybrid-Encoders" class="headerlink" title="Hybrid Encoders"></a>Hybrid Encoders</h4><p>在得到句子的embedding后，为了进一步得到更加丰富的表示，在HCAN中，使用了三种不同类型的encoders：<strong>deep、wide、contextual。</strong></p>
@@ -284,7 +284,7 @@
 <blockquote>
 <p>注意，q与c是共享这些参数的！</p>
 </blockquote>
-<p><strong>Wide encoder：</strong>wide encoder则是化了一种思路，并联多个卷积层，也就是“变宽”。给定$N$个卷积层，假设第一个卷积层的窗口大小为k，那么N个卷积层的窗口大小依次是：$[k,k+1,k+2,k+3,..,k+N-1]$.</p>
+<p><strong>Wide encoder：</strong>wide encoder则是换了一种思路，并联多个卷积层，也就是“变宽”。给定$N$个卷积层，假设第一个卷积层的窗口大小为k，那么N个卷积层的窗口大小依次是：$[k,k+1,k+2,k+3,..,k+N-1]$.</p>
 <p><strong>Contextual encoder</strong>：contextual encoder不使用卷积层，转而使用BILSTM来提取更为丰富的语义特征。给定$N$个BILSTM层，第$h$个BILSTM层的输出是：$U^h$。</p>
 <p><strong>三种encoder的比较</strong></p>
 <blockquote>
@@ -311,7 +311,7 @@ S=U_qU_c^T, \ \ \ \ \ \ \ \ \ \ S\in R^{n\times m}</script><p>然后，在此基
 <p>其中，REP表示将input转化为n✖️m的矩阵，$W_q,W_c\in R^{F}，W_b\in R^{F\times F}$。</p>
 <p>在两个方向上使用co-attention机制：query-to-context和context-to-query。</p>
 <p><img src="/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-HCAN/co-ten.jpg" style="zoom:50%;"></p>
-<p>然后对得到的向量进行concat，再使用BILSTM来进行宁编码，得到输出。公式如下：</p>
+<p>然后对得到的向量进行concat，再使用BILSTM来进行编码，得到输出。公式如下：</p>
 <p><img src="/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-HCAN/bilstm.jpg" style="zoom:50%;"></p>
 <p>注意，我们只使用BILSTM的最后一个输出。</p>
 <h4 id="Final-classification"><a href="#Final-classification" class="headerlink" title="Final classification"></a>Final classification</h4><p>对relevance matching与semantic matching得到的输出进行concat，然后使用两层的MLP，从而得到最终的输出。</p>
@@ -421,7 +421,7 @@ S=U_qU_c^T, \ \ \ \ \ \ \ \ \ \ S\in R^{n\times m}</script><p>然后，在此基
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-count">45</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
