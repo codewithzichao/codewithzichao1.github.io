@@ -52,11 +52,15 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="文本和匹配基本上都看的差不多了，该实现的也都实现了。不过由于文本与匹配的应用场景非常多，并且每个场景所采用的评价指标都不太一样，有点混乱，所以在此总结一下。">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/MRR.jpg">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=AP+%253D+%EF%BC%881%252F1%252B2%252F3%252B3%252F6%252B4%252F9%252B5%252F10%EF%BC%89%252F5%253D0.62">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/MAP.jpg">
 <meta property="article:published_time" content="2020-05-12T12:40:55.000Z">
-<meta property="article:modified_time" content="2020-05-12T14:51:38.926Z">
+<meta property="article:modified_time" content="2020-05-13T07:37:24.224Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/MRR.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/">
 
@@ -214,10 +218,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2020-05-12 20:40:55 / Modified: 22:51:38" itemprop="dateCreated datePublished" datetime="2020-05-12T20:40:55+08:00">2020-05-12</time>
+              <time title="Created: 2020-05-12 20:40:55" itemprop="dateCreated datePublished" datetime="2020-05-12T20:40:55+08:00">2020-05-12</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-05-13 15:37:24" itemprop="dateModified" datetime="2020-05-13T15:37:24+08:00">2020-05-13</time>
+              </span>
 
           
             <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
@@ -239,7 +249,7 @@
       
         <p>文本和匹配基本上都看的差不多了，该实现的也都实现了。不过由于文本与匹配的应用场景非常多，并且每个场景所采用的评价指标都不太一样，有点混乱，所以在此总结一下。</p>
 <a id="more"></a>
-<h2 id="各类指标"><a href="#各类指标" class="headerlink" title="各类指标"></a>各类指标</h2><p>首先记录一下符号：TP(true positive)、FP(false positive)、FN(false nergative)、TN(true negative)。表哥如下：</p>
+<h2 id="各类指标"><a href="#各类指标" class="headerlink" title="各类指标"></a>各类指标</h2><p>首先记录一下符号：TP(true positive)、FP(false positive)、FN(false nergative)、TN(true negative)。表格如下：</p>
 <div class="table-container">
 <table>
 <thead>
@@ -266,14 +276,41 @@
 <h3 id="accuracy与error-rate"><a href="#accuracy与error-rate" class="headerlink" title="accuracy与error rate"></a>accuracy与error rate</h3><script type="math/tex; mode=display">
 accuracy=\frac {TP+TN}{N} \\
 error \ rate=\frac {FP+FN}{N}</script><h3 id="precision-recall-F1-score"><a href="#precision-recall-F1-score" class="headerlink" title="precision/recall/F1 score"></a>precision/recall/F1 score</h3><p>precision表示在预测为正的样本中，真的为正的样本的比例；</p>
-<p>recall表示在原来真的为正的样本中，预测为真的样本的比例。</p>
+<p>recall表示在原本真的为正的样本中，预测为正的样本的比例。</p>
 <p>F1-score是精确率与召回率的权衡。</p>
 <script type="math/tex; mode=display">
 precision=\frac {TP}{TP+FP} \\
 recall=\frac {TP}{TP+FN} \\
-F1-score=\frac {2}{\frac{1}{P}+\frac {1}{R}}</script><p>对于多类别，我们可以在每一个类别上计算P与R，然后对其去平均，从而得到整个训练集的P与R。</p>
+F1-score=\frac {2}{\frac{1}{P}+\frac {1}{R}}</script><blockquote>
+<p>注意：precison、recall、F1score仅使用于二分类问题。对于多分类问题，使用的是micro-P、micro-R、micro-F1以及macro-P、macro-R、macro-F1。</p>
+<p>micro： “Micro”是通过先计算总体的TP, FP和FN的数量，然后计算PRF。</p>
+<p>macro：“Macro”是分别计算每个类别的PRF，然后分别求平均得到PRF。</p>
+<p>链接：<a href="https://www.cnblogs.com/nana-zhang/p/11496496.html" target="_blank" rel="noopener">micro与macro</a></p>
+</blockquote>
 <h3 id="EM"><a href="#EM" class="headerlink" title="EM"></a>EM</h3><p>EM，全称exact match。EM度量是在问答系统中广泛运用的指标。它衡量的是与任何一个真实答案完全匹配的预测的比例。是SQuAD的主要衡量指标。</p>
-<h3 id="MRR"><a href="#MRR" class="headerlink" title="MRR"></a>MRR</h3><h3 id="MAP"><a href="#MAP" class="headerlink" title="MAP"></a>MAP</h3><h3 id="NDCG"><a href="#NDCG" class="headerlink" title="NDCG"></a>NDCG</h3><p></p>
+<h3 id="MRR"><a href="#MRR" class="headerlink" title="MRR"></a>MRR</h3><p>MRR，全称mean reciprocal rank，广泛用于评估NLP中需要排序的模型与算法中，常见于信息检索与问答任务中。具体公式如下：</p>
+<script type="math/tex; mode=display">
+MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}</script><p>其中，$Q$表示query的个数，$rank_i$表示第i个query在真实答案集中出现的位置。举个🌰（来源于知乎）：</p>
+<p><img src="/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/MRR.jpg" alt></p>
+<p>可计算这个系统的MRR值为：(1/3 + 1/2 + 1)/3 = 11/18=0.61。</p>
+<h3 id="MAP"><a href="#MAP" class="headerlink" title="MAP"></a>MAP</h3><p>mAP，顾名思义，即AP的平均值，那么就需要先计算AP，然后再对其进行平均。</p>
+<p>在信息检索中，AP指的是不同召回率上的正确率的平均值，而现在的有些检索系统为了能够快速返回结果，在计算AP时就不再考虑召回率。换句话说，如果数据库中和查询信息相关的5条信息，分别出现在查询结果中的第1、3、6、9、10位，那么这次查询的AP就是： <img src="https://www.zhihu.com/equation?tex=AP+%3D+%EF%BC%881%2F1%2B2%2F3%2B3%2F6%2B4%2F9%2B5%2F10%EF%BC%89%2F5%3D0.62" alt="[公式]"></p>
+<p>得到多条查询的AP值，对其进行平均，就得到了mAP。<a href="https://zhuanlan.zhihu.com/p/35983818" target="_blank" rel="noopener">来源</a></p>
+<p><img src="/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/MAP.jpg" alt></p>
+<h3 id="NDCG"><a href="#NDCG" class="headerlink" title="NDCG"></a>NDCG</h3><p><a href="https://zhuanlan.zhihu.com/p/38850753" target="_blank" rel="noopener">链接</a></p>
+<h2 id="指标在文本匹配中的应用"><a href="#指标在文本匹配中的应用" class="headerlink" title="指标在文本匹配中的应用"></a>指标在文本匹配中的应用</h2><p><strong>相似度计算与复述识别</strong></p>
+<p>这个任务是给出两句话，判断两者是不是表达了同样的含义，或者两句话的相似度有多高，一般都是当成分类问题来对待。常用的公开数据集有：STS、QQP、MSRP，当然啦，还有PPDB，但是数量太大，我没有跑过这个数据集，前面三个数据集就已经很好啦。由于是分类问题(pointwise)，所以评价指标一般使用Accuracy或者F1 score。</p>
+<p><strong>问答匹配(answer selection)</strong></p>
+<p>这个任务指的是：给定问题与问题的候选答案池，从中选择出最好的答案，如果说选择的答案在真实答案集中，说明问题被很好的回答了，否则的话，问题就没有被很好的回答。一般来说，问答匹配会采用pairwise的学习方式，即同question的一对正负样本作为一个训练样本，当然也会使用listwise。常用的数据集有：TrecQA、insuranceQA、WikiQA，还有QNLI，我一般会使用前三个，QNLI是很大的数据集，还没尝试过(关键是么得算力😫)。评价指标使用mAP与MRR等指标。</p>
+<p><strong>对话匹配(response selection)</strong></p>
+<p>对话匹配任务还没有试过，相比问答匹配来说，对话会更加难一些，因为它的回复空间非常大。常见的数据集：UDC、Douban conversation Corpus。评价指标使用Recall_n@k，也就是n个候选回复中，合理回复出现在前k个位置就算成功。当然也会使用mAP与MRR。</p>
+<p><strong>自然语言推理/文本蕴含识别</strong></p>
+<p>NLI/RTE任务指的是：给定句子A(premise)的前提下，如果句子B(hypothesis)为真，那么就是A蕴含了B；如果B为假，那么A与B互相矛盾；否则A与B相互独立。一般来说，NLI/RTE被视为三分类问题(pointwise)。常见的数据集“SNLI、XNLI、MNLI。评价指标使用micro-PRF与macro-PRF。</p>
+<p><strong>信息检索(Information Retrieval)</strong></p>
+<p>信息检索，一般都是先进行相关项的找回，然后再对其进行rank。评价指标会使用mAP与MRR。</p>
+<p><strong>机器阅读理解(Machine Reading Comprehension)</strong></p>
+<p>MRC任务就是在文本段中找寻答案的过程。常用数据集有：SQuAD、MS MARCO、CoQA等等。评价指标主要是EM。MRC任务比较难，而且需要大量的算力，所以不建议算力不充足的童鞋自己搞，容易走很多弯路。</p>
+<p>大致就是这样啦，梳理完这些评价指标后，舒服啦🤩</p>
 
     </div>
 
@@ -356,7 +393,7 @@ F1-score=\frac {2}{\frac{1}{P}+\frac {1}{R}}</script><p>对于多类别，我们
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#各类指标"><span class="nav-number">1.</span> <span class="nav-text">各类指标</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#accuracy与error-rate"><span class="nav-number">1.1.</span> <span class="nav-text">accuracy与error rate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#precision-recall-F1-score"><span class="nav-number">1.2.</span> <span class="nav-text">precision&#x2F;recall&#x2F;F1 score</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EM"><span class="nav-number">1.3.</span> <span class="nav-text">EM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MRR"><span class="nav-number">1.4.</span> <span class="nav-text">MRR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MAP"><span class="nav-number">1.5.</span> <span class="nav-text">MAP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NDCG"><span class="nav-number">1.6.</span> <span class="nav-text">NDCG</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#各类指标"><span class="nav-number">1.</span> <span class="nav-text">各类指标</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#accuracy与error-rate"><span class="nav-number">1.1.</span> <span class="nav-text">accuracy与error rate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#precision-recall-F1-score"><span class="nav-number">1.2.</span> <span class="nav-text">precision&#x2F;recall&#x2F;F1 score</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EM"><span class="nav-number">1.3.</span> <span class="nav-text">EM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MRR"><span class="nav-number">1.4.</span> <span class="nav-text">MRR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MAP"><span class="nav-number">1.5.</span> <span class="nav-text">MAP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NDCG"><span class="nav-number">1.6.</span> <span class="nav-text">NDCG</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指标在文本匹配中的应用"><span class="nav-number">2.</span> <span class="nav-text">指标在文本匹配中的应用</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
