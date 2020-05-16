@@ -63,7 +63,7 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/attentive-matching2.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/attentive-matching3.jpg">
 <meta property="article:published_time" content="2020-05-15T02:26:23.000Z">
-<meta property="article:modified_time" content="2020-05-16T01:53:44.070Z">
+<meta property="article:modified_time" content="2020-05-16T06:07:47.556Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="tensorflow2">
@@ -240,7 +240,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-05-16 09:53:44" itemprop="dateModified" datetime="2020-05-16T09:53:44+08:00">2020-05-16</time>
+                <time title="Modified: 2020-05-16 14:07:47" itemprop="dateModified" datetime="2020-05-16T14:07:47+08:00">2020-05-16</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -297,7 +297,7 @@
 <h4 id="matching-layer"><a href="#matching-layer" class="headerlink" title="matching layer"></a>matching layer</h4><p>这一部分是BIMPM模型真正创新的地方。它采用了双向的matching方法，即：比较P的每一个timestep的向量与Q的所有timestep向量，比较Q的每一个timestep的向量与P的所有timestep向量。在论文中，作者设计了一种multi-perspective的方法。整个multi-perspective方法包含两步：第一步：给出cosine matching function的定义；第二步，在给出的函数的基础上，使用四种匹配策略（full-matching、Maxpooling-matching、attentive-matching、max-attentive-matching），从而得到最终的输出。</p>
 <p><strong>step1：</strong>首先要明白给出的cosine matching function的定义，如下：</p>
 <p><img src="/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/cosine.jpg" style="zoom:50%;"></p>
-<p>其中，$v_1,v_2$是两个向量，假设其维度是$d$维；$W$是参数，其维度是$R^{l\times d}$，$l$是perspective的数量；得到的输出$m=\{m_1,m_2,m_3,…,m_l\},m\in R^l$。具体来说，$m_k=cosine(W_k<em>v_1,W_k</em>v_2)$。</p>
+<p>其中，$v_1,v_2$是两个向量，假设其维度是$d$维；$W$是参数，其维度是$R^{l\times d}$，$l$是perspective的数量；得到的输出$m=\{m_1,m_2,m_3,…,m_l\},m\in R^l$。具体来说，$ m_k=cosine(W_k<em>v_1,W_k</em>v_2) $。</p>
 <p><strong>step2：</strong>在第一步的基础上，给出了四种匹配策略。下面演示的是P对Q的matching，即P的每一个timestep对Q进行matching。</p>
 <p><img src="/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/matching strategiesjpg.jpg" style="zoom:50%;"></p>
 <ul>
