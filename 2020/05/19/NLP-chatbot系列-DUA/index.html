@@ -52,13 +52,15 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="正式入对话的坑啦🤣对话是目前NLP技术重要的落地场景之一，但是相比于其他的方向，对话目前的应用还不算成熟，也远远没有产生它应有的巨大商业价值，但是随着物联网与5G等的发展，对话的应用前景是非常光明的。此外，既然对话的坑还有很多，这也意味着总需要人去填满这些坑，对NLPer来说，是挑战也是机会。其他的不多说，本篇着重讲讲检索式对话的经典模型DUA。">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DUA/DUA%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84.jpg">
 <meta property="article:published_time" content="2020-05-19T15:04:28.000Z">
-<meta property="article:modified_time" content="2020-05-21T23:42:31.588Z">
+<meta property="article:modified_time" content="2020-05-23T13:05:57.885Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="tensorflow2">
 <meta property="article:tag" content="DUA">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://codewithzichao.github.io/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DUA/DUA%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DUA/">
 
@@ -229,7 +231,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-05-22 07:42:31" itemprop="dateModified" datetime="2020-05-22T07:42:31+08:00">2020-05-22</time>
+                <time title="Modified: 2020-05-23 21:05:57" itemprop="dateModified" datetime="2020-05-23T21:05:57+08:00">2020-05-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -269,6 +271,27 @@
       
         <p>正式入对话的坑啦🤣对话是目前NLP技术重要的落地场景之一，但是相比于其他的方向，对话目前的应用还不算成熟，也远远没有产生它应有的巨大商业价值，但是随着物联网与5G等的发展，对话的应用前景是非常光明的。此外，既然对话的坑还有很多，这也意味着总需要人去填满这些坑，对NLPer来说，是挑战也是机会。其他的不多说，本篇着重讲讲检索式对话的经典模型DUA。</p>
 <a id="more"></a>
+<h2 id="DUA模型介绍"><a href="#DUA模型介绍" class="headerlink" title="DUA模型介绍"></a>DUA模型介绍</h2><p>DUA模型是2018年SJTU所发表的一篇论文，在检索式对话当中也是非常有影响力的一片论文。不管是Multi-view还是SMN模型，其实并没有对utterances之间的关系进行很好的建模(即使是在SMN中，也只是对utterances使用简单的GRU就完事了)，而且每一个utterance对于得到合理response的作用是不一样的，所以不应该享有同样的权重(attention)，所以，DUA模型针对于这一点做出了改进，对utterance也进行了深度的encoding。下面将介绍DUA模型的详细细节，<strong>注意，DUA模型相对来说，个人认为有些细节还是挺难理解的(尤其是turns-aware aggregation这块)，至少不是很直观，所以一定要仔细地下面的讲解(或者原始论文)～</strong></p>
+<h3 id="DUA模型架构"><a href="#DUA模型架构" class="headerlink" title="DUA模型架构"></a>DUA模型架构</h3><p>首先给出一些定义：训练集的一个sample表示为：$<C,R,Y>$，其中 $C=\{U_1,U_2,…,U_t\}$，$U_k$表示第k个utterance in context，$R$表示一个response，$Y\in \{0,1\}$表示label(合理回复/不合理回复)。目标是：衡量context于response的匹配度。先给出模型图吧～</C,R,Y></p>
+<p><img src="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DUA/DUA模型架构.jpg" alt></p>
+<p>模型架构和SMN挺像的，但是更复杂了，有些细节还是挺难懂的，下面依次讲解～</p>
+<h4 id="utterance-representation"><a href="#utterance-representation" class="headerlink" title="utterance representation"></a>utterance representation</h4><ul>
+<li>这一层首先是将每一个utterance in context以及response进行encoding，得到相应的utterance embedding或response embedding。输入是：$C=\{U_1,U_2,…,U_t\}、R=[r_1,r_2,…,r_{n_r}]$，$U_k$表示第k个utterance，且：$U_k=[u_1,u_2,…,u_{n_u}]$，其中$u_i,r_i$分别表示utterance in context于response的第i个word的向量表示。</li>
+<li>然后将每个utterance embedding与response embedding输入到GRU中，得到编码后的utterance与response向量，表示为：$S=[S_1,S_2,…,S_t]$与$S_r$，分别表示utterance in context 与response，$S_i\in R^n$。</li>
+</ul>
+<h4 id="turns-aware-aggregation"><a href="#turns-aware-aggregation" class="headerlink" title="turns-aware aggregation"></a>turns-aware aggregation</h4><p><strong>这是DUA模型中最重要的地方，也是创新的地方。</strong>如果仅仅只有上面那一步对utterance的处理的话，会存在一个缺点：也就是所有的utterance都被一样的处理了，也就是说我们认为所有的utterance对得到合理的response都有同样的作用，但这是不对的。由于最后一个utterance对于得到合理response来说，是最重要的，所以在DUA中，我们将每一个utterance in context与其他的utterance(包括 response)进行融合，从而挖掘最后一个utterance与其他utterance(包括response)之间的关系。具体如下：</p>
+<p>输入是上一层的输出：$S=[S_1,S_2,…,S_t]$与$S_r$，输出表示为：$F=[F_1,F_2,…,F_t,F_r]$。其中，$F_j=S_j\Diamond S_t$，$j\in \{1,…,t,r\}$。$\Diamond$运算符表示aggregation运算，<strong>在论文中，采取了concatenation的方式。</strong></p>
+<h4 id="matching-attention-flow"><a href="#matching-attention-flow" class="headerlink" title="matching attention flow"></a>matching attention flow</h4><p><strong>这是DUA模型中最重要的地方，也是创新的地方。</strong>通过turns-aware aggregation，所有的utterance得到了再一次的encoding。但是此时的utterance过于冗长，且并不是所有的word都发挥了作用，所以我们要从中提取出有用且重要的信息。为了解决这个问题，<strong>DUA模型采用了R-net中的self-matching attention机制</strong>(所以MRC中的模型最好去看看，VQA最好也看看(co-attention)，这些都是不分家的，莫得办法，keep learning🤷‍♂️)。具体如下：</p>
+<p>输入是上一层的输出：$F=[F_1,F_2,…,F_t,F_r]$；对于任意的$\hat F=[f_1,f_2,…,f_n]\in F$，输出表示为：$P=[p_1,p_2,…,p_n]$。(这里我认为论文中写错了，并不是只有response这样处理，应该是所有的utterances(包括response)都这样处理才对。)注意：这里的$n$与utterance representation中的n是一样的。其中，$p_t$的计算公式如下：</p>
+<script type="math/tex; mode=display">
+p_t=GRU(p_{t-1},[f_t,c_t])</script><p>其中，$c_t$是self matching attention机制得到的结果，具体计算过程如下：</p>
+<script type="math/tex; mode=display">
+c_t=attn(\hat F,f_t) \\
+s_{j}^{t}=v^Ttanh(W_vf_j+W_{\hat v}f_t+b_r) \\
+a_{i}^{t}=\frac {exp(s_{i}^{t})}{\sum _{j=1}^{n}exp(s_{j}^{t})} \\
+c_t=\sum_{i=1}^{n}a_{i}^{t}f_i</script><p><strong>这一层的输出是：$P=[P_1,P_2,…,P_t,P_r]$。</strong></p>
+<h4 id="response-matching"><a href="#response-matching" class="headerlink" title="response matching"></a>response matching</h4><p>经过matching attention flow之后，我们就已经对utterance进行了很好的encoding。这一层的处理和SMN就很像了，我们利用word level与utterance level 的utterance的表示，来构建word-word similarity matrix($M_1$)与sequence-sequence similarity matrix($M_2$)。</p>
+<h4 id="attentive-turns-aggregation"><a href="#attentive-turns-aggregation" class="headerlink" title="attentive turns aggregation"></a>attentive turns aggregation</h4><h2 id="DUA模型实现"><a href="#DUA模型实现" class="headerlink" title="DUA模型实现"></a>DUA模型实现</h2><h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>Modeling Multi-turn Conversation with Deep Utterance Aggregation</p>
 
     </div>
 
@@ -353,6 +376,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#DUA模型介绍"><span class="nav-number">1.</span> <span class="nav-text">DUA模型介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DUA模型架构"><span class="nav-number">1.1.</span> <span class="nav-text">DUA模型架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#utterance-representation"><span class="nav-number">1.1.1.</span> <span class="nav-text">utterance representation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#turns-aware-aggregation"><span class="nav-number">1.1.2.</span> <span class="nav-text">turns-aware aggregation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#matching-attention-flow"><span class="nav-number">1.1.3.</span> <span class="nav-text">matching attention flow</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#response-matching"><span class="nav-number">1.1.4.</span> <span class="nav-text">response matching</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#attentive-turns-aggregation"><span class="nav-number">1.1.5.</span> <span class="nav-text">attentive turns aggregation</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DUA模型实现"><span class="nav-number">2.</span> <span class="nav-text">DUA模型实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
