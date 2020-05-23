@@ -54,7 +54,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DUA/DUA%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84.jpg">
 <meta property="article:published_time" content="2020-05-19T15:04:28.000Z">
-<meta property="article:modified_time" content="2020-05-23T13:15:21.779Z">
+<meta property="article:modified_time" content="2020-05-23T13:16:22.864Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="tensorflow2">
@@ -231,7 +231,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-05-23 21:15:21" itemprop="dateModified" datetime="2020-05-23T21:15:21+08:00">2020-05-23</time>
+                <time title="Modified: 2020-05-23 21:16:22" itemprop="dateModified" datetime="2020-05-23T21:16:22+08:00">2020-05-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -272,7 +272,7 @@
         <p>正式入对话的坑啦🤣对话是目前NLP技术重要的落地场景之一，但是相比于其他的方向，对话目前的应用还不算成熟，也远远没有产生它应有的巨大商业价值，但是随着物联网与5G等的发展，对话的应用前景是非常光明的。此外，既然对话的坑还有很多，这也意味着总需要人去填满这些坑，对NLPer来说，是挑战也是机会。其他的不多说，本篇着重讲讲检索式对话的经典模型DUA。</p>
 <a id="more"></a>
 <h2 id="DUA模型介绍"><a href="#DUA模型介绍" class="headerlink" title="DUA模型介绍"></a>DUA模型介绍</h2><p>DUA模型是2018年SJTU所发表的一篇论文，在检索式对话当中也是非常有影响力的一片论文。不管是Multi-view还是SMN模型，其实并没有对utterances之间的关系进行很好的建模(即使是在SMN中，也只是对utterances使用简单的GRU就完事了)，而且每一个utterance对于得到合理response的作用是不一样的，所以不应该享有同样的权重(attention)，所以，DUA模型针对于这一点做出了改进，对utterance也进行了深度的encoding。下面将介绍DUA模型的详细细节，<strong>注意，DUA模型相对来说，个人认为有些细节还是挺难理解的(尤其是turns-aware aggregation这块)，至少不是很直观，所以一定要仔细地下面的讲解(或者原始论文)～</strong></p>
-<h3 id="DUA模型架构"><a href="#DUA模型架构" class="headerlink" title="DUA模型架构"></a>DUA模型架构</h3><p>首先给出一些定义：训练集的一个sample表示为：<C,R,Y>，其中$ C=\{U_1,U_2,…,U_t\}$， 另外U_k表示第k个utterance，R表示一个response，Y表示label(合理回复/不合理回复)。目标是：衡量context于response的匹配度。先给出模型图吧～</C,R,Y></p>
+<h3 id="DUA模型架构"><a href="#DUA模型架构" class="headerlink" title="DUA模型架构"></a>DUA模型架构</h3><p>首先给出一些定义：训练集的一个sample表示为：[C,R,Y]，其中$ C=\{U_1,U_2,…,U_t\}$， 另外$U_k$表示第k个utterance，R表示一个response，Y表示label(合理回复/不合理回复)。目标是：衡量context于response的匹配度。先给出模型图吧～</p>
 <p><img src="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DUA/DUA模型架构.jpg" alt></p>
 <p>模型架构和SMN挺像的，但是更复杂了，有些细节还是挺难懂的，下面依次讲解～</p>
 <h4 id="utterance-representation"><a href="#utterance-representation" class="headerlink" title="utterance representation"></a>utterance representation</h4><ul>
