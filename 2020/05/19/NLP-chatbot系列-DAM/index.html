@@ -45,16 +45,19 @@
   };
 </script>
 
-  <meta name="description" content="Just learning">
+  <meta name="description" content="正式入对话的坑啦🤣对话是目前NLP技术重要的落地场景之一，但是相比于其他的方向，对话目前的应用还不算成熟，也远远没有产生它应有的巨大商业价值，但是随着物联网与5G等的发展，对话的应用前景是非常光明的。此外，既然对话的坑还有很多，这也意味着总需要人去填满这些坑，对NLPer来说，是挑战也是机会。其他的不多说，本篇着重讲讲检索式对话的经典模型DAM。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NLP|chatbot系列-DAM">
 <meta property="og:url" content="http://codewithzichao.github.io/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/index.html">
 <meta property="og:site_name" content="codewithzichao">
-<meta property="og:description" content="Just learning">
+<meta property="og:description" content="正式入对话的坑啦🤣对话是目前NLP技术重要的落地场景之一，但是相比于其他的方向，对话目前的应用还不算成熟，也远远没有产生它应有的巨大商业价值，但是随着物联网与5G等的发展，对话的应用前景是非常光明的。此外，既然对话的坑还有很多，这也意味着总需要人去填满这些坑，对NLPer来说，是挑战也是机会。其他的不多说，本篇着重讲讲检索式对话的经典模型DAM。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-05-19T15:06:18.000Z">
-<meta property="article:modified_time" content="2020-05-19T15:06:18.036Z">
+<meta property="article:modified_time" content="2020-05-23T04:20:51.073Z">
 <meta property="article:author" content="zichao">
+<meta property="article:tag" content="NLP">
+<meta property="article:tag" content="tensorflow2">
+<meta property="article:tag" content="DAM">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/">
@@ -221,6 +224,30 @@
 
               <time title="Created: 2020-05-19 23:06:18" itemprop="dateCreated datePublished" datetime="2020-05-19T23:06:18+08:00">2020-05-19</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-05-23 12:20:51" itemprop="dateModified" datetime="2020-05-23T12:20:51+08:00">2020-05-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index">
+                    <span itemprop="name">NLP</span>
+                  </a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/chatbot/" itemprop="url" rel="index">
+                    <span itemprop="name">chatbot</span>
+                  </a>
+                </span>
+            </span>
 
           
             <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
@@ -240,7 +267,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <p>正式入对话的坑啦🤣对话是目前NLP技术重要的落地场景之一，但是相比于其他的方向，对话目前的应用还不算成熟，也远远没有产生它应有的巨大商业价值，但是随着物联网与5G等的发展，对话的应用前景是非常光明的。此外，既然对话的坑还有很多，这也意味着总需要人去填满这些坑，对NLPer来说，是挑战也是机会。其他的不多说，本篇着重讲讲检索式对话的经典模型DAM。</p>
+<a id="more"></a>
     </div>
 
     
@@ -268,6 +296,11 @@
 
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/NLP/" rel="tag"># NLP</a>
+              <a href="/tags/tensorflow2/" rel="tag"># tensorflow2</a>
+              <a href="/tags/DAM/" rel="tag"># DAM</a>
+          </div>
 
         
 
@@ -344,7 +377,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">76</span>
+        <span class="site-state-item-count">77</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
