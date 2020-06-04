@@ -55,11 +55,9 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/DAM.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/self%20attention.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/cross%20attention.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/preceptron.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/loss%20function.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/%E7%BB%93%E6%9E%9C.jpg">
 <meta property="article:published_time" content="2020-05-19T15:06:18.000Z">
-<meta property="article:modified_time" content="2020-06-04T11:07:42.076Z">
+<meta property="article:modified_time" content="2020-06-04T11:08:19.910Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="DAM">
@@ -236,7 +234,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-06-04 19:07:42" itemprop="dateModified" datetime="2020-06-04T19:07:42+08:00">2020-06-04</time>
+                <time title="Modified: 2020-06-04 19:08:19" itemprop="dateModified" datetime="2020-06-04T19:08:19+08:00">2020-06-04</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -291,22 +289,10 @@ R^{l+1}=attentiveModule(R^{l},R^{l},R^{l})</script><p>然后，根据这些结�
 U_{i}^{l}=attentiveModule(U_{i}^{l},R^{l},R^{l}) \\
 R^{l}=attentiveModule(R^{l},U_{i}^{l},U_{i}^{l})</script><p><img src="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/cross attention.jpg" style="zoom:50%;"></p>
 <p>从公式可以看到，两种matrix的构建实际上就是dot product。<strong>最终，对于每一个utterance in context的每一层来说，每一个矩阵的维度是：(batch_size,max_length_utterance,max_length_response)。</strong></p>
-<h4 id="aggregation-layer"><a href="#aggregation-layer" class="headerlink" title="aggregation layer"></a>aggregation layer</h4><p>aggregation layer的输入维度是：(batch_size,num_utterance,max_length_utterance,max_length_response,2(L+1))，这是一个五维向量。我们记做：$Q=\{\cal Q_{i,k,t}\}_{n\times n_{u_i},r}$。它是self attention与cross attention矩阵concat之后的结果。然后对其使用两层的三维卷积（每一层都接上最大池化），第二个最大池化是全局最大池化，得到的输出维度是：(batch_size,filters)，最终将输出送入一层preceptron中，公式如下：</p>
-<p><img src="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/preceptron.jpg" style="zoom:50%;"></p>
-<h3 id="details"><a href="#details" class="headerlink" title="details:"></a>details:</h3><ul>
-<li>数据集：UDC，douban dialogue corpus</li>
-<li>评价指标：$R_n@k$，MRR，MAP</li>
-<li>loss function：</li>
-</ul>
-<p><img src="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/loss function.jpg" style="zoom:50%;"></p>
 <ul>
-<li>每一个context最多有9个utterance，每一个utterance(reponse)最多有50个word</li>
-<li>word embedding使用word2vec得到的词向量，维度是200</li>
-<li>FFN的维度为200，self attention层最大是7层，最后是5层最好</li>
-<li>第一个卷积层有32个[3,3,3]的filters，stride为[1,1,1]，最大池化大小为[3,3,3]，stride为[3,3,3]；第二个卷积层有16个[3,3,3]filters，stride为[1,1,1]，最大池化大小为[3,3,3]，stride为[3,3,3]</li>
-<li>batch szie 为256</li>
+<li><h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3></li>
 </ul>
-<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p><img src="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/结果.jpg" alt></p>
+<p><img src="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/结果.jpg" alt></p>
 <p>从结果来看，DAM模型效果还是不错的～</p>
 <h2 id="DAM模型实现"><a href="#DAM模型实现" class="headerlink" title="DAM模型实现"></a>DAM模型实现</h2><h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>Multi-Turn Response Selection for Chatbots with Deep Attention Matching Network</p>
 
@@ -390,7 +376,7 @@ R^{l}=attentiveModule(R^{l},U_{i}^{l},U_{i}^{l})</script><p><img src="/2020/05/1
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#DAM模型介绍"><span class="nav-number">1.</span> <span class="nav-text">DAM模型介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DAM模型架构"><span class="nav-number">1.1.</span> <span class="nav-text">DAM模型架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Input-layer"><span class="nav-number">1.1.1.</span> <span class="nav-text">Input layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#representation-layer-and-matching-layer"><span class="nav-number">1.1.2.</span> <span class="nav-text">representation layer and matching layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#aggregation-layer"><span class="nav-number">1.1.3.</span> <span class="nav-text">aggregation layer</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#details"><span class="nav-number">1.2.</span> <span class="nav-text">details:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果"><span class="nav-number">1.3.</span> <span class="nav-text">结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DAM模型实现"><span class="nav-number">2.</span> <span class="nav-text">DAM模型实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#DAM模型介绍"><span class="nav-number">1.</span> <span class="nav-text">DAM模型介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DAM模型架构"><span class="nav-number">1.1.</span> <span class="nav-text">DAM模型架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Input-layer"><span class="nav-number">1.1.1.</span> <span class="nav-text">Input layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#representation-layer-and-matching-layer"><span class="nav-number">1.1.2.</span> <span class="nav-text">representation layer and matching layer</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果"><span class="nav-number">1.2.</span> <span class="nav-text">结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DAM模型实现"><span class="nav-number">2.</span> <span class="nav-text">DAM模型实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
