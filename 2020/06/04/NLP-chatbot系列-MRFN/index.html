@@ -58,7 +58,7 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/06/04/NLP-chatbot%E7%B3%BB%E5%88%97-MRFN/Xnip2020-06-08_16-08-07.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/06/04/NLP-chatbot%E7%B3%BB%E5%88%97-MRFN/Xnip2020-06-08_16-30-41.jpg">
 <meta property="article:published_time" content="2020-06-04T14:33:35.000Z">
-<meta property="article:modified_time" content="2020-06-08T08:42:50.975Z">
+<meta property="article:modified_time" content="2020-06-08T08:46:00.710Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="tensorflow2">
@@ -235,7 +235,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-06-08 16:42:50" itemprop="dateModified" datetime="2020-06-08T16:42:50+08:00">2020-06-08</time>
+                <time title="Modified: 2020-06-08 16:46:00" itemprop="dateModified" datetime="2020-06-08T16:46:00+08:00">2020-06-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -310,11 +310,11 @@
 </blockquote>
 <h4 id="Fusion-Strategies"><a href="#Fusion-Strategies" class="headerlink" title="Fusion Strategies"></a>Fusion Strategies</h4><p>首先明确一下，经过上一步，我们现在得到的是：对于utterance $u_i$ in context，表示为：$\{U_i^k\}_{k=1}^K,K=6$；对于reponse r，表示为：$\{R^k\}_{k=1}^K,K=6$。也就是说，现在对于网络的输入是：context：$\{U_i^k\}_{k=1}^K,1&lt;=i&lt;=m$，response：$\{R^k\}_{k=1}^K$。OK，接着往下走～</p>
 <p>我们得到了这么多的表示后，要得到最终的matching score，就必须要对这些表示进行融合，那么怎么融合呢？论文里考虑了三种融合策略：<strong>FES(Fusing at an early stage)、FIS(Fusion at an intermediate stage)、FLS(Fusion at the last stage)</strong>。下面依次来看～</p>
-<h5 id="FES"><a href="#FES" class="headerlink" title="FES"></a>FES</h5><p>所谓的FES指的是，在utterance与response进行交互之前，就将各种表示进行融合。具体来说，对于utterance $u_i$来说，它的6种表示可以表述为：$\{U_i^k\}_{k=1}^K,K=6$，由于这6种表示都是三维的，且batch_size维度与seq_lengt维度相同，所以一个做法就是将这6种表示在最后一个维度上进行concat，最后得到的向量为：$U_i^<em>$，其维度是：(batch_size,seq_length_u_i,hidden_units)​；同样的，得到的reponse的向量为：$R^</em>$，其维度是：​(batch_size,seq_length_r,hidden_units)​。</p>
+<h5 id="FES"><a href="#FES" class="headerlink" title="FES"></a>FES</h5><p>所谓的FES指的是，在utterance与response进行交互之前，就将各种表示进行融合。具体来说，对于utterance $u_i$来说，它的6种表示可以表述为：$\{U_i^k\}_{k=1}^K,K=6$，由于这6种表示都是三维的，且batch_size维度与seq_lengt维度相同，所以一个做法就是将这6种表示在最后一个维度上进行concat，最后得到的向量为：U_i*，其维度是：(batch_size,seq_length_u_i,hidden_units)；同样的，得到的reponse的向量为：R*，其维度是：(batch_size,seq_length_r,hidden_units)。</p>
 <p>得到每一个utterance与response的表示之后，就需要对utterance in context与response进行交互。如下：</p>
 <p><img src="/2020/06/04/NLP-chatbot%E7%B3%BB%E5%88%97-MRFN/FES.jpg" style="zoom:50%;"></p>
 <p><img src="/2020/06/04/NLP-chatbot%E7%B3%BB%E5%88%97-MRFN/Xnip2020-06-08_16-04-22.jpg" style="zoom:50%;"></p>
-<p>然后将$U_i^<em>$与$\overline e_{i,j}$一起送入CompAgg模型中提出的SUBMULT+NN方法中，从而得到$T_i^</em>\in R^{n_i\times d}$。具体$t_{i,j}$的计算如下：</p>
+<p>然后将 $U_i^<em>$  与   $\overline e_{i,j}$ 一起送入CompAgg模型中提出的SUBMULT+NN方法中，从而得到. $T_i^</em>\in R^{n_i\times d}$。具体 $t_{i,j}$ 的计算如下：</p>
 <p><img src="/2020/06/04/NLP-chatbot%E7%B3%BB%E5%88%97-MRFN/Xnip2020-06-08_16-08-07.jpg" style="zoom:50%;"></p>
 <p>然后在此基础上，使用GRU+MLP，得到最终的matching score。</p>
 <h5 id="FIS"><a href="#FIS" class="headerlink" title="FIS"></a>FIS</h5><p>在FIS中，对每种表示形式都执行utterance与response交互。然后对结果进行fusion，在经过GRU+MLP，得到matching score。</p>
