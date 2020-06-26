@@ -45,16 +45,18 @@
   };
 </script>
 
-  <meta name="description" content="Just learning">
+  <meta name="description" content="最近一直在看各种对话模型的源码，发现在评价指标这块很多实现的都不太一样，所以想总结一下，形成自己的Wrapper。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NLP|常用匹配评价指标实现">
 <meta property="og:url" content="http://codewithzichao.github.io/2020/06/26/NLP-%E5%B8%B8%E7%94%A8%E5%8C%B9%E9%85%8D%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87%E5%AE%9E%E7%8E%B0/index.html">
 <meta property="og:site_name" content="codewithzichao">
-<meta property="og:description" content="Just learning">
+<meta property="og:description" content="最近一直在看各种对话模型的源码，发现在评价指标这块很多实现的都不太一样，所以想总结一下，形成自己的Wrapper。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-06-26T05:28:00.000Z">
-<meta property="article:modified_time" content="2020-06-26T05:28:00.157Z">
+<meta property="article:modified_time" content="2020-06-26T05:35:41.746Z">
 <meta property="article:author" content="zichao">
+<meta property="article:tag" content="NLP">
+<meta property="article:tag" content="匹配评价指标">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/06/26/NLP-%E5%B8%B8%E7%94%A8%E5%8C%B9%E9%85%8D%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87%E5%AE%9E%E7%8E%B0/">
@@ -218,8 +220,20 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2020-06-26 13:28:00" itemprop="dateCreated datePublished" datetime="2020-06-26T13:28:00+08:00">2020-06-26</time>
+              <time title="Created: 2020-06-26 13:28:00 / Modified: 13:35:41" itemprop="dateCreated datePublished" datetime="2020-06-26T13:28:00+08:00">2020-06-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index">
+                    <span itemprop="name">NLP</span>
+                  </a>
+                </span>
             </span>
 
           
@@ -240,7 +254,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <p>最近一直在看各种对话模型的源码，发现在评价指标这块很多实现的都不太一样，所以想总结一下，形成自己的Wrapper。</p>
+<a id="more"></a>
+<p>目前在检索式模型这块，常用的评价指标是：MAP，MRR，NDCG，$P_m@k$，$R_m@k$，$R_2@1$.具体含义就不解释了，比较简单，下面直接给出代码吧。</p>
+<h2 id="MAP"><a href="#MAP" class="headerlink" title="MAP"></a>MAP</h2><h2 id="MRR"><a href="#MRR" class="headerlink" title="MRR"></a>MRR</h2><h2 id="NDCG"><a href="#NDCG" class="headerlink" title="NDCG"></a>NDCG</h2>
     </div>
 
     
@@ -268,6 +285,10 @@
 
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/NLP/" rel="tag"># NLP</a>
+              <a href="/tags/%E5%8C%B9%E9%85%8D%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/" rel="tag"># 匹配评价指标</a>
+          </div>
 
         
 
@@ -316,6 +337,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#MAP"><span class="nav-number">1.</span> <span class="nav-text">MAP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MRR"><span class="nav-number">2.</span> <span class="nav-text">MRR</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NDCG"><span class="nav-number">3.</span> <span class="nav-text">NDCG</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -344,7 +366,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">80</span>
+        <span class="site-state-item-count">81</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
