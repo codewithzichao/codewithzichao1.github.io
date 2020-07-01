@@ -58,7 +58,7 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/02/29/NLP-word2vec-GloVe-fastText%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3/3.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/02/29/NLP-word2vec-GloVe-fastText%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3/4.jpg">
 <meta property="article:published_time" content="2020-02-29T06:08:29.000Z">
-<meta property="article:modified_time" content="2020-03-02T01:56:43.160Z">
+<meta property="article:modified_time" content="2020-07-01T12:12:18.089Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="word2vec">
@@ -238,7 +238,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-03-02 09:56:43" itemprop="dateModified" datetime="2020-03-02T09:56:43+08:00">2020-03-02</time>
+                <time title="Modified: 2020-07-01 20:12:18" itemprop="dateModified" datetime="2020-07-01T20:12:18+08:00">2020-07-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -275,7 +275,7 @@
 <blockquote>
 <p>注意：本篇博客尽可能讲解清楚三种词向量训练模型的原理，但是很多细节的部分，需要大家自行去了解，比如huffman树的原理、softmax的原理等等。如若不尽意，可参考我在参考文献中例举的原始论文～</p>
 </blockquote>
-<h2 id="word2vec模型介绍"><a href="#word2vec模型介绍" class="headerlink" title="word2vec模型介绍"></a>word2vec模型介绍</h2><p>word2vec模型其中有两种训练方式：skip-gram与CBOW，此外，还有两种加速训练的trick：hierarchical sofmtmax与negative sampling。所以，word2vec其实有4种方法。</p>
+<h2 id="word2vec模型介绍"><a href="#word2vec模型介绍" class="headerlink" title="word2vec模型介绍"></a>word2vec模型介绍</h2><p>word2vec模型其中有两种训练方式：skip-gram与CBOW，此外，还有两种加速训练的trick：hierarchical sofmtmax与negative sampling。所以，word2vec其实有4种方法。细节见<a href="https://zhuanlan.zhihu.com/p/42080556" target="_blank" rel="noopener">细节</a>、<a href="https://zhuanlan.zhihu.com/p/27234078" target="_blank" rel="noopener">skip-gram详细介绍</a></p>
 <h3 id="skip-gram模型"><a href="#skip-gram模型" class="headerlink" title="skip-gram模型"></a>skip-gram模型</h3><p>skip-gram模型是给定目标词，来预测其上下文。由于skip-gram模型是一个简单的神经网络模型。我们知道使用神经网络来训练的过程分为：</p>
 <ul>
 <li>确定训练数据$(X,Y)$</li>
