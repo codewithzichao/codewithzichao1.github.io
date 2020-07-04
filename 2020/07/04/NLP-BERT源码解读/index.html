@@ -53,7 +53,7 @@
 <meta property="og:description" content="最近一直在看预训练模型，发现大部分模型的源代码基本上都是在Google官方发布的BERT源码的基础上进行修改的(但是全都是TF1.x😷，这点我要吐槽了，按道理TF2.x出来之后，Google在大力推广TF2.x，然而连Google自己发布的ELECTRA、Adapter-BERT、ALBERT等等源代码都是import tensorflow.compat.v1 as tf😷，excuse me">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-07-04T08:31:43.000Z">
-<meta property="article:modified_time" content="2020-07-04T08:53:49.864Z">
+<meta property="article:modified_time" content="2020-07-04T12:40:28.158Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="BERT">
@@ -222,7 +222,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-07-04 16:31:43 / Modified: 16:53:49" itemprop="dateCreated datePublished" datetime="2020-07-04T16:31:43+08:00">2020-07-04</time>
+              <time title="Created: 2020-07-04 16:31:43 / Modified: 20:40:28" itemprop="dateCreated datePublished" datetime="2020-07-04T16:31:43+08:00">2020-07-04</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -274,7 +274,7 @@
 <li>tokenization_test.py：对 tokenization.py文件进行unittest测试。</li>
 </ul>
 <p>以上就是各文件的大致简介，下面将对核心代码文件进行走读～</p>
-<h2 id="核心代码文件走读"><a href="#核心代码文件走读" class="headerlink" title="核心代码文件走读"></a>核心代码文件走读</h2><h3 id="modeling-py"><a href="#modeling-py" class="headerlink" title="modeling.py"></a>modeling.py</h3>
+<h2 id="核心代码文件走读"><a href="#核心代码文件走读" class="headerlink" title="核心代码文件走读"></a>核心代码文件走读</h2><h3 id="modeling-py"><a href="#modeling-py" class="headerlink" title="modeling.py"></a>modeling.py</h3><h3 id="tokenization-py"><a href="#tokenization-py" class="headerlink" title="tokenization.py"></a>tokenization.py</h3><h3 id="create-pretraining-data-py"><a href="#create-pretraining-data-py" class="headerlink" title="create_pretraining_data.py"></a>create_pretraining_data.py</h3><h3 id="run-pretraining-py"><a href="#run-pretraining-py" class="headerlink" title="run_pretraining.py"></a>run_pretraining.py</h3><h3 id="run-classifier-py"><a href="#run-classifier-py" class="headerlink" title="run_classifier.py"></a>run_classifier.py</h3>
     </div>
 
     
@@ -354,7 +354,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#BERT整体代码结构"><span class="nav-number">1.</span> <span class="nav-text">BERT整体代码结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#核心代码文件走读"><span class="nav-number">2.</span> <span class="nav-text">核心代码文件走读</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#modeling-py"><span class="nav-number">2.1.</span> <span class="nav-text">modeling.py</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#BERT整体代码结构"><span class="nav-number">1.</span> <span class="nav-text">BERT整体代码结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#核心代码文件走读"><span class="nav-number">2.</span> <span class="nav-text">核心代码文件走读</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#modeling-py"><span class="nav-number">2.1.</span> <span class="nav-text">modeling.py</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tokenization-py"><span class="nav-number">2.2.</span> <span class="nav-text">tokenization.py</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#create-pretraining-data-py"><span class="nav-number">2.3.</span> <span class="nav-text">create_pretraining_data.py</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#run-pretraining-py"><span class="nav-number">2.4.</span> <span class="nav-text">run_pretraining.py</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#run-classifier-py"><span class="nav-number">2.5.</span> <span class="nav-text">run_classifier.py</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
