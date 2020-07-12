@@ -45,12 +45,12 @@
   };
 </script>
 
-  <meta name="description" content="最近应该会产出大量的关于预训练模型的解读的内容🤩，主要是目前预训练模型确实在几乎各个任务上的表现都超越了传统的模型。将预训练模型应用于各个领域，这也是一个大的趋势。这篇文章主要是通过AdapterBERT与K-Adapter两片paper，来谈谈预训练模型中的Adapter结构。">
+  <meta name="description" content="最近应该会产出大量的关于预训练模型的解读的内容🤩，主要是目前预训练模型确实在几乎各个任务上的表现都超越了传统的模型。将预训练模型应用于各个领域，这也是一个大的趋势。这篇文章主要是通过AdapterBERT与K-Adapter两篇paper，来谈谈预训练模型中的Adapter结构。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NLP|谈谈预训练模型中的Adapter结构">
 <meta property="og:url" content="http://codewithzichao.github.io/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/index.html">
 <meta property="og:site_name" content="codewithzichao">
-<meta property="og:description" content="最近应该会产出大量的关于预训练模型的解读的内容🤩，主要是目前预训练模型确实在几乎各个任务上的表现都超越了传统的模型。将预训练模型应用于各个领域，这也是一个大的趋势。这篇文章主要是通过AdapterBERT与K-Adapter两片paper，来谈谈预训练模型中的Adapter结构。">
+<meta property="og:description" content="最近应该会产出大量的关于预训练模型的解读的内容🤩，主要是目前预训练模型确实在几乎各个任务上的表现都超越了传统的模型。将预训练模型应用于各个领域，这也是一个大的趋势。这篇文章主要是通过AdapterBERT与K-Adapter两篇paper，来谈谈预训练模型中的Adapter结构。">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/Adapter-bert.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/%E7%BB%93%E6%9E%9C.jpg">
@@ -63,7 +63,7 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/K-adapter-result2.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/K-adapter-result3.jpg">
 <meta property="article:published_time" content="2020-07-02T15:05:07.000Z">
-<meta property="article:modified_time" content="2020-07-12T11:31:29.109Z">
+<meta property="article:modified_time" content="2020-07-12T11:40:52.667Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="AdapterBERT">
@@ -240,7 +240,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-07-12 19:31:29" itemprop="dateModified" datetime="2020-07-12T19:31:29+08:00">2020-07-12</time>
+                <time title="Modified: 2020-07-12 19:40:52" itemprop="dateModified" datetime="2020-07-12T19:40:52+08:00">2020-07-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -272,7 +272,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>最近应该会产出大量的关于预训练模型的解读的内容🤩，主要是目前预训练模型确实在几乎各个任务上的表现都超越了传统的模型。将预训练模型应用于各个领域，这也是一个大的趋势。这篇文章主要是通过AdapterBERT与K-Adapter两片paper，来谈谈预训练模型中的Adapter结构。</p>
+        <p>最近应该会产出大量的关于预训练模型的解读的内容🤩，主要是目前预训练模型确实在几乎各个任务上的表现都超越了传统的模型。将预训练模型应用于各个领域，这也是一个大的趋势。这篇文章主要是通过AdapterBERT与K-Adapter两篇paper，来谈谈预训练模型中的Adapter结构。</p>
 <a id="more"></a>
 <h2 id="Adapter-BERT"><a href="#Adapter-BERT" class="headerlink" title="Adapter-BERT"></a>Adapter-BERT</h2><p>Adapter-Bert来源于Google的《Parameter-Efﬁcient Transfer Learning for NLP》论文，主要目的在不降低模型效果的情况下，减小finetune时候的参数。感觉对于无GPU党来说，是一个非常大的福音。</p>
 <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>首先讲讲为什么要有Adapter-Bert。在预训练模型中，可以分为两种：feature-based以及fine-tuning。feature-based指的是通过预训练提取出词向量，然后输入到下游任务当中，在训练过程中，词向量可以随之更新，也可以不更新，侧重的是offline的词向量的生成，典型代表是ELM；fine-tuning指的是首先预训练模型，然后接入下游任务，将预训练阶段的权重作为finetuning的初始化权重，之后将下游任务与预训练部分一起训练，侧重的是co-training，典型代表是BERT。一般来说，fine-tuning的效果要比feature-based要好一些，当然计算代价也要更高一些。但是，总体而言，finetuning的代价实在是太大了，因为我们每一次都要更新所有的参数，这对很多应用尤其是低资源以及multi-mask的应用场景非常不友好。所以，我们想要尽可能地减少fine-tuning的所需要更新的参数数目，同时还要保证尽可能地逼近fine-tuning时的结果，于是便有了Adapter-BERT。</p>
