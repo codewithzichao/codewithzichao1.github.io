@@ -52,16 +52,16 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="文本和匹配基本上都看的差不多了，该实现的也都实现了。不过由于文本与匹配的应用场景非常多，并且每个场景所采用的评价指标都不太一样，有点混乱，所以在此总结一下。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/Users/codewithzichao/codewithzichao.github.io/source/_posts/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/%E5%AE%8F%E5%B9%B3%E5%9D%87%E4%B8%8E%E5%BE%AE%E5%B9%B3%E5%9D%87%E5%AF%B9%E6%AF%94.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/%E5%AE%8F%E5%B9%B3%E5%9D%87%E4%B8%8E%E5%BE%AE%E5%B9%B3%E5%9D%87%E5%AF%B9%E6%AF%94.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/MRR.jpg">
 <meta property="og:image" content="https://www.zhihu.com/equation?tex=AP+%253D+%EF%BC%881%252F1%252B2%252F3%252B3%252F6%252B4%252F9%252B5%252F10%EF%BC%89%252F5%253D0.62">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/MAP.jpg">
 <meta property="article:published_time" content="2020-05-12T12:40:55.000Z">
-<meta property="article:modified_time" content="2020-07-14T03:28:18.396Z">
+<meta property="article:modified_time" content="2020-07-14T03:30:32.260Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/Users/codewithzichao/codewithzichao.github.io/source/_posts/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/%E5%AE%8F%E5%B9%B3%E5%9D%87%E4%B8%8E%E5%BE%AE%E5%B9%B3%E5%9D%87%E5%AF%B9%E6%AF%94.jpg">
+<meta name="twitter:image" content="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/%E5%AE%8F%E5%B9%B3%E5%9D%87%E4%B8%8E%E5%BE%AE%E5%B9%B3%E5%9D%87%E5%AF%B9%E6%AF%94.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/">
 
@@ -232,7 +232,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-07-14 11:28:18" itemprop="dateModified" datetime="2020-07-14T11:28:18+08:00">2020-07-14</time>
+                <time title="Modified: 2020-07-14 11:30:32" itemprop="dateModified" datetime="2020-07-14T11:30:32+08:00">2020-07-14</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -303,7 +303,7 @@ F1-score=\frac {2}{\frac{1}{P}+\frac {1}{R}}</script><blockquote>
 <p>micro： “Micro”是通过先计算总体的TP, FP和FN的数量，然后计算PRF。</p>
 <p>macro：“Macro”是分别计算每个类别的PRF，然后分别求平均得到PRF。</p>
 <p>链接：<a href="https://www.cnblogs.com/nana-zhang/p/11496496.html" target="_blank" rel="noopener">micro与macro</a></p>
-<p><img src="/Users/codewithzichao/codewithzichao.github.io/source/_posts/NLP-分类与匹配的各类评价指标/宏平均与微平均对比.jpg" alt><br>如何每个class的样本数量相差不大，那么宏平均和微平均差异也不大<br>如果每个class的相差较大并且你想：<br>更注重样本量多的class：使用微平均<br>更注重样本量少的class：使用宏平均<br>如果微平均远低于宏平均，则应该去检查样本量多的class<br>如果宏平均远低于微平均，则应该去检查样本量少的class</p>
+<p><img src="/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/宏平均与微平均对比.jpg" alt><br>如何每个class的样本数量相差不大，那么宏平均和微平均差异也不大<br>如果每个class的相差较大并且你想：<br>更注重样本量多的class：使用微平均<br>更注重样本量少的class：使用宏平均<br>如果微平均远低于宏平均，则应该去检查样本量多的class<br>如果宏平均远低于微平均，则应该去检查样本量少的class</p>
 </blockquote>
 <h3 id="EM"><a href="#EM" class="headerlink" title="EM"></a>EM</h3><p>EM，全称exact match。EM度量是在问答系统中广泛运用的指标。它衡量的是与任何一个真实答案完全匹配的预测的比例。是SQuAD的主要衡量指标。</p>
 <h3 id="MRR"><a href="#MRR" class="headerlink" title="MRR"></a>MRR</h3><p>MRR，全称mean reciprocal rank，广泛用于评估NLP中需要排序的模型与算法中，常见于信息检索与问答任务中。具体公式如下：</p>
