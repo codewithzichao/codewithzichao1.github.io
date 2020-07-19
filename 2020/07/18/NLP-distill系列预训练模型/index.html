@@ -58,7 +58,7 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/07/18/NLP-distill%E7%B3%BB%E5%88%97%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/tinyBERT%20result.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/07/18/NLP-distill%E7%B3%BB%E5%88%97%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/tinyBERT%20result2.jpg">
 <meta property="article:published_time" content="2020-07-18T12:36:36.000Z">
-<meta property="article:modified_time" content="2020-07-18T23:32:18.121Z">
+<meta property="article:modified_time" content="2020-07-19T04:48:49.332Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="distillBERT">
@@ -236,7 +236,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-07-19 07:32:18" itemprop="dateModified" datetime="2020-07-19T07:32:18+08:00">2020-07-19</time>
+                <time title="Modified: 2020-07-19 12:48:49" itemprop="dateModified" datetime="2020-07-19T12:48:49+08:00">2020-07-19</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -318,7 +318,19 @@ L_{ce}=-\sum_{i}t_ilog(s_i)</script><p>其中，$t_i、s_i$分别表示teacher m
 <li><strong>embedding-layer distillation：</strong>在tinyBERT模型中，因为我们想要希望模型能够学到与teacher model相似甚至是相同的语义，所以我们采用MSE损失函数来对进行蒸馏。具体公式是：假设teacher model的embedding $E^S$的维度是$d$，tinyBERT的embedding $E^T$维度是$d’$，并且$d’&lt;d$，loss formation 如下：</li>
 </ul>
 <script type="math/tex; mode=display">
-{\cal L_{emd}}=MSE(E^SW_e,E^T)</script><p><strong>Transformer-layer distillation：</strong>对于transformer layer来说，蒸馏的有两部分：attention loss与hidden loss。attention loss主要是希望tinyBERT中的multi-head </p>
+{\cal L_{emd}}=MSE(E^SW_e,E^T)</script><ul>
+<li><strong>Transformer-layer distillation：</strong>对于transformer layer来说，蒸馏的有两部分：attention loss与hidden loss。attention loss主要是希望tinyBERT中的multi-head self attention得到的scores能够接近teacher model的scores，因为有研究表明attention能够学到很多语义知识，包括语法等等。公式如下：</li>
+</ul>
+<script type="math/tex; mode=display">
+{\cal L_{attn}}=\frac {1}{h}\sum_{i=1}^{h}MSE(A_{i}^{S},A_{i}^{T})</script><p>其中，h表示head的数目。</p>
+<p>hidden loss指的是希望通过一个transformer layer得到的输出结果尽可能的靠近teacher model的结果，具体是b图。公式是：</p>
+<script type="math/tex; mode=display">
+{\cal L_{hide}}=MSE(H^SW_h,H^T)</script><ul>
+<li><strong>predcition-layer distillation：</strong>这是采用了交叉熵。公式如下：</li>
+</ul>
+<script type="math/tex; mode=display">
+{\cal L_{pred}}=-softmax(z^T)log_softmax(z^S/t)</script><p>在tinyBERT中，我们是首先在预训练阶段，使用embedding-layer distillation与transformer-layer distillation，在finetune阶段使用prediction-layer distillation。另外，需要讲解的是：tinyBERT是如何对层数进行蒸馏的？</p>
+<p>在distllBERT中，我们是每两层选择一层，但是在tinyBERT中并不是这么的简单粗暴。假设teacher model有N层，我们的student model由M层，怎么进行映射呢？具体是：$0=g(0)，N+1=g(M+1)，n=g(m)$。也就说，embedding层对应于teacher model的embedding层，prediction layer对对应于teacher model的prediction layer，对于中间的 Transformer 层，TinyBERT 采用 k 层蒸馏的方法，即 g(m) = m × N / M。例如 TinyBERT 有 4 层 Transformer，BERT 有 12 层 Transformer，则 TinyBERT 第 1 层 Transformer 学习的是 BERT 的第 3 层；而TinyBERT 第 2 层学习 BERT 的第 6 层。</p>
 <h3 id="结果-1"><a href="#结果-1" class="headerlink" title="结果"></a>结果</h3><p><img src="/2020/07/18/NLP-distill%E7%B3%BB%E5%88%97%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/tinyBERT result.jpg" alt></p>
 <p>可以看到，在蒸馏成同样的层数的时候，tinyBERT的结果要比distillBERT要好很多，在某些数据集上甚至可以与BERT持平，可以还是非常非常优秀的。然后作者又做了很多消融分析，具体结果如下：</p>
 <p><img src="/2020/07/18/NLP-distill%E7%B3%BB%E5%88%97%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/tinyBERT result2.jpg" alt></p>
