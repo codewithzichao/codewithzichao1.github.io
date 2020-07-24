@@ -219,7 +219,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-07-24 14:14:47 / Modified: 16:23:44" itemprop="dateCreated datePublished" datetime="2020-07-24T14:14:47+08:00">2020-07-24</time>
+              <time title="Created: 2020-07-24 14:14:47 / Modified: 16:24:00" itemprop="dateCreated datePublished" datetime="2020-07-24T14:14:47+08:00">2020-07-24</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -251,46 +251,14 @@
 
       
           <p>这篇文章主要是来总结一下目前在跨语言预训练模型方面的工作，当然啦，今年ACL有很多改进的工作，之后会再写一篇。这篇主要讲解的模型是：Multingual-BERT、XLM、XLM-R、MASS、MultiFiT。</p>
-<h2 id="Multilingual-BERT-m-BERT"><a href="#Multilingual-BERT-m-BERT" class="headerlink" title="Multilingual-BERT(m-BERT)"></a>Multilingual-BERT(m-BERT)</h2><h3 id="提出背景"><a href="#提出背景" class="headerlink" title="提出背景"></a>提出背景</h3><p>m-BERT来源于《How multilingual is Multilingual BERT?》论文。主要是想探索：多语言BERT到底学到了什么？以及多语言BERT在零样本迁移学习上的表现如何？主要思路是将m-BERT在多语言上进行预训练，然后使用一个语言进行fine-tune，并在另一种语言上进行评估，fine-tune+eval在NER与POS两个任务进行了实验，最后并做了一些probing实验来探究m-BERT的跨语言迁移学习效果以及其表征能力。</p>
-<h3 id="实验思路"><a href="#实验思路" class="headerlink" title="实验思路"></a>实验思路</h3><p>m-BERT仍然是由12层的transformer layer组成，但是它的训练语料是104种语言的维基百科页面数据，并且所有语言共享一个词汇表。注意：多语言BERT在训练的时候，既没有使用任何输入数据的语言标注，也没有使用任何翻译机制来计算对应语言的表示。最后作者是在NER与POS两个任务上进行实验，这两个任务都是先在一种语言上进行微调，然后在另一种语言上进行评估，从而来探究m-BERT在跨语言迁移学习上的效果。具体结果如下：</p>
-<p><img src="/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/m-BERT result1.jpg" alt></p>
-<p>从结果上来看，fine-tune与eval阶段所使用的语言越相似，效果越好；结果最好的情况是fine-tune与eval使用同一种语言。</p>
-<p>除了上述实验外，作者还探究了lexical overlap对结果的影响。所谓的lexical overlap，指的是：由于在m-BERT当中，所有语言共享一个词汇表，当fine-tune阶段出现了评估阶段所使用的语言的单词后，就会产生一种跨语言的迁移。作者设计了一些实验来探究了跨语言迁移学习的效果是有多大程度依赖于这个lexical overlap；以及当没有这种lexical overlap的时候，跨语言迁移学习的效果。</p>
-<p>在NER任务中，为了测量lexical overlap的影响，定义了$E_{train}$与$E_{eval}$来分别表示训练集与测试集上的实体的集合，计算overlap的公式是：</p>
-<script type="math/tex; mode=display">
-overlap=|E_{train}\bigcap E_{eval}|/|E_{train}\bigcup E_{eval}|</script><p><img src="/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/overlap.jpg" style="zoom:67%;"></p>
-<p>从上述结果中我们可以看到，英文BERT的效果非常依赖于overlap，迁移学习的效果会随着overlap的下降而下降；而对于多语言BERT而言，overlap对于其效果的影响并不大，说明多语言BERT在不同的文本上具有良好的泛化能力。</p>
-<p>另外，作者还做了一些实验来探究多语言BERT在多语言文本混合（Code-switching）和音译（transliteration）的情况下表征能力。具体来说，作者进一步在UD语料库上测试了印地语（HI）和英语（EN）。多语言文本混合是指一个表达里面参杂多种语言，而音译则指将发音相似的外来词语直接通过读音翻译过来，比如酷 （cool）和迪斯科（disco）等。</p>
-<h2 id="XLM"><a href="#XLM" class="headerlink" title="XLM"></a>XLM</h2><h3 id="提出背景-1"><a href="#提出背景-1" class="headerlink" title="提出背景"></a>提出背景</h3><p>模型来源于《Cross-lingual Language Model Pretraining》论文。它的提出背景是：向BERT、XLNet等模型都是在单一语言上进行预训练和fine-tune，换一种语言就需要重新进行预训练+fine-tune，那能不能使用多种语言同时训练一个模型，之后通过一个模型就可以在多个语言上进行下游的任务呢？这就是XLM模型。具体做法是：提出了只使用单种语言的无监督学习方法与使用跨语言的平行语料的有监督学习方法，从而在跨语言分类、监督翻译与无监督翻译中取得了SOTA的效果。</p>
-<h3 id="实验思路-1"><a href="#实验思路-1" class="headerlink" title="实验思路"></a>实验思路</h3><p>作者主要提出了三种loss fucntion：CLM、MLM、TLM。</p>
-<ul>
-<li>CLM：无监督单语单向LM训练任务，使用Transformer在给定前序词语的情况下预测下一个词的概率，实际上是一个transformer语言模型。</li>
-<li>MLM：无监督单语双向LM训练任务，这个与BERT的MLM基本上一样的， 不同的地方在于：BERT中，输入的是句子对，并且我们是去随机MASK掉15%的token，使用的时候，80%使用 [MASK] token 替换，10%用随机 token 替换，最后10%不变；而在XLM中，使用的是由任意数量的句子组成的文本流代替成对的句子(最长为256个token)。为了均衡稀有tokens和高频tokens，借鉴来word2vec中对高频词采样的方法：文本流中的tokens是以多项式分布进行采样的，并且其权重与它们的逆文本频率的平方根成正比。另外，去掉了segment embedding，从而换用了language embedding。</li>
-<li>TLM：有监督翻译LM训练任务，这个任务主要是为跨语言任务所准备的。TLM是对MLM的一种扩展。具体来说，我们将并行的翻译句子拼接在一起，然后对两个句子进行mask操作。譬如我们要做翻译的任务，那么我们通过TLM，就可以引导source与target句子的表征进行对齐。另外，这里也是去掉了segment embedding，换用了language embedding。</li>
-</ul>
-<p><img src="/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/XLM.jpg" alt></p>
-<p>然后我们一般使用CLM或者MLM来进行单语言的预训练，然后根据下游任务来决定是否要加TLM。论文里主要是在跨语言分类(XNLI数据集)、有监督翻译与无监督翻译任务上进行实验。结果如下：</p>
-<p><strong>XNLI</strong></p>
-<p>作者是先用MLM在各个语言的单语语料上进行训练，然后再用英文训练集进行finetune，最后在多个语种上评估。结果如下：</p>
-<p><img src="/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/XLM result1.jpg" alt></p>
-<p><strong>无监督机翻</strong></p>
-<p>一般的套路是：DAE+back translation。DAE指的是：譬如我们要进行英译中这样一个任务，我们搭建一个encoder-decoder框架，将英文数据+噪声输入到encoder中，然后decoder出原始的英文数据，中文也可以这样做；back translation指的是：我们可以将英文通过encoder-decoder，得翻译的中文，然后将翻译后的中文+噪声再通过encoder-decoder，还原成原始的英文。在XLM中，使用CLM/MLM来初始化encoder与decoder部分，然后按照DAE+back translation的框架来训练即可，结果如下：</p>
-<p><img src="/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/UMT.jpg" style="zoom:50%;"></p>
-<p><strong>有监督机翻</strong></p>
-<p>这个就是普通的翻译，没什么可说的，结果如下：</p>
-<p><img src="/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/MT.jpg" style="zoom:50%;"></p>
-<p>论文另外还探究来模型在low-resource language上的结果以及无监督多语言情况下生成的embedding的情况。</p>
-<h2 id="XLM-R"><a href="#XLM-R" class="headerlink" title="XLM-R"></a>XLM-R</h2><p>XLM-R来源于《Unsupervised Cross-lingual Representation Learning at Scale》论文，是对XLM模型的拓展，主要是借鉴了RoBERT模型的套路(大力出奇迹？)。具体而言就是，XLM-R模型在100种语言上使用超过2.5T的数据进行训练。相对于XLM，XLM-R使用了过滤后的CommonCrawl数据集，最终XLM-R在XNLI、MLQA、multilingual-NER这些多语言任务上均取得了最好的实验效果。主要的改进有以下几点：</p>
-<ul>
-<li>在模型部分，整体与XLM基本一样，与XLM模型不同的地方在于：去掉了language embedding；</li>
-<li>XLM-R扩展到100种语言，与XLM-100不同的在于：在消融分析中使用了七种不同的语言：英语、法语、德语、俄语、中文、斯瓦希里语、乌尔多语，这样的话就可以将high-resource language与low-resource language都包含进来，可以比较正确的评价模型。</li>
-<li>使用更多的数据，这与RoBERTa类似，更多的数据能够提升最终的效果。具体来说，对于low-resource language，我们去增加它的数目(类似于上采样？)。</li>
-</ul>
-<p>最后就是一些实验结果，没什么太多可说的。</p>
-<h2 id="MASS"><a href="#MASS" class="headerlink" title="MASS"></a>MASS</h2><p>MASS来源于《MASS: Masked Sequence to Sequence Pre-training for Language Generation》论文。</p>
-<p>如果不是一次</p>
-<h2 id="MultiFiT"><a href="#MultiFiT" class="headerlink" title="MultiFiT"></a>MultiFiT</h2><p>MultiFiT来源于《MultiFiT: Efﬁcient Multi-lingual Language Model Fine-tuning》论文。</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
