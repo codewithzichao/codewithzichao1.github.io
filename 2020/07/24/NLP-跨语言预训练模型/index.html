@@ -45,12 +45,12 @@
   };
 </script>
 
-  <meta name="description" content="Multilingual-BERT(m-BERT)提出背景m-BERT来源于《How multilingual is Multilingual BERT?》论文。主要是想探索：多语言BERT到底学到了什么？以及多语言BERT在零样本迁移学习上的表现如何？主要思路是将m-BERT在多语言上进行预训练，然后使用一个语言进行fine-tune，并在另一种语言上进行评估，fine-tune+eval在NE">
+  <meta name="description" content="这篇文章主要是来总结一下目前在跨语言预训练模型方面的工作，当然啦，今年ACL有很多改进的工作，之后会再写一篇。这篇主要讲解的模型是：Multingual-BERT、XLM、XLM-R、MASS、MultiFiT。 Multilingual-BERT(m-BERT)提出背景m-BERT来源于《How multilingual is Multilingual BERT?》论文。主要是想探索：多语言BE">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NLP|跨语言预训练模型">
 <meta property="og:url" content="http://codewithzichao.github.io/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/index.html">
 <meta property="og:site_name" content="codewithzichao">
-<meta property="og:description" content="Multilingual-BERT(m-BERT)提出背景m-BERT来源于《How multilingual is Multilingual BERT?》论文。主要是想探索：多语言BERT到底学到了什么？以及多语言BERT在零样本迁移学习上的表现如何？主要思路是将m-BERT在多语言上进行预训练，然后使用一个语言进行fine-tune，并在另一种语言上进行评估，fine-tune+eval在NE">
+<meta property="og:description" content="这篇文章主要是来总结一下目前在跨语言预训练模型方面的工作，当然啦，今年ACL有很多改进的工作，之后会再写一篇。这篇主要讲解的模型是：Multingual-BERT、XLM、XLM-R、MASS、MultiFiT。 Multilingual-BERT(m-BERT)提出背景m-BERT来源于《How multilingual is Multilingual BERT?》论文。主要是想探索：多语言BE">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/m-BERT%20result1.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/overlap.jpg">
@@ -59,7 +59,7 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/UMT.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/MT.jpg">
 <meta property="article:published_time" content="2020-07-24T06:14:47.000Z">
-<meta property="article:modified_time" content="2020-07-24T08:20:13.398Z">
+<meta property="article:modified_time" content="2020-07-24T08:23:44.654Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="Multilingual-BERT">
@@ -233,7 +233,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-07-24 14:14:47 / Modified: 16:20:13" itemprop="dateCreated datePublished" datetime="2020-07-24T14:14:47+08:00">2020-07-24</time>
+              <time title="Created: 2020-07-24 14:14:47 / Modified: 16:23:44" itemprop="dateCreated datePublished" datetime="2020-07-24T14:14:47+08:00">2020-07-24</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -271,7 +271,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="Multilingual-BERT-m-BERT"><a href="#Multilingual-BERT-m-BERT" class="headerlink" title="Multilingual-BERT(m-BERT)"></a>Multilingual-BERT(m-BERT)</h2><h3 id="提出背景"><a href="#提出背景" class="headerlink" title="提出背景"></a>提出背景</h3><p>m-BERT来源于《How multilingual is Multilingual BERT?》论文。主要是想探索：多语言BERT到底学到了什么？以及多语言BERT在零样本迁移学习上的表现如何？主要思路是将m-BERT在多语言上进行预训练，然后使用一个语言进行fine-tune，并在另一种语言上进行评估，fine-tune+eval在NER与POS两个任务进行了实验，最后并做了一些probing实验来探究m-BERT的跨语言迁移学习效果以及其表征能力。</p>
+        <p>这篇文章主要是来总结一下目前在跨语言预训练模型方面的工作，当然啦，今年ACL有很多改进的工作，之后会再写一篇。这篇主要讲解的模型是：Multingual-BERT、XLM、XLM-R、MASS、MultiFiT。</p>
+<h2 id="Multilingual-BERT-m-BERT"><a href="#Multilingual-BERT-m-BERT" class="headerlink" title="Multilingual-BERT(m-BERT)"></a>Multilingual-BERT(m-BERT)</h2><h3 id="提出背景"><a href="#提出背景" class="headerlink" title="提出背景"></a>提出背景</h3><p>m-BERT来源于《How multilingual is Multilingual BERT?》论文。主要是想探索：多语言BERT到底学到了什么？以及多语言BERT在零样本迁移学习上的表现如何？主要思路是将m-BERT在多语言上进行预训练，然后使用一个语言进行fine-tune，并在另一种语言上进行评估，fine-tune+eval在NER与POS两个任务进行了实验，最后并做了一些probing实验来探究m-BERT的跨语言迁移学习效果以及其表征能力。</p>
 <h3 id="实验思路"><a href="#实验思路" class="headerlink" title="实验思路"></a>实验思路</h3><p>m-BERT仍然是由12层的transformer layer组成，但是它的训练语料是104种语言的维基百科页面数据，并且所有语言共享一个词汇表。注意：多语言BERT在训练的时候，既没有使用任何输入数据的语言标注，也没有使用任何翻译机制来计算对应语言的表示。最后作者是在NER与POS两个任务上进行实验，这两个任务都是先在一种语言上进行微调，然后在另一种语言上进行评估，从而来探究m-BERT在跨语言迁移学习上的效果。具体结果如下：</p>
 <p><img src="/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/m-BERT result1.jpg" alt></p>
 <p>从结果上来看，fine-tune与eval阶段所使用的语言越相似，效果越好；结果最好的情况是fine-tune与eval使用同一种语言。</p>
