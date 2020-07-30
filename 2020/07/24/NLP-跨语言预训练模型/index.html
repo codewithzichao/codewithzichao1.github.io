@@ -58,8 +58,13 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/XLM%20result1.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/UMT.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/MT.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/MASS.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/MASS-bert-GPT.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/Multifit.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/multifit-unsu.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/multifit-result.jpg">
 <meta property="article:published_time" content="2020-07-24T06:14:47.000Z">
-<meta property="article:modified_time" content="2020-07-24T08:24:00.696Z">
+<meta property="article:modified_time" content="2020-07-30T00:45:54.888Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="Multilingual-BERT">
@@ -231,10 +236,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2020-07-24 14:14:47 / Modified: 16:24:00" itemprop="dateCreated datePublished" datetime="2020-07-24T14:14:47+08:00">2020-07-24</time>
+              <time title="Created: 2020-07-24 14:14:47" itemprop="dateCreated datePublished" datetime="2020-07-24T14:14:47+08:00">2020-07-24</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-07-30 08:45:54" itemprop="dateModified" datetime="2020-07-30T08:45:54+08:00">2020-07-30</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -302,16 +313,38 @@ overlap=|E_{train}\bigcap E_{eval}|/|E_{train}\bigcup E_{eval}|</script><p><img 
 <p>这个就是普通的翻译，没什么可说的，结果如下：</p>
 <p><img src="/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/MT.jpg" style="zoom:50%;"></p>
 <p>论文另外还探究来模型在low-resource language上的结果以及无监督多语言情况下生成的embedding的情况。</p>
-<h2 id="XLM-R"><a href="#XLM-R" class="headerlink" title="XLM-R"></a>XLM-R</h2><p>XLM-R来源于《Unsupervised Cross-lingual Representation Learning at Scale》论文，是对XLM模型的拓展，主要是借鉴了RoBERT模型的套路(大力出奇迹？)。具体而言就是，XLM-R模型在100种语言上使用超过2.5T的数据进行训练。相对于XLM，XLM-R使用了过滤后的CommonCrawl数据集，最终XLM-R在XNLI、MLQA、multilingual-NER这些多语言任务上均取得了最好的实验效果。主要的改进有以下几点：</p>
+<h2 id="XLM-R"><a href="#XLM-R" class="headerlink" title="XLM-R"></a>XLM-R</h2><p>XLM-R来源于《Unsupervised Cross-lingual Representation Learning at Scale》论文，是对XLM模型的拓展，主要是借鉴了RoBERTa模型的套路(大力出奇迹？)。具体而言就是，XLM-R模型在100种语言上使用超过2.5T的数据进行训练。相对于XLM，XLM-R使用了过滤后的CommonCrawl数据集，最终XLM-R在XNLI、MLQA、multilingual-NER这些多语言任务上均取得了最好的实验效果。主要的改进有以下几点：</p>
 <ul>
 <li>在模型部分，整体与XLM基本一样，与XLM模型不同的地方在于：去掉了language embedding；</li>
 <li>XLM-R扩展到100种语言，与XLM-100不同的在于：在消融分析中使用了七种不同的语言：英语、法语、德语、俄语、中文、斯瓦希里语、乌尔多语，这样的话就可以将high-resource language与low-resource language都包含进来，可以比较正确的评价模型。</li>
 <li>使用更多的数据，这与RoBERTa类似，更多的数据能够提升最终的效果。具体来说，对于low-resource language，我们去增加它的数目(类似于上采样？)。</li>
 </ul>
 <p>最后就是一些实验结果，没什么太多可说的。</p>
-<h2 id="MASS"><a href="#MASS" class="headerlink" title="MASS"></a>MASS</h2><p>MASS来源于《MASS: Masked Sequence to Sequence Pre-training for Language Generation》论文。</p>
-<p>如果不是一次</p>
-<h2 id="MultiFiT"><a href="#MultiFiT" class="headerlink" title="MultiFiT"></a>MultiFiT</h2><p>MultiFiT来源于《MultiFiT: Efﬁcient Multi-lingual Language Model Fine-tuning》论文。</p>
+<h2 id="MASS"><a href="#MASS" class="headerlink" title="MASS"></a>MASS</h2><p>MASS来源于《MASS: Masked Sequence to Sequence Pre-training for Language Generation》论文。MASS模型提出的背景是：目前像BERT这样的预训练模型在各种NLU任务中表现的都已经很好了，但是在NLG任务上，却一直表现不佳，而且由于NLG任务标注数据较少，所以更加需要进行pre-train。在seq2seq架构中，一般的想法是：对encoder与decoder都进行pre-train，但是这样导致的问题就在于：这样训练得到的encoder与decoder的分布有可能会不一样，因为就是硬生生地将两个语言模型揉在一起。<strong>所以：要怎么对encoder与decoder都进行pre-train，同时还能保证它们的分布是一致的呢？</strong>这就有了MASS。</p>
+<p><img src="/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/MASS.jpg" alt></p>
+<p>上面是MASS的架构，它整体的训练过程如下：</p>
+<ul>
+<li><strong>encoder</strong>：输入是被随机mask掉之后的句子，但是与BERT不同的地方在于：MASS中是随机mask掉一段连续的token片段，而不是随机mask，这样做的好处在于：迫使模型从未被mask掉的词中提取更多的语义信息，从而用于后续decoder部分的预测。在实验中，mask的最佳比例在50%左右。</li>
+<li><strong>decoder</strong>：输入是与encoder同样的句子，但是mask掉的正好和encoder相反，和翻译一样，迫使decoder通过encoder来得到的语义信息，强化attention部分，另外，只预测encoder部分别mask掉的词，能够加快训练。</li>
+</ul>
+<p>MASS模型的loss function就是log-似然函数，这个没太多可讲的。</p>
+<p>另外，值得一提的是：作者对k(mask掉的token的长度)进行了探究，并将BERT与GPT归结于MASS模型的特例。具体来说，当k为1的时候，encoder部分就只mask掉一个token，decoder部分mask掉所有token，来预测encoder中被mask掉的token，从这个角度来看的话，encoder就像是BERT中的backbone，而decoder就像是classifier；当k等于句子长度的时候，encoder部分我们全部mask掉，decoder部分我们都不mask，这样的话，encoder部分没有输入，decoder部分就相当于GPT。架构图如下：</p>
+<p><img src="/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/MASS-bert-GPT.jpg" alt></p>
+<h2 id="MultiFiT"><a href="#MultiFiT" class="headerlink" title="MultiFiT"></a>MultiFiT</h2><p>MultiFiT来源于《MultiFiT: Efﬁcient Multi-lingual Language Model Fine-tuning》论文。它提出的背景是：目前大多数预训练模型都是在high source语言上进行的，譬如：英语、汉语等等，但是在那些low source语言上表现不好。所以这篇文章就提出了一个MultiFiT模型，能够在low source语言上取得较好的结果。</p>
+<blockquote>
+<p>这里说的high source与low source是以标注数据的多少来判断的，如果标注数据比较多，那么我们就是它是high source语言，如果标注的数据比较少，甚至没有，我们就说它是low source语言。</p>
+</blockquote>
+<p><img src="/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/Multifit.jpg" style="zoom:50%;"></p>
+<p>上面是MultifiT模型的架构图，总共是：1个subword embedidng layer+4个QRNN layer+1个aggregation layer+2个linear layer。这是有监督的情形，对于无监督的情形，也就是没有标注数据，论文中也提出了框架，如下：</p>
+<p><img src="/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/multifit-unsu.jpg" style="zoom:50%;"></p>
+<p>具体步骤如下：</p>
+<ul>
+<li>预训练：首先在目标语言语料中进行单语预料的预训练；</li>
+<li>fine-tune：使用目标语言的任务预料进行fine-tune，其实就是使用任务语料再一次进行了预训练；</li>
+<li>使用跨语言分类器(图中的是LASER)，来对目标任务语料进行预测，并使用预测标签来进行单语的训练，相当于知识蒸馏。</li>
+</ul>
+<p><img src="/2020/07/24/NLP-%E8%B7%A8%E8%AF%AD%E8%A8%80%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/multifit-result.jpg" alt></p>
+<p>最后是在MLDoc与CLS数据集上进行了实验，可以看到，不管是在有监督的情形下还是无监督的情形下，MultiFiT模型取的结果都要比之前的结果要好。</p>
 
     </div>
 
