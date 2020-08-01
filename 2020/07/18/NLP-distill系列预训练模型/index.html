@@ -60,7 +60,7 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/07/18/NLP-distill%E7%B3%BB%E5%88%97%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/fastBERT.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/07/18/NLP-distill%E7%B3%BB%E5%88%97%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/fastbert-result.jpg">
 <meta property="article:published_time" content="2020-07-18T12:36:36.000Z">
-<meta property="article:modified_time" content="2020-07-30T01:00:15.135Z">
+<meta property="article:modified_time" content="2020-07-30T01:21:20.628Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="distillBERT">
@@ -238,7 +238,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-07-30 09:00:15" itemprop="dateModified" datetime="2020-07-30T09:00:15+08:00">2020-07-30</time>
+                <time title="Modified: 2020-07-30 09:21:20" itemprop="dateModified" datetime="2020-07-30T09:21:20+08:00">2020-07-30</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -291,9 +291,7 @@
 <li>使用与RoBERTa类似的动态masking的方法，并且去掉了NSP loss。</li>
 </ul>
 <p>另外，关于distillBERT的预训练阶段的loss，共分为3部分，这里需要好好提一下：</p>
-<ol>
-<li>$L_{ce}$ loss</li>
-</ol>
+<p><strong>$L_{ce}$ loss</strong></p>
 <p>所谓的$L_{ce}$ loss指的是：teacher网络softmax层输出的概率分布和student网络softmax层输出的概率分布的交叉熵（注：MLM任务的输出）。公式如下：</p>
 <blockquote>
 <p>这里有点问题，在代码里使用的KL divergence，而不是CE。。。就按代码来吧。。。</p>
@@ -301,13 +299,9 @@
 <script type="math/tex; mode=display">
 softmax-temperature:p_i=\frac {exp(z_i/T)}{\sum_{j}exp(z_j/T)}</script><script type="math/tex; mode=display">
 L_{ce}=-\sum_{i}t_ilog(s_i)</script><p>其中，$t_i、s_i$分别表示teacher model与student model的soft label，他们的计算公式是$softmax-temperature$。</p>
-<ol>
-<li>$L_{mlm}$ loss</li>
-</ol>
+<p><strong>$L_{mlm}$ loss</strong></p>
 <p>$L_{mlm}$损失就是BERT当中所说的MLM loss，注意：这个是student model本身的mlm。</p>
-<ol>
-<li>$L_{cos}$ loss</li>
-</ol>
+<p><strong>$L_{cos}$ loss</strong></p>
 <p>计算teacher hidden state和student hidden state的余弦相似度。官方代码用的是：nn.CosineEmbeddingLoss。</p>
 <p><strong>我们最终的loss是三种loss的线性相加，来对student model进行pre-training。</strong></p>
 <h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p><img src="/2020/07/18/NLP-distill%E7%B3%BB%E5%88%97%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/distillbert result.jpg" alt></p>
