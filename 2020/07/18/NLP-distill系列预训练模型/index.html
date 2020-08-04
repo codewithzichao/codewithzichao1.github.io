@@ -60,7 +60,7 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/07/18/NLP-distill%E7%B3%BB%E5%88%97%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/fastBERT.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/07/18/NLP-distill%E7%B3%BB%E5%88%97%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/fastbert-result.jpg">
 <meta property="article:published_time" content="2020-07-18T12:36:36.000Z">
-<meta property="article:modified_time" content="2020-07-30T01:21:20.628Z">
+<meta property="article:modified_time" content="2020-08-02T11:29:48.860Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="distillBERT">
@@ -238,7 +238,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-07-30 09:21:20" itemprop="dateModified" datetime="2020-07-30T09:21:20+08:00">2020-07-30</time>
+                <time title="Modified: 2020-08-02 19:29:48" itemprop="dateModified" datetime="2020-08-02T19:29:48+08:00">2020-08-02</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -349,7 +349,9 @@ L_{ce}=-\sum_{i}t_ilog(s_i)</script><p>其中，$t_i、s_i$分别表示teacher m
 Uncertainty=\frac {\sum_{i=1}^{N}p_s(i)logp_s(i)}{log(1/N)}</script><p>在每一层，作者都是用不确定性来衡量样本是否被舍弃，样本的不确定性如果在每一层低于阈值，然后就被立即丢弃，否则的话，就保留进入下一层；另外作者做实验验证了：低不确定性的样本被正确分类的概率高，高不确定性的样本被正确分类的概率低，所以即便在第一层就被舍弃了，但是被错误分类的概率很小。<strong>这个机制叫做样本自适应机制。</strong>这样做的一个好处就是：如果我们想要大幅提高inference的速度，那么我们就可以将阈值设置的大一点，这样的话，大部分的样本的结果在早期就被输出了。</p>
 <h3 id="结果-2"><a href="#结果-2" class="headerlink" title="结果"></a>结果</h3><p><img src="/2020/07/18/NLP-distill%E7%B3%BB%E5%88%97%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/fastbert-result.jpg" alt></p>
 <p>从结果来看，fastBERT要比distilBERT要好，其实我觉得它应该和tinybert这样的模型比较，distilbert算是很早的模型，总觉得结果不太solid。另外fastBERT模型目前只适用于分类任务，对于其他的序列标注等任务都不太适用，不过我觉得已经够了，现实中很多任务都可以被当作分类任务来做，还是有很大的应用价值的。</p>
-
+<h2 id="MobileBERT模型"><a href="#MobileBERT模型" class="headerlink" title="MobileBERT模型"></a>MobileBERT模型</h2><p>mobile-BERT来源于《MobileBERT: a Compact Task-Agnostic BERT for Resource-Limited Devices》论文。我个人觉得整体模型并不优雅</p>
+<h3 id="MobileBERT模型架构"><a href="#MobileBERT模型架构" class="headerlink" title="MobileBERT模型架构"></a>MobileBERT模型架构</h3><p>pass</p>
+<h3 id="结果-3"><a href="#结果-3" class="headerlink" title="结果"></a>结果</h3>
     </div>
 
     
@@ -434,7 +436,7 @@ Uncertainty=\frac {\sum_{i=1}^{N}p_s(i)logp_s(i)}{log(1/N)}</script><p>在每一
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#distillBERT模型"><span class="nav-number">1.</span> <span class="nav-text">distillBERT模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#distillBERT模型架构"><span class="nav-number">1.1.</span> <span class="nav-text">distillBERT模型架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果"><span class="nav-number">1.2.</span> <span class="nav-text">结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tinyBERT模型"><span class="nav-number">2.</span> <span class="nav-text">tinyBERT模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#tinyBERT模型架构"><span class="nav-number">2.1.</span> <span class="nav-text">tinyBERT模型架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果-1"><span class="nav-number">2.2.</span> <span class="nav-text">结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fastBERT模型"><span class="nav-number">3.</span> <span class="nav-text">fastBERT模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#fastBERT模型结构"><span class="nav-number">3.1.</span> <span class="nav-text">fastBERT模型结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果-2"><span class="nav-number">3.2.</span> <span class="nav-text">结果</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#distillBERT模型"><span class="nav-number">1.</span> <span class="nav-text">distillBERT模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#distillBERT模型架构"><span class="nav-number">1.1.</span> <span class="nav-text">distillBERT模型架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果"><span class="nav-number">1.2.</span> <span class="nav-text">结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tinyBERT模型"><span class="nav-number">2.</span> <span class="nav-text">tinyBERT模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#tinyBERT模型架构"><span class="nav-number">2.1.</span> <span class="nav-text">tinyBERT模型架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果-1"><span class="nav-number">2.2.</span> <span class="nav-text">结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fastBERT模型"><span class="nav-number">3.</span> <span class="nav-text">fastBERT模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#fastBERT模型结构"><span class="nav-number">3.1.</span> <span class="nav-text">fastBERT模型结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果-2"><span class="nav-number">3.2.</span> <span class="nav-text">结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MobileBERT模型"><span class="nav-number">4.</span> <span class="nav-text">MobileBERT模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MobileBERT模型架构"><span class="nav-number">4.1.</span> <span class="nav-text">MobileBERT模型架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果-3"><span class="nav-number">4.2.</span> <span class="nav-text">结果</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -450,7 +452,7 @@ Uncertainty=\frac {\sum_{i=1}^{N}p_s(i)logp_s(i)}{log(1/N)}</script><p>在每一
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">60</span>
+          <span class="site-state-item-count">61</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -463,7 +465,7 @@ Uncertainty=\frac {\sum_{i=1}^{N}p_s(i)logp_s(i)}{log(1/N)}</script><p>在每一
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">94</span>
+        <span class="site-state-item-count">96</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
