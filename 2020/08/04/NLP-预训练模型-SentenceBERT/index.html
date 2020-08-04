@@ -58,7 +58,7 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/08/04/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B-SentenceBERT/result2.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/08/04/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B-SentenceBERT/result3.jpg">
 <meta property="article:published_time" content="2020-08-04T03:54:19.000Z">
-<meta property="article:modified_time" content="2020-08-04T08:03:42.280Z">
+<meta property="article:modified_time" content="2020-08-04T08:35:29.577Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="Sentence-BERT">
@@ -229,7 +229,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-08-04 11:54:19 / Modified: 16:03:42" itemprop="dateCreated datePublished" datetime="2020-08-04T11:54:19+08:00">2020-08-04</time>
+              <time title="Created: 2020-08-04 11:54:19 / Modified: 16:35:29" itemprop="dateCreated datePublished" datetime="2020-08-04T11:54:19+08:00">2020-08-04</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -283,7 +283,7 @@
 <li>当输入数据是[sentence1,sentence2,label]，label是连续的，(对应的任务有STS(语义相似度计算))，具体结构如下：</li>
 </ul>
 <p><img src="/2020/08/04/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B-SentenceBERT/lianxu.jpg" alt></p>
-<p>整体结构与第一种相同，不同的地方是：在得到各自的句向量之后，我们使用余弦相似度来进行度量，当然也可以使用其他的譬如皮尔森相关系数。loss function采用MSE。注意：论文里说没有任何与STS相关的数据进行训练，也就是说，在使用第一种架构进行fine-tune之后，我们将拼接与softmax给拿掉，换成cosine similarity就可以了。对于</p>
+<p>整体结构与第一种相同，不同的地方是：在得到各自的句向量之后，我们使用余弦相似度来进行度量，当然也可以使用其他的譬如皮尔森相关系数。loss function采用MSE。注意：论文里说没有任何与STS相关的数据进行训练，也就是说，在使用第一种架构进行fine-tune之后，我们将拼接与softmax给拿掉，换成cosine similarity就可以了。</p>
 <ul>
 <li>当输入数据是[query，positive_answer，negative_answer],（对应的任务有问答匹配)，具体结构与第一种结构相同，但是采用的loss function为triplet loss，公式如下：</li>
 </ul>
