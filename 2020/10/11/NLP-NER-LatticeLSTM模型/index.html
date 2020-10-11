@@ -54,7 +54,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/LatticeLSTM.jpg">
 <meta property="article:published_time" content="2020-10-11T15:09:39.000Z">
-<meta property="article:modified_time" content="2020-10-11T16:56:04.686Z">
+<meta property="article:modified_time" content="2020-10-11T16:59:08.688Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="命名实体识别">
@@ -231,7 +231,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-10-12 00:56:04" itemprop="dateModified" datetime="2020-10-12T00:56:04+08:00">2020-10-12</time>
+                <time title="Modified: 2020-10-12 00:59:08" itemprop="dateModified" datetime="2020-10-12T00:59:08+08:00">2020-10-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -271,14 +271,14 @@
       
         <p>近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解一下《Chinese NER Using Lattice LSTM》论文，即：LatticeLSTM模型。</p>
 <a id="more"></a>
-<h2 id="LatticeLSTM模型介绍"><a href="#LatticeLSTM模型介绍" class="headerlink" title="LatticeLSTM模型介绍"></a>LatticeLSTM模型介绍</h2><p>LatticeLSTM模型来源于2018年ACL上的《Chinese NER Using Lattice LSTM》论文。非常经典，而且它release的code非常的规范，很值得一读～</p>
-<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>目前在NER中，主要分为两大类：基于char level的model与基于word level的model。目前的baseline—LSTM+CRF，在很多实验中都证明了：对于中文，基于word level的model要比基于char level的model要好。但是两者也都有各自的优劣势。char level model最大的缺点在于：<strong>无法很好的利用字与字之间的有效信息</strong>；word level model最大的缺点在于：<strong>在中文中，一般都需要分词，分词的准确率直接影响到最终的NER结果，所以不好的分词会带来不好的NER结果，而目前word level model还无法很好地处理这个问题。</strong>基于这个背景，一个很自然地想法就是：<strong>如果能将词汇的信息融入到char level model中，那么就能够提高模型的效果</strong>，这就是LatticeLSTM模型。</p>
+<p>LatticeLSTM模型来源于2018年ACL上的《Chinese NER Using Lattice LSTM》论文。非常经典，而且它release的code非常的规范，很值得一读～</p>
+<h2 id="LatticeLSTM模型提出的背景"><a href="#LatticeLSTM模型提出的背景" class="headerlink" title="LatticeLSTM模型提出的背景"></a>LatticeLSTM模型提出的背景</h2><p>目前在NER中，主要分为两大类：基于char level的model与基于word level的model。对于目前的baseline—LSTM+CRF，很多实验中都证明了：对于中文，基于word level的model要比基于char level的model要好。但是两者也都有各自的优劣势。char level model最大的缺点在于：<strong>无法很好的利用字与字之间的有效信息</strong>；word level model最大的缺点在于：<strong>在中文中，一般都需要分词，分词的准确率直接影响到最终的NER结果，所以不好的分词会带来不好的NER结果，而目前word level model还无法很好地处理这个问题。</strong>基于这个背景，一个很自然地想法就是：<strong>如果能将词汇的信息融入到char level model中，那么就能够提高模型的效果</strong>，这就是LatticeLSTM模型。</p>
 <blockquote>
 <p>注意：在中英文中，char与word的含义是不一样的。在中文中：char指的是单个字，word指的是词语。</p>
 </blockquote>
-<h3 id="模型介绍"><a href="#模型介绍" class="headerlink" title="模型介绍"></a>模型介绍</h3><p>个人认为这篇文章数学符号比较多，而且整体逻辑并不是很清晰，所以不是很好理解（虽然公式倒是挺简单的），先放模型图吧～</p>
+<h2 id="LatticeLSTM模型介绍"><a href="#LatticeLSTM模型介绍" class="headerlink" title="LatticeLSTM模型介绍"></a>LatticeLSTM模型介绍</h2><p>个人认为这篇文章数学符号比较多，而且整体逻辑并不是很清晰，所以不是很好理解（虽然公式倒是挺简单的），先放模型图吧～</p>
 <p><img src="/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/LatticeLSTM.jpg" alt></p>
-
+<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2>
     </div>
 
     
@@ -359,7 +359,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#LatticeLSTM模型介绍"><span class="nav-number">1.</span> <span class="nav-text">LatticeLSTM模型介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景"><span class="nav-number">1.1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模型介绍"><span class="nav-number">1.2.</span> <span class="nav-text">模型介绍</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#LatticeLSTM模型提出的背景"><span class="nav-number">1.</span> <span class="nav-text">LatticeLSTM模型提出的背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LatticeLSTM模型介绍"><span class="nav-number">2.</span> <span class="nav-text">LatticeLSTM模型介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验结果"><span class="nav-number">3.</span> <span class="nav-text">实验结果</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
