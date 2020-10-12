@@ -64,7 +64,7 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/weibo.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/resume.jpg">
 <meta property="article:published_time" content="2020-10-11T15:09:39.000Z">
-<meta property="article:modified_time" content="2020-10-12T07:55:51.187Z">
+<meta property="article:modified_time" content="2020-10-12T08:02:22.166Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="命名实体识别">
@@ -241,7 +241,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-10-12 15:55:51" itemprop="dateModified" datetime="2020-10-12T15:55:51+08:00">2020-10-12</time>
+                <time title="Modified: 2020-10-12 16:02:22" itemprop="dateModified" datetime="2020-10-12T16:02:22+08:00">2020-10-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -292,6 +292,9 @@
 <li><p><strong>模型输入：</strong>假设输入的序列为$\{c_1,c_2,c_3,…,c_n\}$，其中$c_i$表示第$i$个字，那么整个模型的输入有两部分：$\{c_1,c_2,c_3,…,c_n\}$以及与词典$\cal D$相匹配的所有词语。</p>
 </li>
 <li><p><strong>embedding+LSTM：</strong>这一部分就是将词汇信息融入到char level model中。有三大部分：字本身的char embedding及LSTM部分、以当前字为结尾的相关的词语的embedding信息以及LSTM部分、两者的融合。</p>
+<blockquote>
+<p>注意，在论文里面，演示的是单向的LSTM，但是如果去看代码的话，可以看到也可以使用双向的LSTM，只要把forward和backward的结果拼接在一起，然后输送到CRF中即可。</p>
+</blockquote>
 <ul>
 <li><strong>字$c_j$的char embedding</strong>较为简单，具体表示如下：</li>
 </ul>
