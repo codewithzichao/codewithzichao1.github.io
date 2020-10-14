@@ -61,7 +61,7 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/13/NLP-NER-LRCNN%E6%A8%A1%E5%9E%8B/weibo.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/13/NLP-NER-LRCNN%E6%A8%A1%E5%9E%8B/resume.jpg">
 <meta property="article:published_time" content="2020-10-13T03:50:54.000Z">
-<meta property="article:modified_time" content="2020-10-14T17:02:04.695Z">
+<meta property="article:modified_time" content="2020-10-14T17:04:01.410Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="LRCNN">
@@ -237,7 +237,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-10-15 01:02:04" itemprop="dateModified" datetime="2020-10-15T01:02:04+08:00">2020-10-15</time>
+                <time title="Modified: 2020-10-15 01:04:01" itemprop="dateModified" datetime="2020-10-15T01:04:01+08:00">2020-10-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -279,7 +279,7 @@
 <a id="more"></a>
 <h2 id="LRCNN模型提出的背景"><a href="#LRCNN模型提出的背景" class="headerlink" title="LRCNN模型提出的背景"></a>LRCNN模型提出的背景</h2><p>词汇增强被证明是有效提升NER性能的方式。其中最具开创性的工作就是LatticeLSTM，通过设计巧妙的gate机制将词汇信息融入到char level model中，大幅提高了效果。但是LatticeLSTM存在着两个非常严重的缺陷：</p>
 <p><strong>1. 无法并行化。</strong>在LatticeLSTM中，引入的词汇信息的位置与数量是不固定的，所以无法使用batch来加速训练；</p>
-<p><strong>2. 无法有效处理词汇信息冲突的问题</strong>。譬如：广州市长隆公园，在lexicon中有：<code>广州市</code>，<code>市长</code>，<code>长隆</code>，由于 <code>长</code> 是 <code>市长</code> 与 <code>长隆</code>的组成部分，所以模型对于<code>长</code>这个字的标记就会出现偏差，因为模型不知道要怎么对其进行标记，从而很可能标记出错，换句话说，词汇中的某些词汇对模型中的字的标记进行误导。为了解决这两个问题，就有了LRCNN模型。</p>
+<p><strong>2. 无法有效处理词汇信息冲突的问题</strong>。譬如：广州市长隆公园，在lexicon中有：<code>广州市</code>，<code>市长</code>，<code>长隆</code>，由于 <code>长</code> 是 <code>市长</code> 与 <code>长隆</code>的组成部分，所以模型对于<code>长</code>这个字的标记就会出现偏差，因为模型不知道要怎么对其进行标记，从而很可能标记出错，换句话说，词汇中的某些词会对模型中的字的标记进行误导。为了解决这两个问题，就有了LRCNN模型。</p>
 <h2 id="LRCNN模型介绍"><a href="#LRCNN模型介绍" class="headerlink" title="LRCNN模型介绍"></a>LRCNN模型介绍</h2><p>在LRCNN模型中，<strong>对于第一个问题：</strong>LRCNN采用了CNN而不是RNN来对句子进行编码，这样的话，在不同的cnn layer，不同长度的词汇将被融入模型中；<strong>对于第二个问题：</strong>LRCNN模型使用了rethinking mechanism。先放图～</p>
 <p><img src="/2020/10/13/NLP-NER-LRCNN%E6%A8%A1%E5%9E%8B/LRCNN.jpg" alt></p>
 <p>具体的LRCNN模型描述如下：</p>
