@@ -48,27 +48,27 @@
   <meta name="description" content="近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解一下《Leverage Lexical Knowledge for Chinese Named Entity Recognition via Collaborative Graph Network》论文，即：CGN模型，个人认为这篇文章将GNN应用到NER任务中的方式非常的优雅，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NLP|NER-CGN模型">
-<meta property="og:url" content="http://codewithzichao.github.io/2020/10/16/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:url" content="http://codewithzichao.github.io/2020/10/18/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/index.html">
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解一下《Leverage Lexical Knowledge for Chinese Named Entity Recognition via Collaborative Graph Network》论文，即：CGN模型，个人认为这篇文章将GNN应用到NER任务中的方式非常的优雅，">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/16/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/CGN.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/16/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/C-graph.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/16/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/t-graph.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/16/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/l-graph.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/16/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/weibo.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/16/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/ontonotes.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/16/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/msra.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/16/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/speed.jpg">
-<meta property="article:published_time" content="2020-10-16T14:26:29.000Z">
-<meta property="article:modified_time" content="2020-10-18T05:23:44.636Z">
+<meta property="og:image" content="http://codewithzichao.github.io/Users/codewithzichao/codewithzichao.github.io/source/_posts/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/CGN.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/Users/codewithzichao/codewithzichao.github.io/source/_posts/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/C-graph.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/Users/codewithzichao/codewithzichao.github.io/source/_posts/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/t-graph.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/Users/codewithzichao/codewithzichao.github.io/source/_posts/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/l-graph.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/Users/codewithzichao/codewithzichao.github.io/source/_posts/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/weibo.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/Users/codewithzichao/codewithzichao.github.io/source/_posts/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/ontonotes.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/Users/codewithzichao/codewithzichao.github.io/source/_posts/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/msra.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/Users/codewithzichao/codewithzichao.github.io/source/_posts/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/speed.jpg">
+<meta property="article:published_time" content="2020-10-18T05:28:20.000Z">
+<meta property="article:modified_time" content="2020-10-18T05:30:03.364Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="CGN">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/2020/10/16/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/CGN.jpg">
+<meta name="twitter:image" content="http://codewithzichao.github.io/Users/codewithzichao/codewithzichao.github.io/source/_posts/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/CGN.jpg">
 
-<link rel="canonical" href="http://codewithzichao.github.io/2020/10/16/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/">
+<link rel="canonical" href="http://codewithzichao.github.io/2020/10/18/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/">
 
 
 <script id="page-configurations">
@@ -204,7 +204,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
-    <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/10/16/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/">
+    <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/10/18/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/photo.jpg">
@@ -229,16 +229,10 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2020-10-16 22:26:29" itemprop="dateCreated datePublished" datetime="2020-10-16T22:26:29+08:00">2020-10-16</time>
+              <time title="Created: 2020-10-18 13:28:20 / Modified: 13:30:03" itemprop="dateCreated datePublished" datetime="2020-10-18T13:28:20+08:00">2020-10-18</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-10-18 13:23:44" itemprop="dateModified" datetime="2020-10-18T13:23:44+08:00">2020-10-18</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -282,7 +276,7 @@
 <p>ps：latticeLSTM模型一定要好好研读一下，对于词汇增强类NER模型，基本上都是基于latticeLSTM模型的缺陷改进而来。</p>
 </blockquote>
 <h2 id="CGN模型介绍"><a href="#CGN模型介绍" class="headerlink" title="CGN模型介绍"></a>CGN模型介绍</h2><p>还是先放模型图，再逐步介绍～</p>
-<p><img src="/2020/10/16/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/CGN.jpg" alt></p>
+<p><img src="/Users/codewithzichao/codewithzichao.github.io/source/_posts/NLP-NER-CGN模型/CGN.jpg" alt></p>
 <p>整个模型分为四层：<strong>encoding layer、graph layer、fusion layer、decoding layer，</strong>下面详细介绍～</p>
 <ol>
 <li><p><strong>encoding layer：</strong>模型的输入分为两部分：sentence以及与sentence相匹配的lexicon words，分别表示为：$s=\{c_1,c_2,…,c_n\},l=\{l_1,l_2,…,l_m\}$，其中$c_i$表示sentence的第i个character，$l_i$表示与sentence相匹配的第i个lexicon word。通过使用pretrained char embedding table，我们可以得到每一个character的char embedding：$x_i=e^c(c_i)$；得到char embeding，我们需要将输入到BILSTM进行编码，这一步主要是为了捕获句子的顺序关系，得到contextual representation；对于matched lexicon words，我们也是通过使用pretrained word embedding table，得到每一个word的embedding：$wv_i=e^w(l_i)$。最终encoding layer的输出是对这两者进行concat的结果，表示为：$Node_f=[h_1,h_2,…,h_n,wv_1,wv_2,…,wv_m]$，其维度是：$[batch_size,n+m,hidden_size]$，<strong>我认为这样融合lexicon word的方式是更加优雅的，因为这样不仅可以融合lexicon word information，同时还解决了latticeLSTM模型无法并行的问题。</strong></p>
@@ -292,13 +286,13 @@
 <li><p>图的构建</p>
 <ul>
 <li><p><strong>Containing graph(C-graph)：</strong>这一层是为了集成self-matched words到character中而设计的，主要就是建模character与self-matched words的关系。那么怎么构建呢？既然是graph，就要首先确定node set与edge set，C-graph中的node就是所有的character与matched lexicon words；C-graph中的edge是：我们首先根据所有的character与matched lexicon words来构造邻接矩阵(行代表word，列代表character)，如果word $i$包含character $j$的话，那么邻接矩阵中的$(i,j)$的值为1，否则为0，对应于C-graph的话，就是word与character有连接，如下图所示：</p>
-<p><img src="/2020/10/16/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/C-graph.jpg" style="zoom:50%;"></p>
+<p><img src="/Users/codewithzichao/codewithzichao.github.io/source/_posts/NLP-NER-CGN模型/C-graph.jpg" style="zoom:50%;"></p>
 </li>
 <li><p><strong>Transition graph(T-graph)：</strong>这一层是为了直接集成与当前character最接近的lexicon word信息(preceding or following)。怎么构建图呢？node set还是有C-graph一样，但是edge set不一样，edge是：我们仍然是更加node set来构建邻接矩阵(行：words+character，列：word+character)，如果word $i$或者character $m$是 character $j$的最接近的信息，那么邻接矩阵中的$(i,j) or (m,j)$的值为1，同时为了捕获word与word之间的关系，如果word $i$是word $k$ 的preceding或者following的信息，那么$(i,k)$的值为1。对应于T-graph的话，如下图所示：</p>
-<p><img src="/2020/10/16/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/t-graph.jpg" style="zoom:50%;"></p>
+<p><img src="/Users/codewithzichao/codewithzichao.github.io/source/_posts/NLP-NER-CGN模型/t-graph.jpg" style="zoom:50%;"></p>
 </li>
 <li><p><strong>Lattice-graph(L-graph)：</strong>对应于LatticeLSTM中的Lattice结构，主要是能够捕获到self-matched word的局部信息以及隐式的的集成最接近的lexicon word(个人认为加这个其实就是为了融合更多信息，也没有什么特别的作用，就算不加也是OK的，逻辑上没有什么错误或者不通，但是效果可能就不会这么好了)。怎么构建图呢？node set与前面的一样，edge set1不一样，edge是：我们根据node set来构建邻接矩阵(行：word+character，列：word+character)，如果character $m$是character $j$最接近的character，那么$(m,j)$的值为，那其实相对的，$(j,m)$的值也为1，另外，如果character $j$是word $i$的首位或者尾位，那么$(i,j)$的值为1。对应到L-graph上的话，如下图所示：</p>
-<p><img src="/2020/10/16/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/l-graph.jpg" style="zoom:50%;"></p>
+<p><img src="/Users/codewithzichao/codewithzichao.github.io/source/_posts/NLP-NER-CGN模型/l-graph.jpg" style="zoom:50%;"></p>
 </li>
 </ul>
 </li>
@@ -330,12 +324,12 @@ R=W_1H+W_2Q_1+W_3Q_2+W_4Q_3</script><p>$H$是最初的char embedding送入BILSTM
 <li><p>参数设置：batch size：64(MSRA)，20(OntoNotes)，10(Weibo);optimizer:Adam(MSRA)、GD(OntoNotes and Weibo)</p>
 </li>
 <li><p>实验结果：</p>
-<p><img src="/2020/10/16/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/weibo.jpg" alt></p>
+<p><img src="/Users/codewithzichao/codewithzichao.github.io/source/_posts/NLP-NER-CGN模型/weibo.jpg" alt></p>
 </li>
 </ol>
-<p><img src="/2020/10/16/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/ontonotes.jpg" style="zoom:50%;"></p>
-<p><img src="/2020/10/16/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/msra.jpg" style="zoom:50%;"></p>
-<p><img src="/2020/10/16/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/speed.jpg" style="zoom:50%;"></p>
+<p><img src="/Users/codewithzichao/codewithzichao.github.io/source/_posts/NLP-NER-CGN模型/ontonotes.jpg" style="zoom:50%;"></p>
+<p><img src="/Users/codewithzichao/codewithzichao.github.io/source/_posts/NLP-NER-CGN模型/msra.jpg" style="zoom:50%;"></p>
+<p><img src="/Users/codewithzichao/codewithzichao.github.io/source/_posts/NLP-NER-CGN模型/speed.jpg" style="zoom:50%;"></p>
 <p>从结果来看，CGN还是不错的，尤其是在Weibo数据集上，提升非常大。另外一篇使用GNN来做的LGN模型，从paper中发布的结果来看，ontonotes以及msra的结果要比CGN好上一点点，但是我个人认为CGN融合lexicon的方式要更加优雅一些，而且扩展性比较强，当然了，FLAT出来之后，几乎秒杀CGN和LGN，不过要是还是想用GNN来做NER的话，CGN是一个可以follow的工作，个人想法🧐。</p>
 <h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>《A Lexicon-Based Graph Neural Network for Chinese NER》</p>
 <p>code：<a href="https://github.com/DianboWork/Graph4CNER" target="_blank" rel="noopener">https://github.com/DianboWork/Graph4CNER</a></p>
@@ -379,13 +373,10 @@ R=W_1H+W_2Q_1+W_3Q_2+W_4Q_3</script><p>$H$是最初的char embedding送入BILSTM
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/" rel="prev" title="NLP|NER-LGN模型">
-      <i class="fa fa-chevron-left"></i> NLP|NER-LGN模型
+    <a href="/2020/10/17/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/" rel="prev" title="NLP|NER-FLAT模型">
+      <i class="fa fa-chevron-left"></i> NLP|NER-FLAT模型
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/10/17/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/" rel="next" title="NLP|NER-FLAT模型">
-      NLP|NER-FLAT模型 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
