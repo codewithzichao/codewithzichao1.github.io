@@ -59,7 +59,7 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/bert.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/speed.jpg">
 <meta property="article:published_time" content="2020-10-18T05:52:20.000Z">
-<meta property="article:modified_time" content="2020-10-18T14:05:06.937Z">
+<meta property="article:modified_time" content="2020-10-18T14:09:09.424Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="FLAT">
@@ -229,7 +229,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-10-18 13:52:20 / Modified: 22:05:06" itemprop="dateCreated datePublished" datetime="2020-10-18T13:52:20+08:00">2020-10-18</time>
+              <time title="Created: 2020-10-18 13:52:20 / Modified: 22:09:09" itemprop="dateCreated datePublished" datetime="2020-10-18T13:52:20+08:00">2020-10-18</time>
             </span>
 
           
@@ -288,7 +288,7 @@ A_{i,j}^{*}=W_{q}^{T} E_{x_i}^TE_{x_j}W_{k,E}+ W_q^⊤E_{x_i}^⊤R_{ij}W_{k,R}
 <p><img src="/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/result.jpg" alt></p>
 <p>我们看一下加上了BERT之后的结果，如下图所示。NB!以后比赛可以搞起来了就不一定是BERT+BILSTM+CRF了，也可以是是BERT+FLAT+CRF，不过词汇表在其中还是占了大部分作用，以后要用的好的话，就得制作词汇表了。🧐</p>
 <p><img src="/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/bert.jpg" style="zoom:80%;"></p>
-<p>我们再来看一下推理速度，如下图所示。在batch的情况下，inferance的速度比其他模型快上好几倍，FLAT nb！这个实验另外让我非常惊奇的是，原始的LatticeLSTM的code是不能batch训练的，但是着片paper的作者自己手撸了一个batch的LatticeLSTM，向大佬低头，有空去看看具体是怎么做到的。<a href="https://github.com/LeeSureman/Batch_Parallel_LatticeLSTM" target="_blank" rel="noopener">code</a></p>
+<p>我们再来看一下推理速度，如下图所示。在batch的情况下，inferance的速度比其他模型快上好几倍，FLAT nb！这个实验另外让我非常惊奇的是，原始的LatticeLSTM的code是不能batch训练的，但是这篇paper的作者自己手撸了一个batch的LatticeLSTM，向大佬低头，有空去看看具体是怎么做到的。<a href="https://github.com/LeeSureman/Batch_Parallel_LatticeLSTM" target="_blank" rel="noopener">code</a></p>
 <p><img src="/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/speed.jpg" alt></p>
 </li>
 </ol>
