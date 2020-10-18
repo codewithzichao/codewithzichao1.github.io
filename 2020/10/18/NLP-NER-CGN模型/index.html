@@ -61,7 +61,7 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/18/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/msra.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/18/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/speed.jpg">
 <meta property="article:published_time" content="2020-10-18T05:28:20.000Z">
-<meta property="article:modified_time" content="2020-10-18T05:32:25.719Z">
+<meta property="article:modified_time" content="2020-10-18T05:45:15.986Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="CGN">
@@ -231,7 +231,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-10-18 13:28:20 / Modified: 13:32:25" itemprop="dateCreated datePublished" datetime="2020-10-18T13:28:20+08:00">2020-10-18</time>
+              <time title="Created: 2020-10-18 13:28:20 / Modified: 13:45:15" itemprop="dateCreated datePublished" datetime="2020-10-18T13:28:20+08:00">2020-10-18</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -279,7 +279,7 @@
 <p><img src="/2020/10/18/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/CGN.jpg" alt></p>
 <p>整个模型分为四层：<strong>encoding layer、graph layer、fusion layer、decoding layer，</strong>下面详细介绍～</p>
 <ol>
-<li><p><strong>encoding layer：</strong>模型的输入分为两部分：sentence以及与sentence相匹配的lexicon words，分别表示为：$s=\{c_1,c_2,…,c_n\},l=\{l_1,l_2,…,l_m\}$，其中$c_i$表示sentence的第i个character，$l_i$表示与sentence相匹配的第i个lexicon word。通过使用pretrained char embedding table，我们可以得到每一个character的char embedding：$x_i=e^c(c_i)$；得到char embeding，我们需要将输入到BILSTM进行编码，这一步主要是为了捕获句子的顺序关系，得到contextual representation；对于matched lexicon words，我们也是通过使用pretrained word embedding table，得到每一个word的embedding：$wv_i=e^w(l_i)$。最终encoding layer的输出是对这两者进行concat的结果，表示为：$Node_f=[h_1,h_2,…,h_n,wv_1,wv_2,…,wv_m]$，其维度是：$[batch_size,n+m,hidden_size]$，<strong>我认为这样融合lexicon word的方式是更加优雅的，因为这样不仅可以融合lexicon word information，同时还解决了latticeLSTM模型无法并行的问题。</strong></p>
+<li><p><strong>encoding layer：</strong>模型的输入分为两部分：sentence以及与sentence相匹配的lexicon words，分别表示为：$s=\{c_1,c_2,…,c_n\},l=\{l_1,l_2,…,l_m\}$，其中$c_i$表示sentence的第i个character，$l_i$表示与sentence相匹配的第i个lexicon word。通过使用pretrained char embedding table，我们可以得到每一个character的char embedding：$x_i=e^c(c_i)$；得到char embeding，我们需要将输入到BILSTM进行编码，这一步主要是为了捕获句子的顺序关系，得到contextual representation；对于matched lexicon words，我们也是通过使用pretrained word embedding table，得到每一个word的embedding：$wv_i=e^w(l_i)$。最终encoding layer的输出是对这两者进行concat的结果，表示为：$Node_f=[h_1,h_2,…,h_n,wv_1,wv_2,…,wv_m]$，其维度是：$[batch{_}size,n+m,hidden{_}size]$，<strong>我认为这样融合lexicon word的方式是更加优雅的，因为这样不仅可以融合lexicon word information，同时还解决了latticeLSTM模型无法并行的问题。</strong></p>
 </li>
 <li><p><strong>graph layer：</strong>这一层就是使用GNN来解决后面的两个问题的。总共分为三个graph层：<strong>Containing graph、Transition graph、Lattice graph。</strong>下面依次介绍：图的构建以及aggregate。</p>
 <ul>
