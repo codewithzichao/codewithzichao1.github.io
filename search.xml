@@ -1163,8 +1163,8 @@ R^{l}=attentiveModule(R^{l},U_{i}^{l},U_{i}^{l})</script><p><img src="/2020/05/1
       </categories>
       <tags>
         <tag>NLP</tag>
-        <tag>tensorflow2</tag>
         <tag>DAM</tag>
+        <tag>tensorflow2</tag>
       </tags>
   </entry>
   <entry>
@@ -1240,8 +1240,8 @@ e_{2,i,j}=P_{u_i}^TAP_{r_j}</script><p>其中，$P_{u_i},P_{r_j}$是matching att
       </categories>
       <tags>
         <tag>NLP</tag>
-        <tag>DUA</tag>
         <tag>tensorflow2</tag>
+        <tag>DUA</tag>
       </tags>
   </entry>
   <entry>
@@ -4129,25 +4129,9 @@ p_t=S·sigmoid(v_p^Ttanh(W_ph_t))</script><script type="math/tex; mode=display">
 ]]></content>
   </entry>
   <entry>
-    <title>Friends</title>
-    <url>/Friends/index.html</url>
-    <content><![CDATA[<p>最近看到了好多巨佬们的博客，在这里，和大家分享一波～</p>
-<ul>
-<li><strong>🔗<a href="http://codewithzhangyi.com/about/" target="_blank" rel="noopener">Zhang Yi</a>：</strong>最喜欢的博主之一，做自然语言处理(智能问答、情感分析等)</li>
-<li><strong>🔗<a href="https://luofuli.github.io" target="_blank" rel="noopener">Fuli Luo</a>：</strong>PKU的学姐，巨佬，目前就职于DAMO</li>
-<li><strong>🔗<a href="http://www.shuang0420.com/aboutme/" target="_blank" rel="noopener">徐阿衡</a></strong>：自然语言处理（搜索引擎/QA系统/聊天机器人/知识图谱）</li>
-<li><strong>🔗<a href="http://benjinzhu.com" target="_blank" rel="noopener">Benjin Zhu</a>：</strong> a researcher at Megvii Research，工程与科研都非常强的巨佬</li>
-<li><strong>🔗<a href="https://godweiyang.com" target="_blank" rel="noopener">韦阳</a>：</strong>自然语言处理（句法成分分析方面很强）</li>
-<li><strong>🔗<a href="https://zhiguowang.github.io" target="_blank" rel="noopener">Zhiguo Wang</a>：</strong>AWS的研究员，专注于QA与MRC，BIMPM模型的提出者，很强</li>
-<li><strong>🔗<a href="https://wyydsb.xin" target="_blank" rel="noopener">guojianpan</a>：</strong> PKU的学长，MSRA intern，focus on：Nested NER, Information Extract, Multi-turn chatbot, summarization</li>
-<li><strong>🔗<a href="https://awk.ai" target="_blank" rel="noopener">Qingqing Cao</a>：</strong>Deformer的提出者</li>
-<li><strong>🔗<a href="https://zhouh.github.io" target="_blank" rel="noopener">zhou hao</a>：</strong>字节跳动 ai lab reseracher</li>
-<li><strong>🔗<a href="https://www.cnblogs.com/shona/" target="_blank" rel="noopener">山竹果</a>：</strong>一位漂亮小姐姐的blog，内容质量都挺高的</li>
-<li>🔗<strong><a href="http://arxiv.xixiaoyao.cn/" target="_blank" rel="noopener">卖萌屋学术论文网站</a></strong>：快速get最新的前沿paper，刷起来！</li>
-</ul>
-<p>……</p>
-<p>to be continued～</p>
-]]></content>
+    <title></title>
+    <url>/tags/index.html</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>&lt;font face=&quot;times new roman&quot; size=6&gt;Li Zichao&lt;/font&gt;</title>
@@ -4200,13 +4184,29 @@ p_t=S·sigmoid(v_p^Ttanh(W_ph_t))</script><script type="math/tex; mode=display">
 ]]></content>
   </entry>
   <entry>
-    <title>categories</title>
-    <url>/categories/index.html</url>
-    <content><![CDATA[]]></content>
+    <title>Friends</title>
+    <url>/Friends/index.html</url>
+    <content><![CDATA[<p>最近看到了好多巨佬们的博客，在这里，和大家分享一波～</p>
+<ul>
+<li><strong>🔗<a href="http://codewithzhangyi.com/about/" target="_blank" rel="noopener">Zhang Yi</a>：</strong>最喜欢的博主之一，做自然语言处理(智能问答、情感分析等)</li>
+<li><strong>🔗<a href="https://luofuli.github.io" target="_blank" rel="noopener">Fuli Luo</a>：</strong>PKU的学姐，巨佬，目前就职于DAMO</li>
+<li><strong>🔗<a href="http://www.shuang0420.com/aboutme/" target="_blank" rel="noopener">徐阿衡</a></strong>：自然语言处理（搜索引擎/QA系统/聊天机器人/知识图谱）</li>
+<li><strong>🔗<a href="http://benjinzhu.com" target="_blank" rel="noopener">Benjin Zhu</a>：</strong> a researcher at Megvii Research，工程与科研都非常强的巨佬</li>
+<li><strong>🔗<a href="https://godweiyang.com" target="_blank" rel="noopener">韦阳</a>：</strong>自然语言处理（句法成分分析方面很强）</li>
+<li><strong>🔗<a href="https://zhiguowang.github.io" target="_blank" rel="noopener">Zhiguo Wang</a>：</strong>AWS的研究员，专注于QA与MRC，BIMPM模型的提出者，很强</li>
+<li><strong>🔗<a href="https://wyydsb.xin" target="_blank" rel="noopener">guojianpan</a>：</strong> PKU的学长，MSRA intern，focus on：Nested NER, Information Extract, Multi-turn chatbot, summarization</li>
+<li><strong>🔗<a href="https://awk.ai" target="_blank" rel="noopener">Qingqing Cao</a>：</strong>Deformer的提出者</li>
+<li><strong>🔗<a href="https://zhouh.github.io" target="_blank" rel="noopener">zhou hao</a>：</strong>字节跳动 ai lab reseracher</li>
+<li><strong>🔗<a href="https://www.cnblogs.com/shona/" target="_blank" rel="noopener">山竹果</a>：</strong>一位漂亮小姐姐的blog，内容质量都挺高的</li>
+<li>🔗<strong><a href="http://arxiv.xixiaoyao.cn/" target="_blank" rel="noopener">卖萌屋学术论文网站</a></strong>：快速get最新的前沿paper，刷起来！</li>
+</ul>
+<p>……</p>
+<p>to be continued～</p>
+]]></content>
   </entry>
   <entry>
-    <title></title>
-    <url>/tags/index.html</url>
+    <title>categories</title>
+    <url>/categories/index.html</url>
     <content><![CDATA[]]></content>
   </entry>
 </search>
