@@ -2890,8 +2890,8 @@ L(y,f(x))=L(y,f_{m-1}(x)+T(x,\theta_m))^2=(y-f_{m-1}(x)=T(x,\theta))^2</script><
       <tags>
         <tag>python</tag>
         <tag>统计学习方法</tag>
-        <tag>scikit-learn</tag>
         <tag>决策树</tag>
+        <tag>scikit-learn</tag>
         <tag>CART</tag>
         <tag>回归树</tag>
       </tags>
@@ -3179,9 +3179,9 @@ Q(\theta,\theta^{(i)})=\sum_{z}P(Z|Y,\theta^{(i)})log{P(Y,Z|\theta)},\\
       <tags>
         <tag>python</tag>
         <tag>统计学习方法</tag>
+        <tag>scikit-learn</tag>
         <tag>EM算法</tag>
         <tag>GMM</tag>
-        <tag>scikit-learn</tag>
       </tags>
   </entry>
   <entry>
