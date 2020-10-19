@@ -8,7 +8,7 @@
       <link href="2020/10/19/NLP-Cross-Lingual-NER/"/>
       <url>2020/10/19/NLP-Cross-Lingual-NER/</url>
       
-        <content type="html"><![CDATA[<p>近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解一下</p><p>cross-lingual NER，解读MSRA的三篇论文：《Single-/Multi-Source Cross-Lingual NER via Teacher-Student Learning on Unlabeled Data in Target Language》、《UniTrans : Unifying Model Transfer and Data Transfer for Cross-Lingual Named Entity Recognition with Unlabeled Data》以及《Enhanced Meta-Learning for Cross-lingual Named Entity Recognition with Minimal Resources》。</p><a id="more"></a>]]></content>
+        <content type="html"><![CDATA[<p>近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解一下cross-lingual NER，解读MSRA的三篇论文：《Single-/Multi-Source Cross-Lingual NER via Teacher-Student Learning on Unlabeled Data in Target Language》、《UniTrans : Unifying Model Transfer and Data Transfer for Cross-Lingual Named Entity Recognition with Unlabeled Data》以及《Enhanced Meta-Learning for Cross-lingual Named Entity Recognition with Minimal Resources》。</p><a id="more"></a>]]></content>
       
       
       <categories>
