@@ -45,21 +45,24 @@
   };
 </script>
 
-  <meta name="description" content="近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解中文NER的Adaptive Embedding paradigm，共讲解三篇论文：《An Encoding Strategy Based Word-Character LSTM for Chinese NER》、《A Neural Multi-digraph Model for">
+  <meta name="description" content="近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解中文NER的Adaptive Embedding paradigm。所谓的Adaptive Embedding paradigm，指的是只在embedding部分进行改进，从而让我们不需要设计非常的复杂的结构，能够迁移到不同的模型结构上(RNN&#x2F;CNN&#x2F;transformer e">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NLP|Adaptive Embedding paradigm in ChineseNER">
 <meta property="og:url" content="http://codewithzichao.github.io/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/index.html">
 <meta property="og:site_name" content="codewithzichao">
-<meta property="og:description" content="近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解中文NER的Adaptive Embedding paradigm，共讲解三篇论文：《An Encoding Strategy Based Word-Character LSTM for Chinese NER》、《A Neural Multi-digraph Model for">
+<meta property="og:description" content="近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解中文NER的Adaptive Embedding paradigm。所谓的Adaptive Embedding paradigm，指的是只在embedding部分进行改进，从而让我们不需要设计非常的复杂的结构，能够迁移到不同的模型结构上(RNN&#x2F;CNN&#x2F;transformer e">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/wc-lstm.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/multi-graph.jpg">
 <meta property="article:published_time" content="2020-10-19T05:22:43.000Z">
-<meta property="article:modified_time" content="2020-10-20T03:03:28.788Z">
+<meta property="article:modified_time" content="2020-10-20T10:43:25.402Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="SoftLexicon">
 <meta property="article:tag" content="WC-LSTM">
 <meta property="article:tag" content="Multi-digraph">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://codewithzichao.github.io/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/wc-lstm.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/">
 
@@ -255,7 +258,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-10-20 11:03:28" itemprop="dateModified" datetime="2020-10-20T11:03:28+08:00">2020-10-20</time>
+                <time title="Modified: 2020-10-20 18:43:25" itemprop="dateModified" datetime="2020-10-20T18:43:25+08:00">2020-10-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -293,8 +296,34 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解中文NER的Adaptive Embedding paradigm，共讲解三篇论文：《An Encoding Strategy Based Word-Character LSTM for Chinese NER》、《A Neural Multi-digraph Model for Chinese NER with Gazetteers》以及ACL2020的《Simplify the Usage of Lexicon in Chinese NER》。</p>
+        <p>近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解中文NER的Adaptive Embedding paradigm。所谓的Adaptive Embedding paradigm，指的是只在embedding部分进行改进，从而让我们不需要设计非常的复杂的结构，能够迁移到不同的模型结构上(RNN/CNN/transformer etc)，所以这种方法的好处就在于其可迁移性。这篇文章主要讲解三篇论文：《An Encoding Strategy Based Word-Character LSTM for Chinese NER》、《A Neural Multi-digraph Model for Chinese NER with Gazetteers》以及ACL2020的《Simplify the Usage of Lexicon in Chinese NER》。</p>
 <a id="more"></a>
+<h2 id="WC-LSTM模型"><a href="#WC-LSTM模型" class="headerlink" title="WC-LSTM模型"></a>WC-LSTM模型</h2><h3 id="提出的背景"><a href="#提出的背景" class="headerlink" title="提出的背景"></a>提出的背景</h3><p>WC-LSTM模型是2019年发表在NAACL上的《An Encoding Strategy Based Word-Character LSTM for Chinese NER》论文。提出的背景还是因为LatticeLSTM模型。LatticeLSTM是词汇增强的典型模型，但是其存在一个很严重的问题：<strong>由于每一个sentence所被匹配到的word的数量与位置都不一样，所以导致LatticeLSTM模型无法batch训练与inference。</strong>在WC-LSTM中，为了实现并行化，需要对每一个character所匹配到的words进行编码，从而得到一个fixed embedding，再与character本身的embedding进行融合，最后输送到网络中进行训练。所以，关键就在于：<strong>怎么得到一个fixed embedding？</strong>下面具体介绍。</p>
+<h3 id="WC-LSTM模型介绍"><a href="#WC-LSTM模型介绍" class="headerlink" title="WC-LSTM模型介绍"></a>WC-LSTM模型介绍</h3><p>先放图～</p>
+<p><img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/wc-lstm.jpg" alt></p>
+<ol>
+<li><strong>input：</strong>输入有两部分：sentence以及与sentence相匹配的lexicon words，假设输入的sentence表示为：$s=\{c_1,c_2,…,c_n\}$，其中$c_i$表示sentence的第$i$个character；lexicon words表示为：$c_{b,e}$，在前向的wc-lstm中，使用$\overrightarrow{ws_i} $来表示以$c_i$的结尾的matched lexicon words的集合，后向的也是类似的。所以最终的输入是：$\overrightarrow{rs}=\{(c_1,\overrightarrow{ws_1}),(c_2,\overrightarrow{ws_2}),…,(c_n,\overrightarrow{ws_n})\}$，在WC-LSTM中，使用双向的LSTM，所以还有$\overleftarrow{rs}=\{(c_n,\overleftarrow{ws_n}),(c_{n-1},\overleftarrow{ws_{n-1}}),…,(c_1,\overleftarrow{ws_1})\}$。</li>
+<li><strong>word-character embedding layer：</strong>在$\overrightarrow {rs}$中，对于每一个character $c_i$，对应一个lexicon words集合$\overrightarrow{ws_i}=\{\overrightarrow{w_{i1}},…,\overrightarrow{w_{s^p_i}}\}$，$\overrightarrow{ws_i}$中的word数目记为：$s^t_i$，对于一个batch来说，我门通过padding的方式让每一个sentence的相同位置有同样的$s^p_i$。每一个character的embedding，可以通过查pretrained char embedding table得到，记做：$x^c_i=e^c(c_i)$，每一个lexicon word的embedding也可以查表，记做：$x^{\overrightarrow{w}}_{il}=e(\overrightarrow{w_{il}})$。</li>
+<li><strong>word encoding strategy：</strong>在WC-LSTM中，探索了四种encoding策略：最短词汇信息、最长词汇信息、avg、self-attention。最短词汇信息指的是：使用$c_i$中的词汇集合中长度最短的词作为$c_i$的词汇信息；最长词汇信息指的是：使用当前character的词汇集合中的最长的词作为$c_i$的词汇信息；avg是对所有的词汇信息进行简单的算术平均；self-attention就是自己对自己进行attention，比较简单。得到$c_i$的词汇信息后，将其与$c_i$的embeding进行concat，作为后续的输入。</li>
+<li><strong>wc-lstm：</strong>这就是前向的LSTM的结果与后向的LSTM的结果进行concat，作为CRF的输入。</li>
+<li><strong>decoding：</strong>使用标准的CRF层。</li>
+</ol>
+<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><ol>
+<li>数据集：OntoNotes、MSRA、Weibo、resume</li>
+<li>实验结果就不放了，比Lattice只稍微好一点点，这也是预料之中的，毕竟wc-lstm的主要目的是并行化。</li>
+<li>实验还探究了不同的encoding策略，最后得出的结论是：如果训练数据比较充足的话，建议使用self-attention和avg，因为这两个参数较多，如果训练数据比较少的话，容易过拟合，从而在测试集上表现不好；如果训练数据比较少的话，最短词汇信息和最长词汇信息分别适用于对嵌套实体与flat实体有要求的情况。(吐槽一下，这结论有啥用？我不做实验我也知道啊🐶)</li>
+</ol>
+<h2 id="Multi-digraph模型"><a href="#Multi-digraph模型" class="headerlink" title="Multi-digraph模型"></a>Multi-digraph模型</h2><h3 id="提出的背景-1"><a href="#提出的背景-1" class="headerlink" title="提出的背景"></a>提出的背景</h3><p>Multi-digraph模型是2019年发表在ACL上的《A Neural Multi-digraph Model for Chinese NER with Gazetteers》论文。这个模型所关注的问题word conflicts，具体来说就是：在融合词汇信息的时候，如果有多个词汇表的话，不同的词汇表对于某些话有不同的匹配，这样的话对于句子中的character的标注就会有干扰，<strong>那么怎么很好地建模character与词典之间的关系以及怎么很好地融合不同词典的词汇信息？</strong>这就是multi-digraph模型提出的背景。</p>
+<h3 id="Multi-digraph模型介绍"><a href="#Multi-digraph模型介绍" class="headerlink" title="Multi-digraph模型介绍"></a>Multi-digraph模型介绍</h3><p>先放图～</p>
+<p><img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/multi-graph.jpg" style="zoom: 67%;"></p>
+<p>整体模型主要分为两大块：embedding部分+(LSTM+CRF)部分，第二部分没什么可讲的，主要介绍一下embedding部分。</p>
+<p>embeding 部分主要是根据GGNN来进行构建。怎么构建图呢？首先明确模型的输入：sentence以及实体词典(gazetteer)，那么node set就是：sentence中每一个chatacter作为node+lexicon words in gazetteers的start node与end node(这个具体是啥？)；edge set就是：sentence中从左到右构建一个有向图+每一个matched lexcion word构建一个有向图。在模型图中就是：raw space中五颜六色的箭头，</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>《An Encoding Strategy Based Word-Character LSTM for Chinese NER》</p>
+<p>wc-lstm code：<a href="https://github.com/liuwei1206/CCW-NER" target="_blank" rel="noopener">https://github.com/liuwei1206/CCW-NER</a></p>
+<p>《A Neural Multi-digraph Model for Chinese NER with Gazetteers》</p>
+<p>multi-digraph code：<a href="https://github.com/PhantomGrapes/MultiDigraphNER" target="_blank" rel="noopener">https://github.com/PhantomGrapes/MultiDigraphNER</a></p>
+<p>《Simplify the Usage of Lexicon in Chinese NER》</p>
+<p>softlexicon code：<a href="https://github.com/v-mipeng/LexiconAugmentedNER" target="_blank" rel="noopener">https://github.com/v-mipeng/LexiconAugmentedNER</a></p>
 
     </div>
 
@@ -380,6 +409,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#WC-LSTM模型"><span class="nav-number">1.</span> <span class="nav-text">WC-LSTM模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#提出的背景"><span class="nav-number">1.1.</span> <span class="nav-text">提出的背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WC-LSTM模型介绍"><span class="nav-number">1.2.</span> <span class="nav-text">WC-LSTM模型介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验结果"><span class="nav-number">1.3.</span> <span class="nav-text">实验结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Multi-digraph模型"><span class="nav-number">2.</span> <span class="nav-text">Multi-digraph模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#提出的背景-1"><span class="nav-number">2.1.</span> <span class="nav-text">提出的背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Multi-digraph模型介绍"><span class="nav-number">2.2.</span> <span class="nav-text">Multi-digraph模型介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
