@@ -45,15 +45,15 @@
   };
 </script>
 
-  <meta name="description" content="近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解一下cross-lingual NER，解读MSRA的三篇论文：《Single-&#x2F;Multi-Source Cross-Lingual NER via Teacher-Student Learning on Unlabeled Data in Target Language》、《">
+  <meta name="description" content="近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解一下cross-lingual NER，解读MSRA的三篇论文：《Enhanced Meta-Learning for Cross-lingual Named Entity Recognition with Minimal Resources》、《Single-&#x2F;Multi-So">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NLP|Cross-Lingual NER">
 <meta property="og:url" content="http://codewithzichao.github.io/2020/10/19/NLP-Cross-Lingual-NER/index.html">
 <meta property="og:site_name" content="codewithzichao">
-<meta property="og:description" content="近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解一下cross-lingual NER，解读MSRA的三篇论文：《Single-&#x2F;Multi-Source Cross-Lingual NER via Teacher-Student Learning on Unlabeled Data in Target Language》、《">
+<meta property="og:description" content="近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解一下cross-lingual NER，解读MSRA的三篇论文：《Enhanced Meta-Learning for Cross-lingual Named Entity Recognition with Minimal Resources》、《Single-&#x2F;Multi-So">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-10-19T05:25:05.000Z">
-<meta property="article:modified_time" content="2020-10-19T07:49:39.324Z">
+<meta property="article:modified_time" content="2020-10-21T13:18:16.454Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="cross-lingual NER">
@@ -245,10 +245,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2020-10-19 13:25:05 / Modified: 15:49:39" itemprop="dateCreated datePublished" datetime="2020-10-19T13:25:05+08:00">2020-10-19</time>
+              <time title="Created: 2020-10-19 13:25:05" itemprop="dateCreated datePublished" datetime="2020-10-19T13:25:05+08:00">2020-10-19</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-10-21 21:18:16" itemprop="dateModified" datetime="2020-10-21T21:18:16+08:00">2020-10-21</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -285,9 +291,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解一下cross-lingual NER，解读MSRA的三篇论文：《Single-/Multi-Source Cross-Lingual NER via Teacher-Student Learning on Unlabeled Data in Target Language》、《UniTrans : Unifying Model Transfer and Data Transfer for Cross-Lingual Named Entity Recognition with Unlabeled Data》以及《Enhanced Meta-Learning for Cross-lingual Named Entity Recognition with Minimal Resources》。</p>
+        <p>近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解一下cross-lingual NER，解读MSRA的三篇论文：《Enhanced Meta-Learning for Cross-lingual Named Entity Recognition with Minimal Resources》、《Single-/Multi-Source Cross-Lingual NER via Teacher-Student Learning on Unlabeled Data in Target Language》、《UniTrans : Unifying Model Transfer and Data Transfer for Cross-Lingual Named Entity Recognition with Unlabeled Data》，以及附带的《GRN: Gated Relation Network to Enhance Convolutional Neural Network for Named Entity Recognition》。</p>
 <a id="more"></a>
-
+<h2 id="Enhanced-Meta-Learning模型"><a href="#Enhanced-Meta-Learning模型" class="headerlink" title="Enhanced Meta-Learning模型"></a>Enhanced Meta-Learning模型</h2><h3 id="提出的背景"><a href="#提出的背景" class="headerlink" title="提出的背景"></a>提出的背景</h3>
     </div>
 
     
@@ -329,7 +335,10 @@
     <a href="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/" rel="prev" title="NLP|Adaptive Embedding paradigm in ChineseNER">
       <i class="fa fa-chevron-left"></i> NLP|Adaptive Embedding paradigm in ChineseNER
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2020/10/21/NLP-Multimodal-NER/" rel="next" title="NLP|Multimodal NER">
+      NLP|Multimodal NER <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -367,6 +376,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Enhanced-Meta-Learning模型"><span class="nav-number">1.</span> <span class="nav-text">Enhanced Meta-Learning模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#提出的背景"><span class="nav-number">1.1.</span> <span class="nav-text">提出的背景</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -382,7 +392,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">70</span>
+          <span class="site-state-item-count">71</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
