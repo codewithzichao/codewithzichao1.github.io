@@ -56,7 +56,7 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/19/NLP-Cross-Lingual-NER/meta-learning%20result.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/19/NLP-Cross-Lingual-NER/single-source%20model.jpg">
 <meta property="article:published_time" content="2020-10-19T05:25:05.000Z">
-<meta property="article:modified_time" content="2020-10-22T15:31:10.410Z">
+<meta property="article:modified_time" content="2020-10-22T15:35:04.831Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="cross-lingual NER">
@@ -257,7 +257,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-10-22 23:31:10" itemprop="dateModified" datetime="2020-10-22T23:31:10+08:00">2020-10-22</time>
+                <time title="Modified: 2020-10-22 23:35:04" itemprop="dateModified" datetime="2020-10-22T23:35:04+08:00">2020-10-22</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -351,19 +351,21 @@
 </li>
 <li><p><strong>multi-source cross-lingual NER</strong></p>
 <ol>
-<li><p>training：对于multi-source cross-lingual NER，我们把K个在source language data上训练好的模型当作teacher model(注意，共有K个model，每一个模型在一种source language上训练过)，sutdent model的结构仍然可以相同或者不同。但是与single source cross-lingual NER不同的在于，student model是要拟合teacher model的输出的分布，而teacher model有多个，需要对多个teacher models进行融合，实际上就是多多个teacher model的输出的概率分布进行加权融合，权重就是不同teacher models的相对重要性。公式如下：</p>
-<script type="math/tex; mode=display">
-\tilde p(x_i^{'},\theta_T)=\sum_{k=1}^{K}\alpha_k\tilde p(x_i^{'},\theta_T^{(k)})</script><p>其中，$\tilde p(x_i^{‘},\theta_T^{(k)})$表示第$k$个teacher model的输出概率分布，$\alpha_k$表示第$k$个teacher model的权重。关键是$\alpha_k$怎么计算呢？在这篇paper中，设计一个language identiﬁcation auxiliary task，来计算$\alpha_k$。</p>
-<p><strong>language identiﬁcation auxiliary task</strong></p>
-</li>
+<li>training：对于multi-source cross-lingual NER，我们把K个在source language data上训练好的模型当作teacher model(注意，共有K个model，每一个模型在一种source language上训练过)，sutdent model的结构仍然可以相同或者不同。但是与single source cross-lingual NER不同的在于，student model是要拟合teacher model的输出的分布，而teacher model有多个，需要对多个teacher models进行融合，实际上就是多多个teacher model的输出的概率分布进行加权融合，权重就是不同teacher models的相对重要性。公式如下：</li>
 </ol>
 </li>
 </ol>
-<ol>
+<pre><code>  $$
+  \tilde p(x_i^{&#39;},\theta_T)=\sum_{k=1}^{K}\alpha_k\tilde p(x_i^{&#39;},\theta_T^{(k)})
+  $$
+  其中，$\tilde p(x_i^{&#39;},\theta_T^{(k)})$表示第$k$个teacher model的输出概率分布，$\alpha_k$表示第$k$个teacher model的权重。关键是$\alpha_k$怎么计算呢？在这篇paper中，设计一个language identiﬁcation auxiliary task，来计算$\alpha_k$。
+
+  **language identiﬁcation auxiliary task**
+</code></pre><ol>
 <li>inference：还是只使用student model来进行inference，解码使用softmax。</li>
 </ol>
 <ol>
-<li></li>
+<li>1</li>
 </ol>
 <h2 id="UniTrans-Unifying-Model-Transfer-and-Data-Transfer-for-Cross-Lingual-Named-Entity-Recognition-with-Unlabeled-Data-IJCAI2020"><a href="#UniTrans-Unifying-Model-Transfer-and-Data-Transfer-for-Cross-Lingual-Named-Entity-Recognition-with-Unlabeled-Data-IJCAI2020" class="headerlink" title="UniTrans : Unifying Model Transfer and Data Transfer for Cross-Lingual Named Entity Recognition with Unlabeled Data(IJCAI2020)"></a>UniTrans : Unifying Model Transfer and Data Transfer for Cross-Lingual Named Entity Recognition with Unlabeled Data(IJCAI2020)</h2><h3 id="background-2"><a href="#background-2" class="headerlink" title="background"></a>background</h3><h2 id="GRN-model-not-for-cross-lingual-NER"><a href="#GRN-model-not-for-cross-lingual-NER" class="headerlink" title="GRN model(not for cross-lingual NER)"></a>GRN model(not for cross-lingual NER)</h2><h3 id="background-3"><a href="#background-3" class="headerlink" title="background"></a>background</h3><p>GRN模型是2019年MSRA发表在AAAI上的《GRN: Gated Relation Network to Enhance Convolutional Neural Network for Named Entity Recognition》。在NER任务中，由于其对word的位置信息极其敏感，所以常用的编码器常常使用RNN，但是RNN系列的编码器最大的缺点就在于并行效率太低，而CNN相比RNN来说，最大的优势在于：并行效率高，但是其缺点在于CNN只能对word周边的信息进行建模，捕捉局部context information，但是CNN对global context information的捕捉能力太弱，基于CNN的NER模型(IDCNN)在NER任务上的结果都弱于RNN系列的NER模型，<strong>所以，是否能够设计某种机制，让CNN能够捕捉到global context information呢？</strong>在GRN里，通过使用gating机制对sentence中的任意两个word之间的relation进行建模，从而让CNN捕捉global context information的能力大大提高，这就是GRN提出的背景。</p>
 <blockquote>
