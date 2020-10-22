@@ -53,7 +53,7 @@
 <meta property="og:description" content="近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解一下cross-lingual NER，解读MSRA的三篇论文：《Enhanced Meta-Learning for Cross-lingual Named Entity Recognition with Minimal Resources》、《Single-&#x2F;Multi-So">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-10-19T05:25:05.000Z">
-<meta property="article:modified_time" content="2020-10-21T13:18:16.454Z">
+<meta property="article:modified_time" content="2020-10-22T09:15:41.385Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="cross-lingual NER">
@@ -253,7 +253,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-10-21 21:18:16" itemprop="dateModified" datetime="2020-10-21T21:18:16+08:00">2020-10-21</time>
+                <time title="Modified: 2020-10-22 17:15:41" itemprop="dateModified" datetime="2020-10-22T17:15:41+08:00">2020-10-22</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -293,7 +293,34 @@
       
         <p>近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解一下cross-lingual NER，解读MSRA的三篇论文：《Enhanced Meta-Learning for Cross-lingual Named Entity Recognition with Minimal Resources》、《Single-/Multi-Source Cross-Lingual NER via Teacher-Student Learning on Unlabeled Data in Target Language》、《UniTrans : Unifying Model Transfer and Data Transfer for Cross-Lingual Named Entity Recognition with Unlabeled Data》，以及附带的《GRN: Gated Relation Network to Enhance Convolutional Neural Network for Named Entity Recognition》。</p>
 <a id="more"></a>
-<h2 id="Enhanced-Meta-Learning模型"><a href="#Enhanced-Meta-Learning模型" class="headerlink" title="Enhanced Meta-Learning模型"></a>Enhanced Meta-Learning模型</h2><h3 id="提出的背景"><a href="#提出的背景" class="headerlink" title="提出的背景"></a>提出的背景</h3>
+<h2 id="Enhanced-Meta-Learning-model"><a href="#Enhanced-Meta-Learning-model" class="headerlink" title="Enhanced Meta-Learning model"></a>Enhanced Meta-Learning model</h2><h3 id="提出的背景"><a href="#提出的背景" class="headerlink" title="提出的背景"></a>提出的背景</h3><h2 id="Single-Multi-Source-Cross-Lingual-NER-model"><a href="#Single-Multi-Source-Cross-Lingual-NER-model" class="headerlink" title="Single-/Multi Source Cross-Lingual NER model"></a>Single-/Multi Source Cross-Lingual NER model</h2><h3 id="提出的背景-1"><a href="#提出的背景-1" class="headerlink" title="提出的背景"></a>提出的背景</h3><h2 id="UniTrans-model"><a href="#UniTrans-model" class="headerlink" title="UniTrans model"></a>UniTrans model</h2><h3 id="提出的背景-2"><a href="#提出的背景-2" class="headerlink" title="提出的背景"></a>提出的背景</h3><h3 id="GRN-model-not-for-cross-lingual-NER"><a href="#GRN-model-not-for-cross-lingual-NER" class="headerlink" title="GRN model(not for cross-lingual NER)"></a>GRN model(not for cross-lingual NER)</h3><h3 id="提出的背景-3"><a href="#提出的背景-3" class="headerlink" title="提出的背景"></a>提出的背景</h3><p>GRN模型是2019年发表在AAAI上的《GRN: Gated Relation Network to Enhance Convolutional Neural Network for Named Entity Recognition》。在NER任务中，由于其对word的位置信息极其敏感，所以常用的编码器常常使用RNN，但是RNN系列的编码器最大的缺点就在于并行效率太低，而CNN相比RNN来说，最大的优势在于：并行效率高，但是其缺点在于CNN只能对word周边的信息进行建模，捕捉局部context information，但是CNN对global context information的捕捉能力太弱，基于CNN的NER模型(IDCNN)在NER任务上的结果都弱于RNN系列的NER模型，<strong>所以，是否能够设计某种机制，让CNN能够捕捉到global context information呢？</strong>在GRN里，通过使用gating机制对sentence中的任意两个word之间的relation进行建模，从而让CNN捕捉global context information的能力大大提高，这就是GRN提出的背景。</p>
+<blockquote>
+<p>吐槽一下，这篇说实话很一般，idea真的一般，2019年，BERT都出来了，在GRN的实验里，都没有使用BERT来进行对比，结果也没啥说服力。</p>
+</blockquote>
+<h3 id="GRN模型"><a href="#GRN模型" class="headerlink" title="GRN模型"></a>GRN模型</h3><p>整个GRN模型分为四层：<strong>representation layer、context layer、relation layer、CRF layer。</strong></p>
+<ol>
+<li><p><strong>representation layer：</strong>假设输入的sentence表示为：$s=\{s_1,s_2,…,s_T\}$，每一个token对应的标签表示为：$y=\{y_1,y_2,..,y_T\}$。整个layer的输出有两部分：由GloVe初始化的word embedding(update in training stage)+char embedding通过kernel=3的CNN+max-over-time pooling，从而得到char feature。第一部分表示为：$w_i=E(s_i)$；第二部分：$c_i$，输出是两者concat的结果：$z_i=[c_i,w_i]$。</p>
+</li>
+<li><p><strong>context layer：</strong>这一层主要是捕捉word的局部信息。具体做法是：使用多个不同kernel size的CNN(等长卷积，kernel size=1，3，5)来得到encoding的输出，卷积的激活函数使用$tanh$，然后对使用激活函数之后的结果进行concat，再使用max pooling(不是global max pooling，所以维度数目不变)。</p>
+</li>
+<li><p><strong>relation layer：</strong>这一层的目的主要是用来对sentence中的任意两个word之间的关系进行modeling，并利用gating机制来获取全局内容信息，具体公式如下(其实还是attention，没啥创新，不过这个layer的实现code还是可以去看看的)：</p>
+<script type="math/tex; mode=display">
+\alpha_{i,j}=\sigma(W[x_i;x_j]+b_x) \\
+r_i=\frac{1}{T}\sum_{j=1}^{T}\alpha_{ij}*x_j \\
+p_i=tanh(r_i)</script><p>其中，$r_i$就是word $x_i$的全局fusion feature，当然了，为了增加非线性，对$r_i$使用tanh进行变换，得到$p_i$，这就是最终输入到CRF的输入。</p>
+</li>
+<li><p><strong>CRF layer：</strong>就是标准的CRF layer。</p>
+</li>
+</ol>
+<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><ol>
+<li>数据集：CoNLL-2003 English NER、OntoNotes 5.0</li>
+<li>hypoparameters的设置请参考原始论文，具体结果就不放了，反正就在当时达到了SOTA，anyway。</li>
+</ol>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>《Enhanced Meta-Learning for Cross-lingual Named Entity Recognition with Minimal Resources》</p>
+<p>《Single-/Multi-Source Cross-Lingual NER via Teacher-Student Learning on Unlabeled Data in Target Language》</p>
+<p>《UniTrans : Unifying Model Transfer and Data Transfer for Cross-Lingual Named Entity Recognition with Unlabeled Data》</p>
+<p>《GRN: Gated Relation Network to Enhance Convolutional Neural Network for Named Entity Recognition》。</p>
+
     </div>
 
     
@@ -376,7 +403,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Enhanced-Meta-Learning模型"><span class="nav-number">1.</span> <span class="nav-text">Enhanced Meta-Learning模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#提出的背景"><span class="nav-number">1.1.</span> <span class="nav-text">提出的背景</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Enhanced-Meta-Learning-model"><span class="nav-number">1.</span> <span class="nav-text">Enhanced Meta-Learning model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#提出的背景"><span class="nav-number">1.1.</span> <span class="nav-text">提出的背景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Single-Multi-Source-Cross-Lingual-NER-model"><span class="nav-number">2.</span> <span class="nav-text">Single-&#x2F;Multi Source Cross-Lingual NER model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#提出的背景-1"><span class="nav-number">2.1.</span> <span class="nav-text">提出的背景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UniTrans-model"><span class="nav-number">3.</span> <span class="nav-text">UniTrans model</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#提出的背景-2"><span class="nav-number">3.1.</span> <span class="nav-text">提出的背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GRN-model-not-for-cross-lingual-NER"><span class="nav-number">3.2.</span> <span class="nav-text">GRN model(not for cross-lingual NER)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#提出的背景-3"><span class="nav-number">3.3.</span> <span class="nav-text">提出的背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GRN模型"><span class="nav-number">3.4.</span> <span class="nav-text">GRN模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验结果"><span class="nav-number">3.5.</span> <span class="nav-text">实验结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -405,7 +432,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">108</span>
+        <span class="site-state-item-count">109</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
