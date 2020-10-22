@@ -59,7 +59,7 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/19/NLP-Cross-Lingual-NER/multi-result.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/19/NLP-Cross-Lingual-NER/unitrans.jpg">
 <meta property="article:published_time" content="2020-10-19T05:25:05.000Z">
-<meta property="article:modified_time" content="2020-10-22T17:09:01.525Z">
+<meta property="article:modified_time" content="2020-10-22T17:24:08.379Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="cross-lingual NER">
@@ -260,7 +260,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-10-23 01:09:01" itemprop="dateModified" datetime="2020-10-23T01:09:01+08:00">2020-10-23</time>
+                <time title="Modified: 2020-10-23 01:24:08" itemprop="dateModified" datetime="2020-10-23T01:24:08+08:00">2020-10-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -336,7 +336,7 @@
 </li>
 <li><p>实验结果</p>
 <p><img src="/2020/10/19/NLP-Cross-Lingual-NER/meta-learning result.jpg" alt></p>
-<p>从结果来看，还是不错的，但是提升不是很大。个人认为这种思路还是蛮新颖的。</p>
+<p>从结果来看，还是不错的。个人认为这种思路还是蛮新颖的。</p>
 </li>
 </ol>
 <h2 id="Single-Multi-Source-Cross-Lingual-NER-via-Teacher-Student-Learning-on-Unlabeled-Data-in-Target-Language-ACL2020"><a href="#Single-Multi-Source-Cross-Lingual-NER-via-Teacher-Student-Learning-on-Unlabeled-Data-in-Target-Language-ACL2020" class="headerlink" title="Single-/Multi-Source Cross-Lingual NER via Teacher-Student Learning on Unlabeled Data in Target Language(ACL2020)"></a>Single-/Multi-Source Cross-Lingual NER via Teacher-Student Learning on Unlabeled Data in Target Language(ACL2020)</h2><h3 id="background-1"><a href="#background-1" class="headerlink" title="background"></a>background</h3><p>这篇论文假设的任务更加的严苛：之前的cross-lingual NER都是有可用的labeled source language data，那如果没有可用的labeled source language data，要怎么样才能在unlabeled target language data上取得好的效果呢？它首先对在cross-lingual NER上两种方法进行了对比：</p>
@@ -366,7 +366,7 @@
 <script type="math/tex; mode=display">
 {\cal L}(P,M)=-\frac{1}{Z}\sum_{(u^{(k)},k)\in D_{src}}CE(softmax(g^T(u)MP),k)+\gamma||PP^T-I||_F^2</script><p>其中，$P\in R^{m\times K}=\{\mu^{(1)},\mu^{(2)},…,\mu^{(K)}\}$，K表示K种语言，m表示其embedding dimension，$g^T(u)$表示得到$u$的sentence embedding，$k$我个人觉得是一个one-hot vector，要不然不对劲。得到$P$之后，我们就可以计算$\alpha$了，如下：</p>
 <script type="math/tex; mode=display">
-\alpha_k=\frac{1}{|D_{tgt}|}\sum_{x^{'}\in D_{tgt}}\frac{exp(g^T(x^{'})M\mu^{(k)}/\tau)}{\sum_{i=1}^Kexp(g^T(x^{'})M\mu^{(i)}/\tau)}</script><p>其中，$|D_{tgt}|$表示target language data中的样本数目，$\tau$设置为所有的$g^T(x^{‘})M\mu^{(k)}/\tau)$的方差，从而保证得到的$\alpha$不会为0也不会为1。总的来看，这个任务还是蛮简单的，但是很work。值得一提的是，<strong>在实际实现的过程中，对$M$使用了低秩近似，从而较少参数量，加快训练。</strong></p>
+\alpha_k=\frac{1}{|D_{tgt}|}\sum_{x^{'}\in D_{tgt}}\frac{exp(g^T(x^{'})M\mu^{(k)}/\tau)}{\sum_{i=1}^Kexp(g^T(x^{'})M\mu^{(i)}/\tau)}</script><p>其中，$|D_{tgt}|$表示target language data中的样本数目，$\tau$设置为所有的$g^T(x^{‘})M\mu^{(k)}/\tau)$的方差，从而保证得到的$\alpha$不会为0也不会为1。总的来看，这个任务还是蛮简单的，但是很work。值得一提的是，<strong>在实际实现的过程中，对$M$使用了低秩近似，从而减少参数量，加快训练。</strong></p>
 </li>
 <li><p>inference：还是只使用student model来进行inference，解码使用softmax。</p>
 </li>
@@ -387,7 +387,9 @@
 <h2 id="UniTrans-Unifying-Model-Transfer-and-Data-Transfer-for-Cross-Lingual-Named-Entity-Recognition-with-Unlabeled-Data-IJCAI2020"><a href="#UniTrans-Unifying-Model-Transfer-and-Data-Transfer-for-Cross-Lingual-Named-Entity-Recognition-with-Unlabeled-Data-IJCAI2020" class="headerlink" title="UniTrans : Unifying Model Transfer and Data Transfer for Cross-Lingual Named Entity Recognition with Unlabeled Data(IJCAI2020)"></a>UniTrans : Unifying Model Transfer and Data Transfer for Cross-Lingual Named Entity Recognition with Unlabeled Data(IJCAI2020)</h2><h3 id="background-2"><a href="#background-2" class="headerlink" title="background"></a>background</h3><p>这篇同样也是研究zero-resource cross-lingual NER。目前在cross-lingual NER常用的两种方法的优缺点在上面应提到过了，这里不再赘述。这篇paper希望能够对两种方法进行结合，从而充分利用两者的优点，同时避免其缺点。所以就提出了unitrans模型。额外说一句，这篇paper应该是zero-resource cross-lingual NER的SOTA，结果大幅超越之前所讲解的两篇paper，非常优秀的论文，值得一读。</p>
 <h3 id="model-2"><a href="#model-2" class="headerlink" title="model"></a>model</h3><p>先放图～</p>
 <p><img src="/2020/10/19/NLP-Cross-Lingual-NER/unitrans.jpg" alt></p>
-<p>unitrans整体的架构是：1.我们首先使用source language training data来训练一个NER model，然后对source language data通过translation来得到翻译后的target language，使用翻译后的traning data来对最初训练好的NER model进行fine-tune，并将fine-tuning后的NER model作为teacher model；2.然后通过知识蒸馏，使用teacher model来训练得到一个student model。</p>
+<p>unitrans整体的架构是：1.我们首先使用source language training data $D_{src}$来训练一个NER model(参数：$\theta_{src}$)，然后对source language data通过word-to-word translation来得到翻译后的target language data $D_{trans}$，基于$\theta_{src}$,使用翻译后的$D_{trans}$来对最初训练好的NER model(参数：$\theta_{src}$)进行fine-tune，并将fine-tuning后的NER model作为teacher model(参数：$\theta_{teach}$)，除此之外，我们使用$D_{trans}$来训练最初的model ，得到参数为$\theta_{trans}$的模型(不基于$\theta_{src}$)；2.然后通过知识蒸馏，使用teacher model来训练得到一个student model。下面依次讲解其中重要的compoment。</p>
+<p><strong>word-to-word translation：</strong></p>
+<hr>
 <h2 id="GRN-model-not-for-cross-lingual-NER"><a href="#GRN-model-not-for-cross-lingual-NER" class="headerlink" title="GRN model(not for cross-lingual NER)"></a>GRN model(not for cross-lingual NER)</h2><h3 id="background-3"><a href="#background-3" class="headerlink" title="background"></a>background</h3><p>GRN模型是2019年MSRA发表在AAAI上的《GRN: Gated Relation Network to Enhance Convolutional Neural Network for Named Entity Recognition》。在NER任务中，由于其对word的位置信息极其敏感，所以常用的编码器常常使用RNN，但是RNN系列的编码器最大的缺点就在于并行效率太低，而CNN相比RNN来说，最大的优势在于：并行效率高，但是其缺点在于CNN只能对word周边的信息进行建模，捕捉局部context information，但是CNN对global context information的捕捉能力太弱，基于CNN的NER模型(IDCNN)在NER任务上的结果都弱于RNN系列的NER模型，<strong>所以，是否能够设计某种机制，让CNN能够捕捉到global context information呢？</strong>在GRN里，通过使用gating机制对sentence中的任意两个word之间的relation进行建模，从而让CNN捕捉global context information的能力大大提高，这就是GRN提出的背景。</p>
 <blockquote>
 <p>吐槽一下，这篇说实话很一般，idea真的一般，2019年，BERT都出来了，在GRN的实验里，都没有使用BERT来进行对比，结果也没啥说服力。</p>
