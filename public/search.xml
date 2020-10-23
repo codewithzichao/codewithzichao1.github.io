@@ -107,9 +107,30 @@
 <h2 id="UniTrans-Unifying-Model-Transfer-and-Data-Transfer-for-Cross-Lingual-Named-Entity-Recognition-with-Unlabeled-Data-IJCAI2020"><a href="#UniTrans-Unifying-Model-Transfer-and-Data-Transfer-for-Cross-Lingual-Named-Entity-Recognition-with-Unlabeled-Data-IJCAI2020" class="headerlink" title="UniTrans : Unifying Model Transfer and Data Transfer for Cross-Lingual Named Entity Recognition with Unlabeled Data(IJCAI2020)"></a>UniTrans : Unifying Model Transfer and Data Transfer for Cross-Lingual Named Entity Recognition with Unlabeled Data(IJCAI2020)</h2><h3 id="background-2"><a href="#background-2" class="headerlink" title="background"></a>background</h3><p>这篇同样也是研究zero-resource cross-lingual NER。目前在cross-lingual NER常用的两种方法的优缺点在上面应提到过了，这里不再赘述。这篇paper希望能够对两种方法进行结合，从而充分利用两者的优点，同时避免其缺点。所以就提出了unitrans模型。额外说一句，这篇paper应该是zero-resource cross-lingual NER的SOTA，结果大幅超越之前所讲解的两篇paper，非常优秀的论文，值得一读。</p>
 <h3 id="model-2"><a href="#model-2" class="headerlink" title="model"></a>model</h3><p>先放图～</p>
 <p><img src="/2020/10/19/NLP-Cross-Lingual-NER/unitrans.jpg" alt></p>
-<p>unitrans整体的架构是：1.我们首先使用source language training data $D_{src}$来训练一个NER model(参数：$\theta_{src}$)，然后对source language data通过word-to-word translation来得到翻译后的target language data $D_{trans}$，基于$\theta_{src}$,使用翻译后的$D_{trans}$来对最初训练好的NER model(参数：$\theta_{src}$)进行fine-tune，并将fine-tuning后的NER model作为teacher model(参数：$\theta_{teach}$)，除此之外，我们使用$D_{trans}$来训练最初的model ，得到参数为$\theta_{trans}$的模型(不基于$\theta_{src}$)；2.然后通过知识蒸馏，使用teacher model来训练得到一个student model。下面依次讲解其中重要的compoment。</p>
-<p><strong>word-to-word translation：</strong></p>
-<hr>
+<p>unitrans整体的架构是：1.我们首先确定一个base model，然后使用source language training data $D_{src}$来训练base model得到新的参数为$\theta_{src}$ 的 model；对source language data通过word-to-word translation来得到翻译后的target language data $D_{trans}$，基于$\theta_{src}$,使用翻译后的$D_{trans}$来对参数为$\theta_{src}$的NER model进行fine-tune，并将fine-tuning后的NER model作为teacher model(参数：$\theta_{teach}$)；除此之外，我们使用$D_{trans}$来训练base model，得到参数为$\theta_{trans}$的模型(不基于$\theta_{src}$)；2.我们得到三个模型（$\theta_{src}、\theta_{teach}、\theta_{trans}$）之后，通过设计一种voting机制，去得到unlabeled target language data的pseudo label，然后使用pseudo label来训练student model。下面依次讲解其中重要的compoment。</p>
+<p><strong>base model：</strong>在这篇paper中，就是一个mBERT+softmax，loss就是entity-level的ce loss。</p>
+<p><strong>word-to-word translation：</strong>这一部分借鉴的是《Word translation without parallel data》paper中的做法。具体做法是：假设我们已经得到source language与target language的word embedding：$S，T\in R^{d\times D}$，并且得到了D对word的词典，我们希望能够找到一个变化，使得两个语言的word可以相互转换。公式是：</p>
+<script type="math/tex; mode=display">
+P=argmin_{P^{'}}||P^{'}S-T||_F</script><p>得到$P$之后，对于任何一个source language word，我们可以通过最近邻的方法来找到对应的翻译。但是关键是怎么找到最近邻呢？方法是定义CSLS方法来衡量不同语言的word之间的相似度。具体可以参看<a href="https://zhuanlan.zhihu.com/p/30218451" target="_blank" rel="noopener">link</a>。</p>
+<p><strong>knowleage distillation：</strong>得到三个模型($\theta_{src}、\theta_{teach}、\theta_{trans}$)之后，我们需要将这些模型的知识蒸馏给student。具体做法是如下：</p>
+<ol>
+<li>首先，我们将unlabeled target language data输入到$\theta_{teach}$与$\theta_{stu}$中，来让$\theta_{stu}$模型去拟合$\theta_{teach}$的输出的分布，loss使用MSE；这样做，不仅可以将$\theta_{teach}$的知识蒸馏给$\theta_{stu}$，同时还能让$\theta_{stu}$学习到unlabeled language data中的信息；</li>
+<li>我们希望进一步提升student model的效果，采用的方式是：我们希望能够得到unlabel target language data的pseudo label，然后使用pseudo label来训练student model。具体怎么得到pesudo label呢？我们设计了一种voting 机制，我们将unlabel target langugae输入到三个模型当中，只有当三个模型的输出的结果完全相等时，我们才给其标上label，然后使用这些数据来训练sutdent model。</li>
+<li>综合第一步与第二步，knowledge distillation的总的loss，表示如下：</li>
+</ol>
+<script type="math/tex; mode=display">
+{\cal L}(\theta_{stu})=\frac{1}{|{\cal D}_T|}\sum_{\tilde x\in {\cal D}_T}(\eta{\cal L}_{hard}^{\tilde x}+{\cal L}_{soft}^{\tilde x})</script><p>其中，${\cal L}_{hard}^{\tilde x}$是第二步的loss，${\cal L}_{soft}^{\tilde x}$是第一步的loss，$\eta=1$。</p>
+<p><strong>inference：</strong>我们只使用student model，另外注意，解码使用CRF。</p>
+<h3 id="experiment-2"><a href="#experiment-2" class="headerlink" title="experiment"></a>experiment</h3><ol>
+<li><p>数据集：CoNLL-2002、CoNLL-2003、NoDaLiDa-2019</p>
+</li>
+<li><p>结果</p>
+<p><img src="/2020/10/19/NLP-Cross-Lingual-NER/unitrans-result.jpg" alt></p>
+<p>从结果中我们可以看到，效果提升非常大，这个还可以通过teacher ensembling进一步提升效果。作者也做了一些消融实验，如下：</p>
+<p><img src="/2020/10/19/NLP-Cross-Lingual-NER/ablation.jpg" alt></p>
+<p>这篇论文结果真的太强了，甚至给我感觉使用teacher-student learning这种方式来做cross-lingual NER，这篇paper到顶了。</p>
+</li>
+</ol>
 <h2 id="GRN-model-not-for-cross-lingual-NER"><a href="#GRN-model-not-for-cross-lingual-NER" class="headerlink" title="GRN model(not for cross-lingual NER)"></a>GRN model(not for cross-lingual NER)</h2><h3 id="background-3"><a href="#background-3" class="headerlink" title="background"></a>background</h3><p>GRN模型是2019年MSRA发表在AAAI上的《GRN: Gated Relation Network to Enhance Convolutional Neural Network for Named Entity Recognition》。在NER任务中，由于其对word的位置信息极其敏感，所以常用的编码器常常使用RNN，但是RNN系列的编码器最大的缺点就在于并行效率太低，而CNN相比RNN来说，最大的优势在于：并行效率高，但是其缺点在于CNN只能对word周边的信息进行建模，捕捉局部context information，但是CNN对global context information的捕捉能力太弱，基于CNN的NER模型(IDCNN)在NER任务上的结果都弱于RNN系列的NER模型，<strong>所以，是否能够设计某种机制，让CNN能够捕捉到global context information呢？</strong>在GRN里，通过使用gating机制对sentence中的任意两个word之间的relation进行建模，从而让CNN捕捉global context information的能力大大提高，这就是GRN提出的背景。</p>
 <blockquote>
 <p>吐槽一下，这篇说实话很一般，idea真的一般，2019年，BERT都出来了，在GRN的实验里，都没有使用BERT来进行对比，结果也没啥说服力。</p>
@@ -129,7 +150,7 @@ p_i=tanh(r_i)</script><p>其中，$r_i$就是word $x_i$的全局fusion feature�
 <li><p><strong>CRF layer：</strong>就是标准的CRF layer。</p>
 </li>
 </ol>
-<h3 id="experiment-2"><a href="#experiment-2" class="headerlink" title="experiment"></a>experiment</h3><ol>
+<h3 id="experiment-3"><a href="#experiment-3" class="headerlink" title="experiment"></a>experiment</h3><ol>
 <li>数据集：CoNLL-2003 English NER、OntoNotes 5.0</li>
 <li>hypoparameters的设置请参考原始论文，具体结果就不放了，反正就在当时达到了SOTA，anyway。</li>
 </ol>
