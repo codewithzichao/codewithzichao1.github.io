@@ -61,7 +61,7 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/19/NLP-Cross-Lingual-NER/unitrans-result.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/19/NLP-Cross-Lingual-NER/ablation.jpg">
 <meta property="article:published_time" content="2020-10-19T05:25:05.000Z">
-<meta property="article:modified_time" content="2020-10-23T03:43:13.482Z">
+<meta property="article:modified_time" content="2020-10-23T03:46:12.858Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="cross-lingual NER">
@@ -262,7 +262,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-10-23 11:43:13" itemprop="dateModified" datetime="2020-10-23T11:43:13+08:00">2020-10-23</time>
+                <time title="Modified: 2020-10-23 11:46:12" itemprop="dateModified" datetime="2020-10-23T11:46:12+08:00">2020-10-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -364,7 +364,7 @@
 <script type="math/tex; mode=display">
 \tilde p(x_i^{'},\theta_T)=\sum_{k=1}^{K}\alpha_k\tilde p(x_i^{'},\theta_T^{(k)})</script><p>其中，$\tilde p(x_i^{‘},\theta_T^{(k)})$表示第$k$个teacher model的输出概率分布，$\alpha_k$表示第$k$个teacher model的权重。关键是$\alpha_k$怎么计算呢？在这篇paper中，设计一个language identiﬁcation auxiliary task，来计算$\alpha_k$。</p>
 <p><strong>language identiﬁcation auxiliary task</strong></p>
-<p>这个任务就是计算source language与target language的相似度，从而给teacher models中的各个source language分配权重。第k种source language的数据集表示为：$D^{(k)}_{src}=\{(u^{(k)},k)\}$，我们要做的是：去学习所有的 source language embedding vector：$\mu^{(k)}\in R^m，k\in 1,2,3,..,K$。具体公式如下：</p>
+<p>这个任务通过学习得到不同language的language embedding，来计算source language与target language的相似度，从而给各个teacher models分配权重。假设第k种source language的数据集表示为：$D^{(k)}_{src}=\{(u^{(k)},k)\}$，我们要做的是：去学习所有的 source language embedding vector：$\mu^{(k)}\in R^m，k\in 1,2,3,..,K$。具体公式如下：</p>
 <script type="math/tex; mode=display">
 {\cal L}(P,M)=-\frac{1}{Z}\sum_{(u^{(k)},k)\in D_{src}}CE(softmax(g^T(u)MP),k)+\gamma||PP^T-I||_F^2</script><p>其中，$P\in R^{m\times K}=\{\mu^{(1)},\mu^{(2)},…,\mu^{(K)}\}$，K表示K种语言，m表示其embedding dimension，$g^T(u)$表示得到$u$的sentence embedding，$k$我个人觉得是一个one-hot vector，要不然不对劲。得到$P$之后，我们就可以计算$\alpha$了，如下：</p>
 <script type="math/tex; mode=display">
