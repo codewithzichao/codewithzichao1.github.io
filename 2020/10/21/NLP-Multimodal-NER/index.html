@@ -45,15 +45,15 @@
   };
 </script>
 
-  <meta name="description" content="近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要解决一下目前多模态NER上的论文：《Adaptive Co-Attention Network for Named Entity Recognition in Tweets》、《Visual Attention Model for Name Tagging in Multimodal">
+  <meta name="description" content="近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要解读一下目前多模态NER上质量比较好的论文：《Adaptive Co-Attention Network for Named Entity Recognition in Tweets》、《Visual Attention Model for Name Tagging in Multi">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NLP|Multimodal NER">
 <meta property="og:url" content="http://codewithzichao.github.io/2020/10/21/NLP-Multimodal-NER/index.html">
 <meta property="og:site_name" content="codewithzichao">
-<meta property="og:description" content="近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要解决一下目前多模态NER上的论文：《Adaptive Co-Attention Network for Named Entity Recognition in Tweets》、《Visual Attention Model for Name Tagging in Multimodal">
+<meta property="og:description" content="近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要解读一下目前多模态NER上质量比较好的论文：《Adaptive Co-Attention Network for Named Entity Recognition in Tweets》、《Visual Attention Model for Name Tagging in Multi">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-10-21T12:23:45.000Z">
-<meta property="article:modified_time" content="2020-10-22T09:59:53.097Z">
+<meta property="article:modified_time" content="2020-10-24T14:13:32.019Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="Multimodal NER">
@@ -253,7 +253,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-10-22 17:59:53" itemprop="dateModified" datetime="2020-10-22T17:59:53+08:00">2020-10-22</time>
+                <time title="Modified: 2020-10-24 22:13:32" itemprop="dateModified" datetime="2020-10-24T22:13:32+08:00">2020-10-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -291,8 +291,12 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要解决一下目前多模态NER上的论文：《Adaptive Co-Attention Network for Named Entity Recognition in Tweets》、《Visual Attention Model for Name Tagging in Multimodal Social Media》、《Multimodal Named Entity Recognition for Short Social Media Posts》、《Improving Multimodal Named Entity Recognition via Entity Span Detection with Uniﬁed Multimodal Transformer》、《Aiding Intra-Text Representations with Visual Context for Multimodal Named Entity Recognition》。</p>
+        <p>近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要解读一下目前多模态NER上质量比较好的论文：《Adaptive Co-Attention Network for Named Entity Recognition in Tweets》、《Visual Attention Model for Name Tagging in Multimodal Social Media》、《Multimodal Named Entity Recognition for Short Social Media Posts》、《Improving Multimodal Named Entity Recognition via Entity Span Detection with Uniﬁed Multimodal Transformer》。</p>
 <a id="more"></a>
+<h2 id="Adaptive-Co-Attention-Network-for-Named-Entity-Recognition-in-Tweets"><a href="#Adaptive-Co-Attention-Network-for-Named-Entity-Recognition-in-Tweets" class="headerlink" title="Adaptive Co-Attention Network for Named Entity Recognition in Tweets"></a>Adaptive Co-Attention Network for Named Entity Recognition in Tweets</h2><h3 id="backgroud"><a href="#backgroud" class="headerlink" title="backgroud"></a>backgroud</h3><h3 id="model"><a href="#model" class="headerlink" title="model"></a>model</h3><h3 id="experiment"><a href="#experiment" class="headerlink" title="experiment"></a>experiment</h3><h2 id="Visual-Attention-Model-for-Name-Tagging-in-Multimodal-Social-Media"><a href="#Visual-Attention-Model-for-Name-Tagging-in-Multimodal-Social-Media" class="headerlink" title="Visual Attention Model for Name Tagging in Multimodal Social Media"></a>Visual Attention Model for Name Tagging in Multimodal Social Media</h2><h3 id="background"><a href="#background" class="headerlink" title="background"></a>background</h3><h3 id="model-1"><a href="#model-1" class="headerlink" title="model"></a>model</h3><h3 id="experiment-1"><a href="#experiment-1" class="headerlink" title="experiment"></a>experiment</h3><h2 id="Multimodal-Named-Entity-Recognition-for-Short-Social-Media-Posts"><a href="#Multimodal-Named-Entity-Recognition-for-Short-Social-Media-Posts" class="headerlink" title="Multimodal Named Entity Recognition for Short Social Media Posts"></a>Multimodal Named Entity Recognition for Short Social Media Posts</h2><h3 id="backgroud-1"><a href="#backgroud-1" class="headerlink" title="backgroud"></a>backgroud</h3><h3 id="model-2"><a href="#model-2" class="headerlink" title="model"></a>model</h3><h3 id="experiment-2"><a href="#experiment-2" class="headerlink" title="experiment"></a>experiment</h3><h2 id="Improving-Multimodal-Named-Entity-Recognition-via-Entity-Span-Detection-with-Uniﬁed-Multimodal-Transformer"><a href="#Improving-Multimodal-Named-Entity-Recognition-via-Entity-Span-Detection-with-Uniﬁed-Multimodal-Transformer" class="headerlink" title="Improving Multimodal Named Entity Recognition via Entity Span Detection with Uniﬁed Multimodal Transformer"></a>Improving Multimodal Named Entity Recognition via Entity Span Detection with Uniﬁed Multimodal Transformer</h2><h3 id="background-1"><a href="#background-1" class="headerlink" title="background"></a>background</h3><h3 id="model-3"><a href="#model-3" class="headerlink" title="model"></a>model</h3><h3 id="experiment-3"><a href="#experiment-3" class="headerlink" title="experiment"></a>experiment</h3><h3 id="references"><a href="#references" class="headerlink" title="references"></a>references</h3><p>《Adaptive Co-Attention Network for Named Entity Recognition in Tweets》</p>
+<p>《Visual Attention Model for Name Tagging in Multimodal Social Media》</p>
+<p>《Multimodal Named Entity Recognition for Short Social Media Posts》</p>
+<p>《Improving Multimodal Named Entity Recognition via Entity Span Detection with Uniﬁed Multimodal Transformer》</p>
 
     </div>
 
@@ -335,7 +339,10 @@
     <a href="/2020/10/19/NLP-Cross-Lingual-NER/" rel="prev" title="NLP|Cross-Lingual NER">
       <i class="fa fa-chevron-left"></i> NLP|Cross-Lingual NER
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/" rel="next" title="NLP|RE-DocRED and SCIREX Dataset">
+      NLP|RE-DocRED and SCIREX Dataset <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -373,6 +380,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Adaptive-Co-Attention-Network-for-Named-Entity-Recognition-in-Tweets"><span class="nav-number">1.</span> <span class="nav-text">Adaptive Co-Attention Network for Named Entity Recognition in Tweets</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#backgroud"><span class="nav-number">1.1.</span> <span class="nav-text">backgroud</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#model"><span class="nav-number">1.2.</span> <span class="nav-text">model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment"><span class="nav-number">1.3.</span> <span class="nav-text">experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Visual-Attention-Model-for-Name-Tagging-in-Multimodal-Social-Media"><span class="nav-number">2.</span> <span class="nav-text">Visual Attention Model for Name Tagging in Multimodal Social Media</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#background"><span class="nav-number">2.1.</span> <span class="nav-text">background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#model-1"><span class="nav-number">2.2.</span> <span class="nav-text">model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment-1"><span class="nav-number">2.3.</span> <span class="nav-text">experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Multimodal-Named-Entity-Recognition-for-Short-Social-Media-Posts"><span class="nav-number">3.</span> <span class="nav-text">Multimodal Named Entity Recognition for Short Social Media Posts</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#backgroud-1"><span class="nav-number">3.1.</span> <span class="nav-text">backgroud</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#model-2"><span class="nav-number">3.2.</span> <span class="nav-text">model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment-2"><span class="nav-number">3.3.</span> <span class="nav-text">experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Improving-Multimodal-Named-Entity-Recognition-via-Entity-Span-Detection-with-Uniﬁed-Multimodal-Transformer"><span class="nav-number">4.</span> <span class="nav-text">Improving Multimodal Named Entity Recognition via Entity Span Detection with Uniﬁed Multimodal Transformer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#background-1"><span class="nav-number">4.1.</span> <span class="nav-text">background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#model-3"><span class="nav-number">4.2.</span> <span class="nav-text">model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment-3"><span class="nav-number">4.3.</span> <span class="nav-text">experiment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#references"><span class="nav-number">4.4.</span> <span class="nav-text">references</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -388,20 +396,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">71</span>
+          <span class="site-state-item-count">74</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">109</span>
+        <span class="site-state-item-count">111</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
