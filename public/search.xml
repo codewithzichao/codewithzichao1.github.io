@@ -40,6 +40,14 @@
         <content type="html"><![CDATA[<p>这篇博客主要是讲解图神经网络在Document-level关系抽取上的应用，共讲解4篇论文：《Inter-sentence Relation Extraction with Document-level Graph Convolutional Neural Network》、《Connecting the Dots: Document-level Neural Relation Extraction with Edge-oriented Graphs》、《Reasoning with Latent Structure Reﬁnement for Document-Level Relation Extraction》。</p><a id="more"></a>]]></content>
       
       
+      <categories>
+          
+          <category> NLP </category>
+          
+          <category> 关系抽取 </category>
+          
+      </categories>
+      
       
         <tags>
             
