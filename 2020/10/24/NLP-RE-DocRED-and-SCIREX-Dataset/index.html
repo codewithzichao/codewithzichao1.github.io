@@ -52,13 +52,17 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="这篇博客主要讲解一下Document-level 关系抽取上的最新的两个数据集：DocRED以及SCIREX，paper名称：《DocRED: A Large-Scale Document-Level Relation Extraction Dataset》、《SCIREX: A Challenge Dataset for Document-Level Information Extraction">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/statistic_docred.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/result_docred.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/human_perfance_docred.jpg">
 <meta property="article:published_time" content="2020-10-24T13:57:54.000Z">
-<meta property="article:modified_time" content="2020-10-25T02:10:06.590Z">
+<meta property="article:modified_time" content="2020-10-26T17:16:07.726Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="DocRED">
 <meta property="article:tag" content="SCIREX">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/statistic_docred.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/">
 
@@ -254,7 +258,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-10-25 10:10:06" itemprop="dateModified" datetime="2020-10-25T10:10:06+08:00">2020-10-25</time>
+                <time title="Modified: 2020-10-27 01:16:07" itemprop="dateModified" datetime="2020-10-27T01:16:07+08:00">2020-10-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -294,6 +298,38 @@
       
         <p>这篇博客主要讲解一下Document-level 关系抽取上的最新的两个数据集：DocRED以及SCIREX，paper名称：《DocRED: A Large-Scale Document-Level Relation Extraction Dataset》、《SCIREX: A Challenge Dataset for Document-Level Information Extraction》。</p>
 <a id="more"></a>
+<h2 id="DocRED-datasets"><a href="#DocRED-datasets" class="headerlink" title="DocRED datasets"></a>DocRED datasets</h2><h3 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h3><p>DocRED数据集是2019年发表在ACL上的《DocRED: A Large-Scale Document-Level Relation Extraction Dataset》。关系抽取是NLP中一个非常基础且重要的任务，主要是：辨别text中实体之间的relation facts。但是在目前的relation extraction中，主要都是集中在sentence-level上，也就是提取句子内的实体，并识别实体之间的关系。但是在实际的问题当中，很多实体之间的关系需要通过多个句子来获得，所以将sentence-level的raltion extraction扩展到document-level 的relation extraction是非常有必要的。而目前已有的document-level的数据集，要么数据量不够大，要么有很多的噪音，要么构造的数据集只适用于某一个领域，这对于构建general domain下的document-level relation extraction model是不利的，在这种情况下，就有了DocRED。</p>
+<h3 id="Statistics-of-DocRED"><a href="#Statistics-of-DocRED" class="headerlink" title="Statistics of DocRED"></a>Statistics of DocRED</h3><p>DocRED是根据wikipedia和wikidata构建而来，最后DocRED的各项数值如下：</p>
+<p><img src="/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/statistic_docred.jpg" alt></p>
+<p>从图中可以看到，在DocRED中，平均每一个document的word大概在198.2～209.7之间，说实话，这个程度其实只能算是paragraph，离document还差的比较远，这一点SCIREX数据集弥补了(平均有4000左右)。</p>
+<h3 id="Baseline"><a href="#Baseline" class="headerlink" title="Baseline"></a>Baseline</h3><p>paper中实验了当时SOTA的三种模型。大致的过程是：首先对于一篇doucment表示为：$\cal D=\{w_i\}_{i=1}^{n}$，其中$w_i$表示第$i$个word，我们将其输入到CNN/LSTM/BILSTM当中，得到encoder后的$\{h_i\}_{i=1}^{n}$，然后我们可以得到entities的representation，最后预测每一个entity pair的relation type。下面讲解一些details：</p>
+<ul>
+<li><p><strong>word features：</strong>对于每一个word，它的$feature=[GloVe_word_embedding;entity_type_embedding;coreferance_embedding]$。</p>
+</li>
+<li><p><strong>named entity mention representaion：</strong>这里需要明确named entity mention与entity的区别。named entity mention指的是与entity相关的word的集合，包括指代、缩写、nickname等等。举个例子：<code>北京大学</code>是一个entity，它的named entity mention可以有：<code>北大</code>、<code>p大</code>、<code>贵校</code>、<code>你北</code> 、<code>隔壁</code>等等。那么在relation extraction中，我们要做的recognize named entity mentions。当我们identity named entity mentions后，我们怎么表示entity呢？entity $e_i$如下：</p>
+<script type="math/tex; mode=display">
+e_i=\frac {1}{K}\sum_{i=1}^{K}m_k \\
+m_k=\frac{1}{t-s+1}\sum_{j=t}^{s}h_j</script><p>其中，$K$表示entity $e_i$所有的mentions的数量，$m_k$表示第$k$个mention，t与s是第$K$个mention的开头与结尾的index。</p>
+</li>
+<li><p><strong>predction：</strong>对于relation extraction，我们是将其视为一个多标签分类的问题，所以采用的是sigmoid函数，对于每一个entity pair $(e_i,e_j)$，具体如下：</p>
+<script type="math/tex; mode=display">
+\tilde x_i=[e_i;E(d_{ij})], \ \tilde e_j=[e_j;E(d_{ji})] \\
+P(r|e_i,e_j)=sigmoid(\tilde e_i^TW_r\tilde e_j+b_r)</script><p>其中，$d_{ij}$与$d_{ji}$表示的是两个entity早起docment中第一个mention之间的相对距离，$E$是一个embedding matrix。</p>
+</li>
+</ul>
+<h3 id="expermient"><a href="#expermient" class="headerlink" title="expermient"></a>expermient</h3><p>先放结果～</p>
+<p><img src="/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/result_docred.jpg" alt></p>
+<p><img src="/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/human_perfance_docred.jpg" style="zoom:50%;"></p>
+<ul>
+<li>对于DocRED，评价指标采用的是F1和AUC，但是为了避免训练集与验证集/测试集上relation facts的overlap，所以又提出了Ign F1和Ign AUC指标，以获得更好的效果。</li>
+<li>从上面的表中可以看到，目前的baseline的效果与human的performance相去甚远，还有很大的可以提高的空间。</li>
+<li>在DocRED中，除了关系分类任务，还提出了另一个子任务——identity 关系实例(relation instances)和支持证据(supporting envidences)，用于进一步提高性能。</li>
+<li>总的来看，DocRED是一个general domain document-level relation extraction datasets，目前已有的方法的效果与human performance相去甚远，有很大的提升空间，是一个可以做的方向。</li>
+</ul>
+<h2 id="SCIREX-datasets"><a href="#SCIREX-datasets" class="headerlink" title="SCIREX datasets"></a>SCIREX datasets</h2><h3 id="Background-1"><a href="#Background-1" class="headerlink" title="Background"></a>Background</h3><h3 id="Statistics-of-SCIREX"><a href="#Statistics-of-SCIREX" class="headerlink" title="Statistics of SCIREX"></a>Statistics of SCIREX</h3><h3 id="Baseline-1"><a href="#Baseline-1" class="headerlink" title="Baseline"></a>Baseline</h3><h3 id="experiment"><a href="#experiment" class="headerlink" title="experiment"></a>experiment</h3><h3 id="References"><a href="#References" class="headerlink" title="References"></a>References</h3><p>《DocRED: A Large-Scale Document-Level Relation Extraction Dataset》</p>
+<p>code：<a href="https://github.com/thunlp/DocRED" target="_blank" rel="noopener">https://github.com/thunlp/DocRED</a></p>
+<p>《SCIREX: A Challenge Dataset for Document-Level Information Extraction》</p>
+<p>code：<a href="https://github.com/allenai/SciREX" target="_blank" rel="noopener">https://github.com/allenai/SciREX</a></p>
 
     </div>
 
@@ -378,6 +414,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#DocRED-datasets"><span class="nav-number">1.</span> <span class="nav-text">DocRED datasets</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Background"><span class="nav-number">1.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Statistics-of-DocRED"><span class="nav-number">1.2.</span> <span class="nav-text">Statistics of DocRED</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Baseline"><span class="nav-number">1.3.</span> <span class="nav-text">Baseline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#expermient"><span class="nav-number">1.4.</span> <span class="nav-text">expermient</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SCIREX-datasets"><span class="nav-number">2.</span> <span class="nav-text">SCIREX datasets</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Background-1"><span class="nav-number">2.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Statistics-of-SCIREX"><span class="nav-number">2.2.</span> <span class="nav-text">Statistics of SCIREX</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Baseline-1"><span class="nav-number">2.3.</span> <span class="nav-text">Baseline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment"><span class="nav-number">2.4.</span> <span class="nav-text">experiment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#References"><span class="nav-number">2.5.</span> <span class="nav-text">References</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
