@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>NLP|TST-DualRL model</title>
+    <url>/2020/10/28/NLP-TST-DualRL-model/</url>
+    <content><![CDATA[<p>这篇博客讲解一下IJCAI2019的一篇关于text style transfer的论文：《A Dual Reinforcement Learning Framework for Unsupervised Text Style Transfer》。</p>
+<a id="more"></a>
+]]></content>
+      <categories>
+        <category>NLP</category>
+        <category>文本风格转换</category>
+      </categories>
+      <tags>
+        <tag>NLP</tag>
+        <tag>DualRL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>NLP|RE-Dialogue-based relation extraction</title>
+    <url>/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>NLP|RE-Integrate GNN into Document-level RE task|PART TWO</title>
     <url>/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/</url>
     <content><![CDATA[<p>接着上一篇博客，这篇博客也是讲解图神经网络在Document-level关系抽取上的应用，共讲解4篇论文：《Global-to-Local Neural Networks for Document-Level Relation Extraction》、《HIN: Hierarchical Inference Network for Document-Level Relation Extraction》、《Entity and Evidence Guided Relation Extraction for DocRED》、《Document-Level Relation Extraction with Adaptive Thresholding and Localized Context Pooling》。</p>
