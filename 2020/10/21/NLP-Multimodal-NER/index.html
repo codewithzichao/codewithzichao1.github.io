@@ -62,7 +62,7 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/21/NLP-Multimodal-NER/UMT_result.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/21/NLP-Multimodal-NER/UMT_ablation.jpg">
 <meta property="article:published_time" content="2020-10-21T12:23:45.000Z">
-<meta property="article:modified_time" content="2020-10-27T10:33:29.621Z">
+<meta property="article:modified_time" content="2020-10-27T15:45:33.291Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="Multimodal NER">
@@ -263,7 +263,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-10-27 18:33:29" itemprop="dateModified" datetime="2020-10-27T18:33:29+08:00">2020-10-27</time>
+                <time title="Modified: 2020-10-27 23:45:33" itemprop="dateModified" datetime="2020-10-27T23:45:33+08:00">2020-10-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -416,7 +416,31 @@ w_m=\beta_wh_i+\beta_vm</script><p>最终计算得到的$w_m$作为CRF层的输�
 <h2 id="Improving-Multimodal-Named-Entity-Recognition-via-Entity-Span-Detection-with-Uniﬁed-Multimodal-Transformer-ACL2020"><a href="#Improving-Multimodal-Named-Entity-Recognition-via-Entity-Span-Detection-with-Uniﬁed-Multimodal-Transformer-ACL2020" class="headerlink" title="Improving Multimodal Named Entity Recognition via Entity Span Detection with Uniﬁed Multimodal Transformer(ACL2020)"></a>Improving Multimodal Named Entity Recognition via Entity Span Detection with Uniﬁed Multimodal Transformer(ACL2020)</h2><h3 id="background-3"><a href="#background-3" class="headerlink" title="background"></a>background</h3><p>这是最新的multimodal NER的paper，主要解决的问题有：1.text与image的交互不够，即便能够得到简单交互后的结果，但是text对image context并不敏感；2.之前的研究并没有考虑image带来的bias。针对于第一个问题，这篇paper提出了MMI module，针对于第二个问题，这篇paper设计了ESD辅助任务来解决。具体的下面小节将详细的介绍。</p>
 <h3 id="model-3"><a href="#model-3" class="headerlink" title="model"></a>model</h3><p>先放图～</p>
 <p><img src="/2020/10/21/NLP-Multimodal-NER/UMT_model.jpg" alt></p>
-<p>整体模型分为三部分：</p>
+<p>整体模型分为三部分：<strong>unimodal input representation、multimodal transformer、unified multimodal transformer。</strong></p>
+<ul>
+<li><p><strong>unimodal input representation：</strong>主要分为两部分：word representation与visual representation。对于前者，paper中使用了BERT，一方面是能够得到更加强大的representation，另一方面也能够解决一词多义性问题。假设输入的句子为：$S^{‘}=(s_0,s_1,…,s_{n+1})$，其中$s_0、s_{n+1}$分别表示[CLS]与[SEP] token，通过三种embedding相加，得到的句子表示为：$X=(x_0,x_1,…,x_{n+1})$，通过BERT之后，为：$C=(c_0,c_1,…,c_{n+1})$，其中$c_i\in R^d$；对于后者，采用ResNet来对image进行编码，我们保留ResNet的最后一个卷积层的输出作为该image的representation，为：$U=(u_1,u_2,…,u_49)$，$u_i$表示一个region，且其维度是：$R^{2048}$，然后我们通过一个线性变换，让其维度与word representation的维度一样，为：$V=(v_1,…,v_{49}),v_i\in R^d$。</p>
+</li>
+<li><p><strong>multimodal transformer：</strong>在正式对word与visual进行交互之前，我们首先对word representation再使用一层标准的transformer layer，我个人理解是增加非线性，不加其实也说的通，得到$R=(r_0,r_1,…,r_{n+1})$。接下来，设计了MMI module，让word与visual进行交互。具体分为两部分：image-aware word representation与word-aware visual representation。</p>
+<ul>
+<li><p><strong>image-aware word representation：</strong>这一步是image对word进行attention，得到更好的word representation。那么，就是$V$作为query，$R$作为key和value，使用m-head cross-modal attention，公式如下：</p>
+<script type="math/tex; mode=display">
+CA_i(V,R)=softmax(\frac{[W_{q_i}V]^T[W_{k_i}R]}{\sqrt {d/m}})[W_{v_i}R]^T \\
+MH-CA(V,R)=W^{'}[CA_1(V,R),CA_2(V,R),...,CA_m(V,R)]^T \\
+\tilde P=LN(V+MH-CA(V,R)) \\
+P=LN(\tilde P+FFN(\tilde P))</script><p>其中，$P=(p_1,…,p_{49})$。但是这个与我们最终想要得到更好的word representation的目标不一致，所以我们将$R$作为query，$P$作为key和value，再输入到一个与上述一样的transformer layer，得到$A=(a_0,a_1,…,a_{n+1})$。</p>
+</li>
+<li><p><strong>word-aware visual representation：</strong>这里是word对visual进行attention，所以将word $R$作为query，$V$作为key和value，应用和上述一样的transformer layer，得到$Q=(q_0,q_1,…,q_{n+1})$。然后我们希望能够控制visual information的输入，所以有设计了visual gate，具体公式如下：</p>
+<script type="math/tex; mode=display">
+g=sigmoid(W_a^TA+W_q^TQ) \\
+B=gQ</script><p>$B$就是最终的visual representation。</p>
+</li>
+<li><p><strong>CRF：</strong>我们将$A$与$B$进行concat，并且输送到标准的CRF kayer当中。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>unified multimodal transformer：</strong>在上一步的multimodal transformer当中，都是在关注如何对text和image之间的关系进行建模，但是这样很容易导致模型过分去关注image中有的entity，对于在sentence中但是不在image中的实体关注不够，因此为了解决这个问题，设计了ESD辅助任务，用来预测entity的type。假设一个句子的标注为：$z=(z_0,…,z_{n+1})$，其中$z_i\in \cal Z$，$\cal Z=\{B,I,O\}$，我们将其输送到一个transformer layer+CRF layer。然后我们想要将其辅助与最终的预测，所以设计了一个conversion matrix：$W^c\in R^{|\cal Z|\times |\cal Y|}$，其中$\cal Z=\{B,I,O\}$，${\cal Y}=\{B-PEC,I-PEC,…\}$，如果$\cal Z_j$不是$\cal Y_k$的相关label，那么$W^c_{j,k}=0$，否则为$W^c_{j,k}=\frac{1}{|C_j|}$。</p>
+</li>
+</ul>
 <h3 id="experiment-3"><a href="#experiment-3" class="headerlink" title="experiment"></a>experiment</h3><ol>
 <li><p>数据集：twitter2015、twitter2017</p>
 </li>
