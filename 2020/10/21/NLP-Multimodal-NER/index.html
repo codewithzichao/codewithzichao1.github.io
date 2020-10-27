@@ -62,7 +62,7 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/21/NLP-Multimodal-NER/UMT_result.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/21/NLP-Multimodal-NER/UMT_ablation.jpg">
 <meta property="article:published_time" content="2020-10-21T12:23:45.000Z">
-<meta property="article:modified_time" content="2020-10-27T10:06:53.420Z">
+<meta property="article:modified_time" content="2020-10-27T10:28:37.838Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="Multimodal NER">
@@ -263,7 +263,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-10-27 18:06:53" itemprop="dateModified" datetime="2020-10-27T18:06:53+08:00">2020-10-27</time>
+                <time title="Modified: 2020-10-27 18:28:37" itemprop="dateModified" datetime="2020-10-27T18:28:37+08:00">2020-10-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -392,7 +392,7 @@ w_m=\beta_wh_i+\beta_vm</script><p>最终计算得到的$w_m$作为CRF层的输�
 <p><img src="/2020/10/21/NLP-Multimodal-NER/MNER_model.jpg" style="zoom:50%;"></p>
 <p>整体模型分为三部分：<strong>features、modality attention module、BILSTM+CRF</strong>。</p>
 <ul>
-<li><p><strong>task definition：</strong>输入的sentence表示为：$x=\{x_t\}_{t=1}^{T}$，其对应的标签是:$y={y_t}_{t=1}^{T}$，每一个token由三种modality组成：$x_t=\{x_t^{(w)},x_t^{(c)},x_t^{(v)}\}$，分别表示word embedding、character embedding、visual embedding。</p>
+<li><p><strong>task definition：</strong>输入的sentence表示为：$x=\{x_t\}_{t=1}^{T}$，其对应的标签是:$y=\{y_t\}_{t=1}^{T}$，每一个token由三种modality组成：$x_t=\{x_t^{(w)},x_t^{(c)},x_t^{(v)}\}$，分别表示word embedding、character embedding、visual embedding。</p>
 </li>
 <li><p><strong>features：</strong>共分为三种：word embedding、character embedding、visual embedding。word embedding由GloVe初始化，并在training过程进行更新；character embedding是将character embedding送入BILSTM当中，得出的输出；visual embedding是使用GoogleNet的最后一层的输出。</p>
 </li>
@@ -427,10 +427,12 @@ w_m=\beta_wh_i+\beta_vm</script><p>最终计算得到的$w_m$作为CRF层的输�
 </li>
 <li><p>消融实验</p>
 <p><img src="/2020/10/21/NLP-Multimodal-NER/UMT_ablation.jpg" alt></p>
-<p>这是paper当中消融实验的结果，</p>
+<p>这是paper当中消融实验的结果，可以看到，在UMT模型中，各个component都比较重要，去掉都会有影响，但是相比来说，ESD辅助任务发挥了更大的作用，之后可以搞一波。</p>
 </li>
-<li></li>
+<li><p>base case分析：在paper的base case分析中，主要的错误在于：当image与text完全不相关的时候，BERT-CRF预测会正确，而UMT预测错误，实际上就相当于image是噪音，在整个数据集中，大概有5%的比例。</p>
+</li>
 </ol>
+<p>小小的总结一下吧：对与Multimodal NER任务，目前主要的难点是：1.如何设计更好的机制，从而让token在image找到与其最相关的region？2.在1的基础上，怎么对text和image region更好地进行融合？3.image当中其实只有很好的实体，对于sentence中的其他实体，image其实并不能提供有效的信息，怎么去去解决这种情况？4.当image与text完全不相关时，怎么解决？</p>
 <h2 id="references"><a href="#references" class="headerlink" title="references"></a>references</h2><p>《Adaptive Co-Attention Network for Named Entity Recognition in Tweets》</p>
 <p>《Visual Attention Model for Name Tagging in Multimodal Social Media》</p>
 <p>《Multimodal Named Entity Recognition for Short Social Media Posts》</p>
