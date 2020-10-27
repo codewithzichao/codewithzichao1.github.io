@@ -62,7 +62,7 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/21/NLP-Multimodal-NER/UMT_result.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/21/NLP-Multimodal-NER/UMT_ablation.jpg">
 <meta property="article:published_time" content="2020-10-21T12:23:45.000Z">
-<meta property="article:modified_time" content="2020-10-27T15:45:33.291Z">
+<meta property="article:modified_time" content="2020-10-27T15:46:40.452Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="Multimodal NER">
@@ -263,7 +263,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-10-27 23:45:33" itemprop="dateModified" datetime="2020-10-27T23:45:33+08:00">2020-10-27</time>
+                <time title="Modified: 2020-10-27 23:46:40" itemprop="dateModified" datetime="2020-10-27T23:46:40+08:00">2020-10-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -457,7 +457,7 @@ B=gQ</script><p>$B$就是最终的visual representation。</p>
 <li><p>base case分析：在paper的base case分析中，主要的错误在于：当image与text完全不相关的时候，BERT-CRF预测会正确，而UMT预测错误，实际上就相当于image是噪音，在整个数据集中，大概有5%的比例。</p>
 </li>
 </ol>
-<p>小小的总结一下吧：对与Multimodal NER任务，目前主要的难点是：1.如何设计更好的机制，从而让token在image找到与其最相关的region？2.在1的基础上，怎么对text和image region更好地进行融合？3.image当中其实只有很好的实体，对于sentence中的其他实体，image其实并不能提供有效的信息，怎么去去解决这种情况？4.当image与text完全不相关时，怎么解决？</p>
+<p>小小的总结一下吧：对与Multimodal NER任务，目前主要的难点是：1.如何设计更好的机制，从而让token在image找到与其最相关的region？2.在1的基础上，怎么对text和image region更好地进行融合？3.image当中其实只有很少的实体，对于sentence中的其他实体，image其实并不能提供有效的信息，怎么去解决这种情况？4.当image与text完全不相关时，怎么解决？</p>
 <h2 id="references"><a href="#references" class="headerlink" title="references"></a>references</h2><p>《Adaptive Co-Attention Network for Named Entity Recognition in Tweets》</p>
 <p>《Visual Attention Model for Name Tagging in Multimodal Social Media》</p>
 <p>《Multimodal Named Entity Recognition for Short Social Media Posts》</p>
