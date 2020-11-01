@@ -63,8 +63,11 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/LSR_dynamic_reasoner.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/LSR_result.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/LSR_CDR_GDA.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/GAIN_model.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/GAIN_result.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/GAIN_result_2.jpg">
 <meta property="article:published_time" content="2020-10-24T14:09:30.000Z">
-<meta property="article:modified_time" content="2020-11-01T09:36:48.025Z">
+<meta property="article:modified_time" content="2020-11-01T15:41:57.412Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="Document-level RE">
@@ -265,7 +268,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-11-01 17:36:48" itemprop="dateModified" datetime="2020-11-01T17:36:48+08:00">2020-11-01</time>
+                <time title="Modified: 2020-11-01 23:41:57" itemprop="dateModified" datetime="2020-11-01T23:41:57+08:00">2020-11-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -305,7 +308,7 @@
       
         <p>这篇博客主要是讲解图神经网络在Document-level关系抽取上的应用，共讲解4篇论文：《Inter-sentence Relation Extraction with Document-level Graph Convolutional Neural Network》、《Connecting the Dots: Document-level Neural Relation Extraction with Edge-oriented Graphs》、《Reasoning with Latent Structure Reﬁnement for Document-Level Relation Extraction》、《Double Graph Based Reasoning for Document-level Relation Extraction》。</p>
 <a id="more"></a>
-<h2 id="Inter-sentence-Relation-Extraction-with-Document-level-Graph-Convolutional-Neural-Network-ACL2019"><a href="#Inter-sentence-Relation-Extraction-with-Document-level-Graph-Convolutional-Neural-Network-ACL2019" class="headerlink" title="Inter-sentence Relation Extraction with Document-level Graph Convolutional Neural Network(ACL2019)"></a>Inter-sentence Relation Extraction with Document-level Graph Convolutional Neural Network(ACL2019)</h2><h3 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h3><p>文档级关系抽取的难点在于：我们往往需要抽取的entity pair的是span across multi-sentences，所以我们必须对entity的local、non-local、semantic、dependency等信息进行提取和建模。这篇paper提出的GCNN，正是以word为node，words之间的local与non-local dependency作为edge，来构建document-level graph，从而解决文档级关系抽取问题。</p>
+<h2 id="Inter-sentence-Relation-Extraction-with-Document-level-Graph-Convolutional-Neural-Network-ACL2019"><a href="#Inter-sentence-Relation-Extraction-with-Document-level-Graph-Convolutional-Neural-Network-ACL2019" class="headerlink" title="Inter-sentence Relation Extraction with Document-level Graph Convolutional Neural Network(ACL2019)"></a>Inter-sentence Relation Extraction with Document-level Graph Convolutional Neural Network(ACL2019)</h2><h3 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h3><p>文档级关系抽取的难点在于：我们往往需要抽取的entity pair是span across multi-sentences，所以我们必须对entity的local、non-local、semantic、dependency等信息进行提取和建模。这篇paper提出的GCNN，正是以word为node，words之间的local与non-local dependency作为edge，来构建document-level graph，从而解决文档级关系抽取问题。</p>
 <h3 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h3><p>先放图～</p>
 <p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/GCNN_model.jpg" alt></p>
 <p>GCNN模型分为4部分：<strong>input layer、graph construction、GCNN layer、MIL-based relation classification。</strong></p>
@@ -460,8 +463,48 @@ P(r|e_i,e_j)=\sigma(e_i^TW_ee_j+b_e)</script></li>
 <p>在没有MDP节点的情况下，取得了SOTA，说明MDP的作用一般。总的来说，LSR模型确实很新颖，但是follow的价值一般。</p>
 </li>
 </ol>
-<h2 id="Double-Graph-Based-Reasoning-for-Document-level-Relation-Extraction-EMNLP2020"><a href="#Double-Graph-Based-Reasoning-for-Document-level-Relation-Extraction-EMNLP2020" class="headerlink" title="Double Graph Based Reasoning for Document-level Relation Extraction(EMNLP2020)"></a>Double Graph Based Reasoning for Document-level Relation Extraction(EMNLP2020)</h2><h3 id="Background-3"><a href="#Background-3" class="headerlink" title="Background"></a>Background</h3><p>这篇paper主要解决三个问题：1.一个relation的subject与object可能位于不同的sentence，不能仅仅利用一个句子来得到relation；2.同一个entity可能会出现在不同的sentence当中，因此需要利用cross-sentence context information，从而更好的表示entity；3.很多relation需要logical reasoning(main issue)。为此提出了GAIN模型。个人认为这篇paper提出的模型比较优雅，挺好的。</p>
-<h3 id="Model-3"><a href="#Model-3" class="headerlink" title="Model"></a>Model</h3><h3 id="Experiment-3"><a href="#Experiment-3" class="headerlink" title="Experiment"></a>Experiment</h3><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>《Inter-sentence Relation Extraction with Document-level Graph Convolutional Neural Network》</p>
+<h2 id="Double-Graph-Based-Reasoning-for-Document-level-Relation-Extraction-EMNLP2020"><a href="#Double-Graph-Based-Reasoning-for-Document-level-Relation-Extraction-EMNLP2020" class="headerlink" title="Double Graph Based Reasoning for Document-level Relation Extraction(EMNLP2020)"></a>Double Graph Based Reasoning for Document-level Relation Extraction(EMNLP2020)</h2><h3 id="Background-3"><a href="#Background-3" class="headerlink" title="Background"></a>Background</h3><p>这篇paper也是继承了EoG模型，主要解决三个问题：1.一个relation的subject与object可能位于不同的sentence，不能仅仅利用一个句子来得到relation；2.同一个entity可能会出现在不同的sentence当中，因此需要利用cross-sentence context information，从而更好的表示entity；3.很多relation需要logical reasoning(main issue)。为此提出了GAIN模型。个人认为这篇paper的模型比较优雅，挺好的。</p>
+<h3 id="Model-3"><a href="#Model-3" class="headerlink" title="Model"></a>Model</h3><p>先放图～</p>
+<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/GAIN_model.jpg" alt></p>
+<p>GAIN模型分为四部分：<strong>encoding module、mention-level graph aggregation module、entity-level graph aggregation module、classification module。</strong></p>
+<ul>
+<li><p><strong>task definition：</strong>给定一篇含有$N$个sentence的documnt：$\cal D=\{s_i\}_{i=1}^{N}，s_i=\{w_j\}_{j=1}^{M}$，以及$P$个entity：$\cal E=\{e_i\}_{i=1}^{P},e_i=\{m_j\}_{j=1}^{Q}$，其中$e_i$表示第$i$个entity，$m_j$表示第$i$个entity的第$j$个mention。我们的目标是entity之间的relation。</p>
+</li>
+<li><p><strong>encoding module：</strong>这一部分主要是将document中的word经过编码，得到contextual representation。给定有n个word的document：$\cal D=\{w_i\}_{i=1}^{n}$,然后将word embedding与type embedding以及coreference embedding进行concat，得到final word embedding，即：</p>
+<script type="math/tex; mode=display">
+x_i=[E_w(w_i);E_t(t_i);E_c(c_i)]</script><p>其中，$t_i$与$c_i$是$w_i$对应的named entity type id与entity id，对于那些不属于任何entity的word，我们引入<code>None</code>type。得到final word embedding之后，我们将其输入到一个encoder当中(BISLTM/BERT etc)，得到这一层的输出：</p>
+<script type="math/tex; mode=display">
+[g_1,...,g_n]=Encoder([x_1,...,x_n])</script></li>
+<li><p><strong>mention-level graph aggregation module：</strong>这个graph的构建主要是对mention之间的关系进行建模。在mention-level graph当中，<strong>node set：mention node与document node。</strong>mention node就是表示每一个mention，document node是一个虚拟节点，主要是为了对document information进行建模，同时也是视其为一个中继节点，让不同mention之间的交互变得更加容易。<strong>edge set：intra-entity edge、inter-entity edge、document edge。</strong>intra-entity edge是让同一个entity的mention彼此连接；inter-entity edge是让一个句子内的不同entity的mention之间进行连接；document edge是让所有的mention与document node进行连接。</p>
+<p>构建好graph之后，GAIN模型使用与GCNN中同样的GCN，如下：</p>
+<script type="math/tex; mode=display">
+h^{(l+1)}_{u}=\sigma(\sum_{k\in{\cal K}}\sum_{v\in \cal N_k(u)}W^{(l)}_kh^{(l)}_v+b^{(l)}_k)</script><p>但是这种虽然很接近WL-test，但是会存在范数不收敛的情况，这个真的不需要考虑一下吗？🧐在stack N层GCN之后，对于每一个node，我们去concat所有layer的representation，来作为每一个node的final representation，即：$m_u=[h^{(0)}_u;h^{(1)}_u;…,h^{(N)}_u]$。</p>
+</li>
+<li><p><strong>entity-level graph inference module：</strong>这一步就是进行inference，得到entity-entity的表示，用于最终的分类，所以path reasoning mechanism很重要。在entity-level graph中，我们将同一个entity的所有mention的表示的平均作为此entity的表示，即：$e_i=\frac{1}{N}\sum_n m_n$。entity node之间的边表示：$e_{ij}=\sigma(W_q[e_i;e_j]+b_q),\sigma \text{是激活函数}$。对于entity pair之间不同的路径，其表示是：$p^i_{h,t}=[e_{ho};e_{ot};e_{to};e_{oh}]$，当然了，entity pair之间的path会有多个，我们使用attention机制，如下：</p>
+<script type="math/tex; mode=display">
+s_i=\sigma ([e_h;e_t]W_lp^i_{h,t}) \\
+\alpha_i=\frac{exp(s_i)}{\sum_jexp(s_j)} \\
+p_{h,t}=\sum_i\alpha_ip^i_{h,t}</script><p>其中，$\sigma$是某一个激活函数。这里只使用了2-hop，如果使用multi-hop，效果会不会更好？🧐</p>
+</li>
+<li><p><strong>classification module：</strong>这里就是最终的分类。但是这里借用了ESIM中表示，对于enitty pair $(e_h,e_t)$，其综合的inferential path information是：</p>
+<script type="math/tex; mode=display">
+I_{h,t}=[e_h;e_t;|e_h-e_t|;e_h\odot e_t;m_{doc};p_{h,t}]</script><p>其中，$m_{doc}$就是document node，然后我们将其看作一个多标签分类问题，使用sigmoid函数，来完成分类，如下：</p>
+<script type="math/tex; mode=display">
+P(r|e_h,e_t)=sigmoid(W_b\sigma(W_aI_{h,t}+b_a)+b_b)</script><p>最终的loss使用CE。</p>
+</li>
+</ul>
+<h3 id="Experiment-3"><a href="#Experiment-3" class="headerlink" title="Experiment"></a>Experiment</h3><ol>
+<li><p>数据集：DocRED</p>
+</li>
+<li><p>实验结果</p>
+<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/GAIN_result.jpg" alt></p>
+<p>从结果上看，GAIN的效果是令人惊艳的。我们再来看看ablation，如下：</p>
+<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/GAIN_result_2.jpg" alt></p>
+<p>从消融实验来看，可以发现各个模块对于结果的话影响都是非常巨大的，很优雅，没有多余的设计。</p>
+<p>目前来看，主要的处理：encoding？怎么构建图，才能够利用好mention、entity、sentence、document的信息（edge-oriented or node-oriented）？heterogeneous graph的处理？logical reasoning的处理？长期建模很重要，怎么更好地处理？</p>
+</li>
+</ol>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>《Inter-sentence Relation Extraction with Document-level Graph Convolutional Neural Network》</p>
 <p>《Connecting the Dots: Document-level Neural Relation Extraction with Edge-oriented Graphs》</p>
 <p>《Reasoning with Latent Structure Reﬁnement for Document-Level Relation Extraction》</p>
 <p>《Double Graph Based Reasoning for Document-level Relation Extraction》i</p>
