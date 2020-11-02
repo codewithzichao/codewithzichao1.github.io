@@ -1907,8 +1907,8 @@ G^*=arg min \ Div(P_g,P_{data})=argmin \ max \ V(G,D)</script><p>另外，我们
       </categories>
       <tags>
         <tag>NLP</tag>
-        <tag>IMN</tag>
         <tag>tensorflow2</tag>
+        <tag>IMN</tag>
       </tags>
   </entry>
   <entry>
@@ -1958,8 +1958,8 @@ R^{l}=attentiveModule(R^{l},U_{i}^{l},U_{i}^{l})</script><p><img src="/2020/05/1
       </categories>
       <tags>
         <tag>NLP</tag>
-        <tag>tensorflow2</tag>
         <tag>DAM</tag>
+        <tag>tensorflow2</tag>
       </tags>
   </entry>
   <entry>
