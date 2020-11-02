@@ -3694,10 +3694,10 @@ L(y,f(x))=L(y,f_{m-1}(x)+T(x,\theta_m))^2=(y-f_{m-1}(x)=T(x,\theta))^2</script><
       <tags>
         <tag>python</tag>
         <tag>统计学习方法</tag>
+        <tag>决策树</tag>
         <tag>scikit-learn</tag>
         <tag>CART</tag>
         <tag>回归树</tag>
-        <tag>决策树</tag>
       </tags>
   </entry>
   <entry>
@@ -3751,10 +3751,10 @@ R_2(j,s)=\{x|x^{(j)}>s\}</script><p>接下来，我们需要通过如下函数$m
       <tags>
         <tag>python</tag>
         <tag>统计学习方法</tag>
-        <tag>decision tree</tag>
         <tag>scikit-learn</tag>
         <tag>CART</tag>
         <tag>回归树</tag>
+        <tag>decision tree</tag>
       </tags>
   </entry>
   <entry>
