@@ -1699,11 +1699,11 @@
             
             <tag> 机器学习 </tag>
             
+            <tag> python </tag>
+            
             <tag> 集成学习 </tag>
             
             <tag> XGBoost </tag>
-            
-            <tag> python </tag>
             
             <tag> GBDT </tag>
             
@@ -1734,9 +1734,9 @@
             
             <tag> 统计学习方法 </tag>
             
-            <tag> 决策树 </tag>
-            
             <tag> scikit-learn </tag>
+            
+            <tag> 决策树 </tag>
             
             <tag> CART </tag>
             
@@ -1897,11 +1897,11 @@
             
             <tag> 统计学习方法 </tag>
             
-            <tag> scikit-learn </tag>
-            
             <tag> EM算法 </tag>
             
             <tag> GMM </tag>
+            
+            <tag> scikit-learn </tag>
             
         </tags>
       
