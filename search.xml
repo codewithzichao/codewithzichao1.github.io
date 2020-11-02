@@ -1967,8 +1967,8 @@ R^{l}=attentiveModule(R^{l},U_{i}^{l},U_{i}^{l})</script><p><img src="/2020/05/1
       </categories>
       <tags>
         <tag>NLP</tag>
-        <tag>tensorflow2</tag>
         <tag>DAM</tag>
+        <tag>tensorflow2</tag>
       </tags>
   </entry>
   <entry>
@@ -2044,8 +2044,8 @@ e_{2,i,j}=P_{u_i}^TAP_{r_j}</script><p>其中，$P_{u_i},P_{r_j}$是matching att
       </categories>
       <tags>
         <tag>NLP</tag>
-        <tag>DUA</tag>
         <tag>tensorflow2</tag>
+        <tag>DUA</tag>
       </tags>
   </entry>
   <entry>
@@ -3611,9 +3611,9 @@ L^{*(t)}=-\frac{1}{2}\mathop{\sum}\limits_{j=1}^{T}\frac{G_j^2}{H_j+\lambda}+\ga
       </categories>
       <tags>
         <tag>机器学习</tag>
+        <tag>python</tag>
         <tag>集成学习</tag>
         <tag>XGBoost</tag>
-        <tag>python</tag>
         <tag>GBDT</tag>
       </tags>
   </entry>
@@ -3694,8 +3694,8 @@ L(y,f(x))=L(y,f_{m-1}(x)+T(x,\theta_m))^2=(y-f_{m-1}(x)=T(x,\theta))^2</script><
       <tags>
         <tag>python</tag>
         <tag>统计学习方法</tag>
-        <tag>scikit-learn</tag>
         <tag>决策树</tag>
+        <tag>scikit-learn</tag>
         <tag>CART</tag>
         <tag>回归树</tag>
       </tags>
@@ -3983,9 +3983,9 @@ Q(\theta,\theta^{(i)})=\sum_{z}P(Z|Y,\theta^{(i)})log{P(Y,Z|\theta)},\\
       <tags>
         <tag>python</tag>
         <tag>统计学习方法</tag>
+        <tag>scikit-learn</tag>
         <tag>EM算法</tag>
         <tag>GMM</tag>
-        <tag>scikit-learn</tag>
       </tags>
   </entry>
   <entry>
