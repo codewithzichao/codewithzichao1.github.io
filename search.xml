@@ -160,15 +160,43 @@ P(r|E_a,E_b)=sigmoid(W_r \left[\begin{matrix}I_e \\ I_d \end{matrix}\right]+b_r)
 <p>从结果看，更加一般了，而后在case study中所说明的logical reasoning、coreference reasoning、combine common-sense information问题也没有解决。</p>
 </li>
 </ol>
-<h2 id="Document-Level-Relation-Extraction-with-Adaptive-Thresholding-and-Localized-Context-Pooling-arxiv2020"><a href="#Document-Level-Relation-Extraction-with-Adaptive-Thresholding-and-Localized-Context-Pooling-arxiv2020" class="headerlink" title="Document-Level Relation Extraction with Adaptive Thresholding and Localized Context Pooling(arxiv2020)"></a>Document-Level Relation Extraction with Adaptive Thresholding and Localized Context Pooling(arxiv2020)</h2><h3 id="Background-2"><a href="#Background-2" class="headerlink" title="Background"></a>Background</h3><p>这篇文章是JD放在arxiv上的文章，从结果来看是目前的top1，值得一读。它也是解决document-level RE。它的核心思想是：目前主流的做法是采用基于graph的方法来做，但是很多基于BERT的工作(譬如corefBERT)也能够得到很好的结果，并且在基于graph的模型的实验部分，也都证明了BERT以及BERT-like预训练模型的巨大提升，以至于让人怀疑有必要引入GNN？作者发现如果只用BERT的话，那么对于不同的entity pair，entity的rep都是一样的，这是一个很大的问题，那是否能够不引入graph的方式来解决这个问题呢？这就有了ATLOP模型。</p>
+<h2 id="Document-Level-Relation-Extraction-with-Adaptive-Thresholding-and-Localized-Context-Pooling-arxiv2020"><a href="#Document-Level-Relation-Extraction-with-Adaptive-Thresholding-and-Localized-Context-Pooling-arxiv2020" class="headerlink" title="Document-Level Relation Extraction with Adaptive Thresholding and Localized Context Pooling(arxiv2020)"></a>Document-Level Relation Extraction with Adaptive Thresholding and Localized Context Pooling(arxiv2020)</h2><h3 id="Background-2"><a href="#Background-2" class="headerlink" title="Background"></a>Background</h3><p>这篇文章是JD放在arxiv上的文章，从结果来看是目前的top1，值得一读。它也是解决document-level RE。它的核心思想是：目前主流的做法是采用基于graph的方法来做，但是很多基于BERT的工作(譬如corefBERT)也能够得到很好的结果，并且在基于graph的模型的实验部分，也都证明了BERT以及BERT-like预训练模型的巨大提升，以至于让人怀疑是否有必要引入GNN？作者发现如果只用BERT的话，那么对于不同的entity pair，entity的rep都是一样的，这是一个很大的问题，那是否能够不引入graph的方式来解决这个问题呢？这就有了ATLOP模型。</p>
 <blockquote>
 <p>说实话，这篇paper更多的是解决多标签分类问题，因为即便不是document-level RE，另外随便来个多标签分类，应该也可以得到很好的效果。</p>
 </blockquote>
 <h3 id="Model-2"><a href="#Model-2" class="headerlink" title="Model"></a>Model</h3><p>ATLOP模型整体是基于BERT而不是graph来做的。所以我分两部分阐述：主体部分+改良部分。</p>
 <h4 id="backbone"><a href="#backbone" class="headerlink" title="backbone"></a>backbone</h4><ul>
-<li><strong>task definition：</strong></li>
+<li><p><strong>task definition：</strong>给定document $d$以及一系列entity $\{e_i\}_{i=1}^{n}$，目标是得到entity pair $(e_s,e_o)$的relation $r$，$r\in {\cal R}\cup \{NA\}$。</p>
+</li>
+<li><p><strong>encoder：</strong>给定document $d=[x_t]_{t=1}^l$，对于每一个可能的mention的开头与结尾，加入<code>*</code>来进行标注，然后将sentence输入到BERT当中，得到contextual的rep。即：$[h_1,…,h_l]=BERT([x_1,…,x_l])$。mention embedding由mention首部的<code>*</code>rep来表示，entity rep是对其所有的mention的rep进行logexpsum得到的，即：$h_{e_i}=log\sum_{j=1}^{N_{e_i}}exp(h_{m_j^i})$，其中$m_j^i$表示entity $e_i$的第$j$个mention。</p>
+</li>
+<li><p><strong>binary classification：</strong>对于entity pair $(h_{e_s},h_{e_o})$，我们对其分别进行编码，并使用bilinear得到最终的结果，如下：</p>
+<script type="math/tex; mode=display">
+z_s=tanh(W_sh_{e_s}) \\
+z_o=tanh(W_oh_{e_o}) \\
+P(r|e_s,e_o)=sigmoid(z^T_sW_rz_o+b_r)</script><p>在ATLOP里，为了减少$W_r$的参数量，使用了group bilinear的技术，其实就是multi-head attention的思想，就是将$h_{e_s}与h_{e_o}$的维度分为k份，分别进行bilinear操作，最后对结果进行concat，再使用sigmoid得到结果。</p>
+</li>
 </ul>
-<h4 id="improvement"><a href="#improvement" class="headerlink" title="improvement"></a>improvement</h4><h3 id="Experiment-2"><a href="#Experiment-2" class="headerlink" title="Experiment"></a>Experiment</h3><ol>
+<h4 id="improvement"><a href="#improvement" class="headerlink" title="improvement"></a>improvement</h4><p><strong>adaptive thresholding</strong></p>
+<p>backbone中描述的就是不基于graph的基本操作，但是存在一个问题：我们使用sigmoid函数的时候，需要确定一个阈值(一般是0.5)，当结果大于这个阈值的时候，我们给它positive label，当它小于这个阈值的时候，我们给它negative label。但是作者发现，对于DRE这样的多实体多标签问题，不同的entity pair的不同的realtion判断，应该是有不同的阈值才能够得到更好的结果。一般我们会手动去试不同的阈值在dev上的效果，选取F1值最好的阈值。但是人工选择仍然无法达到最优解(近似最优解)，是否可以让模型自己来选择阈值呢？在ATLOP模型中，设计了adaptive thresholding机制来解决这个问题。</p>
+<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/ATLOP_adaptive_thresholding.jpg" style="zoom:50%;"></p>
+<p>具体来说，对于给定的entity pair $T=(e_s,e_o)$，我们定义它的positive label set($\cal P_T$)与negative label set($\cal P_N$)：前者是$T$有的relation，后者是$T$没有的realtion。我们追求的是：<strong>positive label的logits比negative label的要高，并且两者差距越大越好。</strong>因此，在ATLOP模型中，引入了<code>TH</code>这个class(<code>TH</code>class的概率计算仍然和计算普通的relation是一样的)，在测试的时候，对于给定的entity pair，我们返回的relation class是比<code>TH</code>class的logits要高的class。具体的公式如下：</p>
+<script type="math/tex; mode=display">
+\cal L_1=\sum_{r\in P_T}log(\frac{exp(logits_r)}{sum_{r^{\prime}\in \cal P_T\cup\{TH\}}exp(logits_r^{\prime})}) \\
+\cal L_2=log(\frac{exp(logits_{TH})}{sum_{r^{\prime}\in \cal P_T\cup\{TH\}}exp(logits_r^{\prime})}) \\
+\cal L=L_1+L_2</script><p>这里有个疑问，为什么不计算negative label的loss？🧐</p>
+<p><strong>localized context pooling</strong></p>
+<p>对于不同entity pair中的entity，其实最终用于分类的rep是一样的，而实际上，对于不同的entity pair，它所表达的信息却有可能完全不一样，并且在document中与之相关的信息的位置也是不一样的。为了解决这个问题，在ATLOP模型中，提出了LOP技术。</p>
+<p>具体来说，LOP技术，就是使用BERT中最后一个transformer layer中的multi-head self attention，将其融入到最终每一个entity的rep中，从而在不同的entity pair中，每一个entity的rep能够聚合其最相关的信息，个人认为这是这篇paper中最出彩的地方。具体公式如下：</p>
+<script type="math/tex; mode=display">
+A^{(s,o)}=A^E_s·A^E_o \\
+q^{(s,o)}=\sum_{i=1}^{H}A^{(s,o)}_i \\
+a^{(s,o)}=q^{(s,o)} \ or \ 1^Tq^{(s,o)} \\
+c^{(s,o)}=H^Ta^{(s,o)}</script><p>其中$A^E_s、A^E_o$是entity-level attention，然后我们将$c^{(s,o)}$与$h_{e_s}、h_{e_o}$相结合，如下：</p>
+<script type="math/tex; mode=display">
+z_s^{(s,o)}=tanh(W_sh_{e_s}+W_{c_1}c^{(s,o)}) \\
+z_o^{(s,o)}=tanh(W_oh_{e_o}+W_{c_2}c^{(s,o)}) \\</script><p>接下来操作就是一样的了，直接送入sigmoid就行。</p>
+<h3 id="Experiment-2"><a href="#Experiment-2" class="headerlink" title="Experiment"></a>Experiment</h3><ol>
 <li><p>数据集：CDR、GDA、DocRED</p>
 </li>
 <li><p>结果</p>
