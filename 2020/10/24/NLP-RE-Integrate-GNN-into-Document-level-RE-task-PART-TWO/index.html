@@ -60,11 +60,12 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/HIN_result.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/HIN_ablation.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/ATLOP_adaptive_thresholding.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/ATLOP_LOP.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/ATLOP_result_docred.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/ATLOP_result_CDR_GDA.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/ATLOP_ablation_1.jpg">
 <meta property="article:published_time" content="2020-10-24T15:22:29.000Z">
-<meta property="article:modified_time" content="2020-11-05T11:35:39.917Z">
+<meta property="article:modified_time" content="2020-11-05T11:36:32.957Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="Document-level RE">
@@ -265,7 +266,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-11-05 19:35:39" itemprop="dateModified" datetime="2020-11-05T19:35:39+08:00">2020-11-05</time>
+                <time title="Modified: 2020-11-05 19:36:32" itemprop="dateModified" datetime="2020-11-05T19:36:32+08:00">2020-11-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -435,6 +436,7 @@ P(r|e_s,e_o)=sigmoid(z^T_sW_rz_o+b_r)</script><p>在ATLOP里，为了减少$W_r$
 \cal L=L_1+L_2</script><p>这里有个疑问，为什么不计算negative label的loss？🧐</p>
 <p><strong>localized context pooling</strong></p>
 <p>对于不同entity pair中的entity，其实最终用于分类的rep是一样的，而实际上，对于不同的entity pair，它所表达的信息却有可能完全不一样，并且在document中与之相关的信息的位置也是不一样的。为了解决这个问题，在ATLOP模型中，提出了LOP技术。</p>
+<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/ATLOP_LOP.jpg" style="zoom:50%;"></p>
 <p>具体来说，LOP技术，就是使用BERT中最后一个transformer layer中的multi-head self attention，将其融入到最终每一个entity的rep中，从而在不同的entity pair中，每一个entity的rep能够聚合其最相关的信息，个人认为这是这篇paper中最出彩的地方。具体公式如下：</p>
 <script type="math/tex; mode=display">
 A^{(s,o)}=A^E_s·A^E_o \\
