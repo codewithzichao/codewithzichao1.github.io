@@ -52,12 +52,17 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="接着上一篇博客，这篇博客也是讲解图神经网络在Document-level关系抽取上的应用，共讲解4篇论文：《Global-to-Local Neural Networks for Document-Level Relation Extraction》、《HIN: Hierarchical Inference Network for Document-Level Relation Extractio">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/GLRE_model.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/GLRE_result.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/GLRE_result_pretrained_model.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/GLRE_result_ablation.jpg">
 <meta property="article:published_time" content="2020-10-24T15:22:29.000Z">
-<meta property="article:modified_time" content="2020-11-02T06:01:09.146Z">
+<meta property="article:modified_time" content="2020-11-05T09:02:34.958Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="Document-level RE">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/GLRE_model.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/">
 
@@ -253,7 +258,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-11-02 14:01:09" itemprop="dateModified" datetime="2020-11-02T14:01:09+08:00">2020-11-02</time>
+                <time title="Modified: 2020-11-05 17:02:34" itemprop="dateModified" datetime="2020-11-05T17:02:34+08:00">2020-11-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -293,8 +298,65 @@
       
         <p>接着上一篇博客，这篇博客也是讲解图神经网络在Document-level关系抽取上的应用，共讲解4篇论文：《Global-to-Local Neural Networks for Document-Level Relation Extraction》、《HIN: Hierarchical Inference Network for Document-Level Relation Extraction》、《Document-Level Relation Extraction with Adaptive Thresholding and Localized Context Pooling》、《Entity and Evidence Guided Relation Extraction for DocRED》。</p>
 <a id="more"></a>
-<h2 id="Global-to-Local-Neural-Networks-for-Document-Level-Relation-Extraction-EMNLP2020"><a href="#Global-to-Local-Neural-Networks-for-Document-Level-Relation-Extraction-EMNLP2020" class="headerlink" title="Global-to-Local Neural Networks for Document-Level Relation Extraction(EMNLP2020)"></a>Global-to-Local Neural Networks for Document-Level Relation Extraction(EMNLP2020)</h2><h3 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h3><p>1</p>
-<h3 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h3><h3 id="Experiment"><a href="#Experiment" class="headerlink" title="Experiment"></a>Experiment</h3><h2 id="HIN-Hierarchical-Inference-Network-for-Document-Level-Relation-Extraction-PAKDD2020"><a href="#HIN-Hierarchical-Inference-Network-for-Document-Level-Relation-Extraction-PAKDD2020" class="headerlink" title="HIN: Hierarchical Inference Network for Document-Level Relation Extraction(PAKDD2020)"></a>HIN: Hierarchical Inference Network for Document-Level Relation Extraction(PAKDD2020)</h2><h3 id="Background-1"><a href="#Background-1" class="headerlink" title="Background"></a>Background</h3><h3 id="Model-1"><a href="#Model-1" class="headerlink" title="Model"></a>Model</h3><h3 id="Experiment-1"><a href="#Experiment-1" class="headerlink" title="Experiment"></a>Experiment</h3><h2 id="Document-Level-Relation-Extraction-with-Adaptive-Thresholding-and-Localized-Context-Pooling-arxiv2020"><a href="#Document-Level-Relation-Extraction-with-Adaptive-Thresholding-and-Localized-Context-Pooling-arxiv2020" class="headerlink" title="Document-Level Relation Extraction with Adaptive Thresholding and Localized Context Pooling(arxiv2020)"></a>Document-Level Relation Extraction with Adaptive Thresholding and Localized Context Pooling(arxiv2020)</h2><h3 id="Background-2"><a href="#Background-2" class="headerlink" title="Background"></a>Background</h3><h3 id="Model-2"><a href="#Model-2" class="headerlink" title="Model"></a>Model</h3><h3 id="Experiment-2"><a href="#Experiment-2" class="headerlink" title="Experiment"></a>Experiment</h3><h2 id="Entity-and-Evidence-Guided-Relation-Extraction-for-DocRED-arxiv2020"><a href="#Entity-and-Evidence-Guided-Relation-Extraction-for-DocRED-arxiv2020" class="headerlink" title="Entity and Evidence Guided Relation Extraction for DocRED(arxiv2020)"></a>Entity and Evidence Guided Relation Extraction for DocRED(arxiv2020)</h2><h3 id="Background-3"><a href="#Background-3" class="headerlink" title="Background"></a>Background</h3><h3 id="Model-3"><a href="#Model-3" class="headerlink" title="Model"></a>Model</h3><h3 id="Experiment-3"><a href="#Experiment-3" class="headerlink" title="Experiment"></a>Experiment</h3><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>《Global-to-Local Neural Networks for Document-Level Relation Extraction》</p>
+<h2 id="Global-to-Local-Neural-Networks-for-Document-Level-Relation-Extraction-EMNLP2020"><a href="#Global-to-Local-Neural-Networks-for-Document-Level-Relation-Extraction-EMNLP2020" class="headerlink" title="Global-to-Local Neural Networks for Document-Level Relation Extraction(EMNLP2020)"></a>Global-to-Local Neural Networks for Document-Level Relation Extraction(EMNLP2020)</h2><h3 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h3><p>这篇文章的核心思想是：通过从粗粒度、细粒度、context information的角度对entity之间的relation进行建模。具体解决的问题是：第一：怎么对doucment中的复杂语义进行建模？(使用BERT)；第二：怎么学习有效地entity representation？(使用RGCN)；第三：其他的relation也对于当前目标entity之间的relation产生影响，如果有效的利用？(context-aware)。将这三个方面聚合起来，就是GLRE模型。</p>
+<blockquote>
+<p>目前在doucment-level RE中，存在着三方面的问题：logical reasoning、coreference reasoning、common-sense reasoning。</p>
+</blockquote>
+<h3 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h3><p>先放图～</p>
+<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/GLRE_model.jpg" alt></p>
+<p>GLRE模型分为四部分：<strong>encoding layer、global representation layer、local representation、classifier layer。</strong></p>
+<ul>
+<li><p><strong>encoding layer：</strong>假设输入的document表示为：$\cal D=\{w_1,w_2,…,w_k\}$，其中$w_i$表示的是第$i$个word，我们使用BERT来对其进行编码，如下：</p>
+<script type="math/tex; mode=display">
+H=[h_1,h_2,...,h_k]=BERT([w_1,w_2,...,w_k])</script><p>$H$是BERT最后一层的输出。</p>
+</li>
+<li><p><strong>global representation layer：</strong>GLRE模型同样是基于graph的模型。同样是继承EoG模型，其中有三种node：mention node、entity node与sentence node。对于三种node的表示，我们都是将其本身的avg embedding与各自的type embedding进行conat。具体来说，对于mention node：$n_{m_i}=[avg_{w_j\in m_i}(h_j);t_m]$；对于entity node：$n_{e_i}=[avg_{m_j\in e_i}(n_{m_j});t_{e}]$；对于sentence node：$n_{s_i}=[avg_{h_j\in s_i}(h_j);t_s]$。有五种edge：mention-mention edge(同一个sentence中的所有mentions之间加一条边)、mention-entity edge(entity与其mention之间加一条边)、mention-sentence edge(如果mention node与sentence node加一条边)、entity-sentence edge(如果一个entity至少有一个mention出现在sentence中，那么entity node与sentence之间加一条边)、sentence-sentence edge(所有的sentence node之间加一条边)。<strong>⚠️和EoG模型一样，同样没有entity-entity edge！</strong>构建好graph之后，在GLRE模型中，stack了L层的R-GCN，具体的aggregate的公式如下：</p>
+<script type="math/tex; mode=display">
+n^{l+1}_{i}=\sigma(\sum_{x\in {\cal X}}\sum_{j\in {\cal N_{x}^{i}}}\frac{1}{|\cal N_{x}^{i}|}W^l_xn^l_j+W^l_0n^l_i)</script><p>其中，$\cal N_{x}^{i}$表示在$x$这种edge type下，node i的邻接节点的集合，说到底，还是和GCN处理异质图的方式没啥区别。我们将L层之后的每一个node的representation称为entity global representation，记做：$e^{glo}_{i}$。</p>
+</li>
+<li><p><strong>local representation layer：</strong>如果说global rep layer是想在document-level上对不同的entity之间的语义信息进行建模，那么local rep layer是在对同一个entity的不同的mention之间的信息进行建模，从而得到更加好的entity rep，因为在不同的entity pair中，entity的表示肯定是不同的，如果只用global rep layer的结果的话，那么entity的表示就是唯一的了，肯定对最后结果会有影响。怎么做呢？在GLRE中，采用的是multi-head self attention。对于entity pair $(e_a,e_b)$，公式如下：</p>
+<script type="math/tex; mode=display">
+e^{loc}_a=LN(MHead_a(e^{glo}_a,\{n_{s_i}\}_{s_i\in \cal S_a},\{n_{m_j}\}_{m_j\in \cal M_a})) \\
+e^{loc}_b=LN(MHead_b(e^{glo}_b,\{n_{s_i}\}_{s_i\in \cal S_b},\{n_{m_j}\}_{m_j\in \cal M_b}))</script><p>其中，$\cal S_a$表示的是entity a 的mentions所在的sentence的集合，$\cal M_a$表示的是enity a的mention的集合。</p>
+</li>
+<li><p><strong>classifier layer：</strong>得到$e^{glo}$与$e^{loc}$之后，我们将两者聚合。对于entity pair $(e_a,e_b)$，具体来说：</p>
+<script type="math/tex; mode=display">
+\tilde e_a=[e^{glo}_a;e^{loc}_a;\Delta(\delta_{ab})] \\
+\tilde e_b=[e^{glo}_b;e^{loc}_b;\Delta(\delta_{ba})]</script><p>其中，$\delta_{ab}$表示的是entity a的第一个mention与entity b的相对距离。最后的表示是：$o_r=[\tilde e_a;\tilde e_b]$。为了进一步挖掘信息，paper中说的是document的topic information能够暗含某些relation，所以再一次使用self-attention(与transformer不同，名字叫做context-aware),如下：</p>
+<script type="math/tex; mode=display">
+o_c=\sum_{i=0}^{p}\theta_io_i=\sum_{i=0}^{p}\frac{exp(o_iWo^{\prime}_{i})}{\sum_{j=0}^{p}exp(o_jWo^{\prime}_{j})}</script><p>然后将$o_c$输入到一个FFN层进行分类，即：$y_r=sigmoid(FFN([o_r,;o_c]))$，最后的loss使用CE。</p>
+</li>
+</ul>
+<h3 id="Experiment"><a href="#Experiment" class="headerlink" title="Experiment"></a>Experiment</h3><ol>
+<li><p>数据集：CDR、DocRED</p>
+</li>
+<li><p>结果</p>
+<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/GLRE_result.jpg" style="zoom:50%;"></p>
+<p>说实话，这个结果一般。但是这篇论文的ablation与error analysis很有意思。GLRE在长距离的entity pair的关系抽取上取得了比较好的结果(&gt;=3)，paper中给它归因于global rep layer的构建，同时local rep layer的构建减少了噪音。</p>
+</li>
+<li><p>消融实验结论</p>
+<ol>
+<li><p>BERT对于最终的结果影响很大，paper中做了几组实验，如下：</p>
+<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/GLRE_result_pretrained_model.jpg" style="zoom:50%;"></p>
+</li>
+<li><p>当local rep layer被移除之后，F1值下降很快，这说明multi-head self attention能够有选择性的aggregatemention rep，过滤掉一些噪音，看来不是所有的mention都有entity rep都有用，结果如下：</p>
+<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/GLRE_result_ablation.jpg" style="zoom:50%;"></p>
+</li>
+</ol>
+</li>
+<li><p>Case study</p>
+<ol>
+<li>Logical reasoning很重要，GLRE模型中，完全靠RGCN，没有另外再搞一套机制来结局logical reasoning；</li>
+<li>当一个句子中，很多entity用<code>and</code>这样的词连接的时候，往往模型无法对她们之间的关系进行建模，paper中说在GLRE模型中是靠context-aware来解决的，但是我觉得效果一般吧；</li>
+<li>怎么引入先验知识很重要，因为很多common sense不会出现在训练集里面，而很多relation的判断都需要用到先验知识，这个时候怎么做？GLRE也没有解决这个问题；</li>
+<li>当一个句子的主语等部分缺失时，怎么处理？在GLRE中，是通过建立global rep layer来解决的，但是效果不是很好；</li>
+<li>当代词有歧义的时候，怎么解决？</li>
+<li>paper统计了一下，logical reasoning(40.9%)、component missing error(28.8%)、prior knowledge missing error(13.6%)、coreference reasoning error？(12.9%)。 </li>
+</ol>
+</li>
+</ol>
+<p>总的来说，GLRE模型一般，但是其case study与笑容实验做的还是蛮好的，很有启发性。</p>
+<h2 id="HIN-Hierarchical-Inference-Network-for-Document-Level-Relation-Extraction-PAKDD2020"><a href="#HIN-Hierarchical-Inference-Network-for-Document-Level-Relation-Extraction-PAKDD2020" class="headerlink" title="HIN: Hierarchical Inference Network for Document-Level Relation Extraction(PAKDD2020)"></a>HIN: Hierarchical Inference Network for Document-Level Relation Extraction(PAKDD2020)</h2><h3 id="Background-1"><a href="#Background-1" class="headerlink" title="Background"></a>Background</h3><h3 id="Model-1"><a href="#Model-1" class="headerlink" title="Model"></a>Model</h3><h3 id="Experiment-1"><a href="#Experiment-1" class="headerlink" title="Experiment"></a>Experiment</h3><h2 id="Document-Level-Relation-Extraction-with-Adaptive-Thresholding-and-Localized-Context-Pooling-arxiv2020"><a href="#Document-Level-Relation-Extraction-with-Adaptive-Thresholding-and-Localized-Context-Pooling-arxiv2020" class="headerlink" title="Document-Level Relation Extraction with Adaptive Thresholding and Localized Context Pooling(arxiv2020)"></a>Document-Level Relation Extraction with Adaptive Thresholding and Localized Context Pooling(arxiv2020)</h2><h3 id="Background-2"><a href="#Background-2" class="headerlink" title="Background"></a>Background</h3><h3 id="Model-2"><a href="#Model-2" class="headerlink" title="Model"></a>Model</h3><h3 id="Experiment-2"><a href="#Experiment-2" class="headerlink" title="Experiment"></a>Experiment</h3><h2 id="Entity-and-Evidence-Guided-Relation-Extraction-for-DocRED-arxiv2020"><a href="#Entity-and-Evidence-Guided-Relation-Extraction-for-DocRED-arxiv2020" class="headerlink" title="Entity and Evidence Guided Relation Extraction for DocRED(arxiv2020)"></a>Entity and Evidence Guided Relation Extraction for DocRED(arxiv2020)</h2><h3 id="Background-3"><a href="#Background-3" class="headerlink" title="Background"></a>Background</h3><h3 id="Model-3"><a href="#Model-3" class="headerlink" title="Model"></a>Model</h3><h3 id="Experiment-3"><a href="#Experiment-3" class="headerlink" title="Experiment"></a>Experiment</h3><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>《Global-to-Local Neural Networks for Document-Level Relation Extraction》</p>
 <p>《HIN: Hierarchical Inference Network for Document-Level Relation Extraction》</p>
 <p>《Document-Level Relation Extraction with Adaptive Thresholding and Localized Context Pooling》</p>
 <p>《Entity and Evidence Guided Relation Extraction for DocRED》</p>
