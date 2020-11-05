@@ -63,7 +63,7 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/ATLOP_result_CDR_GDA.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/ATLOP_ablation_1.jpg">
 <meta property="article:published_time" content="2020-10-24T15:22:29.000Z">
-<meta property="article:modified_time" content="2020-11-05T10:31:03.963Z">
+<meta property="article:modified_time" content="2020-11-05T10:34:07.770Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="Document-level RE">
@@ -264,7 +264,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-11-05 18:31:03" itemprop="dateModified" datetime="2020-11-05T18:31:03+08:00">2020-11-05</time>
+                <time title="Modified: 2020-11-05 18:34:07" itemprop="dateModified" datetime="2020-11-05T18:34:07+08:00">2020-11-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -407,7 +407,7 @@ P(r|E_a,E_b)=sigmoid(W_r \left[\begin{matrix}I_e \\ I_d \end{matrix}\right]+b_r)
 <p>从结果看，更加一般了，而后在case study中所说明的logical reasoning、coreference reasoning、combine common-sense information问题也没有解决。</p>
 </li>
 </ol>
-<h2 id="Document-Level-Relation-Extraction-with-Adaptive-Thresholding-and-Localized-Context-Pooling-arxiv2020"><a href="#Document-Level-Relation-Extraction-with-Adaptive-Thresholding-and-Localized-Context-Pooling-arxiv2020" class="headerlink" title="Document-Level Relation Extraction with Adaptive Thresholding and Localized Context Pooling(arxiv2020)"></a>Document-Level Relation Extraction with Adaptive Thresholding and Localized Context Pooling(arxiv2020)</h2><h3 id="Background-2"><a href="#Background-2" class="headerlink" title="Background"></a>Background</h3><p>这篇文章是JD放在arxiv上的文章，从结果来看是目前的top2，值得一读。它也是解决document-level RE。它的核心思想是：目前主流的做法是采用基于graph的方法来做，但是很多基于BERT的工作(譬如corefBERT)也能够得到很好的结果，并且在基于graph的模型的实验部分，也都证明了BERT以及BERT-like预训练模型的巨大提升，以至于让人怀疑有必要引入GNN？作者发现如果只用BERT的话，那么对于不同的entity pair，entity的rep都是一样的，这是一个很大的问题，那是否能够不引入graph的方式来解决这个问题呢？这就有了ATLOP模型。</p>
+<h2 id="Document-Level-Relation-Extraction-with-Adaptive-Thresholding-and-Localized-Context-Pooling-arxiv2020"><a href="#Document-Level-Relation-Extraction-with-Adaptive-Thresholding-and-Localized-Context-Pooling-arxiv2020" class="headerlink" title="Document-Level Relation Extraction with Adaptive Thresholding and Localized Context Pooling(arxiv2020)"></a>Document-Level Relation Extraction with Adaptive Thresholding and Localized Context Pooling(arxiv2020)</h2><h3 id="Background-2"><a href="#Background-2" class="headerlink" title="Background"></a>Background</h3><p>这篇文章是JD放在arxiv上的文章，从结果来看是目前的top1，值得一读。它也是解决document-level RE。它的核心思想是：目前主流的做法是采用基于graph的方法来做，但是很多基于BERT的工作(譬如corefBERT)也能够得到很好的结果，并且在基于graph的模型的实验部分，也都证明了BERT以及BERT-like预训练模型的巨大提升，以至于让人怀疑有必要引入GNN？作者发现如果只用BERT的话，那么对于不同的entity pair，entity的rep都是一样的，这是一个很大的问题，那是否能够不引入graph的方式来解决这个问题呢？这就有了ATLOP模型。</p>
 <blockquote>
 <p>说实话，这篇paper更多的是解决多标签分类问题，因为即便不是document-level RE，另外随便来个多标签分类，应该也可以得到很好的效果。</p>
 </blockquote>
