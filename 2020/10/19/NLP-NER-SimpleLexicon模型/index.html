@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 4.2.0">
+
+
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -14,12 +16,12 @@
 
 
 
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"8.0.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","images":"/images","scheme":"Muse","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
 
   <meta name="description" content="近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解中文NER的Adaptive Embedding paradigm。所谓的Adaptive Embedding paradigm，指的是只在embedding部分进行改进，从而让我们不需要设计非常的复杂的结构，能够迁移到不同的模型结构上(RNN&#x2F;CNN&#x2F;transformer e">
@@ -133,6 +135,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -166,11 +169,43 @@
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
 
   </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
         
@@ -193,14 +228,17 @@
         </li>
       </ul>
 
-      <!--noindex-->
-      <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#wc-lstm模型"><span class="nav-number">1.</span> <span class="nav-text">WC-LSTM模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#提出的背景"><span class="nav-number">1.1.</span> <span class="nav-text">提出的背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#wc-lstm模型介绍"><span class="nav-number">1.2.</span> <span class="nav-text">WC-LSTM模型介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验结果"><span class="nav-number">1.3.</span> <span class="nav-text">实验结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#multi-digraph模型"><span class="nav-number">2.</span> <span class="nav-text">Multi-digraph模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#提出的背景-1"><span class="nav-number">2.1.</span> <span class="nav-text">提出的背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#multi-digraph模型介绍"><span class="nav-number">2.2.</span> <span class="nav-text">Multi-digraph模型介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验结果-1"><span class="nav-number">2.3.</span> <span class="nav-text">实验结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#softlexicon模型"><span class="nav-number">3.</span> <span class="nav-text">SoftLexicon模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#提出的背景-2"><span class="nav-number">3.1.</span> <span class="nav-text">提出的背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#softlexicon模型介绍"><span class="nav-number">3.2.</span> <span class="nav-text">SoftLexicon模型介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验结果-2"><span class="nav-number">3.3.</span> <span class="nav-text">实验结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
-      </section>
-      <!--/noindex-->
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <section class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#WC-LSTM模型"><span class="nav-number">1.</span> <span class="nav-text">WC-LSTM模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#提出的背景"><span class="nav-number">1.1.</span> <span class="nav-text">提出的背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WC-LSTM模型介绍"><span class="nav-number">1.2.</span> <span class="nav-text">WC-LSTM模型介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验结果"><span class="nav-number">1.3.</span> <span class="nav-text">实验结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Multi-digraph模型"><span class="nav-number">2.</span> <span class="nav-text">Multi-digraph模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#提出的背景-1"><span class="nav-number">2.1.</span> <span class="nav-text">提出的背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Multi-digraph模型介绍"><span class="nav-number">2.2.</span> <span class="nav-text">Multi-digraph模型介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验结果-1"><span class="nav-number">2.3.</span> <span class="nav-text">实验结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SoftLexicon模型"><span class="nav-number">3.</span> <span class="nav-text">SoftLexicon模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#提出的背景-2"><span class="nav-number">3.1.</span> <span class="nav-text">提出的背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SoftLexicon模型介绍"><span class="nav-number">3.2.</span> <span class="nav-text">SoftLexicon模型介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验结果-2"><span class="nav-number">3.3.</span> <span class="nav-text">实验结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+        </section>
+        <!--/noindex-->
 
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <section class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zichao"
+      src="/images/photo.jpg">
   <p class="site-author-name" itemprop="name">zichao</p>
   <div class="site-description" itemprop="description">Just learning</div>
 </div>
@@ -227,10 +265,22 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
 
 
 
-      </section>
+        </section>
+      </div>
     </div>
   </aside>
   <div class="sidebar-dimmer"></div>
@@ -243,6 +293,8 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+
+  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
@@ -265,7 +317,7 @@
     <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/photo.jpg">
       <meta itemprop="name" content="zichao">
       <meta itemprop="description" content="Just learning">
     </span>
@@ -310,6 +362,13 @@
     </span>
 
   
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
 </div>
 
         </div>
@@ -321,80 +380,65 @@
     <div class="post-body" itemprop="articleBody">
         <p>近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解中文NER的Adaptive Embedding paradigm。所谓的Adaptive Embedding paradigm，指的是只在embedding部分进行改进，从而让我们不需要设计非常的复杂的结构，能够迁移到不同的模型结构上(RNN/CNN/transformer etc)，所以这种方法的好处就在于其可迁移性。这篇文章主要讲解三篇论文：《An Encoding Strategy Based Word-Character LSTM for Chinese NER》、《A Neural Multi-digraph Model for Chinese NER with Gazetteers》以及ACL2020的《Simplify the Usage of Lexicon in Chinese NER》。</p>
 <a id="more"></a>
-<h2 id="wc-lstm模型">WC-LSTM模型</h2>
-<h3 id="提出的背景">提出的背景</h3>
-<p>WC-LSTM模型是2019年发表在NAACL上的《An Encoding Strategy Based Word-Character LSTM for Chinese NER》论文。提出的背景还是因为LatticeLSTM模型。LatticeLSTM是词汇增强的典型模型，但是其存在一个很严重的问题：<strong>由于每一个sentence所被匹配到的word的数量与位置都不一样，所以导致LatticeLSTM模型无法batch训练与inference。</strong>在WC-LSTM中，为了实现并行化，需要对每一个character所匹配到的words进行编码，从而得到一个fixed embedding，再与character本身的embedding进行融合，最后输送到网络中进行训练。所以，关键就在于：<strong>怎么得到一个fixed embedding？</strong>下面具体介绍。</p>
-<h3 id="wc-lstm模型介绍">WC-LSTM模型介绍</h3>
-<p>先放图～</p>
+
+<h2 id="WC-LSTM模型"><a href="#WC-LSTM模型" class="headerlink" title="WC-LSTM模型"></a>WC-LSTM模型</h2><h3 id="提出的背景"><a href="#提出的背景" class="headerlink" title="提出的背景"></a>提出的背景</h3><p>WC-LSTM模型是2019年发表在NAACL上的《An Encoding Strategy Based Word-Character LSTM for Chinese NER》论文。提出的背景还是因为LatticeLSTM模型。LatticeLSTM是词汇增强的典型模型，但是其存在一个很严重的问题：<strong>由于每一个sentence所被匹配到的word的数量与位置都不一样，所以导致LatticeLSTM模型无法batch训练与inference。</strong>在WC-LSTM中，为了实现并行化，需要对每一个character所匹配到的words进行编码，从而得到一个fixed embedding，再与character本身的embedding进行融合，最后输送到网络中进行训练。所以，关键就在于：<strong>怎么得到一个fixed embedding？</strong>下面具体介绍。</p>
+<h3 id="WC-LSTM模型介绍"><a href="#WC-LSTM模型介绍" class="headerlink" title="WC-LSTM模型介绍"></a>WC-LSTM模型介绍</h3><p>先放图～</p>
 <p><img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/wc-lstm.jpg"></p>
-<ol type="1">
-<li><strong>input：</strong>输入有两部分：sentence以及与sentence相匹配的lexicon words，假设输入的sentence表示为：<span class="math inline">\(s=\{c_1,c_2,...,c_n\}\)</span>，其中<span class="math inline">\(c_i\)</span>表示sentence的第<span class="math inline">\(i\)</span>个character；lexicon words表示为：<span class="math inline">\(c_{b,e}\)</span>，在前向的wc-lstm中，使用$ <span class="math inline">\(来表示以\)</span>c_i<span class="math inline">\(的结尾的matched lexicon words的集合，后向的也是类似的。所以最终的输入是：\)</span>={(c_1,),(c_2,),...,(c_n,)}<span class="math inline">\(，在WC-LSTM中，使用双向的LSTM，所以还有\)</span>={(c_n,),(c_{n-1},),...,(c_1,)}$。</li>
-<li><strong>word-character embedding layer：</strong>在<span class="math inline">\(\overrightarrow {rs}\)</span>中，对于每一个character <span class="math inline">\(c_i\)</span>，对应一个lexicon words集合<span class="math inline">\(\overrightarrow{ws_i}=\{\overrightarrow{w_{i1}},...,\overrightarrow{w_{s^p_i}}\}\)</span>，<span class="math inline">\(\overrightarrow{ws_i}\)</span>中的word数目记为：<span class="math inline">\(s^t_i\)</span>，对于一个batch来说，我门通过padding的方式让每一个sentence的相同位置有同样的<span class="math inline">\(s^p_i\)</span>。每一个character的embedding，可以通过查pretrained char embedding table得到，记做：<span class="math inline">\(x^c_i=e^c(c_i)\)</span>，每一个lexicon word的embedding也可以查表，记做：<span class="math inline">\(x^{\overrightarrow{w}}_{il}=e(\overrightarrow{w_{il}})\)</span>。</li>
-<li><strong>word encoding strategy：</strong>在WC-LSTM中，探索了四种encoding策略：最短词汇信息、最长词汇信息、avg、self-attention。最短词汇信息指的是：使用<span class="math inline">\(c_i\)</span>中的词汇集合中长度最短的词作为<span class="math inline">\(c_i\)</span>的词汇信息；最长词汇信息指的是：使用当前character的词汇集合中的最长的词作为<span class="math inline">\(c_i\)</span>的词汇信息；avg是对所有的词汇信息进行简单的算术平均；self-attention就是自己对自己进行attention，比较简单。得到<span class="math inline">\(c_i\)</span>的词汇信息后，将其与<span class="math inline">\(c_i\)</span>的embeding进行concat，作为后续的输入。</li>
+<ol>
+<li><strong>input：</strong>输入有两部分：sentence以及与sentence相匹配的lexicon words，假设输入的sentence表示为：$s={c_1,c_2,…,c_n}$，其中$c_i$表示sentence的第$i$个character；lexicon words表示为：$c_{b,e}$，在前向的wc-lstm中，使用$\overrightarrow{ws_i} $来表示以$c_i$的结尾的matched lexicon words的集合，后向的也是类似的。所以最终的输入是：$\overrightarrow{rs}={(c_1,\overrightarrow{ws_1}),(c_2,\overrightarrow{ws_2}),…,(c_n,\overrightarrow{ws_n})}$，在WC-LSTM中，使用双向的LSTM，所以还有$\overleftarrow{rs}={(c_n,\overleftarrow{ws_n}),(c_{n-1},\overleftarrow{ws_{n-1}}),…,(c_1,\overleftarrow{ws_1})}$。</li>
+<li><strong>word-character embedding layer：</strong>在$\overrightarrow {rs}$中，对于每一个character $c_i$，对应一个lexicon words集合$\overrightarrow{ws_i}={\overrightarrow{w_{i1}},…,\overrightarrow{w_{s^p_i}}}$，$\overrightarrow{ws_i}$中的word数目记为：$s^t_i$，对于一个batch来说，我门通过padding的方式让每一个sentence的相同位置有同样的$s^p_i$。每一个character的embedding，可以通过查pretrained char embedding table得到，记做：$x^c_i=e^c(c_i)$，每一个lexicon word的embedding也可以查表，记做：$x^{\overrightarrow{w}}<em>{il}=e(\overrightarrow{w</em>{il}})$。</li>
+<li><strong>word encoding strategy：</strong>在WC-LSTM中，探索了四种encoding策略：最短词汇信息、最长词汇信息、avg、self-attention。最短词汇信息指的是：使用$c_i$中的词汇集合中长度最短的词作为$c_i$的词汇信息；最长词汇信息指的是：使用当前character的词汇集合中的最长的词作为$c_i$的词汇信息；avg是对所有的词汇信息进行简单的算术平均；self-attention就是自己对自己进行attention，比较简单。得到$c_i$的词汇信息后，将其与$c_i$的embeding进行concat，作为后续的输入。</li>
 <li><strong>wc-lstm：</strong>这就是前向的LSTM的结果与后向的LSTM的结果进行concat，作为CRF的输入。</li>
 <li><strong>decoding：</strong>使用标准的CRF层。</li>
 </ol>
-<h3 id="实验结果">实验结果</h3>
-<ol type="1">
+<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><ol>
 <li>数据集：OntoNotes、MSRA、Weibo、resume</li>
 <li>实验结果就不放了，比Lattice只稍微好一点点，这也是预料之中的，毕竟wc-lstm的主要目的是并行化。</li>
 <li>实验还探究了不同的encoding策略，最后得出的结论是：如果训练数据比较充足的话，建议使用self-attention和avg，因为这两个参数较多，如果训练数据比较少的话，容易过拟合，从而在测试集上表现不好；如果训练数据比较少的话，最短词汇信息和最长词汇信息分别适用于对嵌套实体与flat实体有要求的情况。(吐槽一下，这结论有啥用？我不做实验我也知道啊🐶)</li>
 </ol>
-<h2 id="multi-digraph模型">Multi-digraph模型</h2>
-<h3 id="提出的背景-1">提出的背景</h3>
-<p>Multi-digraph模型是2019年发表在ACL上的《A Neural Multi-digraph Model for Chinese NER with Gazetteers》论文。这个模型所关注的问题word conflicts，具体来说就是：在融合词汇信息的时候，如果有多个词汇表的话，不同的词汇表对于某些话有不同的匹配，这样的话对于句子中的character的标注就会有干扰，<strong>那么怎么很好地建模character与词典之间的关系以及怎么很好地融合不同词典的词汇信息？</strong>这就是multi-digraph模型提出的背景。</p>
-<h3 id="multi-digraph模型介绍">Multi-digraph模型介绍</h3>
-<p>先放图～</p>
-<p><img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/multi-graph.jpg" style="zoom: 67%;"></p>
+<h2 id="Multi-digraph模型"><a href="#Multi-digraph模型" class="headerlink" title="Multi-digraph模型"></a>Multi-digraph模型</h2><h3 id="提出的背景-1"><a href="#提出的背景-1" class="headerlink" title="提出的背景"></a>提出的背景</h3><p>Multi-digraph模型是2019年发表在ACL上的《A Neural Multi-digraph Model for Chinese NER with Gazetteers》论文。这个模型所关注的问题word conflicts，具体来说就是：在融合词汇信息的时候，如果有多个词汇表的话，不同的词汇表对于某些话有不同的匹配，这样的话对于句子中的character的标注就会有干扰，<strong>那么怎么很好地建模character与词典之间的关系以及怎么很好地融合不同词典的词汇信息？</strong>这就是multi-digraph模型提出的背景。</p>
+<h3 id="Multi-digraph模型介绍"><a href="#Multi-digraph模型介绍" class="headerlink" title="Multi-digraph模型介绍"></a>Multi-digraph模型介绍</h3><p>先放图～</p>
+<img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/multi-graph.jpg" style="zoom: 67%;">
+
 <p>整体模型主要分为两大块：embedding部分+(LSTM+CRF)部分，第二部分没什么可讲的，主要介绍一下embedding部分。</p>
 <p>embeding 部分主要是根据GGNN来进行构建。怎么构建图呢？首先明确模型的输入：sentence以及实体词典(gazetteer)，那么node set就是：sentence中每一个chatacter作为node+<strong>每一种词典的每一类</strong>对应一对节点(起始与结束)，上方有四种词典，因此有四对节点。在模型图中，raw space中五颜六色的箭头就是edge。构建好图后，就可以使用GGNN来进行aggregate，从而产生更好的node representation。下面介绍一下什么是GGNN，以及为什么要选择GGNN而不是其他的GNN。</p>
 <p><strong>GGNN</strong>：全称是Gated graph sequence neural networks，是一种spatial GNN，其aggregate的方式优点类似于GRU，如下：</p>
 <p><img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/ggnn.jpg"></p>
-<p>其中，<span class="math inline">\(h_v^{(1)}\)</span>表示的是初始的embedding，具体的可见<a href="https://zhuanlan.zhihu.com/p/83410937" target="_blank" rel="noopener">link</a>。从aggregate更新的方式来看，就是知道GGNN相比于GCN等GNN来说，最大的优势是比较适用于序列，能够更好地提取文本信息。不过说实话，这里使用GNN有点强行上的意思，没看出来为什么一定要用GGNN。🧐</p>
-<h3 id="实验结果-1">实验结果</h3>
-<ol type="1">
-<li><p>数据集：OntoNotes、MSRA、Weibo、E-commerce(released by this paper)</p></li>
+<p>其中，$h_v^{(1)}$表示的是初始的embedding，具体的可见<a href="https://zhuanlan.zhihu.com/p/83410937" target="_blank" rel="noopener">link</a>。从aggregate更新的方式来看，就是知道GGNN相比于GCN等GNN来说，最大的优势是比较适用于序列，能够更好地提取文本信息。不过说实话，这里使用GNN有点强行上的意思，没看出来为什么一定要用GGNN。🧐</p>
+<h3 id="实验结果-1"><a href="#实验结果-1" class="headerlink" title="实验结果"></a>实验结果</h3><ol>
+<li><p>数据集：OntoNotes、MSRA、Weibo、E-commerce(released by this paper)</p>
+</li>
 <li><p>结果如下：</p>
-<p><img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/multi-digraph-result.jpg" style="zoom:80%;"></p>
-<p>在OntoNotes和MSRA上的结果比大部分模型要好，在Weibo数据集上的结果要差一些，所以多加词汇表果然还是王道啊，不过相对的，估计也无法并行了吧。</p></li>
+<img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/multi-digraph-result.jpg" style="zoom:80%;">
+
+<p>在OntoNotes和MSRA上的结果比大部分模型要好，在Weibo数据集上的结果要差一些，所以多加词汇表果然还是王道啊，不过相对的，估计也无法并行了吧。</p>
+</li>
 </ol>
-<h2 id="softlexicon模型">SoftLexicon模型</h2>
-<h3 id="提出的背景-2">提出的背景</h3>
-<p>像LatticeLSTM模型，它的缺点就是：<strong>1.模型结构过于复杂，无法迁移到其他架构上，而且无法并行化；2.并没有完全融入lexicon的所有信息，也就是有信息损失。</strong>针对第一点，softlexicon和wclstm模型一样，通过将character所匹配到的lexicon words编码为一个fixed vector，并与character embedding进行concat，作为后续模型的输入；针对第二点，softlexicon通过categorizing 所匹配到的lexicon words，从而避免信息损失。具体的在下面小节介绍～</p>
-<h3 id="softlexicon模型介绍">SoftLexicon模型介绍</h3>
-<p>先放图～</p>
+<h2 id="SoftLexicon模型"><a href="#SoftLexicon模型" class="headerlink" title="SoftLexicon模型"></a>SoftLexicon模型</h2><h3 id="提出的背景-2"><a href="#提出的背景-2" class="headerlink" title="提出的背景"></a>提出的背景</h3><p>像LatticeLSTM模型，它的缺点就是：<strong>1.模型结构过于复杂，无法迁移到其他架构上，而且无法并行化；2.并没有完全融入lexicon的所有信息，也就是有信息损失。</strong>针对第一点，softlexicon和wclstm模型一样，通过将character所匹配到的lexicon words编码为一个fixed vector，并与character embedding进行concat，作为后续模型的输入；针对第二点，softlexicon通过categorizing 所匹配到的lexicon words，从而避免信息损失。具体的在下面小节介绍～</p>
+<h3 id="SoftLexicon模型介绍"><a href="#SoftLexicon模型介绍" class="headerlink" title="SoftLexicon模型介绍"></a>SoftLexicon模型介绍</h3><p>先放图～</p>
 <p><img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/softlexicon.jpg"></p>
-<p>假设输入的sentence表示为：<span class="math inline">\(s=\{c_1,c_2,...,c_n\}\)</span>，<span class="math inline">\(w_{i,j}\)</span>表示sentence中与lexicon中相匹配的word。为了不损失任何信息，我们首先对所有的与character <span class="math inline">\(c_i\)</span>相匹配的lexicon words都采用<code>BMES</code>来进行编码，从而每一个character都有4个word sets。其公式如下： <span class="math display">\[
-B(c_i)=\{w_{i,k},\forall w_{i,k}\in L,i&lt;k&lt;=n\} \\
-M(c_i)=\{w_{j,k},\forall w_{j,k}\in L,1&lt;=i&lt;j&lt;k&lt;=n\} \\
-E(c_i)=\{w_{j,i},\forall w_{j,i}\in L,1&lt;=j&lt;i&lt;=n\} \\
-S(c_i)=\{c_i,\exists c_i\in L\}
-\]</span> 其中，<span class="math inline">\(L\)</span>是lexicon,当然如果word set为空的话，那么会添加一个<code>NONE</code>进去。具体的例子如下：</p>
+<p>假设输入的sentence表示为：$s={c_1,c_2,…,c_n}$，$w_{i,j}$表示sentence中与lexicon中相匹配的word。为了不损失任何信息，我们首先对所有的与character $c_i$相匹配的lexicon words都采用<code>BMES</code>来进行编码，从而每一个character都有4个word sets。其公式如下：<br>$$<br>B(c_i)={w_{i,k},\forall w_{i,k}\in L,i&lt;k&lt;=n} \<br>M(c_i)={w_{j,k},\forall w_{j,k}\in L,1&lt;=i&lt;j&lt;k&lt;=n} \<br>E(c_i)={w_{j,i},\forall w_{j,i}\in L,1&lt;=j&lt;i&lt;=n} \<br>S(c_i)={c_i,\exists c_i\in L}<br>$$<br>其中，$L$是lexicon,当然如果word set为空的话，那么会添加一个<code>NONE</code>进去。具体的例子如下：</p>
 <p><img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/softlexicon_example.jpg"></p>
-<p>对于每一个character <span class="math inline">\(c_i\)</span>，我们都能得到word sets。得到word sets之后，我们需要对word sets进行压缩。论文里实验了两种方法：mean-pooling与weighting method，实验表明后者要更好一些。具体来说，假设我们要计算character <span class="math inline">\(c_i\)</span>的<span class="math inline">\(B(c_i)\)</span>的representation vector，我们使用每一个word的frequency作为该词的权重，之所以这样做而没有使用像attention这样的方法，是因为想要提高速度。具体公式如下： <span class="math display">\[
-v^s(S)=\frac{4}{Z}\sum_{w\in S}z(w)e^w(w) \\
-Z=\sum_{w\in B\cup M\cup E\cup S}z(w)
-\]</span> 其中，<span class="math inline">\(S\in \{B,M,E,S\}\)</span>，<span class="math inline">\(z(w)\)</span>表示word <span class="math inline">\(w\)</span>的词频。</p>
-<p>分别得到<code>BMES</code>的representation vector之后，我们需要将其与character进行concat，具体如下： <span class="math display">\[
-x^c=[x^c,e^s(B,M,E,S)] \\
-e^s(B,M,E,S)=[v^s(B),v^s(M),v^s(E),v^s(S)]
-\]</span> 然后将<span class="math inline">\(x^c\)</span>输入到BILSTM+CRF中，得到最终的结果。</p>
-<h3 id="实验结果-2">实验结果</h3>
-<ol type="1">
-<li><p>数据集：OntoNotes、MSRA、Weibo、resume</p></li>
+<p>对于每一个character $c_i$，我们都能得到word sets。得到word sets之后，我们需要对word sets进行压缩。论文里实验了两种方法：mean-pooling与weighting method，实验表明后者要更好一些。具体来说，假设我们要计算character $c_i$的$B(c_i)$的representation vector，我们使用每一个word的frequency作为该词的权重，之所以这样做而没有使用像attention这样的方法，是因为想要提高速度。具体公式如下：<br>$$<br>v^s(S)=\frac{4}{Z}\sum_{w\in S}z(w)e^w(w) \<br>Z=\sum_{w\in B\cup M\cup E\cup S}z(w)<br>$$<br>其中，$S\in {B,M,E,S}$，$z(w)$表示word $w$的词频。</p>
+<p>分别得到<code>BMES</code>的representation vector之后，我们需要将其与character进行concat，具体如下：<br>$$<br>x^c=[x^c,e^s(B,M,E,S)] \<br>e^s(B,M,E,S)=[v^s(B),v^s(M),v^s(E),v^s(S)]<br>$$<br>然后将$x^c$输入到BILSTM+CRF中，得到最终的结果。</p>
+<h3 id="实验结果-2"><a href="#实验结果-2" class="headerlink" title="实验结果"></a>实验结果</h3><ol>
+<li><p>数据集：OntoNotes、MSRA、Weibo、resume</p>
+</li>
 <li><p>实验结果</p>
 <p><img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/ontonotes_msra_softlexicon.jpg"></p>
-<p><img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/weibo_softmlexicon.jpg" style="zoom:50%;"></p>
-<p><img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/resume_softlexicon.jpg" style="zoom:50%;"></p>
-<p>从结果上看，还是不错的，而且speed上有了很大的提升。</p></li>
+<img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/weibo_softmlexicon.jpg" style="zoom:50%;">
+
+<img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/resume_softlexicon.jpg" style="zoom:50%;">
+
+<p>从结果上看，还是不错的，而且speed上有了很大的提升。</p>
+</li>
 </ol>
-<h2 id="参考文献">参考文献</h2>
-<p>《An Encoding Strategy Based Word-Character LSTM for Chinese NER》</p>
-<p>wc-lstm code：https://github.com/liuwei1206/CCW-NER</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>《An Encoding Strategy Based Word-Character LSTM for Chinese NER》</p>
+<p>wc-lstm code：<a href="https://github.com/liuwei1206/CCW-NER" target="_blank" rel="noopener">https://github.com/liuwei1206/CCW-NER</a></p>
 <p>《A Neural Multi-digraph Model for Chinese NER with Gazetteers》</p>
-<p>multi-digraph code：https://github.com/PhantomGrapes/MultiDigraphNER</p>
+<p>multi-digraph code：<a href="https://github.com/PhantomGrapes/MultiDigraphNER" target="_blank" rel="noopener">https://github.com/PhantomGrapes/MultiDigraphNER</a></p>
 <p>《Simplify the Usage of Lexicon in Chinese NER》</p>
-<p>softlexicon code：https://github.com/v-mipeng/LexiconAugmentedNER</p>
+<p>softlexicon code：<a href="https://github.com/v-mipeng/LexiconAugmentedNER" target="_blank" rel="noopener">https://github.com/v-mipeng/LexiconAugmentedNER</a></p>
 <p>《GATED GRAPH SEQUENCE NEURAL NETWORKS》</p>
 
     </div>
@@ -404,6 +448,24 @@ e^s(B,M,E,S)=[v^s(B),v^s(M),v^s(E),v^s(S)]
     
 
     <footer class="post-footer">
+          <div class="reward-container">
+  <div>Would you like to buy me a cup of coffee☕️～</div>
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="zichao Alipay">
+        <span>Alipay</span>
+      </div>
+
+  </div>
+</div>
+
           <div class="post-tags">
               <a href="/tags/NLP/" rel="tag"># NLP</a>
               <a href="/tags/WC-LSTM/" rel="tag"># WC-LSTM</a>
@@ -476,6 +538,24 @@ e^s(B,M,E,S)=[v^s(B),v^s(M),v^s(E),v^s(S)]
   </span>
   <span class="author" itemprop="copyrightHolder">zichao</span>
 </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
 
@@ -483,7 +563,7 @@ e^s(B,M,E,S)=[v^s(B),v^s(M),v^s(E),v^s(S)]
   </footer>
 
   
-  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
 <script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
 
   
@@ -491,6 +571,8 @@ e^s(B,M,E,S)=[v^s(B),v^s(M),v^s(E),v^s(S)]
 
 
 
+  <script src="/js/local-search.js"></script>
+
 
 
 
@@ -506,6 +588,7 @@ e^s(B,M,E,S)=[v^s(B),v^s(M),v^s(E),v^s(S)]
 
 
   
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 
 

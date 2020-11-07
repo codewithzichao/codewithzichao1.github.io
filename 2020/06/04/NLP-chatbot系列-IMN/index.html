@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 4.2.0">
+
+
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -14,12 +16,12 @@
 
 
 
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"8.0.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","images":"/images","scheme":"Muse","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
 
   <meta name="description" content="正式入对话的坑啦🤣对话是目前NLP技术重要的落地场景之一，但是相比于其他的方向，对话目前的应用还不算成熟，也远远没有产生它应有的巨大商业价值，但是随着物联网与5G等的发展，对话的应用前景是非常光明的。此外，既然对话的坑还有很多，这也意味着总需要人去填满这些坑，对NLPer来说，是挑战也是机会。其他的不多说，本篇着重讲讲检索式对话的经典模型IMN。">
@@ -128,6 +130,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -161,11 +164,43 @@
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
 
   </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
         
@@ -188,14 +223,17 @@
         </li>
       </ul>
 
-      <!--noindex-->
-      <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#imn模型介绍"><span class="nav-number">1.</span> <span class="nav-text">IMN模型介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#imn模型架构"><span class="nav-number">1.1.</span> <span class="nav-text">IMN模型架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#word-representation-layer"><span class="nav-number">1.1.1.</span> <span class="nav-text">word representation layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sentence-encoding-layer"><span class="nav-number">1.1.2.</span> <span class="nav-text">sentence encoding layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#matching-layer"><span class="nav-number">1.1.3.</span> <span class="nav-text">matching layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#aggregation-layer"><span class="nav-number">1.1.4.</span> <span class="nav-text">aggregation layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#prediction-layer"><span class="nav-number">1.1.5.</span> <span class="nav-text">prediction layer</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#details"><span class="nav-number">1.2.</span> <span class="nav-text">details</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果"><span class="nav-number">1.3.</span> <span class="nav-text">结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#imn模型实现"><span class="nav-number">2.</span> <span class="nav-text">IMN模型实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
-      </section>
-      <!--/noindex-->
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <section class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#IMN模型介绍"><span class="nav-number">1.</span> <span class="nav-text">IMN模型介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#IMN模型架构"><span class="nav-number">1.1.</span> <span class="nav-text">IMN模型架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#word-representation-layer"><span class="nav-number">1.1.1.</span> <span class="nav-text">word representation layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sentence-encoding-layer"><span class="nav-number">1.1.2.</span> <span class="nav-text">sentence encoding layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#matching-layer"><span class="nav-number">1.1.3.</span> <span class="nav-text">matching layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#aggregation-layer"><span class="nav-number">1.1.4.</span> <span class="nav-text">aggregation layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#prediction-layer"><span class="nav-number">1.1.5.</span> <span class="nav-text">prediction layer</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#details"><span class="nav-number">1.2.</span> <span class="nav-text">details</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果"><span class="nav-number">1.3.</span> <span class="nav-text">结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IMN模型实现"><span class="nav-number">2.</span> <span class="nav-text">IMN模型实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+        </section>
+        <!--/noindex-->
 
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <section class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zichao"
+      src="/images/photo.jpg">
   <p class="site-author-name" itemprop="name">zichao</p>
   <div class="site-description" itemprop="description">Just learning</div>
 </div>
@@ -222,10 +260,22 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
 
 
 
-      </section>
+        </section>
+      </div>
     </div>
   </aside>
   <div class="sidebar-dimmer"></div>
@@ -238,6 +288,8 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+
+  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
@@ -260,7 +312,7 @@
     <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/06/04/NLP-chatbot%E7%B3%BB%E5%88%97-IMN/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/photo.jpg">
       <meta itemprop="name" content="zichao">
       <meta itemprop="description" content="Just learning">
     </span>
@@ -305,6 +357,13 @@
     </span>
 
   
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
 </div>
 
         </div>
@@ -316,50 +375,43 @@
     <div class="post-body" itemprop="articleBody">
         <p>正式入对话的坑啦🤣对话是目前NLP技术重要的落地场景之一，但是相比于其他的方向，对话目前的应用还不算成熟，也远远没有产生它应有的巨大商业价值，但是随着物联网与5G等的发展，对话的应用前景是非常光明的。此外，既然对话的坑还有很多，这也意味着总需要人去填满这些坑，对NLPer来说，是挑战也是机会。其他的不多说，本篇着重讲讲检索式对话的经典模型IMN。</p>
 <a id="more"></a>
-<h2 id="imn模型介绍">IMN模型介绍</h2>
-<p>IMN是2019年中科大发表在CIKM上的一篇论文，整个模型与SMN比较像，但是做了很多的改进，实验也做的比较扎实。总的来看：IMN模型的优势在于：1.使用char embedding来解决OOV问题，同时也加强了word的表示；2.使用了类似于ELMo的结构来做sentence encoder，从而增强sentence的表示；3.使用全局的方式来让context与response进行交互，而不是以往的那种每一个utterance in context分别与response进行交互，从而能够挑选出context中与response最相关的部分(有点pooling的味道？🧐)。下面直接介绍吧～</p>
-<h3 id="imn模型架构">IMN模型架构</h3>
-<p>首先给出定义：给出数据集：<span class="math inline">\(\cal D=\{c,r,y\}_1^N\)</span>，其中<span class="math inline">\(c=\{u_1,u_2,...,u_n\}\)</span>，表示context；r表示response，<span class="math inline">\(y=\{0,1\}\)</span>，表示标签，目标是：得到context与response的匹配度。下面给出架构图～</p>
+
+<h2 id="IMN模型介绍"><a href="#IMN模型介绍" class="headerlink" title="IMN模型介绍"></a>IMN模型介绍</h2><p>IMN是2019年中科大发表在CIKM上的一篇论文，整个模型与SMN比较像，但是做了很多的改进，实验也做的比较扎实。总的来看：IMN模型的优势在于：1.使用char embedding来解决OOV问题，同时也加强了word的表示；2.使用了类似于ELMo的结构来做sentence encoder，从而增强sentence的表示；3.使用全局的方式来让context与response进行交互，而不是以往的那种每一个utterance in context分别与response进行交互，从而能够挑选出context中与response最相关的部分(有点pooling的味道？🧐)。下面直接介绍吧～</p>
+<h3 id="IMN模型架构"><a href="#IMN模型架构" class="headerlink" title="IMN模型架构"></a>IMN模型架构</h3><p>首先给出定义：给出数据集：$\cal D={c,r,y}_1^N$，其中$c={u_1,u_2,…,u_n}$，表示context；r表示response，$y={0,1}$，表示标签，目标是：得到context与response的匹配度。下面给出架构图～</p>
 <p><img src="/2020/06/04/NLP-chatbot%E7%B3%BB%E5%88%97-IMN/IMN.jpg"></p>
 <p>IMN模型总共分为5部分，下面一一介绍～</p>
-<h4 id="word-representation-layer">word representation layer</h4>
-<p>这一部分是模型最初的输入，分为三部分：pre-train word embedding、training set word embedding、character embedding，分别对应于：斯坦福发布的GloVe/Google的word2vec词向量、在训练集上使用word2vec得到的词向量、字向量(随机初始化)。最终的输出是这三个embedding的concat，表示为：<span class="math inline">\(U_{k}^{0}=\{u_{k,i}^{0}\}_{i=1}^{l_{u_k}}\)</span>、<span class="math inline">\(R^0=\{r_{j}^{0}\}_{j=1}^{l_r}\)</span>，<span class="math inline">\(u_{k,i}^{0}\in R^d、r_{j}^{0}\in R^d\)</span>。</p>
+<h4 id="word-representation-layer"><a href="#word-representation-layer" class="headerlink" title="word representation layer"></a>word representation layer</h4><p>这一部分是模型最初的输入，分为三部分：pre-train word embedding、training set word embedding、character embedding，分别对应于：斯坦福发布的GloVe/Google的word2vec词向量、在训练集上使用word2vec得到的词向量、字向量(随机初始化)。最终的输出是这三个embedding的concat，表示为：$U_{k}^{0}={u_{k,i}^{0}}<em>{i=1}^{l</em>{u_k}}$、$R^0={r_{j}^{0}}<em>{j=1}^{l_r}$，$u_{k,i}^{0}\in R^d、r</em>{j}^{0}\in R^d$。</p>
 <blockquote>
 <p>注意：当一个模型的输入既有word embedding又有char embedding的时候，那么对于一个sentence来说，word embedding一定是3维的，char embedding一定是4维的，这个时候我们是无法直接将word embedding与char embedding进行concat或者是作为两个channel，那么怎么办呢？从我目前看到的模型中，基本上有两种解决办法：</p>
 <p>1.对char embedding进行reshape，变成3维的，然后输入一个lstm中，然后将lstm的输出再次进行reshape，将结果与word embedding进行concat/channel；</p>
 <p>2.对char embedding进行reshape，变成3维的，然后输入到一个cnn中，然后将结果使用reduce_mean,reduce_sum等等操作(或者使用全局池化)，使得结果变成2维的，然后再次进行reshape，将结果与word embedding进行concat/channel。</p>
 <p>在IMN模型中，使用的是第二种方法，论文中没有具体说，但是如果去看它的开源代码的话，可以看到就是这样实现的。另外，第一种方法在BIMPM模型中有用到，感兴趣的可以去翻翻我之前关于BIMPM模型的解读～</p>
 </blockquote>
-<h4 id="sentence-encoding-layer">sentence encoding layer</h4>
-<p>这一层主要是提出了一个sentence encoder，从而来得到一个好的sentence embedding。那具体怎么做的呢？在IMN模型中，它借鉴了ELMo模型中的结构。与以往的模型一样，它也是堆叠多层的BILSTM（论文里是三层），但是不同的是，以往的很多模型只使用最顶层的BILSTM的输出，而忽略了中间层的输出结果。实际上，中间层的输出结果同样也表示了很多的信息，只是相对于高层的输出而言，它表示的是较为低层的语义特征。所以，为了得到更好的sentence embedding，IMN模型中将所有层的输出都保留下来，并且还训练了softmax，得到了所有层的权重，最终的输出是所有层的加权求和，它把这种结构叫做：<strong>attentive hierarchical recurrent encoder (AHRE)</strong>。下面用公式来表达：</p>
-<p>有M个层，对于第k个utterance，表示为：<span class="math inline">\(\{U_k^1,U_k^2,...,U_k^M\}\)</span>，response表示为：<span class="math inline">\(\{R^1,R^2,...,R^M\}\)</span>；最终context的输出表示为：<span class="math inline">\(U_K^{enc}=\{u_{k,i}^{enc}\}_{i=1}^{l_{u_k}}\)</span>，response的输出为：<span class="math inline">\(R^{enc}=\{r_{j}^{enc}\}_{j=1}^{l_r}\)</span>，其中：</p>
-<p><img src="/2020/06/04/NLP-chatbot%E7%B3%BB%E5%88%97-IMN/ahe.jpg" style="zoom:50%;"></p>
-<h4 id="matching-layer">matching layer</h4>
-<p>在这块，IMN模型中采用的是将整个context与response进行match，而不是每一个utterance分别与response进行match。那么，context表示为：<span class="math inline">\(C^{enc}=\{c_i^{enc}\}_{i=1}^{l_c} \ where \ \ l_c=\sum_{k=1}^{n}l_{u_k}\)</span>。然后将context与response进行dot preduct，即：<span class="math inline">\(e_{ij}=(c_i^{enc})^T r_j^{enc}\)</span>。然后在此基础上，计算context-to-response representation <span class="math inline">\(\overline R^{enc}=\{\overline r_j^{enc}\}_{j=1}^{l_r}\)</span>与response-to-context representation <span class="math inline">\(\overline C^{enc}=\{\overline c_i^{enc}\}_{i=1}^{l_c}\)</span>，依次如下：</p>
-<p><img src="/2020/06/04/NLP-chatbot%E7%B3%BB%E5%88%97-IMN/rc.jpg" style="zoom:50%;"></p>
-<p><span class="math inline">\(\overline c_i^{enc}\)</span>的计算方法与<span class="math inline">\(\overline r_j^{enc}\)</span>一样。然后在此基础上，形成两个矩阵，如下：</p>
-<p><img src="/2020/06/04/NLP-chatbot%E7%B3%BB%E5%88%97-IMN/matrix.jpg" style="zoom:50%;"></p>
-<p>另外，得到<span class="math inline">\(C^{mat}\)</span>之后，需要进行seperate，因为一开始是进行了flatten，得到<span class="math inline">\(\{U_k^{mat}\}_{k=1}^{n}\)</span>。</p>
-<h4 id="aggregation-layer">aggregation layer</h4>
-<p>这一层就是将上一层的输出：<span class="math inline">\(\{U_k^{mat}\}_{k=1}^{n}\)</span>以及<span class="math inline">\(R^{mat}\)</span>作为输入，然后经过BILSTM，得到：<span class="math inline">\(U^{agr}=\{u_k^{agr}\}_{k=1}^{n}\)</span>与<span class="math inline">\(r^{agr}\)</span>。由于得到的<span class="math inline">\(U^{agr}=\{u_k^{agr}\}_{k=1}^{n}\)</span>是一个三维的向量，所以再经过一层BILSTM，得到<span class="math inline">\(c^{agr}\)</span>。最终的输出是：<span class="math inline">\(m=[c^{agr};r^{agr}]\)</span>。</p>
-<h4 id="prediction-layer">prediction layer</h4>
-<p>这一层是将<span class="math inline">\(m\)</span>输入到一个MLP中，激活函数为relu，然后再经过线性层，使用sigmoid，得到最终的输出结果。最终的损失函数为cross entropy。</p>
-<h3 id="details">details</h3>
-<ul>
+<h4 id="sentence-encoding-layer"><a href="#sentence-encoding-layer" class="headerlink" title="sentence encoding layer"></a>sentence encoding layer</h4><p>这一层主要是提出了一个sentence encoder，从而来得到一个好的sentence embedding。那具体怎么做的呢？在IMN模型中，它借鉴了ELMo模型中的结构。与以往的模型一样，它也是堆叠多层的BILSTM（论文里是三层），但是不同的是，以往的很多模型只使用最顶层的BILSTM的输出，而忽略了中间层的输出结果。实际上，中间层的输出结果同样也表示了很多的信息，只是相对于高层的输出而言，它表示的是较为低层的语义特征。所以，为了得到更好的sentence embedding，IMN模型中将所有层的输出都保留下来，并且还训练了softmax，得到了所有层的权重，最终的输出是所有层的加权求和，它把这种结构叫做：**attentive hierarchical recurrent encoder (AHRE)**。下面用公式来表达：</p>
+<p>有M个层，对于第k个utterance，表示为：${U_k^1,U_k^2,…,U_k^M}$，response表示为：${R^1,R^2,…,R^M}$；最终context的输出表示为：$U_K^{enc}={u_{k,i}^{enc}}<em>{i=1}^{l</em>{u_k}}$，response的输出为：$R^{enc}={r_{j}^{enc}}_{j=1}^{l_r}$，其中：</p>
+<img src="/2020/06/04/NLP-chatbot%E7%B3%BB%E5%88%97-IMN/ahe.jpg" style="zoom:50%;">
+
+<h4 id="matching-layer"><a href="#matching-layer" class="headerlink" title="matching layer"></a>matching layer</h4><p>在这块，IMN模型中采用的是将整个context与response进行match，而不是每一个utterance分别与response进行match。那么，context表示为：$C^{enc}={c_i^{enc}}<em>{i=1}^{l_c} \ where \ \ l_c=\sum</em>{k=1}^{n}l_{u_k}$。然后将context与response进行dot preduct，即：$e_{ij}=(c_i^{enc})^T r_j^{enc}$。然后在此基础上，计算context-to-response representation $\overline R^{enc}={\overline r_j^{enc}}<em>{j=1}^{l_r}$与response-to-context representation $\overline C^{enc}={\overline c_i^{enc}}</em>{i=1}^{l_c}$，依次如下：</p>
+<img src="/2020/06/04/NLP-chatbot%E7%B3%BB%E5%88%97-IMN/rc.jpg" style="zoom:50%;">
+
+<p>$\overline c_i^{enc}$的计算方法与$\overline r_j^{enc}$一样。然后在此基础上，形成两个矩阵，如下：</p>
+<img src="/2020/06/04/NLP-chatbot%E7%B3%BB%E5%88%97-IMN/matrix.jpg" style="zoom:50%;">
+
+<p>另外，得到$C^{mat}$之后，需要进行seperate，因为一开始是进行了flatten，得到${U_k^{mat}}_{k=1}^{n}$。</p>
+<h4 id="aggregation-layer"><a href="#aggregation-layer" class="headerlink" title="aggregation layer"></a>aggregation layer</h4><p>这一层就是将上一层的输出：${U_k^{mat}}_{k=1}^{n}$以及$R^{mat}$作为输入，然后经过BILSTM，得到：$U^{agr}={u_k^{agr}}_{k=1}^{n}$与$r^{agr}$。由于得到的$U^{agr}={u_k^{agr}}_{k=1}^{n}$是一个三维的向量，所以再经过一层BILSTM，得到$c^{agr}$。最终的输出是：$m=[c^{agr};r^{agr}]$。</p>
+<h4 id="prediction-layer"><a href="#prediction-layer" class="headerlink" title="prediction layer"></a>prediction layer</h4><p>这一层是将$m$输入到一个MLP中，激活函数为relu，然后再经过线性层，使用sigmoid，得到最终的输出结果。最终的损失函数为cross entropy。</p>
+<h3 id="details"><a href="#details" class="headerlink" title="details"></a>details</h3><ul>
 <li>数据集：UDC V1，UDC V2，douban，e-commerce dialogue corpus</li>
-<li>评价指标：<span class="math inline">\(R_n@k\)</span>、MAP、MRR、<span class="math inline">\(P@1\)</span></li>
+<li>评价指标：$R_n@k$、MAP、MRR、$P@1$</li>
 <li>优化器：adam</li>
 <li>对于中文数据集，batch size为128，英文数据集为96</li>
 <li>初始学习率为0.001，每5000step指数衰减0.96</li>
 <li>dropout应用与word embedding与所有的隐藏层，dropout为0.2</li>
 <li>使用300维的GloVe词向量，100维的使用word2vec训练训练集得到的词向量，使用150维的char embedding(使用了3个卷积层[3,4,5]，每一次卷积有50个filters)</li>
 </ul>
-<h3 id="结果">结果</h3>
-<p><img src="/2020/06/04/NLP-chatbot%E7%B3%BB%E5%88%97-IMN/结果.jpg"></p>
+<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p><img src="/2020/06/04/NLP-chatbot%E7%B3%BB%E5%88%97-IMN/%E7%BB%93%E6%9E%9C.jpg"></p>
 <p>从结果上看，IMN表现还是不错的，但是有一个疑问，CompAgg以及BIMPM也可以用于多轮对话吗？🧐</p>
-<h2 id="imn模型实现">IMN模型实现</h2>
-<h2 id="参考文献">参考文献</h2>
-<p>Interactive Matching Network for Multi-Turn Response Selection in Retrieval-Based Chatbots</p>
+<h2 id="IMN模型实现"><a href="#IMN模型实现" class="headerlink" title="IMN模型实现"></a>IMN模型实现</h2><h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>Interactive Matching Network for Multi-Turn Response Selection in Retrieval-Based Chatbots</p>
 
     </div>
 
@@ -368,6 +420,24 @@
     
 
     <footer class="post-footer">
+          <div class="reward-container">
+  <div>Would you like to buy me a cup of coffee☕️～</div>
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="zichao Alipay">
+        <span>Alipay</span>
+      </div>
+
+  </div>
+</div>
+
           <div class="post-tags">
               <a href="/tags/NLP/" rel="tag"># NLP</a>
               <a href="/tags/tensorflow2/" rel="tag"># tensorflow2</a>
@@ -439,6 +509,24 @@
   </span>
   <span class="author" itemprop="copyrightHolder">zichao</span>
 </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
 
@@ -446,7 +534,7 @@
   </footer>
 
   
-  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
 <script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
 
   
@@ -454,6 +542,8 @@
 
 
 
+  <script src="/js/local-search.js"></script>
+
 
 
 
@@ -469,6 +559,7 @@
 
 
   
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 
 

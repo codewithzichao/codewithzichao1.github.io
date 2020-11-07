@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 4.2.0">
+
+
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -14,12 +16,12 @@
 
 
 
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"8.0.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","images":"/images","scheme":"Muse","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
 
   <meta name="description" content="接着上一篇博客，这篇博客也是讲解图神经网络在Document-level关系抽取上的应用，共讲解4篇论文：《Global-to-Local Neural Networks for Document-Level Relation Extraction》、《HIN: Hierarchical Inference Network for Document-Level Relation Extractio">
@@ -134,6 +136,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -167,11 +170,43 @@
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
 
   </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
         
@@ -194,14 +229,17 @@
         </li>
       </ul>
 
-      <!--noindex-->
-      <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#global-to-local-neural-networks-for-document-level-relation-extractionemnlp2020"><span class="nav-number">1.</span> <span class="nav-text">Global-to-Local Neural Networks for Document-Level Relation Extraction(EMNLP2020)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#background"><span class="nav-number">1.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#model"><span class="nav-number">1.2.</span> <span class="nav-text">Model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment"><span class="nav-number">1.3.</span> <span class="nav-text">Experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hin-hierarchical-inference-network-for-document-level-relation-extractionpakdd2020"><span class="nav-number">2.</span> <span class="nav-text">HIN: Hierarchical Inference Network for Document-Level Relation Extraction(PAKDD2020)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#background-1"><span class="nav-number">2.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#model-1"><span class="nav-number">2.2.</span> <span class="nav-text">Model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment-1"><span class="nav-number">2.3.</span> <span class="nav-text">Experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#document-level-relation-extraction-with-adaptive-thresholding-and-localized-context-poolingarxiv2020"><span class="nav-number">3.</span> <span class="nav-text">Document-Level Relation Extraction with Adaptive Thresholding and Localized Context Pooling(arxiv2020)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#background-2"><span class="nav-number">3.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#model-2"><span class="nav-number">3.2.</span> <span class="nav-text">Model</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#backbone"><span class="nav-number">3.2.1.</span> <span class="nav-text">backbone</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#improvement"><span class="nav-number">3.2.2.</span> <span class="nav-text">improvement</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment-2"><span class="nav-number">3.3.</span> <span class="nav-text">Experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#entity-and-evidence-guided-relation-extraction-for-docredarxiv2020"><span class="nav-number">4.</span> <span class="nav-text">Entity and Evidence Guided Relation Extraction for DocRED(arxiv2020)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#background-3"><span class="nav-number">4.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#model-3"><span class="nav-number">4.2.</span> <span class="nav-text">Model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment-3"><span class="nav-number">4.3.</span> <span class="nav-text">Experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#references"><span class="nav-number">5.</span> <span class="nav-text">References</span></a></li></ol></div>
-      </section>
-      <!--/noindex-->
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <section class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Global-to-Local-Neural-Networks-for-Document-Level-Relation-Extraction-EMNLP2020"><span class="nav-number">1.</span> <span class="nav-text">Global-to-Local Neural Networks for Document-Level Relation Extraction(EMNLP2020)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Background"><span class="nav-number">1.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Model"><span class="nav-number">1.2.</span> <span class="nav-text">Model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Experiment"><span class="nav-number">1.3.</span> <span class="nav-text">Experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HIN-Hierarchical-Inference-Network-for-Document-Level-Relation-Extraction-PAKDD2020"><span class="nav-number">2.</span> <span class="nav-text">HIN: Hierarchical Inference Network for Document-Level Relation Extraction(PAKDD2020)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Background-1"><span class="nav-number">2.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Model-1"><span class="nav-number">2.2.</span> <span class="nav-text">Model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Experiment-1"><span class="nav-number">2.3.</span> <span class="nav-text">Experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Document-Level-Relation-Extraction-with-Adaptive-Thresholding-and-Localized-Context-Pooling-arxiv2020"><span class="nav-number">3.</span> <span class="nav-text">Document-Level Relation Extraction with Adaptive Thresholding and Localized Context Pooling(arxiv2020)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Background-2"><span class="nav-number">3.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Model-2"><span class="nav-number">3.2.</span> <span class="nav-text">Model</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#backbone"><span class="nav-number">3.2.1.</span> <span class="nav-text">backbone</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#improvement"><span class="nav-number">3.2.2.</span> <span class="nav-text">improvement</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Experiment-2"><span class="nav-number">3.3.</span> <span class="nav-text">Experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Entity-and-Evidence-Guided-Relation-Extraction-for-DocRED-arxiv2020"><span class="nav-number">4.</span> <span class="nav-text">Entity and Evidence Guided Relation Extraction for DocRED(arxiv2020)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Background-3"><span class="nav-number">4.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Model-3"><span class="nav-number">4.2.</span> <span class="nav-text">Model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Experiment-3"><span class="nav-number">4.3.</span> <span class="nav-text">Experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">5.</span> <span class="nav-text">References</span></a></li></ol></div>
+        </section>
+        <!--/noindex-->
 
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <section class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zichao"
+      src="/images/photo.jpg">
   <p class="site-author-name" itemprop="name">zichao</p>
   <div class="site-description" itemprop="description">Just learning</div>
 </div>
@@ -228,10 +266,22 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
 
 
 
-      </section>
+        </section>
+      </div>
     </div>
   </aside>
   <div class="sidebar-dimmer"></div>
@@ -244,6 +294,8 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+
+  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
@@ -266,7 +318,7 @@
     <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/photo.jpg">
       <meta itemprop="name" content="zichao">
       <meta itemprop="description" content="Just learning">
     </span>
@@ -311,6 +363,13 @@
     </span>
 
   
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
 </div>
 
         </div>
@@ -322,158 +381,118 @@
     <div class="post-body" itemprop="articleBody">
         <p>接着上一篇博客，这篇博客也是讲解图神经网络在Document-level关系抽取上的应用，共讲解4篇论文：《Global-to-Local Neural Networks for Document-Level Relation Extraction》、《HIN: Hierarchical Inference Network for Document-Level Relation Extraction》、《Document-Level Relation Extraction with Adaptive Thresholding and Localized Context Pooling》、《Entity and Evidence Guided Relation Extraction for DocRED》。</p>
 <a id="more"></a>
-<h2 id="global-to-local-neural-networks-for-document-level-relation-extractionemnlp2020">Global-to-Local Neural Networks for Document-Level Relation Extraction(EMNLP2020)</h2>
-<h3 id="background">Background</h3>
-<p>这篇文章的核心思想是：通过从粗粒度、细粒度、context information的角度对entity之间的relation进行建模。具体解决的问题是：第一：怎么对document中的复杂语义进行建模？(使用BERT)；第二：怎么学习有效地entity representation？(使用RGCN)；第三：其他的relation也对于当前目标entity之间的relation产生影响，如果有效的利用？(context-aware)。将这三个方面聚合起来，就是GLRE模型。</p>
+
+<h2 id="Global-to-Local-Neural-Networks-for-Document-Level-Relation-Extraction-EMNLP2020"><a href="#Global-to-Local-Neural-Networks-for-Document-Level-Relation-Extraction-EMNLP2020" class="headerlink" title="Global-to-Local Neural Networks for Document-Level Relation Extraction(EMNLP2020)"></a>Global-to-Local Neural Networks for Document-Level Relation Extraction(EMNLP2020)</h2><h3 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h3><p>这篇文章的核心思想是：通过从粗粒度、细粒度、context information的角度对entity之间的relation进行建模。具体解决的问题是：第一：怎么对document中的复杂语义进行建模？(使用BERT)；第二：怎么学习有效地entity representation？(使用RGCN)；第三：其他的relation也对于当前目标entity之间的relation产生影响，如果有效的利用？(context-aware)。将这三个方面聚合起来，就是GLRE模型。</p>
 <blockquote>
 <p>目前在doucment-level RE中，存在着三方面的问题：logical reasoning、coreference reasoning、common-sense reasoning。</p>
 </blockquote>
-<h3 id="model">Model</h3>
-<p>先放图～</p>
+<h3 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h3><p>先放图～</p>
 <p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/GLRE_model.jpg"></p>
 <p>GLRE模型分为四部分：<strong>encoding layer、global representation layer、local representation、classifier layer。</strong></p>
 <ul>
-<li><p><strong>encoding layer：</strong>假设输入的document表示为：<span class="math inline">\(\cal D=\{w_1,w_2,...,w_k\}\)</span>，其中<span class="math inline">\(w_i\)</span>表示的是第<span class="math inline">\(i\)</span>个word，我们使用BERT来对其进行编码，如下： <span class="math display">\[
-H=[h_1,h_2,...,h_k]=BERT([w_1,w_2,...,w_k])
-\]</span> <span class="math inline">\(H\)</span>是BERT最后一层的输出。</p></li>
-<li><p><strong>global representation layer：</strong>GLRE模型同样是基于graph的模型。同样是继承EoG模型，其中有三种node：mention node、entity node与sentence node。对于三种node的表示，我们都是将其本身的avg embedding与各自的type embedding进行conat。具体来说，对于mention node：<span class="math inline">\(n_{m_i}=[avg_{w_j\in m_i}(h_j);t_m]\)</span>；对于entity node：<span class="math inline">\(n_{e_i}=[avg_{m_j\in e_i}(n_{m_j});t_{e}]\)</span>；对于sentence node：<span class="math inline">\(n_{s_i}=[avg_{h_j\in s_i}(h_j);t_s]\)</span>。有五种edge：mention-mention edge(同一个sentence中的所有mentions之间加一条边)、mention-entity edge(entity与其mention之间加一条边)、mention-sentence edge(如果mention node与sentence node加一条边)、entity-sentence edge(如果一个entity至少有一个mention出现在sentence中，那么entity node与sentence之间加一条边)、sentence-sentence edge(所有的sentence node之间加一条边)。<strong>⚠️和EoG模型一样，同样没有entity-entity edge！</strong>构建好graph之后，在GLRE模型中，stack了L层的R-GCN，具体的aggregate的公式如下： <span class="math display">\[
-n^{l+1}_{i}=\sigma(\sum_{x\in {\cal X}}\sum_{j\in {\cal N_{x}^{i}}}\frac{1}{|\cal N_{x}^{i}|}W^l_xn^l_j+W^l_0n^l_i)
-\]</span> 其中，<span class="math inline">\(\cal N_{x}^{i}\)</span>表示在<span class="math inline">\(x\)</span>这种edge type下，node i的邻接节点的集合，说到底，还是和GCN处理异质图的方式没啥区别。我们将L层之后的每一个node的representation称为entity global representation，记做：<span class="math inline">\(e^{glo}_{i}\)</span>。</p></li>
-<li><p><strong>local representation layer：</strong>如果说global rep layer是想在document-level上对不同的entity之间的语义信息进行建模，那么local rep layer是在对同一个entity的不同的mention之间的信息进行建模，从而得到更加好的entity rep，因为在不同的entity pair中，entity的表示肯定是不同的，如果只用global rep layer的结果的话，那么entity的表示就是唯一的了，肯定对最后结果会有影响。怎么做呢？在GLRE中，采用的是multi-head self attention。对于entity pair <span class="math inline">\((e_a,e_b)\)</span>，公式如下： <span class="math display">\[
-e^{loc}_a=LN(MHead_a(e^{glo}_a,\{n_{s_i}\}_{s_i\in \cal S_a},\{n_{m_j}\}_{m_j\in \cal M_a})) \\
-e^{loc}_b=LN(MHead_b(e^{glo}_b,\{n_{s_i}\}_{s_i\in \cal S_b},\{n_{m_j}\}_{m_j\in \cal M_b}))
-\]</span> 其中，<span class="math inline">\(\cal S_a\)</span>表示的是entity a 的mentions所在的sentence的集合，<span class="math inline">\(\cal M_a\)</span>表示的是enity a的mention的集合。</p></li>
-<li><p><strong>classifier layer：</strong>得到<span class="math inline">\(e^{glo}\)</span>与<span class="math inline">\(e^{loc}\)</span>之后，我们将两者聚合。对于entity pair <span class="math inline">\((e_a,e_b)\)</span>，具体来说： <span class="math display">\[
-\tilde e_a=[e^{glo}_a;e^{loc}_a;\Delta(\delta_{ab})] \\
-\tilde e_b=[e^{glo}_b;e^{loc}_b;\Delta(\delta_{ba})]
-\]</span> 其中，<span class="math inline">\(\delta_{ab}\)</span>表示的是entity a的第一个mention与entity b的相对距离。最后的表示是：<span class="math inline">\(o_r=[\tilde e_a;\tilde e_b]\)</span>。为了进一步挖掘信息，paper中说的是document的topic information能够暗含某些relation，所以再一次使用self-attention(与transformer不同，名字叫做context-aware),如下： <span class="math display">\[
-o_c=\sum_{i=0}^{p}\theta_io_i=\sum_{i=0}^{p}\frac{exp(o_iWo^{\prime}_{i})}{\sum_{j=0}^{p}exp(o_jWo^{\prime}_{j})}
-\]</span> 然后将<span class="math inline">\(o_c\)</span>输入到一个FFN层进行分类，即：<span class="math inline">\(y_r=sigmoid(FFN([o_r,;o_c]))\)</span>，最后的loss使用CE。</p></li>
+<li><p><strong>encoding layer：</strong>假设输入的document表示为：$\cal D={w_1,w_2,…,w_k}$，其中$w_i$表示的是第$i$个word，我们使用BERT来对其进行编码，如下：<br>$$<br>H=[h_1,h_2,…,h_k]=BERT([w_1,w_2,…,w_k])<br>$$<br>$H$是BERT最后一层的输出。</p>
+</li>
+<li><p><strong>global representation layer：</strong>GLRE模型同样是基于graph的模型。同样是继承EoG模型，其中有三种node：mention node、entity node与sentence node。对于三种node的表示，我们都是将其本身的avg embedding与各自的type embedding进行conat。具体来说，对于mention node：$n_{m_i}=[avg_{w_j\in m_i}(h_j);t_m]$；对于entity node：$n_{e_i}=[avg_{m_j\in e_i}(n_{m_j});t_{e}]$；对于sentence node：$n_{s_i}=[avg_{h_j\in s_i}(h_j);t_s]$。有五种edge：mention-mention edge(同一个sentence中的所有mentions之间加一条边)、mention-entity edge(entity与其mention之间加一条边)、mention-sentence edge(如果mention node与sentence node加一条边)、entity-sentence edge(如果一个entity至少有一个mention出现在sentence中，那么entity node与sentence之间加一条边)、sentence-sentence edge(所有的sentence node之间加一条边)。<strong>⚠️和EoG模型一样，同样没有entity-entity edge！</strong>构建好graph之后，在GLRE模型中，stack了L层的R-GCN，具体的aggregate的公式如下：<br>$$<br>n^{l+1}<em>{i}=\sigma(\sum</em>{x\in {\cal X}}\sum_{j\in {\cal N_{x}^{i}}}\frac{1}{|\cal N_{x}^{i}|}W^l_xn^l_j+W^l_0n^l_i)<br>$$<br>其中，$\cal N_{x}^{i}$表示在$x$这种edge type下，node i的邻接节点的集合，说到底，还是和GCN处理异质图的方式没啥区别。我们将L层之后的每一个node的representation称为entity global representation，记做：$e^{glo}_{i}$。</p>
+</li>
+<li><p><strong>local representation layer：</strong>如果说global rep layer是想在document-level上对不同的entity之间的语义信息进行建模，那么local rep layer是在对同一个entity的不同的mention之间的信息进行建模，从而得到更加好的entity rep，因为在不同的entity pair中，entity的表示肯定是不同的，如果只用global rep layer的结果的话，那么entity的表示就是唯一的了，肯定对最后结果会有影响。怎么做呢？在GLRE中，采用的是multi-head self attention。对于entity pair $(e_a,e_b)$，公式如下：<br>$$<br>e^{loc}<em>a=LN(MHead_a(e^{glo}_a,{n</em>{s_i}}<em>{s_i\in \cal S_a},{n</em>{m_j}}<em>{m_j\in \cal M_a})) \<br>e^{loc}<em>b=LN(MHead_b(e^{glo}_b,{n</em>{s_i}}_{s_i\in \cal S_b},{n</em>{m_j}}_{m_j\in \cal M_b}))<br>$$<br>其中，$\cal S_a$表示的是entity a 的mentions所在的sentence的集合，$\cal M_a$表示的是enity a的mention的集合。</p>
+</li>
+<li><p><strong>classifier layer：</strong>得到$e^{glo}$与$e^{loc}$之后，我们将两者聚合。对于entity pair $(e_a,e_b)$，具体来说：<br>$$<br>\tilde e_a=[e^{glo}<em>a;e^{loc}<em>a;\Delta(\delta</em>{ab})] \<br>\tilde e_b=[e^{glo}_b;e^{loc}<em>b;\Delta(\delta</em>{ba})]<br>$$<br>其中，$\delta</em>{ab}$表示的是entity a的第一个mention与entity b的相对距离。最后的表示是：$o_r=[\tilde e_a;\tilde e_b]$。为了进一步挖掘信息，paper中说的是document的topic information能够暗含某些relation，所以再一次使用self-attention(与transformer不同，名字叫做context-aware),如下：<br>$$<br>o_c=\sum_{i=0}^{p}\theta_io_i=\sum_{i=0}^{p}\frac{exp(o_iWo^{\prime}<em>{i})}{\sum</em>{j=0}^{p}exp(o_jWo^{\prime}_{j})}<br>$$<br>然后将$o_c$输入到一个FFN层进行分类，即：$y_r=sigmoid(FFN([o_r,;o_c]))$，最后的loss使用CE。</p>
+</li>
 </ul>
-<h3 id="experiment">Experiment</h3>
-<ol type="1">
-<li><p>数据集：CDR、DocRED</p></li>
+<h3 id="Experiment"><a href="#Experiment" class="headerlink" title="Experiment"></a>Experiment</h3><ol>
+<li><p>数据集：CDR、DocRED</p>
+</li>
 <li><p>结果</p>
-<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/GLRE_result.jpg" style="zoom:50%;"></p>
-<p>说实话，这个结果一般。但是这篇论文的ablation与error analysis很有意思。GLRE在长距离的entity pair的关系抽取上取得了比较好的结果(&gt;=3)，paper中给它归因于global rep layer的构建，同时local rep layer的构建减少了噪音。</p></li>
+<img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/GLRE_result.jpg" style="zoom:50%;">
+
+<p>说实话，这个结果一般。但是这篇论文的ablation与error analysis很有意思。GLRE在长距离的entity pair的关系抽取上取得了比较好的结果(&gt;=3)，paper中给它归因于global rep layer的构建，同时local rep layer的构建减少了噪音。</p>
+</li>
 <li><p>消融实验结论</p>
-<ol type="1">
+<ol>
 <li><p>BERT对于最终的结果影响很大，paper中做了几组实验，如下：</p>
-<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/GLRE_result_pretrained_model.jpg" style="zoom:50%;"></p></li>
+<img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/GLRE_result_pretrained_model.jpg" style="zoom:50%;">
+</li>
 <li><p>当local rep layer被移除之后，F1值下降很快，这说明multi-head self attention能够有选择性的aggregatemention rep，过滤掉一些噪音，看来不是所有的mention都有entity rep都有用，结果如下：</p>
-<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/GLRE_result_ablation.jpg" style="zoom:50%;"></p></li>
-</ol></li>
+<img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/GLRE_result_ablation.jpg" style="zoom:50%;">
+</li>
+</ol>
+</li>
 <li><p>Case study</p>
-<ol type="1">
+<ol>
 <li>Logical reasoning很重要，GLRE模型中，完全靠RGCN，没有另外再搞一套机制来结局logical reasoning；</li>
 <li>当一个句子中，很多entity用<code>and</code>这样的词连接的时候，往往模型无法对她们之间的关系进行建模，paper中说在GLRE模型中是靠context-aware来解决的，但是我觉得效果一般吧；</li>
 <li>怎么引入先验知识很重要，因为很多common sense不会出现在训练集里面，而很多relation的判断都需要用到先验知识，这个时候怎么做？GLRE也没有解决这个问题；</li>
 <li>当一个句子的主语等部分缺失时，怎么处理？在GLRE中，是通过建立global rep layer来解决的，但是效果不是很好；</li>
 <li>当代词有歧义的时候，怎么解决？</li>
-<li>paper统计了一下，logical reasoning(40.9%)、component missing error(28.8%)、prior knowledge missing error(13.6%)、coreference reasoning error？(12.9%)。</li>
-</ol></li>
+<li>paper统计了一下，logical reasoning(40.9%)、component missing error(28.8%)、prior knowledge missing error(13.6%)、coreference reasoning error？(12.9%)。 </li>
+</ol>
+</li>
 </ol>
 <p>总的来说，GLRE模型一般，但是其case study与消融实验做的还是蛮好的，很有启发性。</p>
-<h2 id="hin-hierarchical-inference-network-for-document-level-relation-extractionpakdd2020">HIN: Hierarchical Inference Network for Document-Level Relation Extraction(PAKDD2020)</h2>
-<h3 id="background-1">Background</h3>
-<p>HIN模型还是蛮好懂的，它并不是从基于graph的方式上来解决document-level RE的，而是通过从entity-level、sentence-level、document-level这样层级的方式来做，有点类似于文本分类模型HAN。</p>
-<h3 id="model-1">Model</h3>
-<p>先放图～</p>
+<h2 id="HIN-Hierarchical-Inference-Network-for-Document-Level-Relation-Extraction-PAKDD2020"><a href="#HIN-Hierarchical-Inference-Network-for-Document-Level-Relation-Extraction-PAKDD2020" class="headerlink" title="HIN: Hierarchical Inference Network for Document-Level Relation Extraction(PAKDD2020)"></a>HIN: Hierarchical Inference Network for Document-Level Relation Extraction(PAKDD2020)</h2><h3 id="Background-1"><a href="#Background-1" class="headerlink" title="Background"></a>Background</h3><p>HIN模型还是蛮好懂的，它并不是从基于graph的方式上来解决document-level RE的，而是通过从entity-level、sentence-level、document-level这样层级的方式来做，有点类似于文本分类模型HAN。</p>
+<h3 id="Model-1"><a href="#Model-1" class="headerlink" title="Model"></a>Model</h3><p>  先放图～</p>
 <p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/HIN_model.jpg"></p>
 <p>HIN模型分为四部分：<strong>input layer、entity-level inference module、hierarchical document-level inference module、prediction layer。</strong></p>
 <ul>
-<li><p><strong>input layer：</strong>原始的输入有三部分：<strong>word embedding、entity type embedding、coreference embedding。</strong>其中，word embedding就是每一个token的word embedding，其维度：<span class="math inline">\(d_w\)</span>；entity type embedding指的是将entity 的type信息转换为一个dense vector，其维度是：<span class="math inline">\(d_t\)</span>；coreference embedding指的是同一个entity的不同的mention被分配同一个entity id，其维度：<span class="math inline">\(d_c\)</span>。这一层的输出是这三者的concat。</p></li>
-<li><p><strong>entity-level inference module：</strong>首先使用BILSTM来对document进行编码，即：<span class="math inline">\(h_i=BILSTM(w_i),i\in[1,n]\)</span>，<span class="math inline">\(n\)</span>表示一个document中所有的token数目；每一个mention的rep是其每一个word的avg，每一个entity是其所有的mention rep的avg，即：<span class="math inline">\(e_l=avg_{w_i\in e_l}(h_i),\ E_a=avg_{e_l\in E_a}(e_l)\)</span>，其中，<span class="math inline">\(e_l\)</span>表示某一个mention的rep，<span class="math inline">\(E_a\)</span>表示某一个entity的rep。由于收到multi-head attention的影响：将vector映射到不同的latent space会enrich 模型的信息，所以在HIN模型中，也是同样的做法，将得到的entity rep映射到不同的<span class="math inline">\(K\)</span>个latent space，即： <span class="math display">\[
-  E^k_a=W^{(1)}_k(RELU(W^{(0)}_kE_a))
-  \]</span> 之后，由于又收到TransE算法的影响，知：<span class="math inline">\(e_h+e\approx e_t\)</span>，所以作者认为<span class="math inline">\(E_b-E_a\)</span>能够在某种程度上反应entity pair <span class="math inline">\((e_a,e_b)\)</span>的relation。所以第k个latent space的结果是： <span class="math display">\[
-  I^k_e=[E^k_aR^kE^k_b;E^k_b-E^k_a;E^k_a;E^k_b]
-  \]</span> 最终我们将k个latent space的结果进行concat，当然了，我们也加入相对距离进一步丰富信息，如下： <span class="math display">\[
-  I_e=G_e([I^1_e,I^2_e,...,e^K_e;M_{ba}-M_{ab}])
-  \]</span> 其中，<span class="math inline">\(G_e\)</span>是FFN，<span class="math inline">\(d_{ab}\)</span>是相对距离。</p></li>
-<li><p><strong>hierarchical document-level inference module：</strong>这一部分又分为两部分：sentence-level inference与document-level inference。在sentence-level inference中，假设一个document有<span class="math inline">\(L\)</span>个句子，<span class="math inline">\(w_{jt}\)</span>表示第<span class="math inline">\(j\)</span>个sentence的第<span class="math inline">\(t\)</span>个word，我们使用BILSTM对每一个sentence进行编码，如下： <span class="math display">\[
-h_{jt}=BILSTM(w_{jt}),j=1,...,L
-\]</span> 然后借鉴HAN模型，对<span class="math inline">\(h_{jt}\)</span>使用attention，然后得到sentence vector，如下： <span class="math display">\[
-\alpha_{jt}=u^T_wtanh(W_wh_{jt}+b_w) \\
-a_{jt}=\frac{exp(\alpha_{jt})}{\sum_{t}exp(\alpha_{jt})} \\
-S_j=\sum_{t}a_{jt}h_{jt}
-\]</span> 其中，<span class="math inline">\(S_j\)</span>就是第j个sentence的sentence vector。我们进一步将其与<span class="math inline">\(I_e\)</span>进行融合，如下： <span class="math display">\[
-I_{sj}=G_s([S_j;I_e;S_j-I_e;S_j  \ o \ I_e]) \\
-\]</span> <span class="math inline">\(S_{sj}\)</span>就是最终的第j个sentence的sentence vector。</p>
-<p>在document-level inference中，我们还是借鉴HAN模型，使用BISLTM+attention的方式，得到最终document vector，如下： <span class="math display">\[
-c_{sj}=BILSTM_D(I_{sj}),j\in[1,L] \\
-\alpha_{j}=u^T_stanh(W_sc_{sj}+b_s) \\
-a_{jt}=\frac{exp(\alpha_{j})}{\sum_{j}exp(\alpha_{j})} \\
-I_d=\sum_{j}a_{j}c_{sj}
-\]</span> <span class="math inline">\(I_d\)</span>就是最终的document vector。</p></li>
-<li><p><strong>prediction layer：</strong>我们首先对entity-level inference rep与document-level inference rep进行concat，再输入到FFN中进行最终得分类。如下： <span class="math display">\[
-P(r|E_a,E_b)=sigmoid(W_r \left[\begin{matrix}I_e \\ I_d \end{matrix}\right]+b_r)
-\]</span> 最终的loss采用CE。</p></li>
+<li><p><strong>input layer：</strong>原始的输入有三部分：<strong>word embedding、entity type embedding、coreference embedding。</strong>其中，word embedding就是每一个token的word embedding，其维度：$d_w$；entity type embedding指的是将entity 的type信息转换为一个dense vector，其维度是：$d_t$；coreference embedding指的是同一个entity的不同的mention被分配同一个entity id，其维度：$d_c$。这一层的输出是这三者的concat。</p>
+</li>
+<li><p><strong>entity-level inference module：</strong>首先使用BILSTM来对document进行编码，即：$h_i=BILSTM(w_i),i\in[1,n]$，$n$表示一个document中所有的token数目；每一个mention的rep是其每一个word的avg，每一个entity是其所有的mention rep的avg，即：$e_l=avg_{w_i\in e_l}(h_i),\ E_a=avg_{e_l\in E_a}(e_l)$，其中，$e_l$表示某一个mention的rep，$E_a$表示某一个entity的rep。由于收到multi-head attention的影响：将vector映射到不同的latent space会enrich 模型的信息，所以在HIN模型中，也是同样的做法，将得到的entity rep映射到不同的$K$个latent space，即：<br>$$<br>E^k_a=W^{(1)}<em>k(RELU(W^{(0)}_kE_a))<br>$$<br>之后，由于又收到TransE算法的影响，知：$e_h+e\approx e_t$，所以作者认为$E_b-E_a$能够在某种程度上反应entity pair $(e_a,e_b)$的relation。所以第k个latent space的结果是：<br>$$<br>I^k_e=[E^k_aR^kE^k_b;E^k_b-E^k_a;E^k_a;E^k_b]<br>$$<br>最终我们将k个latent space的结果进行concat，当然了，我们也加入相对距离进一步丰富信息，如下：<br>$$<br>I_e=G_e([I^1_e,I^2_e,…,e^K_e;M</em>{ba}-M_{ab}])<br>$$<br>其中，$G_e$是FFN，$d_{ab}$是相对距离。</p>
+</li>
+<li><p><strong>hierarchical document-level inference module：</strong>这一部分又分为两部分：sentence-level inference与document-level inference。在sentence-level inference中，假设一个document有$L$个句子，$w_{jt}$表示第$j$个sentence的第$t$个word，我们使用BILSTM对每一个sentence进行编码，如下：<br>$$<br>h_{jt}=BILSTM(w_{jt}),j=1,…,L<br>$$<br>然后借鉴HAN模型，对$h_{jt}$使用attention，然后得到sentence vector，如下：<br>$$<br>\alpha_{jt}=u^T_wtanh(W_wh_{jt}+b_w) \<br>a_{jt}=\frac{exp(\alpha_{jt})}{\sum_{t}exp(\alpha_{jt})} \<br>S_j=\sum_{t}a_{jt}h_{jt}<br>$$<br>其中，$S_j$就是第j个sentence的sentence vector。我们进一步将其与$I_e$进行融合，如下：<br>$$<br>I_{sj}=G_s([S_j;I_e;S_j-I_e;S_j  \ o \ I_e]) \<br>$$<br>$S_{sj}$就是最终的第j个sentence的sentence vector。</p>
+<p>在document-level inference中，我们还是借鉴HAN模型，使用BISLTM+attention的方式，得到最终document vector，如下：<br>$$<br>c_{sj}=BILSTM_D(I_{sj}),j\in[1,L] \<br>\alpha_{j}=u^T_stanh(W_sc_{sj}+b_s) \<br>a_{jt}=\frac{exp(\alpha_{j})}{\sum_{j}exp(\alpha_{j})} \<br>I_d=\sum_{j}a_{j}c_{sj}<br>$$<br>$I_d$就是最终的document vector。</p>
+</li>
+<li><p><strong>prediction layer：</strong>我们首先对entity-level inference rep与document-level inference rep进行concat，再输入到FFN中进行最终得分类。如下：<br>$$<br>P(r|E_a,E_b)=sigmoid(W_r \left[\begin{matrix}I_e \ I_d \end{matrix}\right]+b_r)<br>$$<br>最终的loss采用CE。</p>
+</li>
 </ul>
-<h3 id="experiment-1">Experiment</h3>
-<ol type="1">
-<li><p>数据集：DocRED</p></li>
+<h3 id="Experiment-1"><a href="#Experiment-1" class="headerlink" title="Experiment"></a>Experiment</h3><ol>
+<li><p>数据集：DocRED</p>
+</li>
 <li><p>结果</p>
 <p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/HIN_result.jpg"></p>
 <p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/HIN_ablation.jpg"></p>
-<p>从结果看，更加一般了，而后在case study中所说明的logical reasoning、coreference reasoning、combine common-sense information问题也没有解决。</p></li>
+<p>从结果看，更加一般了，而后在case study中所说明的logical reasoning、coreference reasoning、combine common-sense information问题也没有解决。</p>
+</li>
 </ol>
-<h2 id="document-level-relation-extraction-with-adaptive-thresholding-and-localized-context-poolingarxiv2020">Document-Level Relation Extraction with Adaptive Thresholding and Localized Context Pooling(arxiv2020)</h2>
-<h3 id="background-2">Background</h3>
-<p>这篇文章是JD放在arxiv上的文章，从结果来看是目前的top1，值得一读。它也是解决document-level RE。它的核心思想是：目前主流的做法是采用基于graph的方法来做，但是很多基于BERT的工作(譬如corefBERT)也能够得到很好的结果，并且在基于graph的模型的实验部分，也都证明了BERT以及BERT-like预训练模型的巨大提升，以至于让人怀疑是否有必要引入GNN？作者发现如果只用BERT的话，那么对于不同的entity pair，entity的rep都是一样的，这是一个很大的问题，那是否能够不引入graph的方式来解决这个问题呢？这就有了ATLOP模型。</p>
+<h2 id="Document-Level-Relation-Extraction-with-Adaptive-Thresholding-and-Localized-Context-Pooling-arxiv2020"><a href="#Document-Level-Relation-Extraction-with-Adaptive-Thresholding-and-Localized-Context-Pooling-arxiv2020" class="headerlink" title="Document-Level Relation Extraction with Adaptive Thresholding and Localized Context Pooling(arxiv2020)"></a>Document-Level Relation Extraction with Adaptive Thresholding and Localized Context Pooling(arxiv2020)</h2><h3 id="Background-2"><a href="#Background-2" class="headerlink" title="Background"></a>Background</h3><p>这篇文章是JD放在arxiv上的文章，从结果来看是目前的top1，值得一读。它也是解决document-level RE。它的核心思想是：目前主流的做法是采用基于graph的方法来做，但是很多基于BERT的工作(譬如corefBERT)也能够得到很好的结果，并且在基于graph的模型的实验部分，也都证明了BERT以及BERT-like预训练模型的巨大提升，以至于让人怀疑是否有必要引入GNN？作者发现如果只用BERT的话，那么对于不同的entity pair，entity的rep都是一样的，这是一个很大的问题，那是否能够不引入graph的方式来解决这个问题呢？这就有了ATLOP模型。</p>
 <blockquote>
 <p>说实话，这篇paper更多的是解决多标签分类问题，因为即便不是document-level RE，另外随便来个多标签分类，应该也可以得到很好的效果。</p>
 </blockquote>
-<h3 id="model-2">Model</h3>
-<p>ATLOP模型整体是基于BERT而不是graph来做的。所以我分两部分阐述：主体部分+改良部分。</p>
-<h4 id="backbone">backbone</h4>
-<ul>
-<li><p><strong>task definition：</strong>给定document <span class="math inline">\(d\)</span>以及一系列entity <span class="math inline">\(\{e_i\}_{i=1}^{n}\)</span>，目标是得到entity pair <span class="math inline">\((e_s,e_o)\)</span>的relation <span class="math inline">\(r\)</span>，<span class="math inline">\(r\in {\cal R}\cup \{NA\}\)</span>。</p></li>
-<li><p><strong>encoder：</strong>给定document <span class="math inline">\(d=[x_t]_{t=1}^l\)</span>，对于每一个可能的mention的开头与结尾，加入<code>*</code>来进行标注，然后将sentence输入到BERT当中，得到contextual的rep。即：<span class="math inline">\([h_1,...,h_l]=BERT([x_1,...,x_l])\)</span>。mention embedding由mention首部的<code>*</code>rep来表示，entity rep是对其所有的mention的rep进行logexpsum得到的，即：<span class="math inline">\(h_{e_i}=log\sum_{j=1}^{N_{e_i}}exp(h_{m_j^i})\)</span>，其中<span class="math inline">\(m_j^i\)</span>表示entity <span class="math inline">\(e_i\)</span>的第<span class="math inline">\(j\)</span>个mention。</p></li>
-<li><p><strong>binary classification：</strong>对于entity pair <span class="math inline">\((h_{e_s},h_{e_o})\)</span>，我们对其分别进行编码，并使用bilinear得到最终的结果，如下： <span class="math display">\[
-z_s=tanh(W_sh_{e_s}) \\
-z_o=tanh(W_oh_{e_o}) \\
-P(r|e_s,e_o)=sigmoid(z^T_sW_rz_o+b_r)
-\]</span> 在ATLOP里，为了减少<span class="math inline">\(W_r\)</span>的参数量，使用了group bilinear的技术，其实就是multi-head attention的思想，就是将<span class="math inline">\(h_{e_s}与h_{e_o}\)</span>的维度分为k份，分别进行bilinear操作，最后对结果进行concat，再使用sigmoid得到结果。</p></li>
+<h3 id="Model-2"><a href="#Model-2" class="headerlink" title="Model"></a>Model</h3><p>ATLOP模型整体是基于BERT而不是graph来做的。所以我分两部分阐述：主体部分+改良部分。</p>
+<h4 id="backbone"><a href="#backbone" class="headerlink" title="backbone"></a>backbone</h4><ul>
+<li><p><strong>task definition：</strong>给定document $d$以及一系列entity ${e_i}_{i=1}^{n}$，目标是得到entity pair $(e_s,e_o)$的relation $r$，$r\in {\cal R}\cup {NA}$。</p>
+</li>
+<li><p><strong>encoder：</strong>给定document $d=[x_t]<em>{t=1}^l$，对于每一个可能的mention的开头与结尾，加入<code>*</code>来进行标注，然后将sentence输入到BERT当中，得到contextual的rep。即：$[h_1,…,h_l]=BERT([x_1,…,x_l])$。mention embedding由mention首部的<code>*</code>rep来表示，entity rep是对其所有的mention的rep进行logexpsum得到的，即：$h</em>{e_i}=log\sum_{j=1}^{N_{e_i}}exp(h_{m_j^i})$，其中$m_j^i$表示entity $e_i$的第$j$个mention。</p>
+</li>
+<li><p><strong>binary classification：</strong>对于entity pair $(h_{e_s},h_{e_o})$，我们对其分别进行编码，并使用bilinear得到最终的结果，如下：<br>$$<br>z_s=tanh(W_sh_{e_s}) \<br>z_o=tanh(W_oh_{e_o}) \<br>P(r|e_s,e_o)=sigmoid(z^T_sW_rz_o+b_r)<br>$$<br>在ATLOP里，为了减少$W_r$的参数量，使用了group bilinear的技术，其实就是multi-head attention的思想，就是将$h_{e_s}与h_{e_o}$的维度分为k份，分别进行bilinear操作，最后对结果进行concat，再使用sigmoid得到结果。</p>
+</li>
 </ul>
-<h4 id="improvement">improvement</h4>
-<p><strong>adaptive thresholding</strong></p>
+<h4 id="improvement"><a href="#improvement" class="headerlink" title="improvement"></a>improvement</h4><p><strong>adaptive thresholding</strong></p>
 <p>backbone中描述的就是不基于graph的基本操作，但是存在一个问题：我们使用sigmoid函数的时候，需要确定一个阈值(一般是0.5)，当结果大于这个阈值的时候，我们给它positive label，当它小于这个阈值的时候，我们给它negative label。但是作者发现，对于DRE这样的多实体多标签问题，不同的entity pair的不同的realtion判断，应该是有不同的阈值才能够得到更好的结果。一般我们会手动去试不同的阈值在dev上的效果，选取F1值最好的阈值。但是人工选择仍然无法达到最优解(近似最优解)，是否可以让模型自己来选择阈值呢？在ATLOP模型中，设计了adaptive thresholding机制来解决这个问题。</p>
-<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/ATLOP_adaptive_thresholding.jpg" style="zoom:50%;"></p>
-<p>具体来说，对于给定的entity pair <span class="math inline">\(T=(e_s,e_o)\)</span>，我们定义它的positive label set(<span class="math inline">\(\cal P_T\)</span>)与negative label set(<span class="math inline">\(\cal P_N\)</span>)：前者是<span class="math inline">\(T\)</span>有的relation，后者是<span class="math inline">\(T\)</span>没有的realtion。我们追求的是：<strong>positive label的logits比negative label的要高，并且两者差距越大越好。</strong>因此，在ATLOP模型中，引入了<code>TH</code>这个class(<code>TH</code>class的概率计算仍然和计算普通的relation是一样的)，在测试的时候，对于给定的entity pair，我们返回的relation class是比<code>TH</code>class的logits要高的class。具体的公式如下： <span class="math display">\[
-\cal L_1=\sum_{r\in P_T}log(\frac{exp(logits_r)}{sum_{r^{\prime}\in \cal P_T\cup\{TH\}}exp(logits_r^{\prime})}) \\
-\cal L_2=log(\frac{exp(logits_{TH})}{sum_{r^{\prime}\in \cal P_T\cup\{TH\}}exp(logits_r^{\prime})}) \\
-\cal L=L_1+L_2
-\]</span> 这里有个疑问，为什么不计算negative label的loss？🧐</p>
+<img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/ATLOP_adaptive_thresholding.jpg" style="zoom:50%;">
+
+<p>具体来说，对于给定的entity pair $T=(e_s,e_o)$，我们定义它的positive label set($\cal P_T$)与negative label set($\cal P_N$)：前者是$T$有的relation，后者是$T$没有的realtion。我们追求的是：<strong>positive label的logits比negative label的要高，并且两者差距越大越好。</strong>因此，在ATLOP模型中，引入了<code>TH</code>这个class(<code>TH</code>class的概率计算仍然和计算普通的relation是一样的)，在测试的时候，对于给定的entity pair，我们返回的relation class是比<code>TH</code>class的logits要高的class。具体的公式如下：<br>$$<br>\cal L_1=\sum_{r\in P_T}log(\frac{exp(logits_r)}{sum_{r^{\prime}\in \cal P_T\cup{TH}}exp(logits_r^{\prime})}) \<br>\cal L_2=log(\frac{exp(logits_{TH})}{sum_{r^{\prime}\in \cal P_T\cup{TH}}exp(logits_r^{\prime})}) \<br>\cal L=L_1+L_2<br>$$<br>这里有个疑问，为什么不计算negative label的loss？🧐</p>
 <p><strong>localized context pooling</strong></p>
 <p>对于不同entity pair中的entity，其实最终用于分类的rep是一样的，而实际上，对于不同的entity pair，它所表达的信息却有可能完全不一样，并且在document中与之相关的信息的位置也是不一样的。为了解决这个问题，在ATLOP模型中，提出了LOP技术。</p>
-<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/ATLOP_LOP.jpg" style="zoom:50%;"></p>
-<p>具体来说，LOP技术，就是使用BERT中最后一个transformer layer中的multi-head self attention，将其融入到最终每一个entity的rep中，从而在不同的entity pair中，每一个entity的rep能够聚合其最相关的信息，个人认为这是这篇paper中最出彩的地方。具体公式如下： <span class="math display">\[
-A^{(s,o)}=A^E_s·A^E_o \\
-q^{(s,o)}=\sum_{i=1}^{H}A^{(s,o)}_i \\
-a^{(s,o)}=q^{(s,o)} \ or \ 1^Tq^{(s,o)} \\
-c^{(s,o)}=H^Ta^{(s,o)}
-\]</span> 其中<span class="math inline">\(A^E_s、A^E_o\)</span>是entity-level attention，然后我们将<span class="math inline">\(c^{(s,o)}\)</span>与<span class="math inline">\(h_{e_s}、h_{e_o}\)</span>相结合，如下： <span class="math display">\[
-z_s^{(s,o)}=tanh(W_sh_{e_s}+W_{c_1}c^{(s,o)}) \\
-z_o^{(s,o)}=tanh(W_oh_{e_o}+W_{c_2}c^{(s,o)}) \\
-\]</span> 接下来操作就是一样的了，直接送入sigmoid就行。</p>
-<h3 id="experiment-2">Experiment</h3>
-<ol type="1">
-<li><p>数据集：CDR、GDA、DocRED</p></li>
+<img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/ATLOP_LOP.jpg" style="zoom:50%;">
+
+<p>具体来说，LOP技术，就是使用BERT中最后一个transformer layer中的multi-head self attention，将其融入到最终每一个entity的rep中，从而在不同的entity pair中，每一个entity的rep能够聚合其最相关的信息，个人认为这是这篇paper中最出彩的地方。具体公式如下：<br>$$<br>A^{(s,o)}=A^E_s·A^E_o \<br>q^{(s,o)}=\sum_{i=1}^{H}A^{(s,o)}<em>i \<br>a^{(s,o)}=q^{(s,o)} \ or \ 1^Tq^{(s,o)} \<br>c^{(s,o)}=H^Ta^{(s,o)}<br>$$<br>其中$A^E_s、A^E_o$是entity-level attention，然后我们将$c^{(s,o)}$与$h</em>{e_s}、h_{e_o}$相结合，如下：<br>$$<br>z_s^{(s,o)}=tanh(W_sh_{e_s}+W_{c_1}c^{(s,o)}) \<br>z_o^{(s,o)}=tanh(W_oh_{e_o}+W_{c_2}c^{(s,o)}) \<br>$$<br>接下来操作就是一样的了，直接送入sigmoid就行。</p>
+<h3 id="Experiment-2"><a href="#Experiment-2" class="headerlink" title="Experiment"></a>Experiment</h3><ol>
+<li><p>数据集：CDR、GDA、DocRED</p>
+</li>
 <li><p>结果</p>
 <p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/ATLOP_result_docred.jpg"></p>
-<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/ATLOP_result_CDR_GDA.jpg" style="zoom:50%;"></p>
-<p>从结果上看，非常可以。</p></li>
+<img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/ATLOP_result_CDR_GDA.jpg" style="zoom:50%;">
+
+<p>从结果上看，非常可以。</p>
+</li>
 <li><p>消融实验</p>
 <p>作者对各个component中进行了消融实验(dev)，如下</p>
-<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/ATLOP_ablation_1.jpg" style="zoom: 50%;"></p>
-<p>说实话，这个adaptive thresholding loss的效果真是出乎我的意料，我感觉掉到41.74%有点太不正常了，即便不用BERT，用BILSTM也能达到50%，不是很懂这个结果。🧐</p></li>
+<img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/ATLOP_ablation_1.jpg" style="zoom: 50%;">
+
+<p>说实话，这个adaptive thresholding loss的效果真是出乎我的意料，我感觉掉到41.74%有点太不正常了，即便不用BERT，用BILSTM也能达到50%，不是很懂这个结果。🧐</p>
+</li>
 </ol>
-<h2 id="entity-and-evidence-guided-relation-extraction-for-docredarxiv2020">Entity and Evidence Guided Relation Extraction for DocRED(arxiv2020)</h2>
-<h3 id="background-3">Background</h3>
-<h3 id="model-3">Model</h3>
-<h3 id="experiment-3">Experiment</h3>
-<h2 id="references">References</h2>
-<p>《Global-to-Local Neural Networks for Document-Level Relation Extraction》</p>
+<h2 id="Entity-and-Evidence-Guided-Relation-Extraction-for-DocRED-arxiv2020"><a href="#Entity-and-Evidence-Guided-Relation-Extraction-for-DocRED-arxiv2020" class="headerlink" title="Entity and Evidence Guided Relation Extraction for DocRED(arxiv2020)"></a>Entity and Evidence Guided Relation Extraction for DocRED(arxiv2020)</h2><h3 id="Background-3"><a href="#Background-3" class="headerlink" title="Background"></a>Background</h3><h3 id="Model-3"><a href="#Model-3" class="headerlink" title="Model"></a>Model</h3><h3 id="Experiment-3"><a href="#Experiment-3" class="headerlink" title="Experiment"></a>Experiment</h3><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>《Global-to-Local Neural Networks for Document-Level Relation Extraction》</p>
 <p>《HIN: Hierarchical Inference Network for Document-Level Relation Extraction》</p>
 <p>《Document-Level Relation Extraction with Adaptive Thresholding and Localized Context Pooling》</p>
 <p>《Entity and Evidence Guided Relation Extraction for DocRED》</p>
@@ -485,6 +504,24 @@ z_o^{(s,o)}=tanh(W_oh_{e_o}+W_{c_2}c^{(s,o)}) \\
     
 
     <footer class="post-footer">
+          <div class="reward-container">
+  <div>Would you like to buy me a cup of coffee☕️～</div>
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="zichao Alipay">
+        <span>Alipay</span>
+      </div>
+
+  </div>
+</div>
+
           <div class="post-tags">
               <a href="/tags/NLP/" rel="tag"># NLP</a>
               <a href="/tags/Document-level-RE/" rel="tag"># Document-level RE</a>
@@ -555,6 +592,24 @@ z_o^{(s,o)}=tanh(W_oh_{e_o}+W_{c_2}c^{(s,o)}) \\
   </span>
   <span class="author" itemprop="copyrightHolder">zichao</span>
 </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
 
@@ -562,7 +617,7 @@ z_o^{(s,o)}=tanh(W_oh_{e_o}+W_{c_2}c^{(s,o)}) \\
   </footer>
 
   
-  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
 <script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
 
   
@@ -570,6 +625,8 @@ z_o^{(s,o)}=tanh(W_oh_{e_o}+W_{c_2}c^{(s,o)}) \\
 
 
 
+  <script src="/js/local-search.js"></script>
+
 
 
 
@@ -585,6 +642,7 @@ z_o^{(s,o)}=tanh(W_oh_{e_o}+W_{c_2}c^{(s,o)}) \\
 
 
   
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 
 

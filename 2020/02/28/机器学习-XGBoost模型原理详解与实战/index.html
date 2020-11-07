@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 4.2.0">
+
+
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -14,12 +16,12 @@
 
 
 
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"8.0.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","images":"/images","scheme":"Muse","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
 
   <meta name="description" content="XGBoost模型是集成学习中最为著名的一个模型。不用我说，我相信只要做ML&#x2F;DM&#x2F;DL领域的筒子们，都会听说过这个模型。这篇博客将详细地讲解XGBoost模型的原理，并且使用XGBoost库来实践。注意：在看XGBoost之前，请务必要读懂CART与GBDT，具体可参看我之前的文章：CART、GBDT。">
@@ -134,6 +136,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -167,11 +170,43 @@
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
 
   </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
         
@@ -194,14 +229,17 @@
         </li>
       </ul>
 
-      <!--noindex-->
-      <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#xgboost模型介绍"><span class="nav-number">1.</span> <span class="nav-text">XGBoost模型介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cost-function的推导"><span class="nav-number">1.1.</span> <span class="nav-text">cost function的推导</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#确定回归树的结构"><span class="nav-number">1.2.</span> <span class="nav-text">确定回归树的结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#稀疏值的处理"><span class="nav-number">2.</span> <span class="nav-text">稀疏值的处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#two-tricks"><span class="nav-number">3.</span> <span class="nav-text">two tricks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#xgboost模型实战"><span class="nav-number">4.</span> <span class="nav-text">XGBoost模型实战</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">5.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
-      </section>
-      <!--/noindex-->
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <section class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#XGBoost模型介绍"><span class="nav-number">1.</span> <span class="nav-text">XGBoost模型介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cost-function的推导"><span class="nav-number">1.1.</span> <span class="nav-text">cost function的推导</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#确定回归树的结构"><span class="nav-number">1.2.</span> <span class="nav-text">确定回归树的结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#稀疏值的处理"><span class="nav-number">2.</span> <span class="nav-text">稀疏值的处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#two-tricks"><span class="nav-number">3.</span> <span class="nav-text">two tricks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XGBoost模型实战"><span class="nav-number">4.</span> <span class="nav-text">XGBoost模型实战</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">5.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+        </section>
+        <!--/noindex-->
 
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <section class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zichao"
+      src="/images/photo.jpg">
   <p class="site-author-name" itemprop="name">zichao</p>
   <div class="site-description" itemprop="description">Just learning</div>
 </div>
@@ -228,10 +266,22 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
 
 
 
-      </section>
+        </section>
+      </div>
     </div>
   </aside>
   <div class="sidebar-dimmer"></div>
@@ -244,6 +294,8 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+
+  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
@@ -266,7 +318,7 @@
     <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-XGBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E6%88%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/photo.jpg">
       <meta itemprop="name" content="zichao">
       <meta itemprop="description" content="Just learning">
     </span>
@@ -307,6 +359,13 @@
     </span>
 
   
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
 </div>
 
         </div>
@@ -316,49 +375,53 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>XGBoost模型是集成学习中最为著名的一个模型。不用我说，我相信只要做ML/DM/DL领域的筒子们，都会听说过这个模型。这篇博客将详细地讲解XGBoost模型的原理，并且使用XGBoost库来实践。注意：<strong>在看XGBoost之前，请务必要读懂CART与GBDT，具体可参看我之前的文章：<a href="https://codewithzichao.github.io/2020/02/27/统计学习方法-决策树模型原理详解与实现/">CART</a>、<a href="https://codewithzichao.github.io/2020/02/27/统计学习方法-AdaBoost模型原理详解与实现/#more">GBDT</a>。</strong></p>
+        <p>XGBoost模型是集成学习中最为著名的一个模型。不用我说，我相信只要做ML/DM/DL领域的筒子们，都会听说过这个模型。这篇博客将详细地讲解XGBoost模型的原理，并且使用XGBoost库来实践。注意：<strong>在看XGBoost之前，请务必要读懂CART与GBDT，具体可参看我之前的文章：<a href="https://codewithzichao.github.io/2020/02/27/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E5%86%B3%E7%AD%96%E6%A0%91%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/">CART</a>、<a href="https://codewithzichao.github.io/2020/02/27/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-AdaBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/#more">GBDT</a>。</strong></p>
 <a id="more"></a>
-<h2 id="xgboost模型介绍">XGBoost模型介绍</h2>
-<p><strong>XGBoost模型是对GBDT很好地工程化的实现。</strong>所以，XGBoost模型也是加法模型，对于给定的样本<span class="math inline">\(x_i\)</span>，我们使用XGBoost对其分数<span class="math inline">\(\hat y_i\)</span>进行预测，可以表示为：</p>
-<p><img src="/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-XGBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E6%88%98/0.jpg" style="zoom:80%;"></p>
-<p><img src="/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-XGBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E6%88%98/1.jpg" style="zoom: 50%;"></p>
-<p>其中，<span class="math inline">\(K\)</span>表示总共有<span class="math inline">\(K\)</span>个决策树，<span class="math inline">\(f_k\)</span>表示第<span class="math inline">\(k\)</span>个决策树，在XGBoost中使用CART树；<span class="math inline">\(\cal F\)</span>表示假设假设空间，即所有决策树的集合。那么，接下来，我们需要给出XGBoost模型的损失函数(严格来讲，叫做 cost function)，以便求出所有的<span class="math inline">\(f_k\)</span>。那么，如下：</p>
-<p><img src="/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-XGBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E6%88%98/2.jpg" style="zoom:80%;"></p>
-<p>其中，<span class="math inline">\(\sum_{i}l(\hat y_i,y_i)\)</span>是损失函数，表示的是模型对于训练集的拟合程度，<span class="math inline">\(\sum_k \Omega(f_k)\)</span>表示正则项，也叫做惩罚项，XGBoost中对每一个回归树进行惩罚，让模型的复杂度不过高，从而不会轻易过拟合。而衡量树的复杂度的指标有很多，譬如：树的深度、叶子结点的数目、内部节点数目等等。<strong>在XGBoost中，采用了叶子结点的数目来衡量树的复杂度</strong>。其中，<span class="math inline">\(T\)</span>表示的是叶子结点的数目，<span class="math inline">\(w\)</span>表示的是叶子结点的分数，也就是回归树预测的值。实际上，这个正则化项也相当于剪枝了。</p>
-<h3 id="cost-function的推导">cost function的推导</h3>
-<p>接下来，重点来了，我们需要对损失函数这一块进行泰勒展开！怎么做呢？始终要记住一句话：<strong>XGBoost模型是对GBDT模型很好地工程化的实现。</strong>所以，XGBoost模型仍然是<strong>前向分步算法</strong>。我们需要<strong>对损失函数进行二阶泰勒展开</strong>。如下：</p>
-<p><img src="/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-XGBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E6%88%98/3.jpg" style="zoom: 67%;"></p>
-<p>所以，通过泰勒展开和化简，我们得到最优的cost function如下： <span class="math display">\[
-L^{*(t)}=-\frac{1}{2}\mathop{\sum}\limits_{j=1}^{T}\frac{G_j^2}{H_j+\lambda}+\gamma T
-\]</span> 所以，从上式可以看出，<strong>只要我们确定了回归树的结构，那么我们就能得到最小的损失</strong>。那么，怎么去确定回归树的结构呢？</p>
-<h3 id="确定回归树的结构">确定回归树的结构</h3>
-<p>关于回归树的学习，一个很直接的想法，就是遍历所有特征的所有切分点，找到最佳切分变量与切分点，从而确定回归树的结构。那么，关键是：我们使用什么样的评价准则来评判切分的质量好坏？在XGBoost中，我们使用如下式子来评判分裂的好坏：</p>
-<p><img src="/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-XGBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E6%88%98/4.jpg" style="zoom:67%;"></p>
-<p>当<span class="math inline">\(\cal L_{split}\)</span>越大，那么说明叶子结点分裂的质量越好，最终的损失函数的值也会越小。所以，我们就可以依次所有特征的所有切分点，从中找到最大的<span class="math inline">\(\cal L_{split}\)</span>的切分点和所对应的值。这种方法叫做：<strong>精确贪心算法</strong>。</p>
-<p><img src="/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-XGBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E6%88%98/5.jpg" style="zoom: 67%;"></p>
-<p>但是，这种分裂算法，在特征数目以及其对应的取值太多的时候，效率会非常的慢，所以，在XGBoost中，还提出的近似贪心算法。<strong>核心思想是：我们不需要依次遍历所有特征值的所有切分点，我们只需要找到并遍历有可能的切分点，从中找到<span class="math inline">\(\cal L_{split}\)</span>的值最大的切分变量与切分点就可以了。</strong></p>
-<p><img src="/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-XGBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E6%88%98/6.jpg" style="zoom:67%;"></p>
+
+<h2 id="XGBoost模型介绍"><a href="#XGBoost模型介绍" class="headerlink" title="XGBoost模型介绍"></a>XGBoost模型介绍</h2><p><strong>XGBoost模型是对GBDT很好地工程化的实现。</strong>所以，XGBoost模型也是加法模型，对于给定的样本$x_i$，我们使用XGBoost对其分数$\hat y_i$进行预测，可以表示为：</p>
+<img src="/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-XGBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E6%88%98/0.jpg" style="zoom:80%;">
+
+<img src="/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-XGBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E6%88%98/1.jpg" style="zoom: 50%;">
+
+<p>其中，$K$表示总共有$K$个决策树，$f_k$表示第$k$个决策树，在XGBoost中使用CART树；$\cal F$表示假设假设空间，即所有决策树的集合。那么，接下来，我们需要给出XGBoost模型的损失函数(严格来讲，叫做 cost function)，以便求出所有的$f_k$。那么，如下：</p>
+<img src="/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-XGBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E6%88%98/2.jpg" style="zoom:80%;">
+
+<p>其中，$\sum_{i}l(\hat y_i,y_i)$是损失函数，表示的是模型对于训练集的拟合程度，$\sum_k \Omega(f_k)$表示正则项，也叫做惩罚项，XGBoost中对每一个回归树进行惩罚，让模型的复杂度不过高，从而不会轻易过拟合。而衡量树的复杂度的指标有很多，譬如：树的深度、叶子结点的数目、内部节点数目等等。<strong>在XGBoost中，采用了叶子结点的数目来衡量树的复杂度</strong>。其中，$T$表示的是叶子结点的数目，$w$表示的是叶子结点的分数，也就是回归树预测的值。实际上，这个正则化项也相当于剪枝了。</p>
+<h3 id="cost-function的推导"><a href="#cost-function的推导" class="headerlink" title="cost function的推导"></a>cost function的推导</h3><p>接下来，重点来了，我们需要对损失函数这一块进行泰勒展开！怎么做呢？始终要记住一句话：<strong>XGBoost模型是对GBDT模型很好地工程化的实现。</strong>所以，XGBoost模型仍然是<strong>前向分步算法</strong>。我们需要<strong>对损失函数进行二阶泰勒展开</strong>。如下：</p>
+<img src="/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-XGBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E6%88%98/3.jpg" style="zoom: 67%;">
+
+<p>所以，通过泰勒展开和化简，我们得到最优的cost function如下：<br>$$<br>L^{*(t)}=-\frac{1}{2}\mathop{\sum}\limits_{j=1}^{T}\frac{G_j^2}{H_j+\lambda}+\gamma T<br>$$<br>所以，从上式可以看出，<strong>只要我们确定了回归树的结构，那么我们就能得到最小的损失</strong>。那么，怎么去确定回归树的结构呢？</p>
+<h3 id="确定回归树的结构"><a href="#确定回归树的结构" class="headerlink" title="确定回归树的结构"></a>确定回归树的结构</h3><p>关于回归树的学习，一个很直接的想法，就是遍历所有特征的所有切分点，找到最佳切分变量与切分点，从而确定回归树的结构。那么，关键是：我们使用什么样的评价准则来评判切分的质量好坏？在XGBoost中，我们使用如下式子来评判分裂的好坏：</p>
+<img src="/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-XGBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E6%88%98/4.jpg" style="zoom:67%;">
+
+<p>当$\cal L_{split}$越大，那么说明叶子结点分裂的质量越好，最终的损失函数的值也会越小。所以，我们就可以依次所有特征的所有切分点，从中找到最大的$\cal L_{split}$的切分点和所对应的值。这种方法叫做：<strong>精确贪心算法</strong>。</p>
+<img src="/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-XGBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E6%88%98/5.jpg" style="zoom: 67%;">
+
+<p>但是，这种分裂算法，在特征数目以及其对应的取值太多的时候，效率会非常的慢，所以，在XGBoost中，还提出的近似贪心算法。<strong>核心思想是：我们不需要依次遍历所有特征值的所有切分点，我们只需要找到并遍历有可能的切分点，从中找到$\cal L_{split}$的值最大的切分变量与切分点就可以了。</strong></p>
+<img src="/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-XGBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E6%88%98/6.jpg" style="zoom:67%;">
+
 <p>不过，在近似算法中，需要注意的是，我们并不是根据样本数目来进行分位，而是以每一个样本的二阶导数作为权重，以此排序，来进行分位。那么，为什么可以采用二阶导数来做权重呢？推导如下（参看链接：<a href="https://zhuanlan.zhihu.com/p/75217528" target="_blank" rel="noopener">xgboost</a>）：</p>
-<p><img src="/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-XGBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E6%88%98/8.jpg" style="zoom: 33%;"></p>
-<h2 id="稀疏值的处理">稀疏值的处理</h2>
-<p>稀疏值有三种：<strong>大量的0值、大量的类别one-hot编码、缺失值。</strong>XGBoost可以自动学习出稀疏值的节点分裂方向。如下：</p>
-<p><img src="/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-XGBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E6%88%98/7.jpg" style="zoom:67%;"></p>
+<img src="/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-XGBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E6%88%98/8.jpg" style="zoom: 33%;">
+
+<h2 id="稀疏值的处理"><a href="#稀疏值的处理" class="headerlink" title="稀疏值的处理"></a>稀疏值的处理</h2><p>稀疏值有三种：<strong>大量的0值、大量的类别one-hot编码、缺失值。</strong>XGBoost可以自动学习出稀疏值的节点分裂方向。如下：</p>
+<img src="/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-XGBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E6%88%98/7.jpg" style="zoom:67%;">
+
 <ul>
-<li>首先需要注意到输入的两个集合：<strong>一个是<span class="math inline">\(I\)</span>，其包含所有的样本(包括含空缺值的样本)；另一个是<span class="math inline">\(I_k\)</span>，是不包含空缺值样本的集合。在计算总的<span class="math inline">\(G\)</span>和<span class="math inline">\(H\)</span>的时候，用的是<span class="math inline">\(I\)</span>。</strong></li>
-<li>此外，可以看到内层循环里面有两个for。<strong>第一个for是从把特征取值从小到大排序。</strong>这个时候，在计算<span class="math inline">\(G_R\)</span>的时候，是用总的<span class="math inline">\(G\)</span>减去<span class="math inline">\(G_L\)</span>，计算<span class="math inline">\(H_R\)</span>也是使用<span class="math inline">\(H\)</span>减去<span class="math inline">\(H_L\)</span>。这就相当于将稀疏值归到了右节点。</li>
-<li><strong>第二个for是从把特征取值从大到小排序。</strong>这个时候，在计算<span class="math inline">\(G_L\)</span> 的时候，是用总的<span class="math inline">\(G\)</span>减去<span class="math inline">\(G_R\)</span>，计算<span class="math inline">\(H_L\)</span>也是使用<span class="math inline">\(H\)</span>减去<span class="math inline">\(H_R\)</span>。这就相当于将稀疏值归到了左节点。</li>
+<li>首先需要注意到输入的两个集合：<strong>一个是$I$，其包含所有的样本(包括含空缺值的样本)；另一个是$I_k$，是不包含空缺值样本的集合。在计算总的$G$和$H$的时候，用的是$I$。</strong></li>
+<li>此外，可以看到内层循环里面有两个for。<strong>第一个for是从把特征取值从小到大排序。</strong>这个时候，在计算$G_R$的时候，是用总的$G$减去$G_L$，计算$H_R$也是使用$H$减去$H_L$。这就相当于将稀疏值归到了右节点。</li>
+<li><strong>第二个for是从把特征取值从大到小排序。</strong>这个时候，在计算$G_L$ 的时候，是用总的$G$减去$G_R$，计算$H_L$也是使用$H$减去$H_R$。这就相当于将稀疏值归到了左节点。</li>
 <li><strong>我们只要比较最大的增益出现在第一个for，还是第二个for，我们就能知道稀疏值的分裂方向是在左还是右。</strong>这就是XGBoost模型处理稀疏值的方法。</li>
 </ul>
-<h2 id="two-tricks">two tricks</h2>
-<p>在XGBoost模型中，除了通过添加正则化项来防止过拟合之外，还用了另外两个用来防止过拟合的trick：<strong>shrinkage(缩减)、column subsampling(列抽样)。</strong>我们一一介绍。<strong>shrinkage</strong>。所谓的shrinkage，就是将学习速率减小，增加迭代次数，从而起到正则化的作用。<strong>column subsampling</strong>。这个和RF中是一样的，没什么可说的。除此之外，XGBoost模型还有一些工程化的东西，像cache的设计等等。这些感兴趣的筒子们，可以去看原始paper🎉～</p>
-<h2 id="xgboost模型实战">XGBoost模型实战</h2>
-<p>当然了，我们并不会从头去去实现一个XGBoost模型，那样十分复杂，而且个人觉得意义不是很大哈。感兴趣的通知可以去直接去阅读源码细节，这样反而更好些🎉在这里，我将使用xgb库来对XGBoost模型进行实践。(夜深了，明天写吧🥱)</p>
+<h2 id="two-tricks"><a href="#two-tricks" class="headerlink" title="two tricks"></a>two tricks</h2><p>在XGBoost模型中，除了通过添加正则化项来防止过拟合之外，还用了另外两个用来防止过拟合的trick：<strong>shrinkage(缩减)、column subsampling(列抽样)。</strong>我们一一介绍。<strong>shrinkage</strong>。所谓的shrinkage，就是将学习速率减小，增加迭代次数，从而起到正则化的作用。<strong>column subsampling</strong>。这个和RF中是一样的，没什么可说的。除此之外，XGBoost模型还有一些工程化的东西，像cache的设计等等。这些感兴趣的筒子们，可以去看原始paper🎉～</p>
+<h2 id="XGBoost模型实战"><a href="#XGBoost模型实战" class="headerlink" title="XGBoost模型实战"></a>XGBoost模型实战</h2><p>当然了，我们并不会从头去去实现一个XGBoost模型，那样十分复杂，而且个人觉得意义不是很大哈。感兴趣的通知可以去直接去阅读源码细节，这样反而更好些🎉在这里，我将使用xgb库来对XGBoost模型进行实践。(夜深了，明天写吧🥱)</p>
 <p>附上代码👇不过说实话，XGBoost的参数真的多😣。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding:utf-8</span></span><br><span class="line"><span class="comment"># Author:codewithzichao</span></span><br><span class="line"><span class="comment"># E-mail:lizichao@pku.edu.cn</span></span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">数据集：Mnist</span></span><br><span class="line"><span class="string">准确率：1.0</span></span><br><span class="line"><span class="string">时间：53.53627586364746</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line">print(pd.__version__)</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> xgboost <span class="keyword">as</span> xgb</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> accuracy_score</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">path = os.getcwd()</span><br><span class="line"></span><br><span class="line">start = time.time()</span><br><span class="line"></span><br><span class="line">train = pd.read_csv(path + <span class="string">"/MnistData/mnist_train.csv"</span>, names=list(i <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">784</span>)))</span><br><span class="line">test = pd.read_csv(path + <span class="string">"/MnistData/mnist_test.csv"</span>, names=list(i <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">784</span>)))</span><br><span class="line"></span><br><span class="line">train_data = train.iloc[:, <span class="number">1</span>:]</span><br><span class="line">train_label = train.iloc[:, <span class="number">0</span>]</span><br><span class="line">print(train_data.shape)</span><br><span class="line">print(train_label.shape)</span><br><span class="line">test_data = test.iloc[:, <span class="number">1</span>:]</span><br><span class="line">test_label = test.iloc[:, <span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">params = &#123;</span><br><span class="line">    <span class="string">'booster'</span>: <span class="string">'gbtree'</span>,</span><br><span class="line">    <span class="string">'objective'</span>: <span class="string">'multi:softmax'</span>,  <span class="comment"># 多分类的问题</span></span><br><span class="line">    <span class="string">'num_class'</span>: <span class="number">10</span>,  <span class="comment"># 类别数，与 multisoftmax 并用</span></span><br><span class="line">    <span class="string">'gamma'</span>: <span class="number">0.1</span>,  <span class="comment"># 用于控制是否后剪枝的参数,越大越保守，一般0.1、0.2这样子。</span></span><br><span class="line">    <span class="string">'max_depth'</span>: <span class="number">12</span>,  <span class="comment"># 构建树的深度，越大越容易过拟合</span></span><br><span class="line">    <span class="string">'lambda'</span>: <span class="number">2</span>,  <span class="comment"># 控制模型复杂度的权重值的L2正则化项参数，参数越大，模型越不容易过拟合。</span></span><br><span class="line">    <span class="string">'subsample'</span>: <span class="number">0.7</span>,  <span class="comment"># 随机采样训练样本</span></span><br><span class="line">    <span class="string">'colsample_bytree'</span>: <span class="number">0.7</span>,  <span class="comment"># 生成树时进行的列采样</span></span><br><span class="line">    <span class="string">'min_child_weight'</span>: <span class="number">3</span>,</span><br><span class="line">    <span class="comment"># 这个参数默认是 1，是每个叶子里面 h 的和至少是多少，对正负样本不均衡时的 0-1 分类而言</span></span><br><span class="line">    <span class="comment"># ，假设 h 在 0.01 附近，min_child_weight 为 1 意味着叶子节点中最少需要包含 100 个样本。</span></span><br><span class="line">    <span class="comment"># 这个参数非常影响结果，控制叶子节点中二阶导的和的最小值，该参数值越小，越容易 overfitting。</span></span><br><span class="line">    <span class="string">'silent'</span>: <span class="number">0</span>,  <span class="comment"># 设置成1则没有运行信息输出，最好是设置为0.</span></span><br><span class="line">    <span class="string">'eta'</span>: <span class="number">0.007</span>,  <span class="comment"># 如同学习率</span></span><br><span class="line">    <span class="string">'seed'</span>: <span class="number">1000</span>,</span><br><span class="line">    <span class="string">'nthread'</span>: <span class="number">7</span>,  <span class="comment"># cpu 线程数</span></span><br><span class="line">    <span class="comment"># 'eval_metric': 'auc'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">num_rounds = <span class="number">5000</span>  <span class="comment"># 迭代次数</span></span><br><span class="line"></span><br><span class="line">X_train, X_validation, Y_train, Y_validation = train_test_split(train_data, train_label, test_size=<span class="number">0.3</span>, random_state=<span class="number">1</span>)</span><br><span class="line"><span class="comment"># random_state is of big influence for val-auc</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">xgb_val = xgb.DMatrix(X_validation, label=Y_validation)</span><br><span class="line">xgb_train = xgb.DMatrix(X_train, label=Y_train)</span><br><span class="line">xgb_test = xgb.DMatrix(test_data)</span><br><span class="line"></span><br><span class="line">watchlist = [(xgb_train, <span class="string">'train'</span>), (xgb_val, <span class="string">'val'</span>)]  <span class="comment"># 允许查看train set与dev set的误差表现</span></span><br><span class="line"><span class="comment"># training model</span></span><br><span class="line"><span class="comment"># early_stopping_rounds 当设置的迭代次数较大时，early_stopping_rounds 可在一定的迭代次数内准确率没有提升就停止训练</span></span><br><span class="line">model = xgb.train(params, xgb_train, num_rounds, watchlist, early_stopping_rounds=<span class="number">30</span>)</span><br><span class="line"></span><br><span class="line">model.save_model(path + <span class="string">"/xgboost/xgb.model"</span>)  <span class="comment"># 用于存储训练出的模型</span></span><br><span class="line">print(<span class="string">"best best_ntree_limit"</span>, model.best_ntree_limit)</span><br><span class="line"></span><br><span class="line">print(<span class="string">"跑到这里了model.predict"</span>)</span><br><span class="line">preds = model.predict(xgb_test, ntree_limit=model.best_ntree_limit)</span><br><span class="line"></span><br><span class="line">accuracy_test = accuracy_score(preds, test_label)</span><br><span class="line">print(<span class="string">f"the accuracy is <span class="subst">&#123;accuracy_test&#125;</span>."</span>)</span><br><span class="line"></span><br><span class="line">end = time.time()</span><br><span class="line"><span class="comment"># 输出运行时长</span></span><br><span class="line"></span><br><span class="line">print(<span class="string">f"xgboost success! cost time:<span class="subst">&#123;end - start&#125;</span>(s)."</span>)</span><br></pre></td></tr></table></figure>
-<h2 id="参考文献">参考文献</h2>
-<p>1 《XGBoost: A Scalable Tree Boosting System》</p>
-<p>2 https://www.jianshu.com/p/ac1c12f3fba1</p>
-<p>3 https://zhuanlan.zhihu.com/p/86816771</p>
+
+
+
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>1 《XGBoost: A Scalable Tree Boosting System》 </p>
+<p>2 <a href="https://www.jianshu.com/p/ac1c12f3fba1" target="_blank" rel="noopener">https://www.jianshu.com/p/ac1c12f3fba1</a></p>
+<p>3 <a href="https://zhuanlan.zhihu.com/p/86816771" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/86816771</a></p>
 
     </div>
 
@@ -367,6 +430,24 @@ L^{*(t)}=-\frac{1}{2}\mathop{\sum}\limits_{j=1}^{T}\frac{G_j^2}{H_j+\lambda}+\ga
     
 
     <footer class="post-footer">
+          <div class="reward-container">
+  <div>Would you like to buy me a cup of coffee☕️～</div>
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="zichao Alipay">
+        <span>Alipay</span>
+      </div>
+
+  </div>
+</div>
+
           <div class="post-tags">
               <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
               <a href="/tags/python/" rel="tag"># python</a>
@@ -440,6 +521,24 @@ L^{*(t)}=-\frac{1}{2}\mathop{\sum}\limits_{j=1}^{T}\frac{G_j^2}{H_j+\lambda}+\ga
   </span>
   <span class="author" itemprop="copyrightHolder">zichao</span>
 </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
 
@@ -447,7 +546,7 @@ L^{*(t)}=-\frac{1}{2}\mathop{\sum}\limits_{j=1}^{T}\frac{G_j^2}{H_j+\lambda}+\ga
   </footer>
 
   
-  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
 <script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
 
   
@@ -455,6 +554,8 @@ L^{*(t)}=-\frac{1}{2}\mathop{\sum}\limits_{j=1}^{T}\frac{G_j^2}{H_j+\lambda}+\ga
 
 
 
+  <script src="/js/local-search.js"></script>
+
 
 
 
@@ -470,6 +571,7 @@ L^{*(t)}=-\frac{1}{2}\mathop{\sum}\limits_{j=1}^{T}\frac{G_j^2}{H_j+\lambda}+\ga
 
 
   
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 
 

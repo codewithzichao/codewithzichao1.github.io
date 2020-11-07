@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 4.2.0">
+
+
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -14,12 +16,12 @@
 
 
 
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"8.0.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","images":"/images","scheme":"Muse","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
 
   <meta name="description" content="AdaBoost模型是提升方法的代表，对于之后理解XGBoost等集成学习模型很有帮助。但是，在学习AdaBoost模型之前，请务必要先搞懂回归树(CART)，因为当AdaBoost的基本分类器是回归树时，需要用到回归树。本篇博客将详细讲解AdaBoost模型的原理，并会讲解梯度提升树模型(GBDT)，并采用python与scikit-learn对其进行实现。">
@@ -38,8 +40,8 @@
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="python">
 <meta property="article:tag" content="统计学习方法">
-<meta property="article:tag" content="决策树">
 <meta property="article:tag" content="scikit-learn">
+<meta property="article:tag" content="决策树">
 <meta property="article:tag" content="CART">
 <meta property="article:tag" content="回归树">
 <meta name="twitter:card" content="summary">
@@ -130,6 +132,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -163,11 +166,43 @@
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
 
   </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
         
@@ -190,14 +225,17 @@
         </li>
       </ul>
 
-      <!--noindex-->
-      <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#adaboost模型介绍"><span class="nav-number">1.</span> <span class="nav-text">AdaBoost模型介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#adaboost模型的另一种表述形式"><span class="nav-number">2.</span> <span class="nav-text">AdaBoost模型的另一种表述形式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gbdt"><span class="nav-number">3.</span> <span class="nav-text">GBDT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#adaboost模型的实现"><span class="nav-number">4.</span> <span class="nav-text">AdaBoost模型的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#python实现"><span class="nav-number">4.1.</span> <span class="nav-text">python实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#scikit-learn实现"><span class="nav-number">4.2.</span> <span class="nav-text">scikit-learn实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
-      </section>
-      <!--/noindex-->
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <section class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#AdaBoost模型介绍"><span class="nav-number">1.</span> <span class="nav-text">AdaBoost模型介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AdaBoost模型的另一种表述形式"><span class="nav-number">2.</span> <span class="nav-text">AdaBoost模型的另一种表述形式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GBDT"><span class="nav-number">3.</span> <span class="nav-text">GBDT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AdaBoost模型的实现"><span class="nav-number">4.</span> <span class="nav-text">AdaBoost模型的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#python实现"><span class="nav-number">4.1.</span> <span class="nav-text">python实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#scikit-learn实现"><span class="nav-number">4.2.</span> <span class="nav-text">scikit-learn实现</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">5.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+        </section>
+        <!--/noindex-->
 
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <section class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zichao"
+      src="/images/photo.jpg">
   <p class="site-author-name" itemprop="name">zichao</p>
   <div class="site-description" itemprop="description">Just learning</div>
 </div>
@@ -224,10 +262,22 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
 
 
 
-      </section>
+        </section>
+      </div>
     </div>
   </aside>
   <div class="sidebar-dimmer"></div>
@@ -240,6 +290,8 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+
+  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
@@ -262,7 +314,7 @@
     <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/02/27/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-AdaBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/photo.jpg">
       <meta itemprop="name" content="zichao">
       <meta itemprop="description" content="Just learning">
     </span>
@@ -303,6 +355,13 @@
     </span>
 
   
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
 </div>
 
         </div>
@@ -314,85 +373,45 @@
     <div class="post-body" itemprop="articleBody">
         <p>AdaBoost模型是提升方法的代表，对于之后理解XGBoost等集成学习模型很有帮助。<strong>但是，在学习AdaBoost模型之前，请务必要先搞懂回归树(CART)，因为当AdaBoost的基本分类器是回归树时，需要用到回归树。</strong>本篇博客将详细讲解AdaBoost模型的原理，并会讲解梯度提升树模型(GBDT)，并采用python与scikit-learn对其进行实现。</p>
 <a id="more"></a>
-<h2 id="adaboost模型介绍">AdaBoost模型介绍</h2>
-<p>AdaBoost模型是典型的提升方法。那么何谓提升(boosting)方法呢？<strong>当我们很难一次性找到一个效果很好的模型的时候，我们可以先找到一些效果不那么好的模型，我们称为弱学习算法，然后将这些弱学习算法通过某种组合，将其提升(boost)为强学习算法，这就是提升方法的思想。</strong>那么，AdaBoost模型就是典型的应用于分类问题的提升算法。AdaBoost模型的做法是：从弱学习算法中学习一系列弱分类器，然后通过某种组合，从而得到最终的强分类器。那么，问题来了：<strong>AdaBoost模型是怎么得到一系列弱分类器的呢？</strong>在提升方法中，一般都是通过调整训练数据集的概率分布，通过不同的训练集分布来得到一系列的弱分类器。那么，问题又来了：<strong>AdaBoost模型是怎么改变训练集的概率分布的呢？AdaBoost模型又是怎么将一系列弱分类器组合成强分类器的呢？</strong></p>
+
+<h2 id="AdaBoost模型介绍"><a href="#AdaBoost模型介绍" class="headerlink" title="AdaBoost模型介绍"></a>AdaBoost模型介绍</h2><p>AdaBoost模型是典型的提升方法。那么何谓提升(boosting)方法呢？<strong>当我们很难一次性找到一个效果很好的模型的时候，我们可以先找到一些效果不那么好的模型，我们称为弱学习算法，然后将这些弱学习算法通过某种组合，将其提升(boost)为强学习算法，这就是提升方法的思想。</strong>那么，AdaBoost模型就是典型的应用于分类问题的提升算法。AdaBoost模型的做法是：从弱学习算法中学习一系列弱分类器，然后通过某种组合，从而得到最终的强分类器。那么，问题来了：<strong>AdaBoost模型是怎么得到一系列弱分类器的呢？</strong>在提升方法中，一般都是通过调整训练数据集的概率分布，通过不同的训练集分布来得到一系列的弱分类器。那么，问题又来了：<strong>AdaBoost模型是怎么改变训练集的概率分布的呢？AdaBoost模型又是怎么将一系列弱分类器组合成强分类器的呢？</strong></p>
 <ul>
 <li>对于第一个问题：<strong>AdaBoost模型提高在上一轮被错误分类的实例的权重，降低被正确分类的实例的权重，这样一来，在下一轮的学习中，被错误分类的实例将得到更大的关注，从而有更大概率被正确分类。</strong></li>
 <li>对于第二个问题：<strong>AdaBoost模型采取加权表决的做法。给予那些分类准确率高的弱分类器更大的权重，而对于分类准确率低的弱分类器更小的权重，这也是很合理的。</strong></li>
 </ul>
 <p>那么介绍完AdaBoost模型的基本思想之后，下面我将给出AdaBoost模型的具体公式细节：</p>
-<p>输入：训练数据集<span class="math inline">\(X=\{(x_1,y_1),(x_2,y_2,...,x_N,y_N)\}\)</span>，其中<span class="math inline">\(x_i\in R^n\)</span>，<span class="math inline">\(y_i\in \{-1,+1\}\)</span>；弱学习算法；</p>
-<p>输出：分类器<span class="math inline">\(G(x)\)</span>。</p>
-<ol type="1">
-<li><p>初始化训练数据集的权值分布<span class="math inline">\(D_1\)</span>，实际上是均匀分布。即：<span class="math inline">\(D_1=\{w_{11},w_{12},w_{13},...,w_{1N}\}\)</span>，其中<span class="math inline">\(w_{1i}=\frac 1N\)</span>。</p></li>
-<li><p>对于<span class="math inline">\(m=1,2,3,...,M\)</span>，执行以下操作：</p></li>
-</ol>
-<p>​ (a) 根据带有权值分布的训练数据集，学习弱分类器： <span class="math display">\[
-G_m(x) : \cal{X}-&gt;\{-1,+1\}
-\]</span> ​ (b) 计算训练数据集的分类误差率： <span class="math display">\[
-e_m=\sum_{i=1}^{N}w_{mi}I(G_m(x_i)\not=y_i)
-\]</span> ​ (c) 计算该分类器的权重： <span class="math display">\[
-\alpha_m=\frac 12log\frac {(1-e_m)}{e_m}
-\]</span> ​ (d) 更新训练数据集的权值分布： <span class="math display">\[
-D_{m+1}=(w_{m+1,1},w_{m+1,2},...,w_{m=1,i},...,w_{m+1,N}),\\
-w_{m+1,i}=\frac{w_{mi}}{Z_m}exp(-\alpha_my_iG_m(x_i)),\\
-Z_m=\sum_{i=1}^{N}w_{mi}exp(-\alpha_my_iG_m(x_i)),\\
-或者，\ \  w_{m+1,i}=\begin{cases}
-                                        \frac{w_{mi}}{Z_m}exp(\alpha_m)&amp; G_m(x_i)\not=y_i\\
-                    \frac{w_{mi}}{Z_m}exp(-\alpha_m)&amp; G_m(x_i)=y_i
-                                        \end{cases}
-\]</span> (3) 构建基本分类器的线性组合： <span class="math display">\[
-G(x)=\sum_{m=1}^{M}\alpha_mG_m(x)
-\]</span> (4) 得到最终的分类器： <span class="math display">\[
-f(x)=sign(G(x))
-\]</span></p>
-<h2 id="adaboost模型的另一种表述形式">AdaBoost模型的另一种表述形式</h2>
-<p>AdaBoost模型还有另外一种解释：AdaBoost模型是<strong>模型为加法模型、损失函数为指数函数、学习算法是前向分步算法的二类分类模型。</strong></p>
-<p><strong>加法模型</strong>。加法模型的形式如下： <span class="math display">\[
-f(x)=\sum_{m=1}^{M}\beta_mb(x,\gamma_m)
-\]</span> 其中，<span class="math inline">\(\beta\)</span>是系数，<span class="math inline">\(b(x,\gamma_m)\)</span>是基本分类器，<span class="math inline">\(\gamma\)</span>是其参数。所以我们要学习的参数就是<span class="math inline">\(\beta_m,\gamma_m\)</span>。</p>
-<p><strong>损失函数</strong>。当给定损失函数<span class="math inline">\(L(y,f(x))=exp(-yf(x))\)</span>之后，整个求解问题变成如下： <span class="math display">\[
-\mathop{min}\limits_{\beta_m,\gamma_m}\sum_{i=1}^{N}L(y_i,\sum_{m=1}^{M}\beta_mb(x_i,\gamma_m))
-\]</span> 但是，一次性要求解M个基分类器的参数与系数，是非常困难的。所以我们需要采用前向分步算法来进行求解。</p>
-<p><strong>前向分步算法</strong>。所谓的前向分步算法，就是我们一次只求解一个基分类器的参数与系数，从而能够大大简化运算。如下： <span class="math display">\[
-\mathop{min}\limits_{\beta,\gamma}\sum_{i=1}^{N}L(y_i,\beta b(x_i,\gamma))
-\]</span></p>
+<p>输入：训练数据集$X={(x_1,y_1),(x_2,y_2,…,x_N,y_N)}$，其中$x_i\in R^n$，$y_i\in {-1,+1}$；弱学习算法；</p>
+<p>输出：分类器$G(x)$。</p>
+<p>(1) 初始化训练数据集的权值分布$D_1$，实际上是均匀分布。即：$D_1={w_{11},w_{12},w_{13},…,w_{1N}}$，其中$w_{1i}=\frac 1N$。</p>
+<p>(2) 对于$m=1,2,3,…,M$，执行以下操作：</p>
+<p>​    (a) 根据带有权值分布的训练数据集，学习弱分类器：<br>$$<br>G_m(x) : \cal{X}-&gt;{-1,+1}<br>$$<br>​    (b) 计算训练数据集的分类误差率：<br>$$<br>e_m=\sum_{i=1}^{N}w_{mi}I(G_m(x_i)\not=y_i)<br>$$<br>​    (c) 计算该分类器的权重：<br>$$<br>\alpha_m=\frac 12log\frac {(1-e_m)}{e_m}<br>$$<br>​    (d) 更新训练数据集的权值分布：<br>$$<br>D_{m+1}=(w_{m+1,1},w_{m+1,2},…,w_{m=1,i},…,w_{m+1,N}),\<br>w_{m+1,i}=\frac{w_{mi}}{Z_m}exp(-\alpha_my_iG_m(x_i)),\<br>Z_m=\sum_{i=1}^{N}w_{mi}exp(-\alpha_my_iG_m(x_i)),\<br>或者，\ \  w_{m+1,i}=\begin{cases}<br>                                        \frac{w_{mi}}{Z_m}exp(\alpha_m)&amp; G_m(x_i)\not=y_i\<br>                    \frac{w_{mi}}{Z_m}exp(-\alpha_m)&amp; G_m(x_i)=y_i<br>                                        \end{cases}<br>$$<br>(3) 构建基本分类器的线性组合：<br>$$<br>G(x)=\sum_{m=1}^{M}\alpha_mG_m(x)<br>$$<br>(4) 得到最终的分类器：<br>$$<br>f(x)=sign(G(x))<br>$$</p>
+<h2 id="AdaBoost模型的另一种表述形式"><a href="#AdaBoost模型的另一种表述形式" class="headerlink" title="AdaBoost模型的另一种表述形式"></a>AdaBoost模型的另一种表述形式</h2><p>AdaBoost模型还有另外一种解释：AdaBoost模型是<strong>模型为加法模型、损失函数为指数函数、学习算法是前向分步算法的二类分类模型。</strong></p>
+<p><strong>加法模型</strong>。加法模型的形式如下：<br>$$<br>f(x)=\sum_{m=1}^{M}\beta_mb(x,\gamma_m)<br>$$<br>其中，$\beta$是系数，$b(x,\gamma_m)$是基本分类器，$\gamma$是其参数。所以我们要学习的参数就是$\beta_m,\gamma_m$。</p>
+<p><strong>损失函数</strong>。当给定损失函数$L(y,f(x))=exp(-yf(x))$之后，整个求解问题变成如下：<br>$$<br>\mathop{min}\limits_{\beta_m,\gamma_m}\sum_{i=1}^{N}L(y_i,\sum_{m=1}^{M}\beta_mb(x_i,\gamma_m))<br>$$<br>但是，一次性要求解M个基分类器的参数与系数，是非常困难的。所以我们需要采用前向分步算法来进行求解。</p>
+<p><strong>前向分步算法</strong>。所谓的前向分步算法，就是我们一次只求解一个基分类器的参数与系数，从而能够大大简化运算。如下：<br>$$<br>\mathop{min}\limits_{\beta,\gamma}\sum_{i=1}^{N}L(y_i,\beta b(x_i,\gamma))<br>$$</p>
 <p>所以，整个AdaBoost模型如下：</p>
 <p>输入：给定训练集与损失函数以及基本分类器集合。</p>
-<p>输出：最终的模型<span class="math inline">\(f(x)\)</span>。</p>
-<ol type="1">
-<li><p>初始化<span class="math inline">\(f_0(x)=0\)</span>。</p></li>
-<li><p>对<span class="math inline">\(m=1,2,...,M\)</span>，有</p></li>
-</ol>
-<p>​ (a) 极小化损失函数 <span class="math display">\[
-(\beta_m,\gamma_m)=\mathop{argmin}\limits_{\beta,\gamma}\sum_{i=1}^{N}L(y_i,f_{m-1}(x_i)+\beta b(x_i,\gamma))
-\]</span> 得到参数<span class="math inline">\(\beta_m, \gamma_m\)</span>。</p>
-<p>​ (b) 更新模型 <span class="math display">\[
-f_m(x)=f_{m-1}(x)+\beta_m b(x,\gamma_m)
-\]</span> (3) 得到最终的模型 <span class="math display">\[
-f(x)=\sum_{m=1}^{M}\beta_m b(x,\gamma_m)
-\]</span></p>
-<h2 id="gbdt">GBDT</h2>
-<p>提升树模型是以分类树或者回归树为基本分类器的提升方法。它也是使用加法模型以及前向分步算法来进行求解模型的。当对于二类分类问题的时候，其等价于AdaBoost模型，这里就不说了。这里，着重讲一下关于应用于回归问题的提升树模型。</p>
-<p><img src="/2020/02/27/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-AdaBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/0.jpg" style="zoom:50%;"></p>
-<p>在回归问题中，损失函数常使用均方误差MSE。如下： <span class="math display">\[
-L(y,f(x))=(y-f(x))^2
-\]</span> 再化简一下： <span class="math display">\[
-L(y,f(x))=L(y,f_{m-1}(x)+T(x,\theta_m))^2=(y-f_{m-1}(x)=T(x,\theta))^2
-\]</span> 我们记<span class="math inline">\(y-f_{m-1}(x)\)</span>为残差<span class="math inline">\(r\)</span>，也就是说，我们要使损失函数最小，只要让当前模型去拟合数据的残差即可。</p>
-<p><img src="/2020/02/27/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-AdaBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/1.jpg" style="zoom:50%;"></p>
-<p>最后，我们可以得到回归树：<span class="math inline">\(f_M(x)=\sum_{m=1}^{M}T(x,\theta_m)\)</span>。计算的例子可以参考这里：<a href="https://zhuanlan.zhihu.com/p/36108972" target="_blank" rel="noopener">GBDT的计算示例</a></p>
+<p>输出：最终的模型$f(x)$。</p>
+<p>(1) 初始化$f_0(x)=0$。</p>
+<p>(2) 对$m=1,2,…,M$，有</p>
+<p>​    (a) 极小化损失函数<br>$$<br>(\beta_m,\gamma_m)=\mathop{argmin}\limits_{\beta,\gamma}\sum_{i=1}^{N}L(y_i,f_{m-1}(x_i)+\beta b(x_i,\gamma))<br>$$<br>得到参数$\beta_m, \gamma_m$。</p>
+<p>​    (b) 更新模型<br>$$<br>f_m(x)=f_{m-1}(x)+\beta_m b(x,\gamma_m)<br>$$<br>(3) 得到最终的模型<br>$$<br>f(x)=\sum_{m=1}^{M}\beta_m b(x,\gamma_m)<br>$$</p>
+<h2 id="GBDT"><a href="#GBDT" class="headerlink" title="GBDT"></a>GBDT</h2><p>提升树模型是以分类树或者回归树为基本分类器的提升方法。它也是使用加法模型以及前向分步算法来进行求解模型的。当对于二类分类问题的时候，其等价于AdaBoost模型，这里就不说了。这里，着重讲一下关于应用于回归问题的提升树模型。</p>
+<img src="/2020/02/27/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-AdaBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/0.jpg" style="zoom:50%;">
+
+<p>在回归问题中，损失函数常使用均方误差MSE。如下：<br>$$<br>L(y,f(x))=(y-f(x))^2<br>$$<br>再化简一下：<br>$$<br>L(y,f(x))=L(y,f_{m-1}(x)+T(x,\theta_m))^2=(y-f_{m-1}(x)=T(x,\theta))^2<br>$$<br>我们记$y-f_{m-1}(x)$为残差$r$，也就是说，我们要使损失函数最小，只要让当前模型去拟合数据的残差即可。</p>
+<img src="/2020/02/27/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-AdaBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/1.jpg" style="zoom:50%;">
+
+<p>最后，我们可以得到回归树：$f_M(x)=\sum_{m=1}^{M}T(x,\theta_m)$。计算的例子可以参考这里：<a href="https://zhuanlan.zhihu.com/p/36108972" target="_blank" rel="noopener">GBDT的计算示例</a></p>
 <p>对于损失函数为指数函数或者是MSE，其实学习回归树是很容易的。但是当损失函数是一般的损失函数的时候，计算往往就会变得很复杂。在这里，我们给出一个大致的框架，而之后要讲的XGBoost/Light GBM/catBoost等树模型就是对GBDT的很好地工程化的实现。</p>
-<p><img src="/2020/02/27/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-AdaBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/2.jpg" style="zoom:50%;"></p>
-<p><img src="/2020/02/27/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-AdaBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/3.jpg" style="zoom:50%;"></p>
+<img src="/2020/02/27/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-AdaBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/2.jpg" style="zoom:50%;">
+
+<img src="/2020/02/27/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-AdaBoost%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/3.jpg" style="zoom:50%;">
+
 <p>理论部分就讲到这里🎉</p>
-<h2 id="adaboost模型的实现">AdaBoost模型的实现</h2>
-<p>把模型实现一遍才算是真正的吃透了这个模型呀。在这里，我采取了两种方式来实现AdaBoost模型：python实现以及调用scikit-learn库来实现。我的github里面可以下载到所有的代码，欢迎访问我的github，也欢迎大家star和fork。附上<strong>GitHub地址: <a href="https://github.com/codewithzichao/Machine_Learning_Code" target="_blank" rel="noopener">《统计学习方法》及常规机器学习模型实现</a></strong>。具体代码如下：</p>
-<h3 id="python实现">python实现</h3>
-<h3 id="scikit-learn实现">scikit-learn实现</h3>
-<h2 id="参考资料">参考资料</h2>
-<p>1 《统计学习方法》</p>
-<p>2 https://zhuanlan.zhihu.com/p/105497113</p>
+<h2 id="AdaBoost模型的实现"><a href="#AdaBoost模型的实现" class="headerlink" title="AdaBoost模型的实现"></a>AdaBoost模型的实现</h2><p>把模型实现一遍才算是真正的吃透了这个模型呀。在这里，我采取了两种方式来实现AdaBoost模型：python实现以及调用scikit-learn库来实现。我的github里面可以下载到所有的代码，欢迎访问我的github，也欢迎大家star和fork。附上**GitHub地址: <a href="https://github.com/codewithzichao/Machine_Learning_Code" target="_blank" rel="noopener">《统计学习方法》及常规机器学习模型实现</a>**。具体代码如下：</p>
+<h3 id="python实现"><a href="#python实现" class="headerlink" title="python实现"></a>python实现</h3><h3 id="scikit-learn实现"><a href="#scikit-learn实现" class="headerlink" title="scikit-learn实现"></a>scikit-learn实现</h3><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>1 《统计学习方法》</p>
+<p>2 <a href="https://zhuanlan.zhihu.com/p/105497113" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/105497113</a></p>
 
     </div>
 
@@ -401,11 +420,29 @@ L(y,f(x))=L(y,f_{m-1}(x)+T(x,\theta_m))^2=(y-f_{m-1}(x)=T(x,\theta))^2
     
 
     <footer class="post-footer">
+          <div class="reward-container">
+  <div>Would you like to buy me a cup of coffee☕️～</div>
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="zichao Alipay">
+        <span>Alipay</span>
+      </div>
+
+  </div>
+</div>
+
           <div class="post-tags">
               <a href="/tags/python/" rel="tag"># python</a>
               <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" rel="tag"># 统计学习方法</a>
-              <a href="/tags/%E5%86%B3%E7%AD%96%E6%A0%91/" rel="tag"># 决策树</a>
               <a href="/tags/scikit-learn/" rel="tag"># scikit-learn</a>
+              <a href="/tags/%E5%86%B3%E7%AD%96%E6%A0%91/" rel="tag"># 决策树</a>
               <a href="/tags/CART/" rel="tag"># CART</a>
               <a href="/tags/%E5%9B%9E%E5%BD%92%E6%A0%91/" rel="tag"># 回归树</a>
           </div>
@@ -475,6 +512,24 @@ L(y,f(x))=L(y,f_{m-1}(x)+T(x,\theta_m))^2=(y-f_{m-1}(x)=T(x,\theta))^2
   </span>
   <span class="author" itemprop="copyrightHolder">zichao</span>
 </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
 
@@ -482,7 +537,7 @@ L(y,f(x))=L(y,f_{m-1}(x)+T(x,\theta_m))^2=(y-f_{m-1}(x)=T(x,\theta))^2
   </footer>
 
   
-  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
 <script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
 
   
@@ -490,6 +545,8 @@ L(y,f(x))=L(y,f_{m-1}(x)+T(x,\theta_m))^2=(y-f_{m-1}(x)=T(x,\theta))^2
 
 
 
+  <script src="/js/local-search.js"></script>
+
 
 
 
@@ -505,6 +562,7 @@ L(y,f(x))=L(y,f_{m-1}(x)+T(x,\theta_m))^2=(y-f_{m-1}(x)=T(x,\theta))^2
 
 
   
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 
 

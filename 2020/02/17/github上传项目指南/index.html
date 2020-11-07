@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 4.2.0">
+
+
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -14,12 +16,12 @@
 
 
 
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"8.0.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","images":"/images","scheme":"Muse","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
 
   <meta name="description" content="今天刷完了《剑指offer》(repo:CodingInterviewCode)，撒花🎉并且，拾起了早早就注册使用却没有好好地管理的我的github。因此，总结一下使用git上传本地项目到自己的github上的流程，以便以后查阅。">
@@ -31,7 +33,6 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/github%E4%B8%8A%E4%BC%A0%E9%A1%B9%E7%9B%AE%E6%8C%87%E5%8D%97/1.git%E7%89%88%E6%9C%AC.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/github%E4%B8%8A%E4%BC%A0%E9%A1%B9%E7%9B%AE%E6%8C%87%E5%8D%97/2.%E5%88%9B%E5%BB%BAssh.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/github%E4%B8%8A%E4%BC%A0%E9%A1%B9%E7%9B%AE%E6%8C%87%E5%8D%97/3.%E5%88%9B%E5%BB%BAssh%20key.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/github%E4%B8%8A%E4%BC%A0%E9%A1%B9%E7%9B%AE%E6%8C%87%E5%8D%97/4.%E5%88%9B%E5%BB%BArepo.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/github%E4%B8%8A%E4%BC%A0%E9%A1%B9%E7%9B%AE%E6%8C%87%E5%8D%97/5,repo.jpg">
 <meta property="article:published_time" content="2020-02-17T05:12:47.000Z">
@@ -126,6 +127,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -159,11 +161,43 @@
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
 
   </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
         
@@ -186,14 +220,17 @@
         </li>
       </ul>
 
-      <!--noindex-->
-      <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#检查git是否安装"><span class="nav-number">1.</span> <span class="nav-text">检查git是否安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建ssh"><span class="nav-number">2.</span> <span class="nav-text">创建ssh</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#打开id_rsa.pub文件复制其内容到gtihub中"><span class="nav-number">3.</span> <span class="nav-text">打开id_rsa.pub文件，复制其内容到gtihub中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#检验是否连接成功"><span class="nav-number">4.</span> <span class="nav-text">检验是否连接成功</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在自己的-github中创建新的repo"><span class="nav-number">5.</span> <span class="nav-text">在自己的 github中创建新的repo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#clone刚刚创建好的repo到自己想到的路径下"><span class="nav-number">6.</span> <span class="nav-text">clone刚刚创建好的repo到自己想到的路径下</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#切换到刚刚下载好的repo文件夹下"><span class="nav-number">7.</span> <span class="nav-text">切换到刚刚下载好的repo文件夹下</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注意事项踩过的坑"><span class="nav-number">8.</span> <span class="nav-text">注意事项(踩过的坑)</span></a></li></ol></div>
-      </section>
-      <!--/noindex-->
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <section class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#检查git是否安装"><span class="nav-number">1.</span> <span class="nav-text">检查git是否安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建ssh"><span class="nav-number">2.</span> <span class="nav-text">创建ssh</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#打开id-rsa-pub文件，复制其内容到gtihub中"><span class="nav-number">3.</span> <span class="nav-text">打开id_rsa.pub文件，复制其内容到gtihub中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#检验是否连接成功"><span class="nav-number">4.</span> <span class="nav-text">检验是否连接成功</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在自己的-github中创建新的repo"><span class="nav-number">5.</span> <span class="nav-text">在自己的 github中创建新的repo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#clone刚刚创建好的repo到自己想到的路径下"><span class="nav-number">6.</span> <span class="nav-text">clone刚刚创建好的repo到自己想到的路径下</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#切换到刚刚下载好的repo文件夹下"><span class="nav-number">7.</span> <span class="nav-text">切换到刚刚下载好的repo文件夹下</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注意事项-踩过的坑"><span class="nav-number">8.</span> <span class="nav-text">注意事项(踩过的坑)</span></a></li></ol></div>
+        </section>
+        <!--/noindex-->
 
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <section class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zichao"
+      src="/images/photo.jpg">
   <p class="site-author-name" itemprop="name">zichao</p>
   <div class="site-description" itemprop="description">Just learning</div>
 </div>
@@ -220,10 +257,22 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
 
 
 
-      </section>
+        </section>
+      </div>
     </div>
   </aside>
   <div class="sidebar-dimmer"></div>
@@ -236,6 +285,8 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+
+  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
@@ -258,7 +309,7 @@
     <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/02/17/github%E4%B8%8A%E4%BC%A0%E9%A1%B9%E7%9B%AE%E6%8C%87%E5%8D%97/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/photo.jpg">
       <meta itemprop="name" content="zichao">
       <meta itemprop="description" content="Just learning">
     </span>
@@ -284,6 +335,13 @@
     </span>
 
   
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
 </div>
 
         </div>
@@ -295,37 +353,33 @@
     <div class="post-body" itemprop="articleBody">
         <p>今天刷完了《剑指offer》(repo:<a href="https://github.com/codewithzichao/CodingInterviewCode" target="_blank" rel="noopener">CodingInterviewCode</a>)，撒花🎉并且，拾起了早早就注册使用却没有好好地管理的我的github。因此，总结一下使用git上传本地项目到自己的github上的流程，以便以后查阅。</p>
 <a id="more"></a>
+
 <p><strong>目标：</strong>上传本地项目到自己github的repo中。</p>
 <p>具体流程如下：</p>
-<h3 id="检查git是否安装">检查git是否安装</h3>
-<p>输入git --version查看本地是否已经安装git。</p>
-<p><img src="/2020/02/17/github%E4%B8%8A%E4%BC%A0%E9%A1%B9%E7%9B%AE%E6%8C%87%E5%8D%97/1.git版本.jpg"></p>
-<h3 id="创建ssh">创建ssh</h3>
-<p>在指定的目录下创建ssh，命令：<code>ssh-keygen -t rsa -C xxx@xx.com</code>。</p>
-<p><img src="/2020/02/17/github%E4%B8%8A%E4%BC%A0%E9%A1%B9%E7%9B%AE%E6%8C%87%E5%8D%97/2.创建ssh.jpg"></p>
-<h3 id="打开id_rsa.pub文件复制其内容到gtihub中">打开id_rsa.pub文件，复制其内容到gtihub中</h3>
-<p>打开id_rsa.pub文件，使用命令：<code>open id_sra.pub</code>或者<code>cat id_rsa.pub</code>。</p>
-<p><img src="/2020/02/17/github%E4%B8%8A%E4%BC%A0%E9%A1%B9%E7%9B%AE%E6%8C%87%E5%8D%97/3.创建ssh%20key.jpg"></p>
-<h3 id="检验是否连接成功">检验是否连接成功</h3>
-<p>在本地的电脑上添加私钥 ，使用命令：<code>ssh-add id_rsa</code>；之后，在输入命令：<code>ssh -T git@github.com</code>。如果此时响应：Hi encoreMiao! You've successfully authenticated, but GitHub does not provide shell access.便是配置成功了。</p>
-<h3 id="在自己的-github中创建新的repo">在自己的 github中创建新的repo</h3>
-<p>注意，此时不要选择initialize this repository with a README。</p>
-<p><img src="/2020/02/17/github%E4%B8%8A%E4%BC%A0%E9%A1%B9%E7%9B%AE%E6%8C%87%E5%8D%97/4.创建repo.jpg"></p>
-<h3 id="clone刚刚创建好的repo到自己想到的路径下">clone刚刚创建好的repo到自己想到的路径下</h3>
-<p>使用命令：<code>git clone https://github.com/codewithzichao/CodingInterviewCode.git</code>即可。</p>
-<h3 id="切换到刚刚下载好的repo文件夹下">切换到刚刚下载好的repo文件夹下</h3>
-<p>执行以下命令👇，从而创建本地仓库以及代码上传。</p>
+<h3 id="检查git是否安装"><a href="#检查git是否安装" class="headerlink" title="检查git是否安装"></a>检查git是否安装</h3><p>输入git –version查看本地是否已经安装git。</p>
+<p><img src="/2020/02/17/github%E4%B8%8A%E4%BC%A0%E9%A1%B9%E7%9B%AE%E6%8C%87%E5%8D%97/1.git%E7%89%88%E6%9C%AC.jpg"></p>
+<h3 id="创建ssh"><a href="#创建ssh" class="headerlink" title="创建ssh"></a>创建ssh</h3><p>在指定的目录下创建ssh，命令：<code>ssh-keygen -t rsa -C xxx@xx.com</code>。</p>
+<p><img src="/2020/02/17/github%E4%B8%8A%E4%BC%A0%E9%A1%B9%E7%9B%AE%E6%8C%87%E5%8D%97/2.%E5%88%9B%E5%BB%BAssh.jpg"></p>
+<h3 id="打开id-rsa-pub文件，复制其内容到gtihub中"><a href="#打开id-rsa-pub文件，复制其内容到gtihub中" class="headerlink" title="打开id_rsa.pub文件，复制其内容到gtihub中"></a>打开id_rsa.pub文件，复制其内容到gtihub中</h3><p>打开id_rsa.pub文件，使用命令：<code>open id_sra.pub</code>或者<code>cat id_rsa.pub</code>。</p>
+<p>![](github上传项目指南/3.创建ssh key.jpg)</p>
+<h3 id="检验是否连接成功"><a href="#检验是否连接成功" class="headerlink" title="检验是否连接成功"></a>检验是否连接成功</h3><p>在本地的电脑上添加私钥 ，使用命令：<code>ssh-add id_rsa </code>；之后，在输入命令：<code>ssh -T git@github.com </code>。如果此时响应：Hi encoreMiao! You’ve successfully authenticated, but GitHub does not provide shell access.便是配置成功了。</p>
+<h3 id="在自己的-github中创建新的repo"><a href="#在自己的-github中创建新的repo" class="headerlink" title="在自己的 github中创建新的repo"></a>在自己的 github中创建新的repo</h3><p>注意，此时不要选择initialize this repository with a README。</p>
+<p><img src="/2020/02/17/github%E4%B8%8A%E4%BC%A0%E9%A1%B9%E7%9B%AE%E6%8C%87%E5%8D%97/4.%E5%88%9B%E5%BB%BArepo.jpg"></p>
+<h3 id="clone刚刚创建好的repo到自己想到的路径下"><a href="#clone刚刚创建好的repo到自己想到的路径下" class="headerlink" title="clone刚刚创建好的repo到自己想到的路径下"></a>clone刚刚创建好的repo到自己想到的路径下</h3><p>使用命令：<code>git clone https://github.com/codewithzichao/CodingInterviewCode.git</code>即可。</p>
+<h3 id="切换到刚刚下载好的repo文件夹下"><a href="#切换到刚刚下载好的repo文件夹下" class="headerlink" title="切换到刚刚下载好的repo文件夹下"></a>切换到刚刚下载好的repo文件夹下</h3><p>执行以下命令👇，从而创建本地仓库以及代码上传。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ touch README.md                                         //新建一个README文档，若上一步勾选了创建README.md，提交时导致冲突</span><br><span class="line">$ git init                                                //初始化本地仓库</span><br><span class="line">$ git add README.md                                       //添加刚刚创建的README文档</span><br><span class="line">$ git commit -m <span class="string">"你的注释...."</span>                             //提交到本地仓库，并写一些注释</span><br><span class="line">$ git remote add origin git@github.com:yourname/xxxx.git  //连接远程仓库并建了一个名叫：origin的别名，当然可以为其他名字，但是origin一看就知道是别名，youname记得替换成你的用户名</span><br><span class="line">$ git push -u origin master                              //将本地仓库的文件提交到别名为origin的地址的master分支下，-u为第一次提交，需要创建master分支，下次就不需要了</span><br></pre></td></tr></table></figure>
+
 <p>初始化完成之后，我们可以把我们项目的源代码提交上去，使用git add命令，如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ git add 系统签名/                                      // 添加需要提交的文件夹，使用git add .  则添加全部</span><br><span class="line">$ git add assets/</span><br><span class="line">$ git add project.properties </span><br><span class="line">$ git add res/</span><br><span class="line">$ git add src/</span><br><span class="line">$ git commit -m <span class="string">"上传项目源代码"</span>                         // 提交到本地仓库</span><br><span class="line">$ git push origin master                               // 将本地仓库合并到别名为origin地址的master分支下</span><br></pre></td></tr></table></figure>
+
 <p>显示结果如下，则代码上传成功。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Counting objects: 63, <span class="keyword">done</span>.</span><br><span class="line">Delta compression using up to 8 threads.</span><br><span class="line">Compressing objects: 100% (53/53), <span class="keyword">done</span>.</span><br><span class="line">Writing objects: 100% (63/63), 1.41 MiB | 217.00 KiB/s, <span class="keyword">done</span>.</span><br><span class="line">Total 63 (delta 16), reused 0 (delta 0)</span><br><span class="line">To git@github.com:codewithzichao/CodingInterview.git</span><br><span class="line">   000a667..61357d8  master -&gt; master</span><br></pre></td></tr></table></figure>
+
 <p>刷新一下GitHub，则显示刚刚提交的项目源代码。</p>
 <p><img src="/2020/02/17/github%E4%B8%8A%E4%BC%A0%E9%A1%B9%E7%9B%AE%E6%8C%87%E5%8D%97/5,repo.jpg"></p>
 <p>到此，成功～</p>
-<h3 id="注意事项踩过的坑">注意事项(踩过的坑)</h3>
-<p>1.如果要删除本地仓库里的文件，不能直接手动删除，要使用命令：<code>git rm &lt;文件名&gt;</code>或者<code>git rm -r &lt;文件夹名&gt;</code>。要不然的话，github上仍然会有原来的文件。</p>
-<p>2.当修改或者增加文件时，使用命令<code>git add &lt;文件夹&gt;/</code>或者<code>git add &lt;文件名&gt;</code>之后，一定要执行<code>git commit -m "title"</code>，要先提交到本地仓库，最后再执行<code>git push origin master</code>命令，才能够更新到github。如果省略掉<code>git commit -m "title"</code>这一步的话，那么修改就不会同步到github中。</p>
+<h3 id="注意事项-踩过的坑"><a href="#注意事项-踩过的坑" class="headerlink" title="注意事项(踩过的坑)"></a>注意事项(踩过的坑)</h3><p>1.如果要删除本地仓库里的文件，不能直接手动删除，要使用命令：<code>git rm &lt;文件名&gt;</code>或者<code>git rm -r &lt;文件夹名&gt;</code>。要不然的话，github上仍然会有原来的文件。</p>
+<p>2.当修改或者增加文件时，使用命令<code>git add &lt;文件夹&gt;/</code>或者<code>git add &lt;文件名&gt;</code>之后，一定要执行<code>git commit -m &quot;title&quot;</code>，要先提交到本地仓库，最后再执行<code>git push origin master</code>命令，才能够更新到github。如果省略掉<code>git commit -m &quot;title&quot;</code>这一步的话，那么修改就不会同步到github中。</p>
 <p>over☕️～</p>
 
     </div>
@@ -335,6 +389,24 @@
     
 
     <footer class="post-footer">
+          <div class="reward-container">
+  <div>Would you like to buy me a cup of coffee☕️～</div>
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="zichao Alipay">
+        <span>Alipay</span>
+      </div>
+
+  </div>
+</div>
+
           <div class="post-tags">
               <a href="/tags/github/" rel="tag"># github</a>
           </div>
@@ -404,6 +476,24 @@
   </span>
   <span class="author" itemprop="copyrightHolder">zichao</span>
 </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
 
@@ -411,7 +501,7 @@
   </footer>
 
   
-  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
 <script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
 
   
@@ -419,6 +509,8 @@
 
 
 
+  <script src="/js/local-search.js"></script>
+
 
 
 
@@ -434,6 +526,7 @@
 
 
   
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 
 

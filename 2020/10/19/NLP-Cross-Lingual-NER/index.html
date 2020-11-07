@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 4.2.0">
+
+
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -14,12 +16,12 @@
 
 
 
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
 
 <script class="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"8.0.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
+    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","images":"/images","scheme":"Muse","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
 
   <meta name="description" content="近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解一下cross-lingual NER，解读今年MSRA发表的三篇论文：《Enhanced Meta-Learning for Cross-lingual Named Entity Recognition with Minimal Resources》、《Single-&#x2F;Mult">
@@ -30,8 +32,6 @@
 <meta property="og:description" content="近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解一下cross-lingual NER，解读今年MSRA发表的三篇论文：《Enhanced Meta-Learning for Cross-lingual Named Entity Recognition with Minimal Resources》、《Single-&#x2F;Mult">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/19/NLP-Cross-Lingual-NER/meta-learning.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/19/NLP-Cross-Lingual-NER/meta-learning%20result.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/19/NLP-Cross-Lingual-NER/single-source%20model.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/19/NLP-Cross-Lingual-NER/single-result.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/19/NLP-Cross-Lingual-NER/multi-result.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/19/NLP-Cross-Lingual-NER/unitrans.jpg">
@@ -130,6 +130,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -163,11 +164,43 @@
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
 
   </li>
+        <li class="menu-item menu-item-schedule">
+
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
         
@@ -190,14 +223,17 @@
         </li>
       </ul>
 
-      <!--noindex-->
-      <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#enhanced-meta-learning-for-cross-lingual-named-entity-recognition-with-minimal-resourcesaaai2020"><span class="nav-number">1.</span> <span class="nav-text">Enhanced Meta-Learning for Cross-lingual Named Entity Recognition with Minimal Resources(AAAI2020)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#background"><span class="nav-number">1.1.</span> <span class="nav-text">background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#model"><span class="nav-number">1.2.</span> <span class="nav-text">model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment"><span class="nav-number">1.3.</span> <span class="nav-text">experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#single-multi-source-cross-lingual-ner-via-teacher-student-learning-on-unlabeled-data-in-target-languageacl2020"><span class="nav-number">2.</span> <span class="nav-text">Single-&#x2F;Multi-Source Cross-Lingual NER via Teacher-Student Learning on Unlabeled Data in Target Language(ACL2020)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#background-1"><span class="nav-number">2.1.</span> <span class="nav-text">background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#model-1"><span class="nav-number">2.2.</span> <span class="nav-text">model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment-1"><span class="nav-number">2.3.</span> <span class="nav-text">experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#unitrans-unifying-model-transfer-and-data-transfer-for-cross-lingual-named-entity-recognition-with-unlabeled-dataijcai2020"><span class="nav-number">3.</span> <span class="nav-text">UniTrans : Unifying Model Transfer and Data Transfer for Cross-Lingual Named Entity Recognition with Unlabeled Data(IJCAI2020)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#background-2"><span class="nav-number">3.1.</span> <span class="nav-text">background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#model-2"><span class="nav-number">3.2.</span> <span class="nav-text">model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment-2"><span class="nav-number">3.3.</span> <span class="nav-text">experiment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#background-3"><span class="nav-number">3.4.</span> <span class="nav-text">background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#grn-model"><span class="nav-number">3.5.</span> <span class="nav-text">GRN model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment-3"><span class="nav-number">3.6.</span> <span class="nav-text">experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#references"><span class="nav-number">4.</span> <span class="nav-text">references</span></a></li></ol></div>
-      </section>
-      <!--/noindex-->
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <section class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Enhanced-Meta-Learning-for-Cross-lingual-Named-Entity-Recognition-with-Minimal-Resources-AAAI2020"><span class="nav-number">1.</span> <span class="nav-text">Enhanced Meta-Learning for Cross-lingual Named Entity Recognition with Minimal Resources(AAAI2020)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#background"><span class="nav-number">1.1.</span> <span class="nav-text">background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#model"><span class="nav-number">1.2.</span> <span class="nav-text">model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment"><span class="nav-number">1.3.</span> <span class="nav-text">experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Single-Multi-Source-Cross-Lingual-NER-via-Teacher-Student-Learning-on-Unlabeled-Data-in-Target-Language-ACL2020"><span class="nav-number">2.</span> <span class="nav-text">Single-&#x2F;Multi-Source Cross-Lingual NER via Teacher-Student Learning on Unlabeled Data in Target Language(ACL2020)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#background-1"><span class="nav-number">2.1.</span> <span class="nav-text">background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#model-1"><span class="nav-number">2.2.</span> <span class="nav-text">model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment-1"><span class="nav-number">2.3.</span> <span class="nav-text">experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UniTrans-Unifying-Model-Transfer-and-Data-Transfer-for-Cross-Lingual-Named-Entity-Recognition-with-Unlabeled-Data-IJCAI2020"><span class="nav-number">3.</span> <span class="nav-text">UniTrans : Unifying Model Transfer and Data Transfer for Cross-Lingual Named Entity Recognition with Unlabeled Data(IJCAI2020)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#background-2"><span class="nav-number">3.1.</span> <span class="nav-text">background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#model-2"><span class="nav-number">3.2.</span> <span class="nav-text">model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment-2"><span class="nav-number">3.3.</span> <span class="nav-text">experiment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#background-3"><span class="nav-number">3.4.</span> <span class="nav-text">background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GRN-model"><span class="nav-number">3.5.</span> <span class="nav-text">GRN model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment-3"><span class="nav-number">3.6.</span> <span class="nav-text">experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#references"><span class="nav-number">4.</span> <span class="nav-text">references</span></a></li></ol></div>
+        </section>
+        <!--/noindex-->
 
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <section class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zichao"
+      src="/images/photo.jpg">
   <p class="site-author-name" itemprop="name">zichao</p>
   <div class="site-description" itemprop="description">Just learning</div>
 </div>
@@ -224,10 +260,22 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+  </div>
 
 
 
-      </section>
+        </section>
+      </div>
     </div>
   </aside>
   <div class="sidebar-dimmer"></div>
@@ -240,6 +288,8 @@
     <i class="fa fa-arrow-up"></i>
     <span>0%</span>
   </div>
+
+  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
@@ -262,7 +312,7 @@
     <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/10/19/NLP-Cross-Lingual-NER/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/photo.jpg">
       <meta itemprop="name" content="zichao">
       <meta itemprop="description" content="Just learning">
     </span>
@@ -307,6 +357,13 @@
     </span>
 
   
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
 </div>
 
         </div>
@@ -318,144 +375,137 @@
     <div class="post-body" itemprop="articleBody">
         <p>近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解一下cross-lingual NER，解读今年MSRA发表的三篇论文：《Enhanced Meta-Learning for Cross-lingual Named Entity Recognition with Minimal Resources》、《Single-/Multi-Source Cross-Lingual NER via Teacher-Student Learning on Unlabeled Data in Target Language》、《UniTrans : Unifying Model Transfer and Data Transfer for Cross-Lingual Named Entity Recognition with Unlabeled Data》，以及附带的《GRN: Gated Relation Network to Enhance Convolutional Neural Network for Named Entity Recognition》。</p>
 <a id="more"></a>
-<h2 id="enhanced-meta-learning-for-cross-lingual-named-entity-recognition-with-minimal-resourcesaaai2020">Enhanced Meta-Learning for Cross-lingual Named Entity Recognition with Minimal Resources(AAAI2020)</h2>
-<h3 id="background">background</h3>
-<p>当我们想要在target language上进行NER任务的时候，但是如果没有足够的labled data的话，cross-lingual NER是一种有效的方式。所谓的cross-lingual NER指的是，我们有labeled source language data与unlabeled target language data，我们希望模型在labeled source language上学习到的知识能够迁移给unlabeled target language，从而使得target language data在没有label的情况下，也能够取得很好的结果。目前已有的cross-lingual NER model主要分为两种方式：<strong>methods based on direct transfer 与methods based on annotation projection</strong>。</p>
+
+<h2 id="Enhanced-Meta-Learning-for-Cross-lingual-Named-Entity-Recognition-with-Minimal-Resources-AAAI2020"><a href="#Enhanced-Meta-Learning-for-Cross-lingual-Named-Entity-Recognition-with-Minimal-Resources-AAAI2020" class="headerlink" title="Enhanced Meta-Learning for Cross-lingual Named Entity Recognition with Minimal Resources(AAAI2020)"></a>Enhanced Meta-Learning for Cross-lingual Named Entity Recognition with Minimal Resources(AAAI2020)</h2><h3 id="background"><a href="#background" class="headerlink" title="background"></a>background</h3><p>当我们想要在target language上进行NER任务的时候，但是如果没有足够的labled data的话，cross-lingual NER是一种有效的方式。所谓的cross-lingual NER指的是，我们有labeled source language data与unlabeled target language data，我们希望模型在labeled source language上学习到的知识能够迁移给unlabeled target language，从而使得target language data在没有label的情况下，也能够取得很好的结果。目前已有的cross-lingual NER model主要分为两种方式：<strong>methods based on direct transfer 与methods based on annotation projection</strong>。</p>
 <ul>
 <li>所谓的methods based on direct transfer指的是：我们使用source language data去训练一个NER model，然后直接在target language data上进行test，这种方法的关键在于：怎么得到并在模型中融入一些language-independent feature，常用的是：cross-lingual word embedding，word cluster等等。</li>
 <li>所谓的methods based on annotation projection指的是：我们将source language data在word level/phrase level上给他翻译成target language data，当然label也是copy过去，然后模型使用翻译后的target language data进行训练，最后在原有unlabeled target language data进行test。</li>
 </ul>
 <p>本篇paper提出的方法属于第一种，因为作者认为这种方法还有提升的空间。为什么呢？因为最近有paper显示：<strong>通过建立一个cross-lingual encoder，任何句子都能够被encode到同一个feature space</strong>。另外，在mBERT中，还给出了这样一个结论：通过mBERT，我们可以通过简单的余弦相似度来计算不同语言的句子的similarity，这样的话，给定一个target language example，我们就能够在source language data中召回出一些与其在结构/语义上相似的句子。所以在正式对unlabeled language data进行test之前，我们是不是可以在source language data中找到与给定的unlabeled language data中相似的那些sample，从而使用这些sample来对模型进行fine-tuning，来提升效果？答案是肯定的！此外，召回的example会是一个比较少的数目，从而避免引入额外的噪音，伤害模型的性能。到此，cross-lingual NER任务就转化为了：<strong>模型需要在一个小数目的训练集上进行训练，并在新的target language上取得比较好的结果。</strong>这就很自然地引入了meta learning。</p>
-<h3 id="model">model</h3>
-<p>首先简单的介绍一下什么是meta learning。所谓的meta learning，也叫做LTL(学会学习)，它适用于：模型只需要使用少量数据进行训练，就能够快速在适用于一个新的任务，<strong>它强调的是fast adaptation。</strong>目前常用的meta learning算法，主要分为三类：leanrning a metric space 、learning a good parameters initialization、learning an optimizer，本篇paper采用的MAML算法属于第二类。OK，点到为止，下面将讲解如何利用meta learning来进行cross-lingual NER任务。</p>
-<ol type="1">
+<h3 id="model"><a href="#model" class="headerlink" title="model"></a>model</h3><p>首先简单的介绍一下什么是meta learning。所谓的meta learning，也叫做LTL(学会学习)，它适用于：模型只需要使用少量数据进行训练，就能够快速在适用于一个新的任务，<strong>它强调的是fast adaptation。</strong>目前常用的meta learning算法，主要分为三类：leanrning a metric space 、learning a good parameters initialization、learning  an optimizer，本篇paper采用的MAML算法属于第二类。OK，点到为止，下面将讲解如何利用meta learning来进行cross-lingual NER任务。</p>
+<ol>
 <li><p><strong>问题定义</strong></p>
-<p>我们把labeled source language data记做： <span class="math inline">\(D^S_{train}=\{x^{(i)}\}_{i=1}^{N}\)</span> ，unlabeled target language data记做：<span class="math inline">\(D^T_{test}=\{x^{(j)}\}_{j=1}^{M}\)</span>。我们的目标是：希望使用<span class="math inline">\(D^S_{train}\)</span>来训练一个模型，从而让模型能够在<span class="math inline">\(D^S_{test}\)</span>有着很好的效果。</p></li>
-<li><p><strong>Base model：</strong>使用预训练的mBERT，同时添加一个softmax用于token解码，损失函数采用CE。</p></li>
+<p>我们把labeled source language data记做： $D^S_{train}={x^{(i)}}<em>{i=1}^{N}$ ，unlabeled target language data记做：$D^T</em>{test}={x^{(j)}}<em>{j=1}^{M}$。我们的目标是：希望使用$D^S</em>{train}$来训练一个模型，从而让模型能够在$D^S_{test}$有着很好的效果。        </p>
+</li>
+<li><p><strong>Base model：</strong>使用预训练的mBERT，同时添加一个softmax用于token解码，损失函数采用CE。</p>
+</li>
 <li><p><strong>enhanced meta learning approach：</strong>在这篇paper里，使用MAML算法来进行meta learning。不了解的MAML算法请看这个<a href="https://zhuanlan.zhihu.com/p/57864886" target="_blank" rel="noopener">link</a>。整个算法其实分为三部分：task的构建、meta-training(在MAML中就是预训练阶段)与adaptation(在MAML中就是微调阶段)。</p>
-<ol type="1">
-<li><p><strong>task的构建</strong></p>
-<p>在执行MAML算法之前，我们需要构建task，因为在MAML中，一个task就相当于一个样本。对于<span class="math inline">\(D^S_{train}\)</span>中每一个样本<span class="math inline">\(x^{(i)}\)</span>，我们将其本身当作meta task <span class="math inline">\(\tau_i\)</span>的测试集<span class="math inline">\(D^{\tau_i}_{test}\)</span>(其实就是query set)，从source language data召回的与<span class="math inline">\(x^{(i)}\)</span>最相似的样本的集合作为meta task <span class="math inline">\(\tau_i\)</span>的训练集<span class="math inline">\(D^{\tau_i}_{train}\)</span>(其实就是support set)，所以每一个meta task <span class="math inline">\(\tau_i\)</span>可以表示为： <span class="math display">\[
-\tau_i=(D^{\tau_i}_{test},D^{\tau_i}_{test}),i\in 1,2,3,4,5,...,N
-\]</span> 具体怎么召回呢？其实就是通过mBERT得到<span class="math inline">\(x^{(i)}\)</span>的sentence presentation，然后计算<span class="math inline">\(x^{(i)}\)</span>与<span class="math inline">\(x^{(j)}\)</span>的余弦相似度，选取最相似的K个样本即可。</p></li>
+<ol>
+<li><p><strong>task的构建</strong>    </p>
+<p>在执行MAML算法之前，我们需要构建task，因为在MAML中，一个task就相当于一个样本。对于$D^S_{train}$中每一个样本$x^{(i)}$，我们将其本身当作meta task $\tau_i$的测试集$D^{\tau_i}<em>{test}$(其实就是query set)，从source language data召回的与$x^{(i)}$最相似的样本的集合作为meta  task $\tau_i$的训练集$D^{\tau_i}</em>{train}$(其实就是support set)，所以每一个meta  task $\tau_i$可以表示为：<br>$$<br>\tau_i=(D^{\tau_i}_{test},D^{\tau_i}_{test}),i\in 1,2,3,4,5,…,N<br>$$<br>具体怎么召回呢？其实就是通过mBERT得到$x^{(i)}$的sentence presentation，然后计算$x^{(i)}$与$x^{(j)}$的余弦相似度，选取最相似的K个样本即可。</p>
+</li>
 <li><p><strong>meta-training</strong></p>
-<p>这一步可以看作是预训练，模型在多个不同task进行训练，从而能够让模型获得很强的泛化能力，之后在目标task当中，我们只需要fine-tuning很少的次数，就可以得到很好的结果，也就是<strong>fast adaption</strong>。这一步核心的东西叫做：<strong>gradient by gradient</strong>。具体就是：我们随机sample一些task作为一个batch来训练模型的参数<span class="math inline">\(\theta\)</span>，在这一个batch的参数更新的时候，是一个样本一个样本来进行参数更新的，等到一个batch结束后，我们就得到了一个新的参数<span class="math inline">\(\theta^{&#39;}\)</span>，然后用<span class="math inline">\(\theta^{&#39;}\)</span>来更新最原始的参数<span class="math inline">\(\theta\)</span>。当然了，预训练可以执行很多次。</p></li>
+<p>这一步可以看作是预训练，模型在多个不同task进行训练，从而能够让模型获得很强的泛化能力，之后在目标task当中，我们只需要fine-tuning很少的次数，就可以得到很好的结果，也就是<strong>fast adaption</strong>。这一步核心的东西叫做：<strong>gradient by gradient</strong>。具体就是：我们随机sample一些task作为一个batch来训练模型的参数$\theta$，在这一个batch的参数更新的时候，是一个样本一个样本来进行参数更新的，等到一个batch结束后，我们就得到了一个新的参数$\theta^{‘}$，然后用$\theta^{‘}$来更新最原始的参数$\theta$。当然了，预训练可以执行很多次。</p>
+</li>
 <li><p><strong>adaptation</strong></p>
 <p>这一步是模型在target language data上进行微调。当然了，具体的task的构建方法也是第一步说的一样，不过使用的样本全部来自于target language data。<strong>值得注意的是，这一步中我们只有一次的参数更新。</strong>整体的架构图如下：</p>
 <p><img src="/2020/10/19/NLP-Cross-Lingual-NER/meta-learning.jpg"></p>
-<p>当然了，由于不同语言的句子之间的对齐很重要，为了让模型能够学习到这种对齐，model还在token-level上对entity进行了mask。还有一个max loss的操作，具体就是：传统的CE loss，它对每一个token 的loss都是平等对待，但是这是不对的，不同的token它对整体的loss贡献是不一样的，所以我们可以减去所有token loss中最大值，从而让那些loss 比较高的token能够学习的更加充分。当然在本paper里没有使用，因为本来训练数据就少，没有必要，而且这样搞很容易过度学习了，从而伤害模型的性能。</p></li>
-</ol></li>
+<p>当然了，由于不同语言的句子之间的对齐很重要，为了让模型能够学习到这种对齐，model还在token-level上对entity进行了mask。还有一个max loss的操作，具体就是：传统的CE loss，它对每一个token 的loss都是平等对待，但是这是不对的，不同的token它对整体的loss贡献是不一样的，所以我们可以减去所有token loss中最大值，从而让那些loss 比较高的token能够学习的更加充分。当然在本paper里没有使用，因为本来训练数据就少，没有必要，而且这样搞很容易过度学习了，从而伤害模型的性能。</p>
+</li>
 </ol>
-<h3 id="experiment">experiment</h3>
-<ol type="1">
-<li><p>数据集：CoNLL-2002/2003、Europeana Newspapers、MSRA，en作为source language，其他语言作为target language。</p></li>
+</li>
+</ol>
+<h3 id="experiment"><a href="#experiment" class="headerlink" title="experiment"></a>experiment</h3><ol>
+<li><p>数据集：CoNLL-2002/2003、Europeana Newspapers、MSRA，en作为source language，其他语言作为target language。</p>
+</li>
 <li><p>实验结果</p>
-<p><img src="/2020/10/19/NLP-Cross-Lingual-NER/meta-learning%20result.jpg"></p>
-<p>从结果来看，还是不错的。个人认为这种思路还是蛮新颖的。</p></li>
+<p>![](NLP-Cross-Lingual-NER/meta-learning result.jpg)</p>
+<p>从结果来看，还是不错的。个人认为这种思路还是蛮新颖的。</p>
+</li>
 </ol>
-<h2 id="single-multi-source-cross-lingual-ner-via-teacher-student-learning-on-unlabeled-data-in-target-languageacl2020">Single-/Multi-Source Cross-Lingual NER via Teacher-Student Learning on Unlabeled Data in Target Language(ACL2020)</h2>
-<h3 id="background-1">background</h3>
-<p>这篇论文假设的任务更加的严苛：之前的cross-lingual NER都是有可用的labeled source language data，那如果没有可用的labeled source language data，要怎么样才能在unlabeled target language data上取得好的效果呢？它首先对在cross-lingual NER上两种方法进行了对比：</p>
+<h2 id="Single-Multi-Source-Cross-Lingual-NER-via-Teacher-Student-Learning-on-Unlabeled-Data-in-Target-Language-ACL2020"><a href="#Single-Multi-Source-Cross-Lingual-NER-via-Teacher-Student-Learning-on-Unlabeled-Data-in-Target-Language-ACL2020" class="headerlink" title="Single-/Multi-Source Cross-Lingual NER via Teacher-Student Learning on Unlabeled Data in Target Language(ACL2020)"></a>Single-/Multi-Source Cross-Lingual NER via Teacher-Student Learning on Unlabeled Data in Target Language(ACL2020)</h2><h3 id="background-1"><a href="#background-1" class="headerlink" title="background"></a>background</h3><p>这篇论文假设的任务更加的严苛：之前的cross-lingual NER都是有可用的labeled source language data，那如果没有可用的labeled source language data，要怎么样才能在unlabeled target language data上取得好的效果呢？它首先对在cross-lingual NER上两种方法进行了对比：</p>
 <ul>
 <li><strong>methods based on direct transfer</strong>缺点的在于：没有很好地利用unlabeled target language data，并且模型效果非常依赖language-independent feature；</li>
 <li><strong>methods based on annotation projection</strong>的缺点在于：需要parallel text of target language data，一般都是通过对source language data进行翻译得到，这样以来，难免会引入噪音，对最终模型的性能存在损害，同时这种方法对于zero-source cross-lingual NER的情况不适用。</li>
 </ul>
 <p>对两种方法进行分析之后，<strong>我们希望构建的模型，能够处理zero-source cross-lingual NER这种情况，同时能够很好地利用unlabeled target language data中的信息。</strong>具体的做法是：采用teacher-student learning(借鉴了知识蒸馏)。</p>
-<h3 id="model-1">model</h3>
-<p>整个模型分为两大情况：single source cross-lingual NER和multi-source cross-lingual NER，都是采用teacher-student learning的方式来进行训练。</p>
-<ol type="1">
+<h3 id="model-1"><a href="#model-1" class="headerlink" title="model"></a>model</h3><p>整个模型分为两大情况：single source cross-lingual NER和multi-source cross-lingual NER，都是采用teacher-student learning的方式来进行训练。</p>
+<ol>
 <li><p><strong>single source cross-lingual NER</strong></p>
-<ol type="1">
+<ol>
 <li><p>training：对于single source cross-lingual NER，我们把在source language上训练好的模型作为teacher model。具体在这篇paper里面，选取mBERT作为teacher model，student model可以与teacher model一样的结构，也可以是不一样的结构。我们把使用后unlabeled target language data去训练student model，让其去模拟teacher model输出的实体标签的分布。损失函数采用MSE，解码使用softmax。<strong>注意，训练过程中，我们不去更新teacher model的参数。</strong>模型图如下：</p>
-<p><img src="/2020/10/19/NLP-Cross-Lingual-NER/single-source%20model.jpg"></p></li>
-<li><p>inference：我们只使用srtudent model 来进行inference，解码仍然采用softmax。</p></li>
-</ol></li>
-<li><p><strong>multi-source cross-lingual NER</strong></p>
-<ol type="1">
-<li><p>training：对于multi-source cross-lingual NER，我们把K个在source language data上训练好的模型当作teacher model(注意，共有K个model，每一个模型在一种source language上训练过)，sutdent model的结构仍然可以相同或者不同。但是与single source cross-lingual NER不同的在于，student model是要拟合teacher model的输出的分布，而teacher model有多个，需要对多个teacher models进行融合，实际上就是多个teacher model的输出的概率分布进行加权融合，权重就是不同teacher models的相对重要性。公式如下： <span class="math display">\[
-\tilde p(x_i^{&#39;},\theta_T)=\sum_{k=1}^{K}\alpha_k\tilde p(x_i^{&#39;},\theta_T^{(k)})
-\]</span> 其中，<span class="math inline">\(\tilde p(x_i^{&#39;},\theta_T^{(k)})\)</span>表示第<span class="math inline">\(k\)</span>个teacher model的输出概率分布，<span class="math inline">\(\alpha_k\)</span>表示第<span class="math inline">\(k\)</span>个teacher model的权重。关键是<span class="math inline">\(\alpha_k\)</span>怎么计算呢？在这篇paper中，设计一个language identiﬁcation auxiliary task，来计算<span class="math inline">\(\alpha_k\)</span>。</p>
-<p><strong>language identiﬁcation auxiliary task</strong></p>
-<p>这个任务通过学习得到不同language的language embedding，来计算source language与target language的相似度，从而给各个teacher models分配权重。假设第k种source language的数据集表示为：<span class="math inline">\(D^{(k)}_{src}=\{(u^{(k)},k)\}\)</span>，我们要做的是：去学习所有的 source language embedding vector：<span class="math inline">\(\mu^{(k)}\in R^m，k\in 1,2,3,..,K\)</span>。具体公式如下： <span class="math display">\[
-{\cal L}(P,M)=-\frac{1}{Z}\sum_{(u^{(k)},k)\in D_{src}}CE(softmax(g^T(u)MP),k)+\gamma||PP^T-I||_F^2
-\]</span> 其中，<span class="math inline">\(P\in R^{m\times K}=\{\mu^{(1)},\mu^{(2)},...,\mu^{(K)}\}\)</span>，K表示K种语言，m表示其embedding dimension，<span class="math inline">\(g^T(u)\)</span>表示得到<span class="math inline">\(u\)</span>的sentence embedding，<span class="math inline">\(k\)</span>我个人觉得是一个one-hot vector，要不然不对劲。得到<span class="math inline">\(P\)</span>之后，我们就可以计算<span class="math inline">\(\alpha\)</span>了，如下： <span class="math display">\[
-\alpha_k=\frac{1}{|D_{tgt}|}\sum_{x^{&#39;}\in D_{tgt}}\frac{exp(g^T(x^{&#39;})M\mu^{(k)}/\tau)}{\sum_{i=1}^Kexp(g^T(x^{&#39;})M\mu^{(i)}/\tau)}
-\]</span> 其中，<span class="math inline">\(|D_{tgt}|\)</span>表示target language data中的样本数目，<span class="math inline">\(\tau\)</span>设置为所有的<span class="math inline">\(g^T(x^{&#39;})M\mu^{(k)}/\tau)\)</span>的方差，从而保证得到的<span class="math inline">\(\alpha\)</span>不会为0也不会为1。总的来看，这个任务还是蛮简单的，但是很work。值得一提的是，<strong>在实际实现的过程中，对<span class="math inline">\(M\)</span>使用了低秩近似，从而减少参数量，加快训练。</strong></p></li>
-<li><p>inference：还是只使用student model来进行inference，解码使用softmax。</p></li>
-</ol></li>
+<p>![](NLP-Cross-Lingual-NER/single-source model.jpg)</p>
+</li>
+<li><p>inference：我们只使用srtudent model 来进行inference，解码仍然采用softmax。</p>
+</li>
 </ol>
-<h3 id="experiment-1">experiment</h3>
-<ol type="1">
-<li><p>数据集：CoNLL-2002、CoNLL-2003</p></li>
-<li><p>hypoparameters的设置参考原始论文</p></li>
+</li>
+<li><p><strong>multi-source cross-lingual NER</strong></p>
+<ol>
+<li><p>training：对于multi-source cross-lingual NER，我们把K个在source language data上训练好的模型当作teacher model(注意，共有K个model，每一个模型在一种source language上训练过)，sutdent model的结构仍然可以相同或者不同。但是与single source cross-lingual NER不同的在于，student model是要拟合teacher model的输出的分布，而teacher model有多个，需要对多个teacher models进行融合，实际上就是多个teacher model的输出的概率分布进行加权融合，权重就是不同teacher models的相对重要性。公式如下：<br>$$<br>\tilde p(x_i^{‘},\theta_T)=\sum_{k=1}^{K}\alpha_k\tilde p(x_i^{‘},\theta_T^{(k)})<br>$$<br>其中，$\tilde p(x_i^{‘},\theta_T^{(k)})$表示第$k$个teacher model的输出概率分布，$\alpha_k$表示第$k$个teacher model的权重。关键是$\alpha_k$怎么计算呢？在这篇paper中，设计一个language identiﬁcation auxiliary task，来计算$\alpha_k$。</p>
+<p><strong>language identiﬁcation auxiliary task</strong></p>
+<p>这个任务通过学习得到不同language的language embedding，来计算source language与target language的相似度，从而给各个teacher models分配权重。假设第k种source language的数据集表示为：$D^{(k)}<em>{src}={(u^{(k)},k)}$，我们要做的是：去学习所有的 source language embedding vector：$\mu^{(k)}\in R^m，k\in 1,2,3,..,K$。具体公式如下：<br>$$<br>{\cal L}(P,M)=-\frac{1}{Z}\sum</em>{(u^{(k)},k)\in D_{src}}CE(softmax(g^T(u)MP),k)+\gamma||PP^T-I||<em>F^2<br>$$<br>其中，$P\in R^{m\times K}={\mu^{(1)},\mu^{(2)},…,\mu^{(K)}}$，K表示K种语言，m表示其embedding dimension，$g^T(u)$表示得到$u$的sentence embedding，$k$我个人觉得是一个one-hot vector，要不然不对劲。得到$P$之后，我们就可以计算$\alpha$了，如下：<br>$$<br>\alpha_k=\frac{1}{|D_{tgt}|}\sum</em>{x^{‘}\in D_{tgt}}\frac{exp(g^T(x^{‘})M\mu^{(k)}/\tau)}{\sum_{i=1}^Kexp(g^T(x^{‘})M\mu^{(i)}/\tau)}<br>$$<br>其中，$|D_{tgt}|$表示target language data中的样本数目，$\tau$设置为所有的$g^T(x^{‘})M\mu^{(k)}/\tau)$的方差，从而保证得到的$\alpha$不会为0也不会为1。总的来看，这个任务还是蛮简单的，但是很work。值得一提的是，<strong>在实际实现的过程中，对$M$使用了低秩近似，从而减少参数量，加快训练。</strong></p>
+</li>
+<li><p>inference：还是只使用student model来进行inference，解码使用softmax。</p>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="experiment-1"><a href="#experiment-1" class="headerlink" title="experiment"></a>experiment</h3><ol>
+<li><p>数据集：CoNLL-2002、CoNLL-2003</p>
+</li>
+<li><p>hypoparameters的设置参考原始论文</p>
+</li>
 <li><p>实验结果</p>
-<p><img src="/2020/10/19/NLP-Cross-Lingual-NER/single-result.jpg" style="zoom:50%;"></p></li>
+<img src="/2020/10/19/NLP-Cross-Lingual-NER/single-result.jpg" style="zoom:50%;">
+
+</li>
 </ol>
 <p><img src="/2020/10/19/NLP-Cross-Lingual-NER/multi-result.jpg"></p>
 <p>从结果来看，效果是惊人的，在single source cross-lingual NER中，仅仅使用unlabeled target language data，就超越了meta learning那篇的结果；对于multi-source cross-lingual NER中，效果更是大幅提高，说明teacher-student learning这种方法有着很大的潜力。之后可以再在这上面做一些探索。</p>
-<h2 id="unitrans-unifying-model-transfer-and-data-transfer-for-cross-lingual-named-entity-recognition-with-unlabeled-dataijcai2020">UniTrans : Unifying Model Transfer and Data Transfer for Cross-Lingual Named Entity Recognition with Unlabeled Data(IJCAI2020)</h2>
-<h3 id="background-2">background</h3>
-<p>这篇同样也是研究zero-resource cross-lingual NER。目前在cross-lingual NER常用的两种方法的优缺点在上面应提到过了，这里不再赘述。这篇paper希望能够对两种方法进行结合，从而充分利用两者的优点，同时避免其缺点。所以就提出了unitrans模型。额外说一句，这篇paper应该是zero-resource cross-lingual NER的SOTA，结果大幅超越之前所讲解的两篇paper，非常优秀的论文，值得一读。</p>
-<h3 id="model-2">model</h3>
-<p>先放图～</p>
+<h2 id="UniTrans-Unifying-Model-Transfer-and-Data-Transfer-for-Cross-Lingual-Named-Entity-Recognition-with-Unlabeled-Data-IJCAI2020"><a href="#UniTrans-Unifying-Model-Transfer-and-Data-Transfer-for-Cross-Lingual-Named-Entity-Recognition-with-Unlabeled-Data-IJCAI2020" class="headerlink" title="UniTrans : Unifying Model Transfer and Data Transfer for Cross-Lingual Named Entity Recognition with Unlabeled Data(IJCAI2020)"></a>UniTrans : Unifying Model Transfer and Data Transfer for Cross-Lingual Named Entity Recognition with Unlabeled Data(IJCAI2020)</h2><h3 id="background-2"><a href="#background-2" class="headerlink" title="background"></a>background</h3><p>这篇同样也是研究zero-resource cross-lingual NER。目前在cross-lingual NER常用的两种方法的优缺点在上面应提到过了，这里不再赘述。这篇paper希望能够对两种方法进行结合，从而充分利用两者的优点，同时避免其缺点。所以就提出了unitrans模型。额外说一句，这篇paper应该是zero-resource cross-lingual NER的SOTA，结果大幅超越之前所讲解的两篇paper，非常优秀的论文，值得一读。</p>
+<h3 id="model-2"><a href="#model-2" class="headerlink" title="model"></a>model</h3><p>先放图～</p>
 <p><img src="/2020/10/19/NLP-Cross-Lingual-NER/unitrans.jpg"></p>
-<p>unitrans整体的架构是：1.我们首先确定一个base model，然后使用source language training data <span class="math inline">\(D_{src}\)</span>来训练base model得到新的参数为<span class="math inline">\(\theta_{src}\)</span> 的 model；对source language data通过word-to-word translation来得到翻译后的target language data <span class="math inline">\(D_{trans}\)</span>，基于<span class="math inline">\(\theta_{src}\)</span>,使用翻译后的<span class="math inline">\(D_{trans}\)</span>来对参数为<span class="math inline">\(\theta_{src}\)</span>的NER model进行fine-tune，并将fine-tuning后的NER model作为teacher model(参数：<span class="math inline">\(\theta_{teach}\)</span>)；除此之外，我们使用<span class="math inline">\(D_{trans}\)</span>来训练base model，得到参数为<span class="math inline">\(\theta_{trans}\)</span>的模型(不基于<span class="math inline">\(\theta_{src}\)</span>)；2.我们得到三个模型（<span class="math inline">\(\theta_{src}、\theta_{teach}、\theta_{trans}\)</span>）之后，通过设计一种voting机制，去得到unlabeled target language data的pseudo label，然后使用pseudo label来训练student model。下面依次讲解其中重要的compoment。</p>
+<p>unitrans整体的架构是：1.我们首先确定一个base model，然后使用source language training data $D_{src}$来训练base model得到新的参数为$\theta_{src}$ 的 model；对source language data通过word-to-word translation来得到翻译后的target language data $D_{trans}$，基于$\theta_{src}$,使用翻译后的$D_{trans}$来对参数为$\theta_{src}$的NER model进行fine-tune，并将fine-tuning后的NER model作为teacher model(参数：$\theta_{teach}$)；除此之外，我们使用$D_{trans}$来训练base model，得到参数为$\theta_{trans}$的模型(不基于$\theta_{src}$)；2.我们得到三个模型（$\theta_{src}、\theta_{teach}、\theta_{trans}$）之后，通过设计一种voting机制，去得到unlabeled target language data的pseudo label，然后使用pseudo label来训练student model。下面依次讲解其中重要的compoment。</p>
 <p><strong>base model：</strong>在这篇paper中，就是一个mBERT+softmax，loss就是entity-level的ce loss。</p>
-<p><strong>word-to-word translation：</strong>这一部分借鉴的是《Word translation without parallel data》paper中的做法。具体做法是：假设我们已经得到source language与target language的word embedding：<span class="math inline">\(S，T\in R^{d\times D}\)</span>，并且得到了D对word的词典，我们希望能够找到一个变化，使得两个语言的word可以相互转换。公式是： <span class="math display">\[
-P=argmin_{P^{&#39;}}||P^{&#39;}S-T||_F
-\]</span> 得到<span class="math inline">\(P\)</span>之后，对于任何一个source language word，我们可以通过最近邻的方法来找到对应的翻译。但是关键是怎么找到最近邻呢？方法是定义CSLS方法来衡量不同语言的word之间的相似度。具体可以参看<a href="https://zhuanlan.zhihu.com/p/30218451" target="_blank" rel="noopener">link</a>。</p>
-<p><strong>knowleage distillation：</strong>得到三个模型(<span class="math inline">\(\theta_{src}、\theta_{teach}、\theta_{trans}\)</span>)之后，我们需要将这些模型的知识蒸馏给student。具体做法是如下：</p>
-<ol type="1">
-<li>首先，我们将unlabeled target language data输入到<span class="math inline">\(\theta_{teach}\)</span>与<span class="math inline">\(\theta_{stu}\)</span>中，来让<span class="math inline">\(\theta_{stu}\)</span>模型去拟合<span class="math inline">\(\theta_{teach}\)</span>的输出的分布，loss使用MSE；这样做，不仅可以将<span class="math inline">\(\theta_{teach}\)</span>的知识蒸馏给<span class="math inline">\(\theta_{stu}\)</span>，同时还能让<span class="math inline">\(\theta_{stu}\)</span>学习到unlabeled language data中的信息；</li>
+<p><strong>word-to-word translation：</strong>这一部分借鉴的是《Word translation without parallel data》paper中的做法。具体做法是：假设我们已经得到source language与target language的word embedding：$S，T\in R^{d\times D}$，并且得到了D对word的词典，我们希望能够找到一个变化，使得两个语言的word可以相互转换。公式是：<br>$$<br>P=argmin_{P^{‘}}||P^{‘}S-T||_F<br>$$<br>得到$P$之后，对于任何一个source language word，我们可以通过最近邻的方法来找到对应的翻译。但是关键是怎么找到最近邻呢？方法是定义CSLS方法来衡量不同语言的word之间的相似度。具体可以参看<a href="https://zhuanlan.zhihu.com/p/30218451" target="_blank" rel="noopener">link</a>。</p>
+<p><strong>knowleage distillation：</strong>得到三个模型($\theta_{src}、\theta_{teach}、\theta_{trans}$)之后，我们需要将这些模型的知识蒸馏给student。具体做法是如下：</p>
+<ol>
+<li>首先，我们将unlabeled target language data输入到$\theta_{teach}$与$\theta_{stu}$中，来让$\theta_{stu}$模型去拟合$\theta_{teach}$的输出的分布，loss使用MSE；这样做，不仅可以将$\theta_{teach}$的知识蒸馏给$\theta_{stu}$，同时还能让$\theta_{stu}$学习到unlabeled language data中的信息；</li>
 <li>我们希望进一步提升student model的效果，采用的方式是：我们希望能够得到unlabel target language data的pseudo label，然后使用pseudo label来训练student model。具体怎么得到pesudo label呢？我们设计了一种voting 机制，我们将unlabel target langugae输入到三个模型当中，只有当三个模型的输出的结果完全相等时，我们才给其标上label，然后使用这些数据来训练sutdent model。</li>
 <li>综合第一步与第二步，knowledge distillation的总的loss，表示如下：</li>
 </ol>
-<p><span class="math display">\[
-{\cal L}(\theta_{stu})=\frac{1}{|{\cal D}_T|}\sum_{\tilde x\in {\cal D}_T}(\eta{\cal L}_{hard}^{\tilde x}+{\cal L}_{soft}^{\tilde x})
-\]</span></p>
-<p>其中，<span class="math inline">\({\cal L}_{hard}^{\tilde x}\)</span>是第二步的loss，<span class="math inline">\({\cal L}_{soft}^{\tilde x}\)</span>是第一步的loss，<span class="math inline">\(\eta=1\)</span>。</p>
+<p>$$<br>{\cal L}(\theta_{stu})=\frac{1}{|{\cal D}<em>T|}\sum</em>{\tilde x\in {\cal D}<em>T}(\eta{\cal L}</em>{hard}^{\tilde x}+{\cal L}_{soft}^{\tilde x})<br>$$</p>
+<p>其中，${\cal L}<em>{hard}^{\tilde x}$是第二步的loss，${\cal L}</em>{soft}^{\tilde x}$是第一步的loss，$\eta=1$。</p>
 <p><strong>inference：</strong>我们只使用student model，另外注意，解码使用CRF。</p>
-<h3 id="experiment-2">experiment</h3>
-<ol type="1">
-<li><p>数据集：CoNLL-2002、CoNLL-2003、NoDaLiDa-2019</p></li>
+<h3 id="experiment-2"><a href="#experiment-2" class="headerlink" title="experiment"></a>experiment</h3><ol>
+<li><p>数据集：CoNLL-2002、CoNLL-2003、NoDaLiDa-2019</p>
+</li>
 <li><p>结果</p>
 <p><img src="/2020/10/19/NLP-Cross-Lingual-NER/unitrans-result.jpg"></p>
 <p>从结果中我们可以看到，效果提升非常大，这个还可以通过teacher ensembling进一步提升效果。作者也做了一些消融实验，如下：</p>
 <p><img src="/2020/10/19/NLP-Cross-Lingual-NER/ablation.jpg"></p>
-<p>这篇论文结果真的太强了，甚至给我感觉使用teacher-student learning这种方式来做cross-lingual NER，这篇paper到顶了。</p></li>
+<p>这篇论文结果真的太强了，甚至给我感觉使用teacher-student learning这种方式来做cross-lingual NER，这篇paper到顶了。</p>
+</li>
 </ol>
 <p>##GRN model(not for cross-lingual NER)</p>
-<h3 id="background-3">background</h3>
-<p>GRN模型是2019年MSRA发表在AAAI上的《GRN: Gated Relation Network to Enhance Convolutional Neural Network for Named Entity Recognition》。在NER任务中，由于其对word的位置信息极其敏感，所以常用的编码器常常使用RNN，但是RNN系列的编码器最大的缺点就在于并行效率太低，而CNN相比RNN来说，最大的优势在于：并行效率高，但是其缺点在于CNN只能对word周边的信息进行建模，捕捉局部context information，但是CNN对global context information的捕捉能力太弱，基于CNN的NER模型(IDCNN)在NER任务上的结果都弱于RNN系列的NER模型，<strong>所以，是否能够设计某种机制，让CNN能够捕捉到global context information呢？</strong>在GRN里，通过使用gating机制对sentence中的任意两个word之间的relation进行建模，从而让CNN捕捉global context information的能力大大提高，这就是GRN提出的背景。</p>
+<h3 id="background-3"><a href="#background-3" class="headerlink" title="background"></a>background</h3><p>GRN模型是2019年MSRA发表在AAAI上的《GRN: Gated Relation Network to Enhance Convolutional Neural Network for Named Entity Recognition》。在NER任务中，由于其对word的位置信息极其敏感，所以常用的编码器常常使用RNN，但是RNN系列的编码器最大的缺点就在于并行效率太低，而CNN相比RNN来说，最大的优势在于：并行效率高，但是其缺点在于CNN只能对word周边的信息进行建模，捕捉局部context information，但是CNN对global context information的捕捉能力太弱，基于CNN的NER模型(IDCNN)在NER任务上的结果都弱于RNN系列的NER模型，<strong>所以，是否能够设计某种机制，让CNN能够捕捉到global context information呢？</strong>在GRN里，通过使用gating机制对sentence中的任意两个word之间的relation进行建模，从而让CNN捕捉global context information的能力大大提高，这就是GRN提出的背景。</p>
 <blockquote>
 <p>吐槽一下，这篇说实话很一般，idea真的一般，2019年，BERT都出来了，在GRN的实验里，都没有使用BERT来进行对比，结果也没啥说服力。</p>
 </blockquote>
-<h3 id="grn-model">GRN model</h3>
-<p>整个GRN模型分为四层：<strong>representation layer、context layer、relation layer、CRF layer。</strong></p>
-<ol type="1">
-<li><p><strong>representation layer：</strong>假设输入的sentence表示为：<span class="math inline">\(s=\{s_1,s_2,...,s_T\}\)</span>，每一个token对应的标签表示为：<span class="math inline">\(y=\{y_1,y_2,..,y_T\}\)</span>。整个layer的输出有两部分：由GloVe初始化的word embedding(update in training stage)+char embedding通过kernel=3的CNN+max-over-time pooling，从而得到char feature。第一部分表示为：<span class="math inline">\(w_i=E(s_i)\)</span>；第二部分：<span class="math inline">\(c_i\)</span>，输出是两者concat的结果：<span class="math inline">\(z_i=[c_i,w_i]\)</span>。</p></li>
-<li><p><strong>context layer：</strong>这一层主要是捕捉word的局部信息。具体做法是：使用多个不同kernel size的CNN(等长卷积，kernel size=1，3，5)来得到encoding的输出，卷积的激活函数使用<span class="math inline">\(tanh\)</span>，然后对使用激活函数之后的结果进行concat，再使用max pooling(不是global max pooling，所以维度数目不变)。</p></li>
-<li><p><strong>relation layer：</strong>这一层的目的主要是用来对sentence中的任意两个word之间的关系进行modeling，并利用gating机制来获取全局内容信息，具体公式如下(其实还是attention，没啥创新，不过这个layer的实现code还是可以去看看的)： <span class="math display">\[
-\alpha_{i,j}=\sigma(W[x_i;x_j]+b_x) \\
-r_i=\frac{1}{T}\sum_{j=1}^{T}\alpha_{ij}*x_j \\
-p_i=tanh(r_i)
-\]</span> 其中，<span class="math inline">\(r_i\)</span>就是word <span class="math inline">\(x_i\)</span>的全局fusion feature，当然了，为了增加非线性，对<span class="math inline">\(r_i\)</span>使用tanh进行变换，得到<span class="math inline">\(p_i\)</span>，这就是最终输入到CRF的输入。</p></li>
-<li><p><strong>CRF layer：</strong>就是标准的CRF layer。</p></li>
+<h3 id="GRN-model"><a href="#GRN-model" class="headerlink" title="GRN model"></a>GRN model</h3><p>整个GRN模型分为四层：<strong>representation layer、context layer、relation layer、CRF layer。</strong></p>
+<ol>
+<li><p><strong>representation layer：</strong>假设输入的sentence表示为：$s={s_1,s_2,…,s_T}$，每一个token对应的标签表示为：$y={y_1,y_2,..,y_T}$。整个layer的输出有两部分：由GloVe初始化的word embedding(update in training stage)+char embedding通过kernel=3的CNN+max-over-time pooling，从而得到char feature。第一部分表示为：$w_i=E(s_i)$；第二部分：$c_i$，输出是两者concat的结果：$z_i=[c_i,w_i]$。</p>
+</li>
+<li><p><strong>context layer：</strong>这一层主要是捕捉word的局部信息。具体做法是：使用多个不同kernel size的CNN(等长卷积，kernel size=1，3，5)来得到encoding的输出，卷积的激活函数使用$tanh$，然后对使用激活函数之后的结果进行concat，再使用max pooling(不是global max pooling，所以维度数目不变)。</p>
+</li>
+<li><p><strong>relation layer：</strong>这一层的目的主要是用来对sentence中的任意两个word之间的关系进行modeling，并利用gating机制来获取全局内容信息，具体公式如下(其实还是attention，没啥创新，不过这个layer的实现code还是可以去看看的)：<br>$$<br>\alpha_{i,j}=\sigma(W[x_i;x_j]+b_x) \<br>r_i=\frac{1}{T}\sum_{j=1}^{T}\alpha_{ij}*x_j \<br>p_i=tanh(r_i)<br>$$<br>其中，$r_i$就是word $x_i$的全局fusion feature，当然了，为了增加非线性，对$r_i$使用tanh进行变换，得到$p_i$，这就是最终输入到CRF的输入。</p>
+</li>
+<li><p><strong>CRF layer：</strong>就是标准的CRF layer。</p>
+</li>
 </ol>
-<h3 id="experiment-3">experiment</h3>
-<ol type="1">
+<h3 id="experiment-3"><a href="#experiment-3" class="headerlink" title="experiment"></a>experiment</h3><ol>
 <li>数据集：CoNLL-2003 English NER、OntoNotes 5.0</li>
 <li>hypoparameters的设置请参考原始论文，具体结果就不放了，反正就在当时达到了SOTA，anyway。</li>
 </ol>
-<h2 id="references">references</h2>
-<p>《Enhanced Meta-Learning for Cross-lingual Named Entity Recognition with Minimal Resources》</p>
-<p>code：<strong>https://github.com/microsoft/vert-papers/tree/master/papers/Meta-Cross</strong></p>
+<h2 id="references"><a href="#references" class="headerlink" title="references"></a>references</h2><p>《Enhanced Meta-Learning for Cross-lingual Named Entity Recognition with Minimal Resources》</p>
+<p>code：<strong><a href="https://github.com/microsoft/vert-papers/tree/master/papers/Meta-Cross" target="_blank" rel="noopener">https://github.com/microsoft/vert-papers/tree/master/papers/Meta-Cross</a></strong></p>
 <p>《Single-/Multi-Source Cross-Lingual NER via Teacher-Student Learning on Unlabeled Data in Target Language》、</p>
-<p>code：<strong>https://github.com/microsoft/vert-papers/tree/master/papers/SingleMulti-TS</strong></p>
+<p>code：<strong><a href="https://github.com/microsoft/vert-papers/tree/master/papers/SingleMulti-TS" target="_blank" rel="noopener">https://github.com/microsoft/vert-papers/tree/master/papers/SingleMulti-TS</a></strong></p>
 <p>《UniTrans : Unifying Model Transfer and Data Transfer for Cross-Lingual Named Entity Recognition with Unlabeled Data》</p>
-<p>code： <strong>https://github.com/microsoft/vert-papers/tree/master/papers/UniTrans</strong></p>
+<p>code： <strong><a href="https://github.com/microsoft/vert-papers/tree/master/papers/UniTrans" target="_blank" rel="noopener">https://github.com/microsoft/vert-papers/tree/master/papers/UniTrans</a></strong></p>
 <p>《GRN: Gated Relation Network to Enhance Convolutional Neural Network for Named Entity Recognition》。</p>
-<p>code：<strong>https://github.com/HuiChen24/NER-GRN</strong></p>
+<p>code：<strong><a href="https://github.com/HuiChen24/NER-GRN" target="_blank" rel="noopener">https://github.com/HuiChen24/NER-GRN</a></strong></p>
 
     </div>
 
@@ -464,6 +514,24 @@ p_i=tanh(r_i)
     
 
     <footer class="post-footer">
+          <div class="reward-container">
+  <div>Would you like to buy me a cup of coffee☕️～</div>
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
+        <span>WeChat Pay</span>
+      </div>
+      <div>
+        <img src="/images/alipay.jpg" alt="zichao Alipay">
+        <span>Alipay</span>
+      </div>
+
+  </div>
+</div>
+
           <div class="post-tags">
               <a href="/tags/NLP/" rel="tag"># NLP</a>
               <a href="/tags/cross-lingual-NER/" rel="tag"># cross-lingual NER</a>
@@ -534,6 +602,24 @@ p_i=tanh(r_i)
   </span>
   <span class="author" itemprop="copyrightHolder">zichao</span>
 </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
 
@@ -541,7 +627,7 @@ p_i=tanh(r_i)
   </footer>
 
   
-  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
 <script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
 
   
@@ -549,6 +635,8 @@ p_i=tanh(r_i)
 
 
 
+  <script src="/js/local-search.js"></script>
+
 
 
 
@@ -564,6 +652,7 @@ p_i=tanh(r_i)
 
 
   
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 
 
