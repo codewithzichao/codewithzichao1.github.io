@@ -228,7 +228,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <section class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#LRCNN模型提出的背景"><span class="nav-number">1.</span> <span class="nav-text">LRCNN模型提出的背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LRCNN模型介绍"><span class="nav-number">2.</span> <span class="nav-text">LRCNN模型介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验结果"><span class="nav-number">3.</span> <span class="nav-text">实验结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#lrcnn模型提出的背景"><span class="nav-number">1.</span> <span class="nav-text">LRCNN模型提出的背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lrcnn模型介绍"><span class="nav-number">2.</span> <span class="nav-text">LRCNN模型介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验结果"><span class="nav-number">3.</span> <span class="nav-text">实验结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
         </section>
         <!--/noindex-->
 
@@ -377,52 +377,41 @@
     <div class="post-body" itemprop="articleBody">
         <p>近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解一下《CNN-Based Chinese NER with Lexicon Rethinking》论文，即：LRCNN模型。</p>
 <a id="more"></a>
-
-<h2 id="LRCNN模型提出的背景"><a href="#LRCNN模型提出的背景" class="headerlink" title="LRCNN模型提出的背景"></a>LRCNN模型提出的背景</h2><p>词汇增强被证明是有效提升NER性能的方式。其中最具开创性的工作就是LatticeLSTM，通过设计巧妙的gate机制将词汇信息融入到char level model中，大幅提高了效果。但是LatticeLSTM存在着两个非常严重的缺陷：</p>
+<h2 id="lrcnn模型提出的背景">LRCNN模型提出的背景</h2>
+<p>词汇增强被证明是有效提升NER性能的方式。其中最具开创性的工作就是LatticeLSTM，通过设计巧妙的gate机制将词汇信息融入到char level model中，大幅提高了效果。但是LatticeLSTM存在着两个非常严重的缺陷：</p>
 <p><strong>1. 无法并行化。</strong>在LatticeLSTM中，引入的词汇信息的位置与数量是不固定的，所以无法使用batch来加速训练；</p>
 <p><strong>2. 无法有效处理词汇信息冲突的问题</strong>。譬如：广州市长隆公园，在lexicon中有：<code>广州市</code>，<code>市长</code>，<code>长隆</code>，由于 <code>长</code> 是 <code>市长</code> 与 <code>长隆</code>的组成部分，所以模型对于<code>长</code>这个字的标记就会出现偏差，因为模型不知道要怎么对其进行标记，从而很可能标记出错，换句话说，词汇中的某些词会对模型中的字的标记进行误导。为了解决这两个问题，就有了LRCNN模型。</p>
-<h2 id="LRCNN模型介绍"><a href="#LRCNN模型介绍" class="headerlink" title="LRCNN模型介绍"></a>LRCNN模型介绍</h2><p>在LRCNN模型中，<strong>对于第一个问题：</strong>LRCNN采用了CNN而不是RNN来对句子进行编码，这样的话，在不同的cnn layer，不同长度的词汇将被融入模型中；<strong>对于第二个问题：</strong>LRCNN模型使用了rethinking mechanism。先放图～</p>
+<h2 id="lrcnn模型介绍">LRCNN模型介绍</h2>
+<p>在LRCNN模型中，<strong>对于第一个问题：</strong>LRCNN采用了CNN而不是RNN来对句子进行编码，这样的话，在不同的cnn layer，不同长度的词汇将被融入模型中；<strong>对于第二个问题：</strong>LRCNN模型使用了rethinking mechanism。先放图～</p>
 <p><img src="/2020/10/13/NLP-NER-LRCNN%E6%A8%A1%E5%9E%8B/LRCNN.jpg"></p>
 <p>具体的LRCNN模型描述如下：</p>
-<ol>
-<li><p>假设输入的句子表示：$C={c_1,c_2,…,c_M}\in\cal R^{M \times d}$，基于字的词汇表为$\cal V$，其中$c_i$是第$i$个字的char embedding，且$c_i\in \cal R^d$，句子中与lexicon相匹配的每一个词语表示为：$w_m^l={c_m,…,c_{m+l-1}}$，其中$c_m$表示这个词语的首个字，$l$是这个词语的长度。</p>
-</li>
+<ol type="1">
+<li><p>假设输入的句子表示：<span class="math inline">\(C=\{c_1,c_2,...,c_M\}\in\cal R^{M \times d}\)</span>，基于字的词汇表为<span class="math inline">\(\cal V\)</span>，其中<span class="math inline">\(c_i\)</span>是第<span class="math inline">\(i\)</span>个字的char embedding，且<span class="math inline">\(c_i\in \cal R^d\)</span>，句子中与lexicon相匹配的每一个词语表示为：<span class="math inline">\(w_m^l=\{c_m,...,c_{m+l-1}\}\)</span>，其中<span class="math inline">\(c_m\)</span>表示这个词语的首个字，<span class="math inline">\(l\)</span>是这个词语的长度。</p></li>
 <li><p>在句子编码层，LRCNN模型stack多层的cnn layer，主要目的就是：不仅能够很好的融入词汇信息，同时还能够并行化加速训练。具体来说：采用window size为2的一维卷积，以上图为例，我们将char embedding当作第一层，那么使用一次卷积后，可以得到第二层，这一层中每一个token都是一个bigram，如果在此基础上，在使用一次卷积，就可以得到trigram，以此类推，我们就可以不断地扩大感受野。除此之外，我们可以将词汇信息融入其中，具体来说：譬如<code>广州</code>是lexicon中的词，也是卷积后的bigram，我们可以使用badanan attention，从而将bigram信息与词汇信息进行融合。具体公式如下：</p>
-<img src="/2020/10/13/NLP-NER-LRCNN%E6%A8%A1%E5%9E%8B/cnn_attention.jpg" style="zoom: 33%;">
-
-<p>其中$X_m^l$表示的是融合之后的结果。</p>
-</li>
+<p><img src="/2020/10/13/NLP-NER-LRCNN%E6%A8%A1%E5%9E%8B/cnn_attention.jpg" style="zoom: 33%;"></p>
+<p>其中<span class="math inline">\(X_m^l\)</span>表示的是融合之后的结果。</p></li>
 <li><p>由于CNN的分层结构，低层的词汇无法影响到高层的词汇，所以为了解决第二个问题，LRCNN模型中应用了rethinking mechanism。所谓地rethinking mechanism指的是：使用最顶层的CNN的feature map来指导低层的lexicon conflicts问题。具体做法是：向每一层CNN添加一个feedback layer来调整lexicon的权重。举个例子，如果高层特征中没有得到<code>广州市</code>与<code>长隆</code>，那么低层的<code>市长</code>这一词汇将会对最终的标注产生误导，所以需要<code>广州市</code>来降低<code>市长</code>一词在输出特征中的权重。具体公式如下：</p>
-<img src="/2020/10/13/NLP-NER-LRCNN%E6%A8%A1%E5%9E%8B/rethinking.jpg" style="zoom:50%;">
-
-<p>需要注意的是，其中$W,U,b$都是reuse attention module中的参数，为了避免过拟合。</p>
-</li>
-<li><p>经过$L$层，我们可以得到$L$个multigram的信息，其维度都是$[batch_size,hidden_size,seq_length]$。接下来，为了让句子的每一个字能够自适应的选择不同gram的feature map，LRCNN借鉴了《Densely Connected CNN with Multi-scale Feature Attention for Text Classification》<a href="https://blog.csdn.net/guoyuhaoaaa/article/details/81842767" target="_blank" rel="noopener">link</a> paper中的multi-scale attention机制，具体如下：</p>
-<img src="/2020/10/13/NLP-NER-LRCNN%E6%A8%A1%E5%9E%8B/multi-scale attention.jpg" style="zoom: 33%;">
-
-<p>其中，$s_m^l$表示的是第L层的feature的第m个字对其D个特征进行求和得到的scalar，我们最终输入到CRF层的是：$X^{att}={X_1^{att},X_2^{att},…,X_M^{att}}$。</p>
-</li>
+<p><img src="/2020/10/13/NLP-NER-LRCNN%E6%A8%A1%E5%9E%8B/rethinking.jpg" style="zoom:50%;"></p>
+<p>需要注意的是，其中<span class="math inline">\(W,U,b\)</span>都是reuse attention module中的参数，为了避免过拟合。</p></li>
+<li><p>经过<span class="math inline">\(L\)</span>层，我们可以得到<span class="math inline">\(L\)</span>个multigram的信息，其维度都是<span class="math inline">\([batch\_size,hidden\_size,seq\_length]\)</span>。接下来，为了让句子的每一个字能够自适应的选择不同gram的feature map，LRCNN借鉴了《Densely Connected CNN with Multi-scale Feature Attention for Text Classification》<a href="https://blog.csdn.net/guoyuhaoaaa/article/details/81842767" target="_blank" rel="noopener">link</a> paper中的multi-scale attention机制，具体如下：</p>
+<p><img src="/2020/10/13/NLP-NER-LRCNN%E6%A8%A1%E5%9E%8B/multi-scale attention.jpg" style="zoom: 33%;"></p>
+<p>其中，<span class="math inline">\(s_m^l\)</span>表示的是第L层的feature的第m个字对其D个特征进行求和得到的scalar，我们最终输入到CRF层的是：<span class="math inline">\(X^{att}=\{X_1^{att},X_2^{att},...,X_M^{att}\}\)</span>。</p></li>
 </ol>
-<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><ol>
-<li><p>数据集仍然是那四个：MSRA、OntoNotes、Weibo、Resume</p>
-</li>
-<li><p>参数设定：initial learning rate：0.0015 with decay rate：0.05，dropout rate：0.5  on char embedding,lexicon embedding,cnn layers; char embedding(50) and lexicon embedding(50) were initialized by pretained embedding and fine_tuned during training; four cnn layer with 128 output channels for other datasets except MSRA(5 cnn layer with 300 channels);use earlystopping.</p>
-</li>
+<h2 id="实验结果">实验结果</h2>
+<ol type="1">
+<li><p>数据集仍然是那四个：MSRA、OntoNotes、Weibo、Resume</p></li>
+<li><p>参数设定：initial learning rate：0.0015 with decay rate：0.05，dropout rate：0.5 on char embedding,lexicon embedding,cnn layers; char embedding(50) and lexicon embedding(50) were initialized by pretained embedding and fine_tuned during training; four cnn layer with 128 output channels for other datasets except MSRA(5 cnn layer with 300 channels);use earlystopping.</p></li>
 <li><p>结果</p>
-<img src="/2020/10/13/NLP-NER-LRCNN%E6%A8%A1%E5%9E%8B/msra.jpg" style="zoom:50%;">
-
-<img src="/2020/10/13/NLP-NER-LRCNN%E6%A8%A1%E5%9E%8B/ontonotes.jpg" style="zoom:50%;">
-
-<img src="/2020/10/13/NLP-NER-LRCNN%E6%A8%A1%E5%9E%8B/weibo.jpg" style="zoom:50%;">
-
-<img src="/2020/10/13/NLP-NER-LRCNN%E6%A8%A1%E5%9E%8B/resume.jpg" style="zoom:50%;">
-
-</li>
+<p><img src="/2020/10/13/NLP-NER-LRCNN%E6%A8%A1%E5%9E%8B/msra.jpg" style="zoom:50%;"></p>
+<p><img src="/2020/10/13/NLP-NER-LRCNN%E6%A8%A1%E5%9E%8B/ontonotes.jpg" style="zoom:50%;"></p>
+<p><img src="/2020/10/13/NLP-NER-LRCNN%E6%A8%A1%E5%9E%8B/weibo.jpg" style="zoom:50%;"></p>
+<p><img src="/2020/10/13/NLP-NER-LRCNN%E6%A8%A1%E5%9E%8B/resume.jpg" style="zoom:50%;"></p></li>
 </ol>
 <p>从实验结果来看，LRCNN还是不错的，不过我个人的感觉就是还是太过于复杂了，主要是rethinking那块，应该不是很好迁移到其他模型上。</p>
-<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>《CNN-Based Chinese NER with Lexicon Rethinking》</p>
+<h2 id="参考文献">参考文献</h2>
+<p>《CNN-Based Chinese NER with Lexicon Rethinking》</p>
 <p>《Densely Connected CNN with Multi-scale Feature Attention for Text Classification》</p>
-<p>LRCNN-code:<a href="https://github.com/gungunXD/LR-CNN" target="_blank" rel="noopener">https://github.com/gungunXD/LR-CNN</a></p>
+<p>LRCNN-code:https://github.com/gungunXD/LR-CNN</p>
 
     </div>
 

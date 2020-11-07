@@ -222,7 +222,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <section class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#SiamLSTM模型介绍"><span class="nav-number">1.</span> <span class="nav-text">SiamLSTM模型介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SiamLSTM模型实现"><span class="nav-number">2.</span> <span class="nav-text">SiamLSTM模型实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#siamlstm模型介绍"><span class="nav-number">1.</span> <span class="nav-text">SiamLSTM模型介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#siamlstm模型实现"><span class="nav-number">2.</span> <span class="nav-text">SiamLSTM模型实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
         </section>
         <!--/noindex-->
 
@@ -371,14 +371,17 @@
     <div class="post-body" itemprop="articleBody">
         <p>正式开始看文本匹配的东西啦！文本匹配对NLPer来说是很重要的，不管是最后是做对话、推荐、搜索，文本匹配都是必不可少的。当然啦，BERT系列的模型出来之后，其实传统的深度学习模型效果是远远比不上的。不过这些预训练模型效果好是好，但是训练代价昂贵，当然啦，有人会说，现在已经有剪枝、量化、蒸馏这样的方法来减小预训练模型的大小，从而降低训练所需的代价(所以说模型压缩、加速这个方向还是很有前景的🤩咦，好像跑偏了，anyway)，但是这仍然远远不够，所以熟悉传统的文本匹配模型是非常有必要的。本篇博客讲解经典的SiamLSTM模型，并采用tensorflow2实现。</p>
 <a id="more"></a>
-
-<h2 id="SiamLSTM模型介绍"><a href="#SiamLSTM模型介绍" class="headerlink" title="SiamLSTM模型介绍"></a>SiamLSTM模型介绍</h2><p>SiamLSTM模型来源于《Siamese Recurrent Architectures for Learning Sentence Similarity》论文，是在2016年提出的。SiamLSTM模型所要解决的是<strong>预测句子之间的相似度</strong>。SiamLSTM模型的架构和SiamCNN非常地类似，毕竟都是Siamese神经网络嘛🥰。直接放图吧～</p>
-<img src="/2020/04/28/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-SiamLSTM/Siam.jpg" style="zoom: 67%;">
-
-<p>模型本身并不是很难，不过有两个地方需要注意：第一个是，两个句子最后使用的是只有最后一个step的hidden state；第二个是，SiamLSTM所使用的相似度的计算方法（1范数），如下：<br>$$<br>g(h_{T_a}^{(a)},h_{T_b}^{(b)})=exp(-||h_{T_a}^{(a)},h_{T_b}^{(b)}||_1)\in[0,1]<br>$$<br>最后，SiamLSTM模型使用的是SemEval 2014数据集。训练集：SemEval 2014 train data，共5000条<br>测试集：SemEval 2014 test data， 共4927条。每条数据的形式是：<code>[“I like playing basketball.”,”My favourite sports is basketball.”, 3.4]</code>。由于SiamLSTM使用的相似度计算方法，导致结果是在$[0,1]$区间的，所以最后需要对结果进行缩放，从而在$[1,5]$之间。SiamLSTM模型使用的损失函数是MSE。</p>
+<h2 id="siamlstm模型介绍">SiamLSTM模型介绍</h2>
+<p>SiamLSTM模型来源于《Siamese Recurrent Architectures for Learning Sentence Similarity》论文，是在2016年提出的。SiamLSTM模型所要解决的是<strong>预测句子之间的相似度</strong>。SiamLSTM模型的架构和SiamCNN非常地类似，毕竟都是Siamese神经网络嘛🥰。直接放图吧～</p>
+<p><img src="/2020/04/28/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-SiamLSTM/Siam.jpg" style="zoom: 67%;"></p>
+<p>模型本身并不是很难，不过有两个地方需要注意：第一个是，两个句子最后使用的是只有最后一个step的hidden state；第二个是，SiamLSTM所使用的相似度的计算方法（1范数），如下： <span class="math display">\[
+g(h_{T_a}^{(a)},h_{T_b}^{(b)})=exp(-||h_{T_a}^{(a)},h_{T_b}^{(b)}||_1)\in[0,1]
+\]</span> 最后，SiamLSTM模型使用的是SemEval 2014数据集。训练集：SemEval 2014 train data，共5000条 测试集：SemEval 2014 test data， 共4927条。每条数据的形式是：<code>[“I like playing basketball.”,”My favourite sports is basketball.”, 3.4]</code>。由于SiamLSTM使用的相似度计算方法，导致结果是在<span class="math inline">\([0,1]\)</span>区间的，所以最后需要对结果进行缩放，从而在<span class="math inline">\([1,5]\)</span>之间。SiamLSTM模型使用的损失函数是MSE。</p>
 <p>论文提到的训练的一些details：<strong>使用AdaDelta，使用梯度裁剪，使用SGD，LSTM的输出维度是50。</strong></p>
 <p>以上就是SiamLSTM模型模型的全部内容啦🥰（说实话，最近看文本匹配的论文，真的感觉不难，比起之前看reformer、BERT等的文章，真的是太轻松啦，希望之后不要打脸🥰）</p>
-<h2 id="SiamLSTM模型实现"><a href="#SiamLSTM模型实现" class="headerlink" title="SiamLSTM模型实现"></a>SiamLSTM模型实现</h2><h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>Siamese Recurrent Architectures for Learning Sentence Similarity</p>
+<h2 id="siamlstm模型实现">SiamLSTM模型实现</h2>
+<h2 id="参考文献">参考文献</h2>
+<p>Siamese Recurrent Architectures for Learning Sentence Similarity</p>
 
     </div>
 

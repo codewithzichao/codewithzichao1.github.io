@@ -226,7 +226,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <section class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Multi-view模型介绍"><span class="nav-number">1.</span> <span class="nav-text">Multi-view模型介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#模型结构"><span class="nav-number">1.1.</span> <span class="nav-text">模型结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#损失函数"><span class="nav-number">1.2.</span> <span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#details"><span class="nav-number">1.3.</span> <span class="nav-text">details</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果"><span class="nav-number">1.4.</span> <span class="nav-text">结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Multi-view模型实现"><span class="nav-number">2.</span> <span class="nav-text">Multi-view模型实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#multi-view模型介绍"><span class="nav-number">1.</span> <span class="nav-text">Multi-view模型介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#模型结构"><span class="nav-number">1.1.</span> <span class="nav-text">模型结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#损失函数"><span class="nav-number">1.2.</span> <span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#details"><span class="nav-number">1.3.</span> <span class="nav-text">details</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果"><span class="nav-number">1.4.</span> <span class="nav-text">结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#multi-view模型实现"><span class="nav-number">2.</span> <span class="nav-text">Multi-view模型实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
         </section>
         <!--/noindex-->
 
@@ -375,14 +375,15 @@
     <div class="post-body" itemprop="articleBody">
         <p>正式入对话的坑啦🤣对话是目前NLP技术重要的落地场景之一，但是相比于其他的方向，对话目前的应用还不算成熟，也远远没有产生它应有的巨大商业价值，但是随着物联网与5G等的发展，对话的应用前景是非常光明的。此外，既然对话的坑还有很多，这也意味着总需要人去填满这些坑，对NLPer来说，是挑战也是机会。其他的不多说，本篇着重讲讲检索式对话的经典模型Multi-view。</p>
 <a id="more"></a>
-
-<h2 id="Multi-view模型介绍"><a href="#Multi-view模型介绍" class="headerlink" title="Multi-view模型介绍"></a>Multi-view模型介绍</h2><p>首先不得不说，这是一片非常好的文章，非常适合用来做对话入门🤩首先来说说为什么要有Multi-view模型。最先要说明的是，这篇文章是于2016年发表的，这时候匹配是以基于表示的模型为主，而基于交互的模型还为兴起。所以，在response selection任务中，大部分模型都是将context与response视为word的集合，然后对其进行embedding，论文中称其为word sequence model。这样的方法的缺点在于：<strong>其忽略了utterances之间的关系。</strong>譬如说：一个utterance可以是对上一个utterance的肯定、否定，或者是开启一个新的topic，但是word sequence model无法捕捉到这样的信息。再说明白点，word sequence model无法很好地处理多轮对话。<strong>所以，Multi-view模型通过在utterance level进行建模，并与word level进行combine，从而大幅提升在respone selection任务中的表现。</strong></p>
-<h3 id="模型结构"><a href="#模型结构" class="headerlink" title="模型结构"></a>模型结构</h3><p>首先介绍传统的word sequence model处理多轮对话的思路：将多轮对话首尾连接成一条长长的文本，从而输送到网络中。就是下面这个样子：</p>
-<img src="/2020/05/15/NLP-chatbot%E7%B3%BB%E5%88%97-Multi-view/word sequence modle.jpg" style="zoom: 67%;">
-
-<p>其中，<code>_sos_</code>是两个utterance之间的连接符。再将句子使用GRU进行encoder之后，我们使用GRU的最后一个hidden state来计算confidence，即匹配度。公式如下：<br>$$<br>p(y=1|c,r)=\sigma (cWr+b)<br>$$<br>其中，$c，r$表示context1与response，$\sigma$是sigmoid函数。但是仅仅在word level进行建模是不够的，Multi-view模型更是在utterance level进进行建模，从而期望得到更高层次的语义表示。如下</p>
-<img src="/2020/05/15/NLP-chatbot%E7%B3%BB%E5%88%97-Multi-view/multi-view.jpg" style="zoom:67%;">
-
+<h2 id="multi-view模型介绍">Multi-view模型介绍</h2>
+<p>首先不得不说，这是一片非常好的文章，非常适合用来做对话入门🤩首先来说说为什么要有Multi-view模型。最先要说明的是，这篇文章是于2016年发表的，这时候匹配是以基于表示的模型为主，而基于交互的模型还为兴起。所以，在response selection任务中，大部分模型都是将context与response视为word的集合，然后对其进行embedding，论文中称其为word sequence model。这样的方法的缺点在于：<strong>其忽略了utterances之间的关系。</strong>譬如说：一个utterance可以是对上一个utterance的肯定、否定，或者是开启一个新的topic，但是word sequence model无法捕捉到这样的信息。再说明白点，word sequence model无法很好地处理多轮对话。<strong>所以，Multi-view模型通过在utterance level进行建模，并与word level进行combine，从而大幅提升在respone selection任务中的表现。</strong></p>
+<h3 id="模型结构">模型结构</h3>
+<p>首先介绍传统的word sequence model处理多轮对话的思路：将多轮对话首尾连接成一条长长的文本，从而输送到网络中。就是下面这个样子：</p>
+<p><img src="/2020/05/15/NLP-chatbot%E7%B3%BB%E5%88%97-Multi-view/word sequence modle.jpg" style="zoom: 67%;"></p>
+<p>其中，<code>_sos_</code>是两个utterance之间的连接符。再将句子使用GRU进行encoder之后，我们使用GRU的最后一个hidden state来计算confidence，即匹配度。公式如下： <span class="math display">\[
+p(y=1|c,r)=\sigma (cWr+b)
+\]</span> 其中，<span class="math inline">\(c，r\)</span>表示context1与response，<span class="math inline">\(\sigma\)</span>是sigmoid函数。但是仅仅在word level进行建模是不够的，Multi-view模型更是在utterance level进进行建模，从而期望得到更高层次的语义表示。如下</p>
+<p><img src="/2020/05/15/NLP-chatbot%E7%B3%BB%E5%88%97-Multi-view/multi-view.jpg" style="zoom:67%;"></p>
 <p>我在图上标记了一下，因为这个图要分成两部分来看(一开始我看的时候，有点模糊😷)。下面依次解析～</p>
 <ul>
 <li>红框部分是word sequence model，这个没有可说的，与上面说的一样；红框下面的是utterance sequence model部分。</li>
@@ -394,26 +395,25 @@
 <blockquote>
 <p>注意：word level的GRU是context与reponse共享的；utterance level的GRU是context与response共享的，但是两个level之间的GRU不共享参数。</p>
 </blockquote>
-<h3 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h3><p>Multi-view的损失函数是：likehood loss、disagreement loss与 regularization loss。</p>
-<img src="/2020/05/15/NLP-chatbot%E7%B3%BB%E5%88%97-Multi-view/loss.jpg" style="zoom:50%;">
-
-<p>其中，$p_w(l_i)、p_u(l_i)$分别表示word level与utterance level的是第$i$个label的概率，label取${0,1}$，$\hat p_w(l_i)=1-p_w(l_i)、\hat p_u(l_i)=1-p_u(l_i)$，$\cal L_D、\cal L_L$分别表示disagreement loss与likehood loss。likehood loss很好理解，不过关于disagreement loss，就不是很理解为什么要这么定义了，可能需要再看看其他论文。</p>
+<h3 id="损失函数">损失函数</h3>
+<p>Multi-view的损失函数是：likehood loss、disagreement loss与 regularization loss。</p>
+<p><img src="/2020/05/15/NLP-chatbot%E7%B3%BB%E5%88%97-Multi-view/loss.jpg" style="zoom:50%;"></p>
+<p>其中，<span class="math inline">\(p_w(l_i)、p_u(l_i)\)</span>分别表示word level与utterance level的是第<span class="math inline">\(i\)</span>个label的概率，label取<span class="math inline">\(\{0,1\}\)</span>，<span class="math inline">\(\hat p_w(l_i)=1-p_w(l_i)、\hat p_u(l_i)=1-p_u(l_i)\)</span>，<span class="math inline">\(\cal L_D、\cal L_L\)</span>分别表示disagreement loss与likehood loss。likehood loss很好理解，不过关于disagreement loss，就不是很理解为什么要这么定义了，可能需要再看看其他论文。</p>
 <p>在预测的时候，我们对每一个response的置信度的公式如下：</p>
-<img src="/2020/05/15/NLP-chatbot%E7%B3%BB%E5%88%97-Multi-view/预测.jpg" style="zoom:50%;">
-
+<p><img src="/2020/05/15/NLP-chatbot%E7%B3%BB%E5%88%97-Multi-view/预测.jpg" style="zoom:50%;"></p>
 <p>最后，我们从candidate中选出置信度最大的response，即可。</p>
-<h3 id="details"><a href="#details" class="headerlink" title="details"></a>details</h3><ul>
-<li><p>数据集：UDC(ubuntu corpus)</p>
-</li>
-<li><p>评价指标：1 in m Recall@k，在m个候选回复中，合理回复出现在前k个就算成功。1 in 2 Recall@1，就是二分类中的recall。</p>
-</li>
-<li><p>training details：采用Glove词向量，GRU的hidden units为200，kernel数目为200，初始学习率为0.01，batch size为32，4-5个epochs就收敛了。</p>
-</li>
+<h3 id="details">details</h3>
+<ul>
+<li><p>数据集：UDC(ubuntu corpus)</p></li>
+<li><p>评价指标：1 in m Recall@k，在m个候选回复中，合理回复出现在前k个就算成功。1 in 2 Recall@1，就是二分类中的recall。</p></li>
+<li><p>training details：采用Glove词向量，GRU的hidden units为200，kernel数目为200，初始学习率为0.01，batch size为32，4-5个epochs就收敛了。</p></li>
 </ul>
-<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><img src="/2020/05/15/NLP-chatbot%E7%B3%BB%E5%88%97-Multi-view/结果1.jpg" style="zoom:50%;">
-
+<h3 id="结果">结果</h3>
+<p><img src="/2020/05/15/NLP-chatbot%E7%B3%BB%E5%88%97-Multi-view/结果1.jpg" style="zoom:50%;"></p>
 <p>可以看到，结果确实非常好～论文中还去探索了<code>_sos_</code>tag的作用，也探索了不同数目的utterance对结果的影响，感兴趣的童鞋可以看原始论文，个人认为这篇论文写的非常好，非常值得一读～</p>
-<h2 id="Multi-view模型实现"><a href="#Multi-view模型实现" class="headerlink" title="Multi-view模型实现"></a>Multi-view模型实现</h2><h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>Multi-view Response Selection for Human-Computer Conversation</p>
+<h2 id="multi-view模型实现">Multi-view模型实现</h2>
+<h2 id="参考文献">参考文献</h2>
+<p>Multi-view Response Selection for Human-Computer Conversation</p>
 
     </div>
 

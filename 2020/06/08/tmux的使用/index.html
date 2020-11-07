@@ -348,22 +348,23 @@
     <div class="post-body" itemprop="articleBody">
         <p>以前一直不知道为何大家推崇tmux，最近使用了一段时间的tmux后，同时配合着iterm2，发觉真香！🤩网上的教程很多，但是很多细节没有说到，导致我最开始接触tmux的时候，费了一两个小时才算入手，所以就打算写写tmux的使用。</p>
 <a id="more"></a>
-
-<h2 id="tmux简介"><a href="#tmux简介" class="headerlink" title="tmux简介"></a>tmux简介</h2><p>详细的就不介绍了，它最大的作用就在于：可以让你同时使用多个终端，同时还可以保存下来，必要的时候，然后再次加载回来，非常方便。tmux中有三个非常重要的概念：<strong>会话(session)、窗口(window)、窗格(pane)**，他们的关系是：</strong>一个会话可以有多个窗口，一个窗口可以有多个窗格。**下面讲讲tmux的常用命令。</p>
+<h2 id="tmux简介">tmux简介</h2>
+<p>详细的就不介绍了，它最大的作用就在于：可以让你同时使用多个终端，同时还可以保存下来，必要的时候，然后再次加载回来，非常方便。tmux中有三个非常重要的概念：<strong>会话(session)、窗口(window)、窗格(pane)</strong>，他们的关系是：<strong>一个会话可以有多个窗口，一个窗口可以有多个窗格。</strong>下面讲讲tmux的常用命令。</p>
 <blockquote>
 <p>注意：以下操作建立在已经安装好tmux以及oh my tmux的基础上！</p>
 </blockquote>
-<h2 id="tmux常用命令"><a href="#tmux常用命令" class="headerlink" title="tmux常用命令"></a>tmux常用命令</h2><ul>
+<h2 id="tmux常用命令">tmux常用命令</h2>
+<ul>
 <li>要创建会话，使用命令：<code>tmux new -s 会话名称</code>；</li>
 <li>要创建新的窗口，使用命令：<code>ctrl+A</code>，然后再按<code>C</code>键，注意，这两个操作是分开的，不是一起按</li>
 <li>要显示该会话下的所有窗口，使用命令：<code>ctrl+A</code>，然后再按<code>W</code>键，注意，这两个操作是分开的，不是一起按</li>
 <li>要切换窗口，使用命令：<code>ctrl+A+l</code></li>
 <li>要关闭窗口，使用命令：<code>ctrl+A</code>，然后使用<code>shift+&amp;</code>，注意，这两个操作是分开的，不是一起按</li>
-<li>分割窗格，使用命令：<code>ctrl+A</code>，然后使用<code>shift+%</code>（纵向分割）或者<code>shift+&quot;</code>（横向分割）</li>
+<li>分割窗格，使用命令：<code>ctrl+A</code>，然后使用<code>shift+%</code>（纵向分割）或者<code>shift+"</code>（横向分割）</li>
 <li>要关闭当前窗格，使用命令：<code>ctrl+A</code>，然后再按<code>x</code>键，注意，这两个操作是分开的，不是一起按</li>
 <li>要选择同一窗口的不同窗格，使用命令：<code>ctrl+A</code>，然后再按<code>上下左右</code>键，注意，这两个操作是分开的，不是一起按</li>
 <li>要杀死所有会话，使用命令：<code>tmux kill-server</code></li>
-<li>要杀死指定的会话，使用命令：<code>tmux kill-session -t 会话名称 </code></li>
+<li>要杀死指定的会话，使用命令：<code>tmux kill-session -t 会话名称</code></li>
 <li>要进入指定的会话，使用命令：<code>tmux a -t 会话名称</code></li>
 <li>要查看目前所有的会话，使用命令：<code>tmux ls</code></li>
 <li>保存当前会话，使用命令：<code>ctrl+b</code>，然后再按<code>d</code>键，注意，这两个操作是分开的，不是一起按</li>
