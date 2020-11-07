@@ -3867,9 +3867,9 @@ L^{*(t)}=-\frac{1}{2}\mathop{\sum}\limits_{j=1}^{T}\frac{G_j^2}{H_j+\lambda}+\ga
       </categories>
       <tags>
         <tag>机器学习</tag>
+        <tag>python</tag>
         <tag>集成学习</tag>
         <tag>XGBoost</tag>
-        <tag>python</tag>
         <tag>GBDT</tag>
       </tags>
   </entry>
