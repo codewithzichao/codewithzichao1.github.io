@@ -2477,7 +2477,7 @@ p(y=1|c,r)=\sigma (cWr+b)</script><p>其中，$c，r$表示context1与response�
   <entry>
     <title>NLP|分类与匹配的各类评价指标</title>
     <url>/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/</url>
-    <content><![CDATA[<p>文本和匹配基本上都看的差不多了，该实现的也都实现了。不过由于文本与匹配的应用场景非常多，并且每个场景所采用的评价指标都不太一样，有点混乱，所以在此总结一下。</p>
+    <content><![CDATA[<p>由于文本与匹配的应用场景非常多，并且每个场景所采用的评价指标都不太一样，有点混乱，所以在此总结一下。</p>
 <a id="more"></a>
 <h2 id="各类指标"><a href="#各类指标" class="headerlink" title="各类指标"></a>各类指标</h2><p>首先记录一下符号：TP(true positive)、FP(false positive)、FN(false nergative)、TN(true negative)。表格如下：</p>
 <div class="table-container">
