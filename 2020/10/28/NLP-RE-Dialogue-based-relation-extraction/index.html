@@ -62,7 +62,7 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_result.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_result_ablation.jpg">
 <meta property="article:published_time" content="2020-10-27T16:56:48.000Z">
-<meta property="article:modified_time" content="2020-11-07T17:24:30.311Z">
+<meta property="article:modified_time" content="2020-11-07T17:27:52.972Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="dialogue-based RE">
@@ -263,7 +263,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-11-08 01:24:30" itemprop="dateModified" datetime="2020-11-08T01:24:30+08:00">2020-11-08</time>
+                <time title="Modified: 2020-11-08 01:27:52" itemprop="dateModified" datetime="2020-11-08T01:27:52+08:00">2020-11-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -321,21 +321,16 @@
 <p>我们首先定义一些符号：<span class="math inline">\(O_i\)</span>表示前<span class="math inline">\(i\)</span>轮对话中，使用模型预测得出的argument pair<span class="math inline">\((a_1,a_2)\)</span>的relation type set，<span class="math inline">\(L\)</span>表示在整个对话中argument pair<span class="math inline">\((a_1,a_2)\)</span>的真实的relation type set，<span class="math inline">\(R\)</span>表示所有的36个relation type，所以：<span class="math inline">\(O_i,L\in R\)</span>；我们定义辅助函数<span class="math inline">\(j(x)\)</span>，如果<span class="math inline">\(x\)</span>不出现在<span class="math inline">\(D\)</span>中，那么返回<span class="math inline">\(m\)</span>，否则的话，返回<span class="math inline">\(x\)</span>第一次出现的对话轮数<span class="math inline">\(i\)</span>；我们定义辅助函数<span class="math inline">\(i(r)\)</span>，表示：对于每一个relation type <span class="math inline">\(r\in L\)</span>，如果存在一个trigger for <span class="math inline">\(r\)</span>，那么<span class="math inline">\(i(r)=j(\lambda_r)\)</span>，其中<span class="math inline">\(\lambda_r\)</span>表示trigger，否则<span class="math inline">\(i(r)=m\)</span>，对于relation <span class="math inline">\(r{\in} R {\text \ }L\)</span>，<span class="math inline">\(i(r)=1\)</span>。我们使用<span class="math inline">\(E_i\)</span>表示前<span class="math inline">\(i\)</span>轮可以评估的relation type set，如下： <span class="math display">\[
 \begin{align}E_i=\{r|i\geq max\{j(a_1),j(a_2),i(r)\}\} \end{align}
 \]</span> <span class="math inline">\(E_i\)</span>的意思是：在前<span class="math inline">\(i\)</span>轮对话中，如果出现了<span class="math inline">\(a_1,a_2\)</span>以及与relation <span class="math inline">\(r\)</span>相关的trigger的话，那么relation <span class="math inline">\(r\)</span>就是可评估的，也就是说作为候选。之所以这样定义，是因为这样做可以知道对于每一个argument pair，我们大致可以推算预测其relation大概需要多少轮数。之后，我们定义conversation precision与recall依旧conversation F1，如下： <span class="math display">\[
-\begin{align}
-\\
 P_c(D,a_1,a_2)=\frac{\sum_{i=1}^{m}|O_i\cap L\cap E_i|}{\sum_{i=1}^{m}|O_i\cap E_i|} \\
 R_c(D,a_1,a_2)=\frac{\sum_{i=1}^{m}|O_i\cap L\cap E_i|}{\sum_{i=1}^{m}|L\cap E_i|} \\
 P_c=\frac{\sum_{D^{\prime},a_1^{\prime},a_2^{\prime}}P_c(D^{\prime},a_1^{\prime},a_2^{\prime})}{\sum_{D^{\prime},a_1^{\prime},a_2^{\prime}}1} \\
 R_c=\frac{\sum_{D^{\prime},a_1^{\prime},a_2^{\prime}}R_c(D^{\prime},a_1^{\prime},a_2^{\prime})}{\sum_{D^{\prime},a_1^{\prime},a_2^{\prime}}1} \\
-F1_c=\frac{2P_cR_c}{P_c+R_c}\\
-\end{align}
+F1_c=\frac{2P_cR_c}{P_c+R_c}
 \]</span></p>
 <h3 id="baseline">Baseline</h3>
 <p>在paper中，介绍了四种baseline：Majority、CNN/LSTM/BILSTM、BERT、BERT<span class="math inline">\(_s\)</span>。所谓的Majority就是：如果一个argument pair的relation没出现在training set当中，那么输出training set中数目最大的relation type，否则的话，输出与argument pair最相关的relation type；CNN/LSTM/BILSTM指的是：采用CNN/LSTM/BILSTM作为编码器；BERT指的是：采用BERT以及BERT-like预训练模型作为编码器，不过其输入格式是：<span class="math inline">\([CLS]d[SEP]a_1[SEP]a_2[SEP]\)</span>；BERT<span class="math inline">\(_s\)</span>是作者所改进的一个方法，指的是：仍然采用BERT以及BERT-like预训练模型作为编码器，但是其输入格式是：<span class="math inline">\([CLS]\hat d[SEP]\hat a_1[SEP]\hat a_2[SEP]\)</span>，其中： <span class="math display">\[
-\begin{align}
 \hat d=\hat s_1:\hat t_1,...,\hat s_n:\hat t_n \\
 \hat s_i=\begin{cases}[S1] &amp; if \ s_i=a_1 \\ [S2] &amp; if \ s_1=a_2 \\ s_1 &amp; otherwise \end{cases}
-\end{align}
 \]</span> 其中，<span class="math inline">\([S1],[S2]\)</span>表示两个新的特殊的token。</p>
 <h3 id="experiment">Experiment</h3>
 <p>放一下上述四种方法在DialogRE数据集上的结果:</p>

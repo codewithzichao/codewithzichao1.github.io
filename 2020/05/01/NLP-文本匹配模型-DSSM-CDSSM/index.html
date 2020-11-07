@@ -304,44 +304,32 @@
       
         <p>正式开始看文本匹配的东西啦！文本匹配对NLPer来说是很重要的，不管是最后是做对话、推荐、搜索，文本匹配都是必不可少的。当然啦，BERT系列的模型出来之后，其实传统的深度学习模型效果是远远比不上的。不过这些预训练模型效果好是好，但是训练代价昂贵，当然啦，有人会说，现在已经有剪枝、量化、蒸馏这样的方法来减小预训练模型的大小，从而降低训练所需的代价(所以说模型压缩、加速这个方向还是很有前景的🤩咦，好像跑偏了，anyway)，但是这仍然远远不够，所以熟悉传统的文本匹配模型是非常有必要的。本篇博客讲解经典的DSSM/CDSSM模型，并采用tensorflow2实现。</p>
 <a id="more"></a>
-<h2 id="dssm模型介绍">DSSM模型介绍</h2>
-<p>DSSM模型来源于2013年《Learning Deep Structured Semantic Models for Web Search using Clickthrough Data》论文。由于是13年的论文，所以其实整体思想还是很简单的，直接放图吧～</p>
-<p><img src="/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-DSSM-CDSSM/DSSM.jpg"></p>
-<p><span class="math inline">\(x\)</span>表示term vector， 表示输出向量，<span class="math inline">\(l_i,i=1,...,N\)</span> 表示隐藏层， <span class="math inline">\(W_i\)</span> 表示第<span class="math inline">\(i\)</span>层的参数矩阵，<span class="math inline">\(b_i\)</span>表示 第<span class="math inline">\(i\)</span>个偏置项。</p>
-<figure>
-<img src="https://www.zhihu.com/equation?tex=l_%7B1%7D%3DW_%7B1%7Dx+%5C%5C+l_%7Bi%7D%3Df%28W_%7Bi%7Dl_%7Bi-1%7D%2Bb_%7Bi%7D%29%2Ci%3D2%2C...%2CN-1+%5C%5C+y+%3D+f%28W_%7BN%7Dl_%7BN-1%7D%2Bb_%7BN%7D%29+%5C%5C+" alt="[公式]"><figcaption aria-hidden="true">[公式]</figcaption>
-</figure>
-<p>其中，使用 <span class="math inline">\(tanh\)</span> 作为输出层和隐藏层的激活函数。在检索中，使用<span class="math inline">\(Q\)</span>表示query，<span class="math inline">\(D\)</span>表示doc，，那么它们之间的相关度可以使用余弦相似度来衡量。</p>
-<figure>
-<img src="https://www.zhihu.com/equation?tex=R%28Q%2CD%29%3Dcosine%28y_%7BQ%7D%2Cy_%7BD%7D%29%3D%5Cfrac%7By_%7BQ%7D%5E%7BT%7Dy_%7BD%7D%7D%7B%5Cleft+%5C%7C+y_%7BQ%7D%5Cright%5C%7C+%5Cleft+%5C%7C+y_%7BD%7D%5Cright%5C%7C%7D+%5C%5C" alt="[公式]"><figcaption aria-hidden="true">[公式]</figcaption>
-</figure>
+<h2 id="DSSM模型介绍"><a href="#DSSM模型介绍" class="headerlink" title="DSSM模型介绍"></a>DSSM模型介绍</h2><p>DSSM模型来源于2013年《Learning Deep Structured Semantic Models for Web Search using Clickthrough Data》论文。由于是13年的论文，所以其实整体思想还是很简单的，直接放图吧～</p>
+<p><img src="/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-DSSM-CDSSM/DSSM.jpg" alt></p>
+<p>$x$表示term vector， 表示输出向量，$l_i,i=1,…,N$ 表示隐藏层， $W_i$ 表示第$i$层的参数矩阵，$b_i$表示 第$i$个偏置项。</p>
+<p><img src="https://www.zhihu.com/equation?tex=l_%7B1%7D%3DW_%7B1%7Dx+%5C%5C+l_%7Bi%7D%3Df%28W_%7Bi%7Dl_%7Bi-1%7D%2Bb_%7Bi%7D%29%2Ci%3D2%2C...%2CN-1+%5C%5C+y+%3D+f%28W_%7BN%7Dl_%7BN-1%7D%2Bb_%7BN%7D%29+%5C%5C+" alt="[公式]"></p>
+<p>其中，使用 $tanh$ 作为输出层和隐藏层的激活函数。在检索中，使用$Q$表示query，$D$表示doc，，那么它们之间的相关度可以使用余弦相似度来衡量。</p>
+<p><img src="https://www.zhihu.com/equation?tex=R%28Q%2CD%29%3Dcosine%28y_%7BQ%7D%2Cy_%7BD%7D%29%3D%5Cfrac%7By_%7BQ%7D%5E%7BT%7Dy_%7BD%7D%7D%7B%5Cleft+%5C%7C+y_%7BQ%7D%5Cright%5C%7C+%5Cleft+%5C%7C+y_%7BD%7D%5Cright%5C%7C%7D+%5C%5C" alt="[公式]"></p>
 <p>在·word2vec还没有兴起之前，一般都是采用BOW构建词汇表，然后使用one-hot进行编码，但是时间上，词汇表会非常大，在DSSM中，使用word hashing的方法，作为模型的第一层。和word2vec比较像，都是将高维稀疏向量转换为低维稠密向量。</p>
-<p><code>Word Hashing</code>是paper非常重要的一个 <code>trick</code>，以英文单词来说，比如 <code>good</code>，他可以写成 <code>#good#</code>，然后按tri-grams来进行分解为 <code>#go goo ood od#</code>，再将这个tri-grams灌入到 <code>bag-of-word</code>中，这种方式可以非常有效的解决 <code>vocabulary</code>太大的问题(因为在真实的web search中vocabulary就是异常的大)，另外也不会出现 <code>oov</code>问题，因此英文单词才26个，3个字母的组合都是有限的，很容易枚举光。</p>
+<p><code>Word Hashing</code>是paper非常重要的一个 <code>trick</code>，以英文单词来说，比如 <code>good</code>，他可以写成 <code>#good#</code>，然后按tri-grams来进行分解为 <code>#go goo ood od#</code>，再将这个tri-grams灌入到 <code>bag-of-word</code>中，这种方式可以非常有效的解决 <code>vocabulary</code>太大的问题(因为在真实的web search中vocabulary就是异常的大)，另外也不会出现 <code>oov</code>问题，因此英文单词才26个，3个字母的组合都是有限的，很容易枚举光。 </p>
 <p>在得到余弦相似度之后，再使用softmax，通过softmax 函数可以把query 与样本 doc 的语义相似性转化为一个后验概率：</p>
-<figure>
-<img src="https://www.zhihu.com/equation?tex=P%28D%7CQ%29%3D%5Cfrac%7Bexp%28%5Cgamma+R%28Q%2CD%29%29%7D%7B%5Csum_%7BD%5E%5Cprime%5Cin+%5Cbold+D%7D%7Bexp%28%5Cgamma+R%28Q%2C+D%5E%5Cprime%29%29%7D%7D+%5C%5C" alt="[公式]"><figcaption aria-hidden="true">[公式]</figcaption>
-</figure>
-<p>其中<span class="math inline">\(\gamma\)</span>是一个softmax函数的平滑因子， <img src="https://www.zhihu.com/equation?tex=%5Cbold+D" alt="[公式]"> 表示被排序的候选文档集合，在实际中，对于正样本，每一个（query， 点击doc）对，使用 <span class="math inline">\((Q,D^+)\)</span>表示；对于负样本，随机选择4个曝光但未点击的doc，用 <img src="https://www.zhihu.com/equation?tex=%5Cleft%5C%7BD_%7Bj%7D%5E%7B-%7D%3B+j%3D1%2C...%2C4%5Cright%5C%7D" alt="[公式]"> 来表示。在训练阶段，通过极大似然估计来最小化损失函数：</p>
-<figure>
-<img src="https://www.zhihu.com/equation?tex=L%28%5CLambda%29+%3D+-log%5Cprod_%7B%28Q%2CD%5E%7B%2B%7D%29%7D%5E%7B%7D+P%28D%5E%7B%2B%7D%7CQ%29+%5C%5C" alt="[公式]"><figcaption aria-hidden="true">[公式]</figcaption>
-</figure>
-<p>其中<span class="math inline">\(\Lambda\)</span>表示神经网络的参数。模型通过随机梯度下降（SGD）来进行优化，最终可以得到各网络层的参数 <span class="math inline">\(W_i,b_i\)</span>。</p>
+<p><img src="https://www.zhihu.com/equation?tex=P%28D%7CQ%29%3D%5Cfrac%7Bexp%28%5Cgamma+R%28Q%2CD%29%29%7D%7B%5Csum_%7BD%5E%5Cprime%5Cin+%5Cbold+D%7D%7Bexp%28%5Cgamma+R%28Q%2C+D%5E%5Cprime%29%29%7D%7D+%5C%5C" alt="[公式]"></p>
+<p>其中$\gamma$是一个softmax函数的平滑因子， <img src="https://www.zhihu.com/equation?tex=%5Cbold+D" alt="[公式]"> 表示被排序的候选文档集合，在实际中，对于正样本，每一个（query， 点击doc）对，使用 $(Q,D^+)$表示；对于负样本，随机选择4个曝光但未点击的doc，用 <img src="https://www.zhihu.com/equation?tex=%5Cleft%5C%7BD_%7Bj%7D%5E%7B-%7D%3B+j%3D1%2C...%2C4%5Cright%5C%7D" alt="[公式]"> 来表示。在训练阶段，通过极大似然估计来最小化损失函数：</p>
+<p><img src="https://www.zhihu.com/equation?tex=L%28%5CLambda%29+%3D+-log%5Cprod_%7B%28Q%2CD%5E%7B%2B%7D%29%7D%5E%7B%7D+P%28D%5E%7B%2B%7D%7CQ%29+%5C%5C" alt="[公式]"></p>
+<p>其中$\Lambda$表示神经网络的参数。模型通过随机梯度下降（SGD）来进行优化，最终可以得到各网络层的参数 $W_i,b_i$。</p>
 <p>DSSM模型的缺点在于：使用word hashing会造成冲突，因为不同的单词有可能产生同样的n-gram；采用词袋模型，损失了上下文结构信息。</p>
-<h2 id="cdssm模型介绍">CDSSM模型介绍</h2>
-<p>CDSSM是DSSM的改进，在DSSM中，由于采用词袋模型来表示输入的query与document，完全丧失了句子本身应有的上下文结构信息，而CDSSM采用词n-gram与卷积池化操作，捕获上下文关系。模型图如下：👇</p>
+<h2 id="CDSSM模型介绍"><a href="#CDSSM模型介绍" class="headerlink" title="CDSSM模型介绍"></a>CDSSM模型介绍</h2><p>CDSSM是DSSM的改进，在DSSM中，由于采用词袋模型来表示输入的query与document，完全丧失了句子本身应有的上下文结构信息，而CDSSM采用词n-gram与卷积池化操作，捕获上下文关系。模型图如下：👇</p>
 <p><img src="/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-DSSM-CDSSM/CDSSM.jpg" style="zoom: 45%;"></p>
 <p><strong>Query/document：</strong>输入的query与doc句子，并且使用了<code>&lt;s&gt;</code>进行填充，保证进行卷积的时候，前后都有词。</p>
 <p><strong>Sliding window</strong> 是定义滑动窗口对输入的句子做n-gram,来获取word-n-gram，文章用的tri-gram。</p>
 <p><strong>word-n-gram layer</strong> 是经过滑窗处理后的word-n-gram 数据。</p>
 <p><strong>Letter-trigram layer</strong> 是对word-n-gram 按原始dssm说的那个把单词用n-gram进行切割的方式进行处理，不过在进行词袋模型统计的时候统计的是word-n-gram了，不再是整个句子。</p>
 <p><strong>卷积层：</strong>一维卷积。</p>
-<p><strong>max-pooling ：</strong>池化层也是经常和卷积一起配合使用的操作了，这里之所以选择max-pooling是因为，语义匹配的目的是为了找到query和doc之间的相似度，那么就需要去找到两者相似的点，max-pooling则可以找到整个特征图中最重要的点，而avg-pooling则容易把重要的信息平均掉。 之后加一层全连接，损失函数什么的都与DSSM一样。</p>
-<h2 id="cdssm模型实现">CDSSM模型实现</h2>
-<h2 id="参考文献">参考文献</h2>
-<p>Learning Deep Structured Semantic Models for Web Search using Clickthrough Data</p>
+<p><strong>max-pooling ：</strong>池化层也是经常和卷积一起配合使用的操作了，这里之所以选择max-pooling是因为，语义匹配的目的是为了找到query和doc之间的相似度，那么就需要去找到两者相似的点，max-pooling则可以找到整个特征图中最重要的点，而avg-pooling则容易把重要的信息平均掉。<br>之后加一层全连接，损失函数什么的都与DSSM一样。</p>
+<h2 id="CDSSM模型实现"><a href="#CDSSM模型实现" class="headerlink" title="CDSSM模型实现"></a>CDSSM模型实现</h2><h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>Learning Deep Structured Semantic Models for Web Search using Clickthrough Data</p>
 <p>A Latent Semantic Model with Convolutional-Pooling Structure for Information Retrieval</p>
-<p>https://zhuanlan.zhihu.com/p/53326791</p>
-<p>https://www.cnblogs.com/wmx24/p/10157154.html</p>
+<p><a href="https://zhuanlan.zhihu.com/p/53326791" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/53326791</a></p>
+<p><a href="https://www.cnblogs.com/wmx24/p/10157154.html" target="_blank" rel="noopener">https://www.cnblogs.com/wmx24/p/10157154.html</a></p>
 
     </div>
 
@@ -427,7 +415,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#dssm模型介绍"><span class="nav-number">1.</span> <span class="nav-text">DSSM模型介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cdssm模型介绍"><span class="nav-number">2.</span> <span class="nav-text">CDSSM模型介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cdssm模型实现"><span class="nav-number">3.</span> <span class="nav-text">CDSSM模型实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#DSSM模型介绍"><span class="nav-number">1.</span> <span class="nav-text">DSSM模型介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CDSSM模型介绍"><span class="nav-number">2.</span> <span class="nav-text">CDSSM模型介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CDSSM模型实现"><span class="nav-number">3.</span> <span class="nav-text">CDSSM模型实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

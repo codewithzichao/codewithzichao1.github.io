@@ -301,60 +301,63 @@
       
         <p>近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解一下《A Lexicon-Based Graph Neural Network for Chinese NER》论文，即：LGN模型，有意思的是，这篇论文与LRCNN是同一个作者。</p>
 <a id="more"></a>
-<h2 id="lgn模型提出的背景">LGN模型提出的背景</h2>
-<p>LGN着眼解决的问题与LRCNN模型是一样的（两个模型来自于同一作者），就是LatticeLSTM中存在着一个问题：lexicon conflicts。在LRCNN模型中，是通过rethinking mechanism来解决，而在LGN模型中，则是通过GNN来进行解决这个问题，那么为什么可以用GNN来解决呢？因为对于word conflicts问题，很重要的就是要利用句子的全局信息和高层特征来进行解决，而GNN对于全局信息的建模和聚合有着非常强大的能力。具体是怎么解决的将在下面几小节具体说明。</p>
-<h2 id="lgn模型介绍">LGN模型介绍</h2>
-<p>先放图～</p>
-<p><img src="/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/graph.jpg"></p>
-<ol type="1">
+<h2 id="LGN模型提出的背景"><a href="#LGN模型提出的背景" class="headerlink" title="LGN模型提出的背景"></a>LGN模型提出的背景</h2><p>LGN着眼解决的问题与LRCNN模型是一样的（两个模型来自于同一作者），就是LatticeLSTM中存在着一个问题：lexicon conflicts。在LRCNN模型中，是通过rethinking mechanism来解决，而在LGN模型中，则是通过GNN来进行解决这个问题，那么为什么可以用GNN来解决呢？因为对于word conflicts问题，很重要的就是要利用句子的全局信息和高层特征来进行解决，而GNN对于全局信息的建模和聚合有着非常强大的能力。具体是怎么解决的将在下面几小节具体说明。</p>
+<h2 id="LGN模型介绍"><a href="#LGN模型介绍" class="headerlink" title="LGN模型介绍"></a>LGN模型介绍</h2><p>先放图～</p>
+<p><img src="/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/graph.jpg" alt></p>
+<ol>
 <li><p><strong>图的构建及node与edge的初始化</strong>。既然使用了GNN来解决，那么首先需要解决的问题就是：<strong>如何构建图？</strong></p>
-<ol type="1">
+<ol>
 <li>node：在LGN模型中，sentence中的char当作node，node的初始化并不是直接使用char embedding，而是将其输入到LSTM当中，输出的结果当作node的初始化；</li>
 <li>edge：lexicon中的word被当作edge，(edge的初始化直接使用word embedding即可)，edge的指向是从首个字指向尾个字，以此来构建一个有向图。</li>
 <li>global relay node：此外，在LGN中，还设置了全局中继节点来获取全局信息来用以解决word conflicts问题。</li>
-<li>使用公式来表示：假设句子表示为：<span class="math inline">\(s=\{c_1,c_2,...,c_n\}\)</span>，<span class="math inline">\(c_i\)</span>表示第<span class="math inline">\(i\)</span>个字，lexicon中的word表示为：<span class="math inline">\(w_{b,e}=\{c_b,c_{b+1},...,c_{e-1},c_e\}\)</span>，<span class="math inline">\(b,e\)</span>分别表示该词的首部与尾部的index，整个图表示为：<span class="math inline">\(\cal G=(V,E)\)</span>，<span class="math inline">\(c_i\in \cal V\)</span>，<span class="math inline">\(e_{b,e}\in \cal E\)</span>。除此之外，原图转置后的反向图表示为：<span class="math inline">\(\cal G^T\)</span>。我们最终的是</li>
-</ol></li>
+<li>使用公式来表示：假设句子表示为：$s=\{c_1,c_2,…,c_n\}$，$c_i$表示第$i$个字，lexicon中的word表示为：$w_{b,e}=\{c_b,c_{b+1},…,c_{e-1},c_e\}$，$b,e$分别表示该词的首部与尾部的index，整个图表示为：$\cal G=(V,E)$，$c_i\in \cal V$，$e_{b,e}\in \cal E$。除此之外，原图转置后的反向图表示为：$\cal G^T$。我们最终的是</li>
+</ol>
+</li>
 <li><p><strong>图的Local Aggregation。</strong>local aggregation分为两大部分：node aggregation和edge aggregation。下面依次介绍。</p>
-<ol type="1">
+<ol>
 <li>node aggregation其实和普通的GNN一样，就是聚合其邻域特征，在这里，使用transformer中的multihead attention来进行聚合，具体公式如下：</li>
 </ol>
-<p><span class="math display">\[
-e\rightarrow c:\tilde c_i^t=MultiAtt(c^t_i,\{\forall [c^t_k,e^t_{k,i}]\})
-\]</span></p>
-<p>其中，<span class="math inline">\(\tilde c^t_i\)</span>表示第i个char的第t次step aggregate之后的结果(个人理解是为计算<span class="math inline">\(c^{t+1}_i\)</span>做准备)，<span class="math inline">\(c^t_i\)</span>表示第i个char的第t次step的结果，<span class="math inline">\(e^{t}_{k,i}\)</span>表示第t次step的index从k到i的edge的state。</p>
-<ol start="2" type="1">
-<li>edge aggregation也是一样，聚合其邻域特征。对于<span class="math inline">\(e^t_{b,e}\)</span>，它的邻域特征有index从b到e的所有char的信息。所以同样通过multihead attention来进行聚合，具体公式如下： <span class="math display">\[
-c\rightarrow e:\tilde e^{t}_{b,e}=MultiAtt(e^t_{b,e},C^t_{b,e})
-\]</span> 其中<span class="math inline">\(C^t_{b,e}\)</span>表示index从b到e的char sequence embedding。</li>
-</ol></li>
-<li><p><strong>Global aggregation。</strong>由于句子并不是完全的sequential的，所以为了捕获长期依赖和高层特征，在LGN当中设置了global relay node来aggregate node和edge。具体公式如下： <span class="math display">\[
+<script type="math/tex; mode=display">
+e\rightarrow c:\tilde c_i^t=MultiAtt(c^t_i,\{\forall [c^t_k,e^t_{k,i}]\})</script><p>其中，$\tilde c^t_i$表示第i个char的第t次step aggregate之后的结果(个人理解是为计算$c^{t+1}_i$做准备)，$c^t_i$表示第i个char的第t次step的结果，$e^{t}_{k,i}$表示第t次step的index从k到i的edge的state。</p>
+<ol>
+<li>edge aggregation也是一样，聚合其邻域特征。对于$e^t_{b,e}$，它的邻域特征有index从b到e的所有char的信息。所以同样通过multihead attention来进行聚合，具体公式如下：<script type="math/tex; mode=display">
+c\rightarrow e:\tilde e^{t}_{b,e}=MultiAtt(e^t_{b,e},C^t_{b,e})</script>其中$C^t_{b,e}$表示index从b到e的char sequence embedding。</li>
+</ol>
+</li>
+<li><p><strong>Global aggregation。</strong>由于句子并不是完全的sequential的，所以为了捕获长期依赖和高层特征，在LGN当中设置了global relay node来aggregate node和edge。具体公式如下：</p>
+<script type="math/tex; mode=display">
 g^t_c=MultiAtt(g^t,C^t_{1,n}) \\
 g^t_e=MultiAtt(g^t,\{\forall e^t\in\cal E\}) \\
-c,e\rightarrow g:\tilde g^t=[g^t_c;g^t_e]
-\]</span> 其中，<span class="math inline">\(C^t_{1,n}\)</span>表示第t个step的整个句子的hidden state，<span class="math inline">\(g^t\)</span>表示的是第t个step整个图的全局信息。</p></li>
+c,e\rightarrow g:\tilde g^t=[g^t_c;g^t_e]</script><p>其中，$C^t_{1,n}$表示第t个step的整个句子的hidden state，$g^t$表示的是第t个step整个图的全局信息。</p>
+</li>
 <li><p><strong>Node update。</strong>在进行聚合之后，就要开始对node进行更新。具体公司如下：</p>
 <p><img src="/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/node update.jpg" style="zoom:50%;"></p>
-<p>其中，<span class="math inline">\(\cal X^t_i\)</span>表示的是node i与全局中继节点<span class="math inline">\(\tilde g^{t-1}\)</span>的concat，<span class="math inline">\(\xi ^t_i\)</span>表示的是bigram的concat，这个实际上和LSTM有点像。</p></li>
+<p>其中，$\cal X^t_i$表示的是node i与全局中继节点$\tilde g^{t-1}$的concat，$\xi ^t_i$表示的是bigram的concat，这个实际上和LSTM有点像。</p>
+</li>
 <li><p><strong>Edge update。</strong>这个与node update是一样的。具体公式如下：</p>
 <p><img src="/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/edge update.jpg" style="zoom:50%;"></p>
-<p>其中，<span class="math inline">\(\cal X^t_{b,e}\)</span>表示的是aggregation edge <span class="math inline">\(\tilde e^{t-1}_{b,e}\)</span>与全局中继节点<span class="math inline">\(\tilde g^{t-1}\)</span>的concat。</p></li>
+<p>其中，$\cal X^t_{b,e}$表示的是aggregation edge $\tilde e^{t-1}_{b,e}$与全局中继节点$\tilde g^{t-1}$的concat。</p>
+</li>
 <li><p><strong>Global relay node update。</strong>与上述一样，不再赘述，具体公式如下：</p>
-<p><img src="/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/relay node update.jpg" style="zoom:50%;"></p></li>
-<li><p>重复2-6步骤若干次，之后接入CRF，这没什么可以说的。</p></li>
+<p><img src="/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/relay node update.jpg" style="zoom:50%;"></p>
+</li>
+<li><p>重复2-6步骤若干次，之后接入CRF，这没什么可以说的。</p>
+</li>
 </ol>
-<h2 id="实验结果">实验结果</h2>
-<ol type="1">
-<li><p>数据集：OntoNotes、MSRA、Weibo、Resume</p></li>
-<li><p>参数设置：Adam optimizer(learning rate=2e-5 on MSRA and OntoNotes, 2e-4 on Weibo and resume)；droput(0.5 on embedding ,0.2 on aggregation module)；embedding size and state size is 50；</p></li>
+<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><ol>
+<li><p>数据集：OntoNotes、MSRA、Weibo、Resume</p>
+</li>
+<li><p>参数设置：Adam optimizer(learning rate=2e-5 on MSRA and OntoNotes, 2e-4 on Weibo and resume)；droput(0.5 on embedding ,0.2 on aggregation module)；embedding size and state size is 50；</p>
+</li>
 <li><p>结果</p>
-<p><img src="/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/msra_and_weibo.jpg"></p>
+<p><img src="/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/msra_and_weibo.jpg" alt></p>
 <p><img src="/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/resume.jpg" style="zoom:50%;"></p>
-<p><img src="/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/ontonotes.jpg" style="zoom:50%;"></p></li>
+<p><img src="/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/ontonotes.jpg" style="zoom:50%;"></p>
+</li>
 </ol>
 <p>从结果来看，要比LatticeLSTM要好，但是有意思的是，这个结果要比这个作者提出的LRCNN要差一些，我查了一下，都是19年发的，一个在emnlp(this paper)，一个在ijcai，anyway，enjoy。</p>
-<h2 id="参考文献">参考文献</h2>
-<p>《A Lexicon-Based Graph Neural Network for Chinese NER》</p>
-<p>code：https://github.com/RowitZou/LGN</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>《A Lexicon-Based Graph Neural Network for Chinese NER》</p>
+<p>code：<a href="https://github.com/RowitZou/LGN" target="_blank" rel="noopener">https://github.com/RowitZou/LGN</a></p>
 
     </div>
 
@@ -438,7 +441,7 @@ c,e\rightarrow g:\tilde g^t=[g^t_c;g^t_e]
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#lgn模型提出的背景"><span class="nav-number">1.</span> <span class="nav-text">LGN模型提出的背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lgn模型介绍"><span class="nav-number">2.</span> <span class="nav-text">LGN模型介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验结果"><span class="nav-number">3.</span> <span class="nav-text">实验结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#LGN模型提出的背景"><span class="nav-number">1.</span> <span class="nav-text">LGN模型提出的背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LGN模型介绍"><span class="nav-number">2.</span> <span class="nav-text">LGN模型介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验结果"><span class="nav-number">3.</span> <span class="nav-text">实验结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

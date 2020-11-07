@@ -55,7 +55,7 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/0.0..png">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/0.%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84%E6%A6%82%E8%A7%88.png">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/1.encoder-decoder%E5%86%85%E9%83%A8%E6%9E%B6%E6%9E%84.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/2.scaled%20-dot-product%20.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/2.scaled%20-dot-product%20%20.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/3.qkv%E7%9A%84%E8%AE%A1%E7%AE%97.png">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/4.QKscore.png">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/5.softmax.png">
@@ -310,16 +310,13 @@
       
         <p>目前为止，已经学了很多东西，但是没有输出，总感觉似乎少了点什么。这片博客将回顾经典的Transformer模型。Transformer模型是Google在2017年所提出的模型。该模型抛弃了传统的RNN与CNN，全部采用Attention机制，结果证明其在当时取得了SOTA的效果，得到了广泛的应用。Transformer也是后来大火的BERT中的核心组成部分，所以Transformer模型的提出是非常具有开创性的工作。本文将首先介绍Transformer提出的背景，紧接着详细讲解其内部架构，最后对Transformer做一个小小的总结。</p>
 <a id="more"></a>
-<h2 id="transformer模型提出的原因">Transformer模型提出的原因</h2>
-<p>在基于RNN的seq2seq+attention模型中，由于attention机制的加入，能够很好地解决信息损失与句子长距离依赖问题，但是它存在与普通RNN同样的问题。其t时刻的hidden state依赖于t-1时刻的hidden state与t时刻的输入，只有t-1时刻的hidden state计算完成后，才能够去计算t时刻的hidden state。这样固定的顺序计算在训练时会非常缓慢，无法并行计算，计算效率低下；此外，当训练集非常大的时候，网络的计算量也会变得非常庞大。</p>
+<h2 id="Transformer模型提出的原因"><a href="#Transformer模型提出的原因" class="headerlink" title="Transformer模型提出的原因"></a>Transformer模型提出的原因</h2><p>在基于RNN的seq2seq+attention模型中，由于attention机制的加入，能够很好地解决信息损失与句子长距离依赖问题，但是它存在与普通RNN同样的问题。其t时刻的hidden state依赖于t-1时刻的hidden state与t时刻的输入，只有t-1时刻的hidden state计算完成后，才能够去计算t时刻的hidden state。这样固定的顺序计算在训练时会非常缓慢，无法并行计算，计算效率低下；此外，当训练集非常大的时候，网络的计算量也会变得非常庞大。</p>
 <p>后来，基于CNN的seq2seq+attention模型被提出，它具有基于RNN的seq2seq+attention模型的捕捉长距离依赖的能力，并且可以并行化实现，但是缺点是：输入序列与输出序列越长，计算量越大。</p>
 <p>所以，Transformer模型的提出主要是想在不损害性能的情况下，减少计算量并提高并行效率。</p>
-<h2 id="transformer模型分析">Transformer模型分析</h2>
-<h3 id="transformer模型概览">Transformer模型概览</h3>
-<p>首先，没错，Transformer模型还是encoder-decoder架构，输入序列<span class="math inline">\((x_1,x_2,x_3,...,x_{T_X})\)</span>经过encoder，输出<span class="math inline">\((h_1,h_2,h_3,...,h_{T_X})\)</span>作为decoder的输入，最后经过decoder得到最终的输出序列<span class="math inline">\((y_1,y_2,y_3,..,y_{T_Y})\)</span>。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/0.0..png"></p>
+<h2 id="Transformer模型分析"><a href="#Transformer模型分析" class="headerlink" title="Transformer模型分析"></a>Transformer模型分析</h2><h3 id="Transformer模型概览"><a href="#Transformer模型概览" class="headerlink" title="Transformer模型概览"></a>Transformer模型概览</h3><p>首先，没错，Transformer模型还是encoder-decoder架构，输入序列$(x_1,x_2,x_3,…,x_{T_X})$经过encoder，输出$(h_1,h_2,h_3,…,h_{T_X})$作为decoder的输入，最后经过decoder得到最终的输出序列$(y_1,y_2,y_3,..,y_{T_Y})$。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/0.0..png" alt></p>
 <p>那么再具体一点，在Transformer中，Encoder部分由多个encoder堆叠组成，Decoder部分也是由多个decoder堆叠而成。需要注意的是：<strong>Encoder部分的输出会与Decoder部分的每一个decoder相结合，这是不同的地方。</strong></p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/0.模型架构概览.png"></p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/0.模型架构概览.png" alt></p>
 <p>宏观上的结构我们知道了，最后来看每一个encoder与decoder的内部结构。</p>
 <p><strong>encoder层：</strong>每一个encoder层由两个子层构成。</p>
 <p><strong>第一个子层(multi-head attention layer)：</strong>其输入是前一个encoder层的输出，输入首先进入multi-head attention机制，再接一个残差连接与层归一化；</p>
@@ -330,88 +327,74 @@
 <p><strong>第三个子层(FFN layer)：</strong>其输入是第二个子层的输出，将第二个子层的输出输入到一个全连接的前馈神经网络，再接一个残差连接与层归一化，之后需要再接一个线性转换层，最后通过softmax，得到该decoder层输出的单词。</p>
 <p><strong>这里需要明确的是：在decoder部分，并不是最后一次性把所有的序列全部decode出来，而是像RNN一样，一次只decode一个单词，因为下一个decoder层还需要用到前一个的输出作为输入。</strong></p>
 <p>下面将一一讲解每一个部分。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/1.encoder-decoder内部架构.jpg"></p>
-<h3 id="核心scaled-dot-product-attention与multi-head-attention">核心—Scaled Dot-Product Attention与Multi-Head Attention</h3>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/2.scaled%20-dot-product%20.jpg"></p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/1.encoder-decoder内部架构.jpg" alt></p>
+<h3 id="核心—Scaled-Dot-Product-Attention与Multi-Head-Attention"><a href="#核心—Scaled-Dot-Product-Attention与Multi-Head-Attention" class="headerlink" title="核心—Scaled Dot-Product Attention与Multi-Head Attention"></a>核心—Scaled Dot-Product Attention与Multi-Head Attention</h3><p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/2.scaled -dot-product  .jpg" alt></p>
 <blockquote>
-<p>在这里，首先要理解，传统的attention机制的本质其实可以理解为：输入序列中的元素可以想象为&lt;key,value&gt;对，那么给定target中某个要预测的元素Q，通过计算Q与每个key的相关性，得到每一个key对应value的权重系数（attention weights），再对value进行加和平均，就是最终的attention值（context vector）。在NLP中，key和value常常看做一个值（hidden state）。参看：<a href="https://blog.csdn.net/malefactor/article/details/78767781" target="_blank" rel="noopener">attention机制本质</a></p>
+<p>在这里，首先要理解，传统的attention机制的本质其实可以理解为：输入序列中的元素可以想象为<key,value>对，那么给定target中某个要预测的元素Q，通过计算Q与每个key的相关性，得到每一个key对应value的权重系数（attention weights），再对value进行加和平均，就是最终的attention值（context vector）。在NLP中，key和value常常看做一个值（hidden state）。参看：<a href="https://blog.csdn.net/malefactor/article/details/78767781" target="_blank" rel="noopener">attention机制本质</a></key,value></p>
 </blockquote>
-<p>直接放公式： <span class="math display">\[
-Attention(Q,K,V)=softmax(\frac {QK^{T}}{\sqrt{d_k}})V,
-\]</span></p>
-<p><span class="math display">\[
-MultiHead(Q,K,V)=Concat(head_1,...,head_h)W^O,其中 head_i=Attention(QW_i^Q,KW_i^K,VW_i^V).
-\]</span></p>
-<ol type="1">
-<li>首先理解Scaled Dot-Product Attention中的Q、K、V是怎么得来的。比如给出输入序列的word embedding<span class="math inline">\(x=\{x_1,x_2\}\)</span>，通过线性变换，得到Q、K、V。公式表达如下：</li>
+<p>直接放公式：</p>
+<script type="math/tex; mode=display">
+Attention(Q,K,V)=softmax(\frac {QK^{T}}{\sqrt{d_k}})V,</script><script type="math/tex; mode=display">
+MultiHead(Q,K,V)=Concat(head_1,...,head_h)W^O,其中 head_i=Attention(QW_i^Q,KW_i^K,VW_i^V).</script><ol>
+<li>首先理解Scaled Dot-Product Attention中的Q、K、V是怎么得来的。比如给出输入序列的word embedding$x=\{x_1,x_2\}$，通过线性变换，得到Q、K、V。公式表达如下：</li>
 </ol>
-<p><span class="math display">\[
+<script type="math/tex; mode=display">
 Q=xW^Q,
 K=xW^K,
-V=xW^V.
-\]</span></p>
-<p>其中参数<span class="math inline">\(W^Q,W^K,W^V\)</span>通过网络的训练得出。以下图为例：</p>
-<p>输入：两个单词，Thinking, Machines. 通过嵌入变换会<span class="math inline">\(x_1,x_2\)</span>两个向量[1 x 4]。分别与 <span class="math inline">\(W^Q,W^K,W^V\)</span> 三个矩阵[4x3]做点乘得到，${q_1,q_2},{k_1,k_2},{v_2,v_2} $6个向量[1x3]。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/3.qkv的计算.png"></p>
-<ol start="2" type="1">
+V=xW^V.</script><p>其中参数$W^Q,W^K,W^V$通过网络的训练得出。以下图为例：</p>
+<p>输入：两个单词，Thinking, Machines. 通过嵌入变换会$x_1,x_2$两个向量[1 x 4]。分别与 $W^Q,W^K,W^V$ 三个矩阵[4x3]做点乘得到，${q_1,q_2},{k_1,k_2},{v_2,v_2} $6个向量[1x3]。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/3.qkv的计算.png" alt></p>
+<ol>
 <li>接着，计算self-attention的分数值。该分数表示当我们在encode一个词的时候，对句子其他词的关注程度。我们通过Q与K做点乘得到分数值。以下图为例：</li>
 </ol>
-<p>我们需要计算其他词相对于thinking这个词的分数。首先是thinking自己: <span class="math inline">\(q_1·k_1\)</span>；machines相对于thinking的分数：<span class="math inline">\(q_1·k_2\)</span>。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/4.QKscore.png"></p>
-<ol start="3" type="1">
+<p>我们需要计算其他词相对于thinking这个词的分数。首先是thinking自己: $q_1·k_1$；machines相对于thinking的分数：$q_1·k_2$。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/4.QKscore.png" alt></p>
+<ol>
 <li>对score进行缩放，即规范化，并对score使用softmax，得到分布。以下图为例：</li>
 </ol>
-<p>score之所以需要进行缩放是因为：要使梯度更加稳定。因为当<span class="math inline">\(d_k\)</span>非常大的时候，点乘结果会非常大，如果不做缩放，那么经过sofmax归一化之后，二者差距会非常大，从而使得在反向传播的时候，梯度会非常小，难以训练。譬如：如果不进行缩放，经过softmax的结果是：0.99999...，0.0000000...，这显然不利于之后的计算。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/5.softmax.png"></p>
-<ol start="4" type="1">
+<p>score之所以需要进行缩放是因为：要使梯度更加稳定。因为当$d_k$非常大的时候，点乘结果会非常大，如果不做缩放，那么经过sofmax归一化之后，二者差距会非常大，从而使得在反向传播的时候，梯度会非常小，难以训练。譬如：如果不进行缩放，经过softmax的结果是：0.99999…，0.0000000…，这显然不利于之后的计算。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/5.softmax.png" alt></p>
+<ol>
 <li>将归一化的score与v相乘，得到attention值，并对加权向量值求和， 这将在此位置（对于第一个单词thinking）产生self-attention层的输出。以下图为例：</li>
 </ol>
-<p>最终的输出：<span class="math inline">\(z_1=0.88v_1+0.12v_2\)</span>.</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/6.sum.png"></p>
+<p>最终的输出：$z_1=0.88v_1+0.12v_2$.</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/6.sum.png" alt></p>
 <p>上述是计算的一个单词的attention值，在实际操作中，往往以矩阵形式操作。如下：</p>
 <p>输入是一个[2x4]的矩阵（单词嵌入），每个运算是[4x3]的矩阵，求得Q,K,V。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/7.矩阵计算.png"></p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/7.矩阵计算.png" alt></p>
 <p>Q对K转制做点乘，除以dk的平方根。做一个softmax得到合为1的比例，对V做点乘得到输出Z。那么这个Z就是self-attention的输出，Z的第一行就是thinking的self-attention值，第二行就是machines的self-attention值。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/8.矩阵计算.png"></p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/8.矩阵计算.png" alt></p>
 <p>Scaled Dot-Product Attention大致就讲完了，那么对于Multi-Head Attention，其实就很简单了，就是将上述过程重复H次，然后再concat，最后输出。主要是为了能够并行运算，加快计算效率，看图👇。</p>
 <p>在Multi-Head attention中，我们为每个head维护单独的Q / K / V权重矩阵，从而导致不同的Q / K / V矩阵。 在transformer原文中，使用了8个head，所以最后会得到8个矩阵。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/9.multihead.png"></p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/10..png"></p>
-<p>得到8个矩阵之后，再concat变成一个矩阵，与<span class="math inline">\(W^O\)</span>做点乘后，输入到FFN中。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/11.png"></p>
-<p>Multi-Head Attention部分就讲完了。然而还有一些细节需要关注。我们再回顾一下self-attention的计算公式： <span class="math display">\[
-Attention(Q,K,V)=softmax(\frac {QK^{T}}{\sqrt{d_k}})V,
-\]</span> Q、K、V是由输入与W相乘得到的，输入的维度为：(m,512)，m是一个句子的单词数，512是word embedding的维度，那么Q、K、V的维度是：(m,64)，那么<span class="math inline">\(QK^T\)</span>的维度是：(m,m)。也就是一个attention map，比如说输入是一句话 "i have a dream" 总共4个单词， 这里就会形成一张4x4的注意力机制的图，每一个格子就对应一个权重，如下👇。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/9.multihead.png" alt></p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/10..png" alt></p>
+<p>得到8个矩阵之后，再concat变成一个矩阵，与$W^O$做点乘后，输入到FFN中。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/11.png" alt></p>
+<p>Multi-Head Attention部分就讲完了。然而还有一些细节需要关注。我们再回顾一下self-attention的计算公式：</p>
+<script type="math/tex; mode=display">
+Attention(Q,K,V)=softmax(\frac {QK^{T}}{\sqrt{d_k}})V,</script><p>Q、K、V是由输入与W相乘得到的，输入的维度为：(m,512)，m是一个句子的单词数，512是word embedding的维度，那么Q、K、V的维度是：(m,64)，那么$QK^T$的维度是：(m,m)。也就是一个attention map，比如说输入是一句话 “i have a dream” 总共4个单词， 这里就会形成一张4x4的注意力机制的图，每一个格子就对应一个权重，如下👇。</p>
 <p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/12.jpg" style="zoom:50%;"></p>
 <p><strong>需要注意的是，在encoder中，叫做self-attention，在decoder中，叫做masked self-attention</strong>。所谓的mask，意思就是不给模型看到未来的信息。</p>
 <p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/13.jpg" style="zoom:50%;"></p>
 <p>就比如说，i作为第一个单词，只能有和i自己的attention。have作为第二个单词，有和i, have 两个attention。 a 作为第三个单词，有和i,have,a 前面三个单词的attention。到了最后一个单词dream的时候，才有对整个句子4个单词的attention。</p>
 <p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/14.jpg" style="zoom:50%;"></p>
 <p>这是做完softmax之后的结果。</p>
-<p>对与self-attention来说，就会出现一个问题，如果输入的句子特别长，那就为形成一个 NxN的attention map，这就会导致内存爆炸...所以要么减少batch size多gpu训练，要么剪断输入的长度，还有一个方法是用conv对K,V做卷积减少长度。</p>
+<p>对与self-attention来说，就会出现一个问题，如果输入的句子特别长，那就为形成一个 NxN的attention map，这就会导致内存爆炸…所以要么减少batch size多gpu训练，要么剪断输入的长度，还有一个方法是用conv对K,V做卷积减少长度。</p>
 <p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/15.jpg" style="zoom:50%;"></p>
 <p>对K,V做卷积和stride（stride的话(n,1)是对seq_len单边进行跳跃），会减少seq_len的长度而不会减少hid_dim的长度。所以最后的结果Z还是和原先一样（因为Q没有改变）。mask的话比较麻烦了，作者用的是local attention。</p>
-<p>Encoder和Decoder部分的区别如下： 1、 Encoder部分的self-attention计算的是两两单词之间attention。然后decoder部分计算的就是当前的单词和它前面单词的attention了。 2、 Decoder部分多了一层，Encoder-Decoder的attention，就是将decoder的self attention部分和Encoder部分output进行attention。然后再去Feed Forward。</p>
-<h3 id="positional-encoding">Positional Encoding</h3>
-<p>在transformer中，由于舍弃了CNN与RNN，那么就单词的位置信息就没有被考虑到，这是不合理的。因此，为了解决这个问题，transformer中在encoder与decoder的输入中，添加了positional encoding。维度和embedding的维度一样，这个向量采用了一种很独特的方法来让模型学习到这个值，这个向量能决定当前词的位置，或者说在一个句子中不同的词之间的距离。这个位置向量的具体计算方法有很多种，论文中的计算方法如下： <span class="math display">\[
-PE_{(pos,2i)}=sin(pos/10000^{2i/d_{model}}),
-\]</span></p>
-<p><span class="math display">\[
-PE_{(pos,2i+1)}=cos(pos/10000^{2i/d_{model}}).
-\]</span></p>
-<p>其中pos是指当前词在句子中的位置，i是指向量中每个值的index，可以看出，在<strong>偶数位置，使用正弦编码，在奇数位置，使用余弦编码</strong>。</p>
+<p>Encoder和Decoder部分的区别如下：<br>1、 Encoder部分的self-attention计算的是两两单词之间attention。然后decoder部分计算的就是当前的单词和它前面单词的attention了。<br>2、 Decoder部分多了一层，Encoder-Decoder的attention，就是将decoder的self attention部分和Encoder部分output进行attention。然后再去Feed Forward。</p>
+<h3 id="Positional-Encoding"><a href="#Positional-Encoding" class="headerlink" title="Positional Encoding"></a>Positional Encoding</h3><p>在transformer中，由于舍弃了CNN与RNN，那么就单词的位置信息就没有被考虑到，这是不合理的。因此，为了解决这个问题，transformer中在encoder与decoder的输入中，添加了positional encoding。维度和embedding的维度一样，这个向量采用了一种很独特的方法来让模型学习到这个值，这个向量能决定当前词的位置，或者说在一个句子中不同的词之间的距离。这个位置向量的具体计算方法有很多种，论文中的计算方法如下：</p>
+<script type="math/tex; mode=display">
+PE_{(pos,2i)}=sin(pos/10000^{2i/d_{model}}),</script><script type="math/tex; mode=display">
+PE_{(pos,2i+1)}=cos(pos/10000^{2i/d_{model}}).</script><p>其中pos是指当前词在句子中的位置，i是指向量中每个值的index，可以看出，在<strong>偶数位置，使用正弦编码，在奇数位置，使用余弦编码</strong>。</p>
 <p>最后把这个Positional Encoding与embedding的值相加，作为输入送到下一层。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/16.png"></p>
-<h3 id="layer-normalization">Layer Normalization</h3>
-<p>在transformer中，每一个子层（self-attetion，ffnn）之后都会接一个残缺模块，并且有一个Layer normalization。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/17.png"></p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/16.png" alt></p>
+<h3 id="Layer-Normalization"><a href="#Layer-Normalization" class="headerlink" title="Layer Normalization"></a>Layer Normalization</h3><p>在transformer中，每一个子层（self-attetion，ffnn）之后都会接一个残缺模块，并且有一个Layer normalization。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/17.png" alt></p>
 <p>残差连接很简单，在这里，主要讲解一下Layer normalization。其实所有的normalization都是为了解决covariate shfit问题。就是如果在训练集上已经建立好了x到y的映射，那么如果test set的分布与training set的分布不一样，那么模型效果不会很好。比较著名的就是Batch normalization。通过将输入数据转化为固定均值与方差的数据，从而能够加速训练。而Layer Normalization与BN最大的不同在于，LN是固定住每一层的均值和方差，从而降低covariate shift带来的影响。参看链接：<a href="https://blog.csdn.net/zhangjunhit/article/details/53169308" target="_blank" rel="noopener">Layer Normalization</a></p>
-<h3 id="position-wise-feed-forward-networks">Position-wise Feed-Forward Networks</h3>
-<p>在multi-head attention后，会接一个FFN层，计算公式如下： <span class="math display">\[
-FFN(x)=max(0,xW_1+b_1)W_2+b_2.
-\]</span></p>
-<h3 id="mask">MASK</h3>
-<p>mask 表示掩码，它对某些值进行掩盖，使其在参数更新时不产生效果。Transformer 模型里面涉及两种 mask，分别是 padding mask 和 sequence mask。其中，padding mask 在所有的 scaled dot-product attention 里面都需要用到，而 sequence mask 只有在 decoder 的 self-attention 里面用到。</p>
+<h3 id="Position-wise-Feed-Forward-Networks"><a href="#Position-wise-Feed-Forward-Networks" class="headerlink" title="Position-wise Feed-Forward Networks"></a>Position-wise Feed-Forward Networks</h3><p>在multi-head attention后，会接一个FFN层，计算公式如下：</p>
+<script type="math/tex; mode=display">
+FFN(x)=max(0,xW_1+b_1)W_2+b_2.</script><h3 id="MASK"><a href="#MASK" class="headerlink" title="MASK"></a>MASK</h3><p>mask 表示掩码，它对某些值进行掩盖，使其在参数更新时不产生效果。Transformer 模型里面涉及两种 mask，分别是 padding mask 和 sequence mask。其中，padding mask 在所有的 scaled dot-product attention 里面都需要用到，而 sequence mask 只有在 decoder 的 self-attention 里面用到。</p>
 <p><strong>Padding Mask</strong></p>
 <p>什么是 padding mask 呢？因为每个批次输入序列长度是不一样的也就是说，我们要对输入序列进行对齐。具体来说，就是给在较短的序列后面填充 0。但是如果输入的序列太长，则是截取左边的内容，把多余的直接舍弃。因为这些填充的位置，其实是没什么意义的，所以我们的attention机制不应该把注意力放在这些位置上，所以我们需要进行一些处理。</p>
 <p>具体的做法是，把这些位置的值加上一个非常大的负数(负无穷)，这样的话，经过 softmax，这些位置的概率就会接近0！</p>
@@ -419,45 +402,43 @@ FFN(x)=max(0,xW_1+b_1)W_2+b_2.
 <p><strong>Sequence mask</strong></p>
 <p>文章前面也提到，sequence mask 是为了使得 decoder 不能看见未来的信息。也就是对于一个序列，在 time_step 为 t 的时刻，我们的解码输出应该只能依赖于 t 时刻之前的输出，而不能依赖 t 之后的输出。因此我们需要想一个办法，把 t 之后的信息给隐藏起来。</p>
 <p>那么具体怎么做呢？也很简单：产生一个上三角矩阵，上三角的值全为0。把这个矩阵作用在每一个序列上，就可以达到我们的目的。</p>
-<p>对于 decoder 的 self-attention，里面使用到的 scaled dot-product attention，同时需要padding mask 和 sequence mask 作为 attn_mask，具体实现就是两个mask相加作为attn_mask。 其他情况，attn_mask 一律等于 padding mask。</p>
-<h2 id="重要的细节">重要的细节</h2>
-<ol type="1">
+<p>对于 decoder 的 self-attention，里面使用到的 scaled dot-product attention，同时需要padding mask 和 sequence mask 作为 attn_mask，具体实现就是两个mask相加作为attn_mask。<br>其他情况，attn_mask 一律等于 padding mask。</p>
+<h2 id="重要的细节"><a href="#重要的细节" class="headerlink" title="重要的细节"></a>重要的细节</h2><ol>
 <li><strong>Mask是怎么工作的？是否只有在decoder的时候，才会用到mask？如果不是，请详细描述encoder与decoder的mask的工作状况。</strong></li>
 </ol>
 <p>答：其实如果看源码的话，这个问题非常简单明了（padding mask 与sentence mask）。这里先不写，放一个连接：<a href="https://blog.csdn.net/u012526436/article/details/86295971" target="_blank" rel="noopener">Mask</a></p>
-<ol start="2" type="1">
+<ol>
 <li><strong>最后一层的encoder输出了什么？是输出了Z还是输出了K与V？如果是输出了K与V，那么与前面的encoder层的计算是否有区别？</strong></li>
 </ol>
 <p>答：答案是输出K、V到每个decoder层，而且K与V是同一个矩阵，还记得我说的attention本质吗？具体过程，还是看源码，先不写了，码字太难受了。</p>
-<ol start="3" type="1">
+<ol>
 <li><strong>在训练过程中，是teacher forcing还是free run？</strong></li>
 </ol>
 <p>答：论文说的是free run，但是实际操作还是会有teacher forcing。一般会设置一个teacher_forcing_prob，不会一直都是teacher forcing，这样效果会好些。</p>
-<ol start="4" type="1">
+<ol>
 <li><strong>什么是BPE？在transformer中起到了什么作用？</strong></li>
 </ol>
 <p>答：之后再写吧，这是一种编码方式，特简单，但是很多地方都会用到，之后应该会专门写一篇文章介绍～</p>
-<ol start="5" type="1">
+<ol>
 <li><strong>为什么要使用multi-head self-attention？</strong></li>
 </ol>
 <p>答：其实这个原文里也没有讲的特别清楚，个人理解是：multi-head就像是cnn中的多个filter，不同的head可以关注句子中不同位置的信息（位置信息、句法信息、罕见字信息等等），可以更加综合地利用各方面的信息，提取出更加丰富的特征。</p>
-<ol start="6" type="1">
+<ol>
 <li><strong>transformer的优点和缺点？</strong></li>
 </ol>
 <p>答：优点：相比rnn来说，能够并行计算；相比cnn来说，不需要叠加非常多的层来扩大感受野。</p>
-<p>​ 缺点：因为抛弃了rnn，所以失去了句子之间的位置信息，虽然加了positional encoding，但是仍然无法做到像rnn那样，完全地考虑单词之间的位置关系。此外，transformer的空间复杂度非常大，如果句子长度为<span class="math inline">\(L\)</span>，那么每一个head都需要存储<span class="math inline">\(L^2\)</span>的score，当<span class="math inline">\(L\)</span>非常大的时候，那么就会出现OOM的情况，那么，这种情况下，就需要讲句子非常多个句子，但是一旦分割句子，那么句子之间的前后关系就没有了，那么模型结果也会受影响。</p>
-<ol start="7" type="1">
+<p>​       缺点：因为抛弃了rnn，所以失去了句子之间的位置信息，虽然加了positional encoding，但是仍然无法做到像rnn那样，完全地考虑单词之间的位置关系。此外，transformer的空间复杂度非常大，如果句子长度为$L$，那么每一个head都需要存储$L^2$的score，当$L$非常大的时候，那么就会出现OOM的情况，那么，这种情况下，就需要讲句子非常多个句子，但是一旦分割句子，那么句子之间的前后关系就没有了，那么模型结果也会受影响。</p>
+<ol>
 <li><strong>为什么要使用label-smoothing？</strong></li>
 </ol>
 <p>答：<a href="https://zhuanlan.zhihu.com/p/60821628" target="_blank" rel="noopener">transformer细节</a></p>
-<p>​</p>
+<p>​    </p>
 <p>我的这片博文只是详细地剖析transformer的原理，但是有很多细节的地方（譬如上述两个问题），原论文其中讲的并不清楚🤷‍♂️。anyway，需要看源码，然后自己亲自调试才能真正地看懂，所以，RTFSC，源码链接：<a href="http://nlp.seas.harvard.edu/2018/04/03/attention.html" target="_blank" rel="noopener">pytorch-transformer</a>、<a href="https://github.com/tensorflow/tensor2tensor" target="_blank" rel="noopener">tensorflow-transformer</a></p>
-<h2 id="参考文献">参考文献</h2>
-<ol type="1">
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ol>
 <li>《Attention Is All You Need》</li>
-<li>https://jalammar.github.io/illustrated-transformer/</li>
-<li>https://zhuanlan.zhihu.com/p/39034683</li>
-<li>https://zhuanlan.zhihu.com/p/60821628</li>
+<li><a href="https://jalammar.github.io/illustrated-transformer/" target="_blank" rel="noopener">https://jalammar.github.io/illustrated-transformer/</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/39034683" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/39034683</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/60821628" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/60821628</a></li>
 </ol>
 
     </div>
@@ -545,7 +526,7 @@ FFN(x)=max(0,xW_1+b_1)W_2+b_2.
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#transformer模型提出的原因"><span class="nav-number">1.</span> <span class="nav-text">Transformer模型提出的原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#transformer模型分析"><span class="nav-number">2.</span> <span class="nav-text">Transformer模型分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#transformer模型概览"><span class="nav-number">2.1.</span> <span class="nav-text">Transformer模型概览</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#核心scaled-dot-product-attention与multi-head-attention"><span class="nav-number">2.2.</span> <span class="nav-text">核心—Scaled Dot-Product Attention与Multi-Head Attention</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#positional-encoding"><span class="nav-number">2.3.</span> <span class="nav-text">Positional Encoding</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#layer-normalization"><span class="nav-number">2.4.</span> <span class="nav-text">Layer Normalization</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#position-wise-feed-forward-networks"><span class="nav-number">2.5.</span> <span class="nav-text">Position-wise Feed-Forward Networks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mask"><span class="nav-number">2.6.</span> <span class="nav-text">MASK</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重要的细节"><span class="nav-number">3.</span> <span class="nav-text">重要的细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Transformer模型提出的原因"><span class="nav-number">1.</span> <span class="nav-text">Transformer模型提出的原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Transformer模型分析"><span class="nav-number">2.</span> <span class="nav-text">Transformer模型分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Transformer模型概览"><span class="nav-number">2.1.</span> <span class="nav-text">Transformer模型概览</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#核心—Scaled-Dot-Product-Attention与Multi-Head-Attention"><span class="nav-number">2.2.</span> <span class="nav-text">核心—Scaled Dot-Product Attention与Multi-Head Attention</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Positional-Encoding"><span class="nav-number">2.3.</span> <span class="nav-text">Positional Encoding</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Layer-Normalization"><span class="nav-number">2.4.</span> <span class="nav-text">Layer Normalization</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Position-wise-Feed-Forward-Networks"><span class="nav-number">2.5.</span> <span class="nav-text">Position-wise Feed-Forward Networks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MASK"><span class="nav-number">2.6.</span> <span class="nav-text">MASK</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重要的细节"><span class="nav-number">3.</span> <span class="nav-text">重要的细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

@@ -295,39 +295,30 @@
       
         <p>这篇博客主要讲解图神经网络在sentence-level的关系抽取任务中的应用，共讲解三篇paper：《Graph Neural Networks with Generated Parameters for Relation Extraction》、《GraphRel: Modeling Text as Relational Graphs for Joint Entity and Relation Extraction》、《A General Framework for Information Extraction using Dynamic Span Graphs》。</p>
 <a id="more"></a>
-<h2 id="graph-neural-networks-with-generated-parameters-for-relation-extractionacl2019">Graph Neural Networks with Generated Parameters for Relation Extraction(ACL2019)</h2>
-<h3 id="background">background</h3>
-<p>图神经网络在图关系推理中的效果非常强大，但是目前以后的GNN只能在预定义好的图上进行，无法直接在非结构化的文本中直接应用。所以在这篇paper中，就是采用 spectral GCN来进行aggegate。但是要使用GCN的话，有这么几个条件：1.最好是无向图，如果是有向图的话，则需要再根据问题进行调整，很麻烦，一般是要求无向图；2.边的类型必须一样，也就是同质图。所以问题就在于：怎么去构建一个无向图？怎么得到邻接矩阵？这就是GPGNN所要解决的问题。</p>
-<h3 id="model">model</h3>
-<p>先放图～</p>
-<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-sentence-level-RE-task/GPGNN_model.jpg"></p>
+<h2 id="Graph-Neural-Networks-with-Generated-Parameters-for-Relation-Extraction-ACL2019"><a href="#Graph-Neural-Networks-with-Generated-Parameters-for-Relation-Extraction-ACL2019" class="headerlink" title="Graph Neural Networks with Generated Parameters for Relation Extraction(ACL2019)"></a>Graph Neural Networks with Generated Parameters for Relation Extraction(ACL2019)</h2><h3 id="background"><a href="#background" class="headerlink" title="background"></a>background</h3><p>图神经网络在图关系推理中的效果非常强大，但是目前以后的GNN只能在预定义好的图上进行，无法直接在非结构化的文本中直接应用。所以在这篇paper中，就是采用 spectral GCN来进行aggegate。但是要使用GCN的话，有这么几个条件：1.最好是无向图，如果是有向图的话，则需要再根据问题进行调整，很麻烦，一般是要求无向图；2.边的类型必须一样，也就是同质图。所以问题就在于：怎么去构建一个无向图？怎么得到邻接矩阵？这就是GPGNN所要解决的问题。</p>
+<h3 id="model"><a href="#model" class="headerlink" title="model"></a>model</h3><p>先放图～</p>
+<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-sentence-level-RE-task/GPGNN_model.jpg" alt></p>
 <p>整体模型架构分为三部分：<strong>encoding module、propagation module、classification module。</strong></p>
 <ul>
-<li><p><strong>task definition：</strong>给定一个sentence：<span class="math inline">\(s=(x_0,x_1,...,x_{l-1})\)</span>，relation的集合：<span class="math inline">\(\cal R\)</span>，以及sentence中的entites：<span class="math inline">\({\cal V}=\{v_1,v_2,...,v_{|\cal V|}\}\)</span>，其中<span class="math inline">\(v_i\)</span>由单个或者多个token构成。我们要做的是：对每一个entity pair <span class="math inline">\((v_i,v_j)\)</span>，我们去得出它的rleation <span class="math inline">\(r_{v_i,v_j}\)</span>。</p></li>
-<li><p><strong>encoding module：</strong>首先根据text来构建全连接的GNN：<span class="math inline">\(\cal G=(V,E)\)</span>，所有的entity就是node。然后我们对entity pair进行encoding，得到邻接矩阵。具体如下： <span class="math display">\[
+<li><p><strong>task definition：</strong>给定一个sentence：$s=(x_0,x_1,…,x_{l-1})$，relation的集合：$\cal R$，以及sentence中的entites：${\cal V}=\{v_1,v_2,…,v_{|\cal V|}\}$，其中$v_i$由单个或者多个token构成。我们要做的是：对每一个entity pair $(v_i,v_j)$，我们去得出它的rleation $r_{v_i,v_j}$。</p>
+</li>
+<li><p><strong>encoding module：</strong>首先根据text来构建全连接的GNN：$\cal G=(V,E)$，所有的entity就是node。然后我们对entity pair进行encoding，得到邻接矩阵。具体如下：</p>
+<script type="math/tex; mode=display">
 A_{i,j}^{(n)}=[MLP_n(BILSTM_n((E(x_0^{i,j}),E(x_1^{i,j}),...,E(x_{l-1}^{i,j}))))] \\
-E(x_t^{i,j})=[x_t;p_t^{i,j}] \\
-\]</span> 其中，<span class="math inline">\(x_t\)</span>表示word <span class="math inline">\(x_t\)</span>的word embedding(采用GloVe)，<span class="math inline">\(p_t^{i,j}\)</span>表示word <span class="math inline">\(x_t\)</span>相对于entity pair <span class="math inline">\((v_i,v_j)\)</span>的position embedding(sentnece中的每一个token要么属于entity <span class="math inline">\(v_i\)</span>，要么属于entity <span class="math inline">\(v_j\)</span>，要么都不属于)，我们这两者进行concat，得出的<span class="math inline">\(E(x_t^{i,j})\)</span>表示相对于entity pair <span class="math inline">\((v_i,v_j)\)</span>的word <span class="math inline">\(x_t\)</span>的embedding；<span class="math inline">\(A_{i,j}^{(n)}\)</span>表示的是第<span class="math inline">\(n\)</span>层的entity pair <span class="math inline">\(v_i,v_j\)</span>的边的参数，从本质上来说，就是邻接矩阵。</p></li>
-<li><p><strong>propagation module：</strong>这一部分就是传统的aggregate。从第<span class="math inline">\(n\)</span>层更新到第<span class="math inline">\(n+1\)</span>层的公式如下： <span class="math display">\[
-h_i^{(n+1)}=\sum_{v_j\in {\cal N_{(v_i)}}}\sigma(A^{(n)}_{i,j}h^{(n)}_{j})
-\]</span> 其中，<span class="math inline">\(\sigma\)</span>表示某一种激活函数。但是这里有一个疑问：<span class="math inline">\(h^{(0)}_i\)</span>怎么得到的？论文里的没看懂。。。</p></li>
-<li><p><strong>classification module：</strong>concat所有layer的<span class="math inline">\(v_i\)</span>与<span class="math inline">\(v_j\)</span>的表示，然后使用softmax，如下： <span class="math display">\[
+E(x_t^{i,j})=[x_t;p_t^{i,j}] \\</script><p>其中，$x_t$表示word $x_t$的word embedding(采用GloVe)，$p_t^{i,j}$表示word $x_t$相对于entity pair $(v_i,v_j)$的position embedding(sentnece中的每一个token要么属于entity $v_i$，要么属于entity $v_j$，要么都不属于)，我们这两者进行concat，得出的$E(x_t^{i,j})$表示相对于entity pair $(v_i,v_j)$的word $x_t$的embedding；$A_{i,j}^{(n)}$表示的是第$n$层的entity pair $v_i,v_j$的边的参数，从本质上来说，就是邻接矩阵。</p>
+</li>
+<li><p><strong>propagation module：</strong>这一部分就是传统的aggregate。从第$n$层更新到第$n+1$层的公式如下：</p>
+<script type="math/tex; mode=display">
+h_i^{(n+1)}=\sum_{v_j\in {\cal N_{(v_i)}}}\sigma(A^{(n)}_{i,j}h^{(n)}_{j})</script><p>其中，$\sigma$表示某一种激活函数。但是这里有一个疑问：$h^{(0)}_i$怎么得到的？论文里的没看懂。。。</p>
+</li>
+<li><p><strong>classification module：</strong>concat所有layer的$v_i$与$v_j$的表示，然后使用softmax，如下：</p>
+<script type="math/tex; mode=display">
 r_{v_i,v_j}=[[h^1_{v_i}\odot h^1_{v_j}];...;h^K_{v_i}\odot h^K_{v_j}]] \\
-{\cal P}(r_{v_i,v_j}|h,t,s)=softmax(MLP(r_{v_i,v_j})) \\
-\]</span> 最终的loss使用CE loss，如下： <span class="math display">\[
-L=\sum_{s\in S}\sum_{i\not=j}log{\cal P}(r_{v_i,v_j}|h,t,s)
-\]</span></p></li>
+{\cal P}(r_{v_i,v_j}|h,t,s)=softmax(MLP(r_{v_i,v_j})) \\</script><p>最终的loss使用CE loss，如下：</p>
+<script type="math/tex; mode=display">
+L=\sum_{s\in S}\sum_{i\not=j}log{\cal P}(r_{v_i,v_j}|h,t,s)</script></li>
 </ul>
-<h2 id="graphrel-modeling-text-as-relational-graphs-for-joint-entity-and-relation-extractionacl2019">GraphRel: Modeling Text as Relational Graphs for Joint Entity and Relation Extraction(ACL2019)</h2>
-<h3 id="background-1">background</h3>
-<h3 id="model-1">model</h3>
-<h3 id="experiment">experiment</h3>
-<h2 id="a-general-framework-for-information-extraction-using-dynamic-span-graphsnaacl2019">A General Framework for Information Extraction using Dynamic Span Graphs(NAACL2019)</h2>
-<h3 id="background-2">background</h3>
-<h3 id="model-2">model</h3>
-<h3 id="experiment-1">experiment</h3>
-<h2 id="references">references</h2>
-<p>《Graph Neural Networks with Generated Parameters for Relation Extraction》</p>
+<h2 id="GraphRel-Modeling-Text-as-Relational-Graphs-for-Joint-Entity-and-Relation-Extraction-ACL2019"><a href="#GraphRel-Modeling-Text-as-Relational-Graphs-for-Joint-Entity-and-Relation-Extraction-ACL2019" class="headerlink" title="GraphRel: Modeling Text as Relational Graphs for Joint Entity and Relation Extraction(ACL2019)"></a>GraphRel: Modeling Text as Relational Graphs for Joint Entity and Relation Extraction(ACL2019)</h2><h3 id="background-1"><a href="#background-1" class="headerlink" title="background"></a>background</h3><h3 id="model-1"><a href="#model-1" class="headerlink" title="model"></a>model</h3><h3 id="experiment"><a href="#experiment" class="headerlink" title="experiment"></a>experiment</h3><h2 id="A-General-Framework-for-Information-Extraction-using-Dynamic-Span-Graphs-NAACL2019"><a href="#A-General-Framework-for-Information-Extraction-using-Dynamic-Span-Graphs-NAACL2019" class="headerlink" title="A General Framework for Information Extraction using Dynamic Span Graphs(NAACL2019)"></a>A General Framework for Information Extraction using Dynamic Span Graphs(NAACL2019)</h2><h3 id="background-2"><a href="#background-2" class="headerlink" title="background"></a>background</h3><h3 id="model-2"><a href="#model-2" class="headerlink" title="model"></a>model</h3><h3 id="experiment-1"><a href="#experiment-1" class="headerlink" title="experiment"></a>experiment</h3><h2 id="references"><a href="#references" class="headerlink" title="references"></a>references</h2><p>《Graph Neural Networks with Generated Parameters for Relation Extraction》</p>
 <p>《GraphRel: Modeling Text as Relational Graphs for Joint Entity and Relation Extraction》</p>
 <p>《A General Framework for Information Extraction using Dynamic Span Graphs》</p>
 
@@ -413,7 +404,7 @@ L=\sum_{s\in S}\sum_{i\not=j}log{\cal P}(r_{v_i,v_j}|h,t,s)
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#graph-neural-networks-with-generated-parameters-for-relation-extractionacl2019"><span class="nav-number">1.</span> <span class="nav-text">Graph Neural Networks with Generated Parameters for Relation Extraction(ACL2019)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#background"><span class="nav-number">1.1.</span> <span class="nav-text">background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#model"><span class="nav-number">1.2.</span> <span class="nav-text">model</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#graphrel-modeling-text-as-relational-graphs-for-joint-entity-and-relation-extractionacl2019"><span class="nav-number">2.</span> <span class="nav-text">GraphRel: Modeling Text as Relational Graphs for Joint Entity and Relation Extraction(ACL2019)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#background-1"><span class="nav-number">2.1.</span> <span class="nav-text">background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#model-1"><span class="nav-number">2.2.</span> <span class="nav-text">model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment"><span class="nav-number">2.3.</span> <span class="nav-text">experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#a-general-framework-for-information-extraction-using-dynamic-span-graphsnaacl2019"><span class="nav-number">3.</span> <span class="nav-text">A General Framework for Information Extraction using Dynamic Span Graphs(NAACL2019)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#background-2"><span class="nav-number">3.1.</span> <span class="nav-text">background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#model-2"><span class="nav-number">3.2.</span> <span class="nav-text">model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment-1"><span class="nav-number">3.3.</span> <span class="nav-text">experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#references"><span class="nav-number">4.</span> <span class="nav-text">references</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Graph-Neural-Networks-with-Generated-Parameters-for-Relation-Extraction-ACL2019"><span class="nav-number">1.</span> <span class="nav-text">Graph Neural Networks with Generated Parameters for Relation Extraction(ACL2019)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#background"><span class="nav-number">1.1.</span> <span class="nav-text">background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#model"><span class="nav-number">1.2.</span> <span class="nav-text">model</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GraphRel-Modeling-Text-as-Relational-Graphs-for-Joint-Entity-and-Relation-Extraction-ACL2019"><span class="nav-number">2.</span> <span class="nav-text">GraphRel: Modeling Text as Relational Graphs for Joint Entity and Relation Extraction(ACL2019)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#background-1"><span class="nav-number">2.1.</span> <span class="nav-text">background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#model-1"><span class="nav-number">2.2.</span> <span class="nav-text">model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment"><span class="nav-number">2.3.</span> <span class="nav-text">experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#A-General-Framework-for-Information-Extraction-using-Dynamic-Span-Graphs-NAACL2019"><span class="nav-number">3.</span> <span class="nav-text">A General Framework for Information Extraction using Dynamic Span Graphs(NAACL2019)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#background-2"><span class="nav-number">3.1.</span> <span class="nav-text">background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#model-2"><span class="nav-number">3.2.</span> <span class="nav-text">model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment-1"><span class="nav-number">3.3.</span> <span class="nav-text">experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#references"><span class="nav-number">4.</span> <span class="nav-text">references</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
