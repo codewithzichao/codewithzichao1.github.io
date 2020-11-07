@@ -57,8 +57,12 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/dialog_realtion_type.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/dialogRE_result2.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/dialog_result_1.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_model.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_hyperparameters.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_result.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_result_ablation.jpg">
 <meta property="article:published_time" content="2020-10-27T16:56:48.000Z">
-<meta property="article:modified_time" content="2020-11-07T08:43:23.860Z">
+<meta property="article:modified_time" content="2020-11-07T13:18:17.204Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="dialogue-based RE">
@@ -259,7 +263,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-11-07 16:43:23" itemprop="dateModified" datetime="2020-11-07T16:43:23+08:00">2020-11-07</time>
+                <time title="Modified: 2020-11-07 21:18:17" itemprop="dateModified" datetime="2020-11-07T21:18:17+08:00">2020-11-07</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -327,7 +331,73 @@ F1_c=\frac{2P_cR_c}{P_c+R_c}</script><h3 id="Baseline"><a href="#Baseline" class
 <p>下面是加了argument type之后的结果，发现结果是有提升的，说明argument type是有作用的。</p>
 <p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/dialog_result_1.jpg" style="zoom:50%;"></p>
 <p>总的来说，DialogRE是一个新的工作，在这个上面还是可以做很多的工作的。</p>
-<h2 id="Dialogue-Relation-Extraction-with-Document-level-Heterogeneous-Graph-Attention-Networks-arxiv2020"><a href="#Dialogue-Relation-Extraction-with-Document-level-Heterogeneous-Graph-Attention-Networks-arxiv2020" class="headerlink" title="Dialogue Relation Extraction with Document-level Heterogeneous Graph Attention Networks(arxiv2020)"></a>Dialogue Relation Extraction with Document-level Heterogeneous Graph Attention Networks(arxiv2020)</h2><h3 id="Background-1"><a href="#Background-1" class="headerlink" title="Background"></a>Background</h3><h3 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h3><h3 id="Experiment-1"><a href="#Experiment-1" class="headerlink" title="Experiment"></a>Experiment</h3><h2 id><a href="#" class="headerlink" title=" "></a> </h2><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>《Dialogue-Based Relation Extraction》</p>
+<h2 id="Dialogue-Relation-Extraction-with-Document-level-Heterogeneous-Graph-Attention-Networks-arxiv2020"><a href="#Dialogue-Relation-Extraction-with-Document-level-Heterogeneous-Graph-Attention-Networks-arxiv2020" class="headerlink" title="Dialogue Relation Extraction with Document-level Heterogeneous Graph Attention Networks(arxiv2020)"></a>Dialogue Relation Extraction with Document-level Heterogeneous Graph Attention Networks(arxiv2020)</h2><h3 id="Background-1"><a href="#Background-1" class="headerlink" title="Background"></a>Background</h3><p>这篇paper研究的是dialogue relation extraction task。之前的关于DRE的方法都没有很好地利用好speaker的信息，所以就忽略了speaker之间的信息可能会带给argument pair的影响。怎么解决呢？在这篇paper当中，采用的是基于graph的方法，提出了HGAT模型。</p>
+<h3 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h3><p>先放图～</p>
+<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_model.jpg" alt></p>
+<p>整个HGAT模型分为三部分：<strong>utterance encoder、graph construction、relation classification。</strong></p>
+<ul>
+<li><p><strong>task definition：</strong>给定含有$N$个utterance的dialogue：$D=\{u_1,…,u_N\}$以及argument pair：${\cal A}={(x_1,y_1),…,(x_1,y_1)}$，其中$x_i,y_i$是dialogue中的entity，我们的目标是：建立模型，预测argument pair的relation。</p>
+</li>
+<li><p><strong>data processing：</strong>使用spaCy获得POS tag以及named-entity types of each token。</p>
+</li>
+<li><p><strong>utterance encoder：</strong>对于每一个utterance $u_i$，我们使用GloVe初始化，并且与其他两种embedding进行concat，得到最终的初始的token embedding，如下：</p>
+<script type="math/tex; mode=display">
+e=[e_w;e_p;e_t]</script><p>其中，$e_p$表示POS embedding，$e_t$表示entity-type embedding；然后送入encoder当中进行编码，这里使用的是BILSTM(其实其他的编码器也是OK的)<strong>(local BILSTM)</strong>，然后得到contextual rep，如下：</p>
+<script type="math/tex; mode=display">
+\overleftarrow {h^{i}_{j}}=BILSTM_l(\overleftarrow {h^i_{j+1}},e^i_j) \\
+\overrightarrow {h^{i}_{j}}=BILSTM_r(\overrightarrow {h^i_{j-1}},e^i_j) \\
+h^i_j=[\overleftarrow {h^i_j};\overrightarrow {h^i_j}]</script><p>其中，$e^i_j$表示第$i$个utterance的第$j$个token的初始embedding rep，$h^i_j$表示第$i$个utterance的第$j$个token的rep。之后，我们对其进行max over time pooling，得到sentence vecotor，再送入到BILSTM当中<strong>(global BILSTM)</strong>，得到新的contextual rep，这个时候是三维的张量。</p>
+</li>
+<li><p><strong>graph construction：</strong>这一部分就是graph的构建，分为两部分：<strong>node construction、edge construction。</strong></p>
+<ul>
+<li><p>node construction：共有5种类型的node：utterance node、entity-type node、word node、speaker node、argument node。utterance node指的是：一个utterance是一个node，其表示就是使用的utterance encoder输出的结果；entity-type node指的是：word的type，每个named entity的每一个word都连接到其对应的entity-type node；word node指的是：对话的vocabulary，初始状态使用GloVe，每一个word node都与包含这个word的utterance node相连接，并且与在这个对话当中，这个word有可能的entity type node相连接；speaker node指的是：每一个唯一的speaker，并且其与ta自身的utterance相连接；argument node指的是：用来编码argument pair中的argument的相对位置信息(subject or object?)，每一个argument pair都有两个argument 。</p>
+</li>
+<li><p>edge construction：<strong>⚠️graph本身是无向的，但是propagation是有方向的。</strong>这里总共有5种edge：utterance-word、utterance-argument、utterance-speaker、type-word、type-argument。所有的edge都是无向的，并且都是随机初始化(除了utterance-word，其采用POS tag来初始化)。</p>
+<blockquote>
+<p>ps：我个人觉得这种需要用已有的语法分析工具来得到feature的方法不是很优雅，一方面这些语法分析工具得到的feature并不是很准确，另一方面一体化不好，个人拙见是一个好的模型应该是其本身与数据无关的、与第三方工具无关的、针对问题本身进行建模的。</p>
+</blockquote>
+</li>
+<li><p>message propagation：构建好graph之后，我们就需要进行aggregate。由于我们构建的是一个异质图，所以paper中采用的是GAT与metapath(HGNN中经常使用的一种方法)。GAT很简单就不提了，不懂可见<a href="https://zhuanlan.zhihu.com/p/81350196?utm_source=wechat_session" target="_blank" rel="noopener">link</a>，主要讲一下metapath的设计，这对于HGNN的效果是最重要的。</p>
+<p>Metapath：第一，使用utterance node来update word node、speaker node与argument node；第二，更新好的word node来update entity-type node；第三，更新好的entity-type node来update word node、argument node、entity-type node；第四，我们使用word node、speaker node、argument node来update utterance node；最后，utterance node再一次update word node、speaker node、argument node。即： </p>
+<script type="math/tex; mode=display">
+V_u\rightarrow V_b\rightarrow V_t\rightarrow V_b\rightarrow V_u\rightarrow V_b</script><p>然后借鉴了ACL2020邱锡鹏老师那篇使用HGNN来做文本摘要的paper，对一个node的更新，都使用了残差链接，即：$\hat h_i=\tilde h_i+h^{\prime}_i$，其中$h^{\prime}_i$是GAT layer输入，$\tilde h_i$是GAT layer的输出，然后我们使用FFN，增加非线性，即：$h^{new}_i=FFN(\hat h_i)$。OK，在HGAT模型中，更新次数为三次，其整体而言公式如下：</p>
+<script type="math/tex; mode=display">
+H^1_b=GAT(H^0_b,H^0_u) \\
+H^1_t=GAT(H^0_t,H^1_b) \\
+H^2_b=GAT(H^1_b,H^1_t) \\
+H^1_u=GAT(H^0_u,H^2_b) \\
+H^3_b=GAT(H^2_b,H^1_u)</script><p>⚠️注意，$b$表示basic node，包括：word node、speaker node、argument node。</p>
+</li>
+<li></li>
+</ul>
+</li>
+<li><p><strong>relation classifier：</strong>选择argument node $\tau_x，\tau_y$与word node $e_x,e_y$，将两者concat，并且送入到sigmoid中，如下：</p>
+<script type="math/tex; mode=display">
+e^{\prime}_x=[maxpooling(\tau_x);maxpooling(e_x)] \\
+e^{\prime}_y=[maxpooling(\tau_y);maxpooling(e_y)] \\
+e^{\prime}=[e^{\prime}_x;e^{\prime}_y] \\
+P(r|e_x,e_y)=sigmoid(W_ee^{\prime}+b_e)_r</script></li>
+</ul>
+<h3 id="Experiment-1"><a href="#Experiment-1" class="headerlink" title="Experiment"></a>Experiment</h3><ol>
+<li><p>数据集：DialogRE</p>
+</li>
+<li><p>hyperparameters</p>
+<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_hyperparameters.jpg" style="zoom:50%;"></p>
+</li>
+<li><p>结果</p>
+<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_result.jpg" alt></p>
+<p>从结果来看，提升还是蛮大的。我们再来看看消融实验与case study。</p>
+</li>
+<li><p>消融实验</p>
+<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_result_ablation.jpg" style="zoom:50%;"></p>
+<p>从消融实验结果来看：1.去掉global BILSTM的结果与POSembedding的影响比较大，这说明如何得到一个好的sentence vector并对其进行编码是非常重要的，另外，POS embedding的结果也说明句子结构的建模也是很重要的，所以如果建模也是一个值得探讨的问题；2. 一个好的embedding初始化很重要；3. 默认update是3次，目前是最优。我觉得这个消融实验做的一般，我觉得应该对不同的node与edge的作用也要进行实验，不然怎么证明你的graph是比较好的呢？</p>
+</li>
+<li><p>case study</p>
+<p>从case study中可以得出：95%的argument pair是span 2个sentence，所以长距离建模很重要；entity-type很重要，如果模型无法从训练数据中获取到足够的信息，那么就会判断出错。这个case study也做的一般。。。 </p>
+<p>总的来说，HGAT模型一般吧，但是由于是第一个在DialogRE数据集上的模型，结果还是很令人满意的。</p>
+</li>
+</ol>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>《Dialogue-Based Relation Extraction》</p>
 <p>《Dialogue Relation Extraction with Document-level Heterogeneous Graph Attention Networks》</p>
 
     </div>
@@ -412,7 +482,7 @@ F1_c=\frac{2P_cR_c}{P_c+R_c}</script><h3 id="Baseline"><a href="#Baseline" class
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Dialogue-Based-Relation-Extraction-ACL2020"><span class="nav-number">1.</span> <span class="nav-text">Dialogue-Based Relation Extraction(ACL2020)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Background"><span class="nav-number">1.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Statistics-of-DialogRE"><span class="nav-number">1.2.</span> <span class="nav-text">Statistics of DialogRE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-formulation-and-Evaluation"><span class="nav-number">1.3.</span> <span class="nav-text">Task formulation and Evaluation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Baseline"><span class="nav-number">1.4.</span> <span class="nav-text">Baseline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Experiment"><span class="nav-number">1.5.</span> <span class="nav-text">Experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dialogue-Relation-Extraction-with-Document-level-Heterogeneous-Graph-Attention-Networks-arxiv2020"><span class="nav-number">2.</span> <span class="nav-text">Dialogue Relation Extraction with Document-level Heterogeneous Graph Attention Networks(arxiv2020)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Background-1"><span class="nav-number">2.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Model"><span class="nav-number">2.2.</span> <span class="nav-text">Model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Experiment-1"><span class="nav-number">2.3.</span> <span class="nav-text">Experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">3.</span> <span class="nav-text"> </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">4.</span> <span class="nav-text">References</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Dialogue-Based-Relation-Extraction-ACL2020"><span class="nav-number">1.</span> <span class="nav-text">Dialogue-Based Relation Extraction(ACL2020)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Background"><span class="nav-number">1.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Statistics-of-DialogRE"><span class="nav-number">1.2.</span> <span class="nav-text">Statistics of DialogRE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-formulation-and-Evaluation"><span class="nav-number">1.3.</span> <span class="nav-text">Task formulation and Evaluation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Baseline"><span class="nav-number">1.4.</span> <span class="nav-text">Baseline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Experiment"><span class="nav-number">1.5.</span> <span class="nav-text">Experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dialogue-Relation-Extraction-with-Document-level-Heterogeneous-Graph-Attention-Networks-arxiv2020"><span class="nav-number">2.</span> <span class="nav-text">Dialogue Relation Extraction with Document-level Heterogeneous Graph Attention Networks(arxiv2020)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Background-1"><span class="nav-number">2.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Model"><span class="nav-number">2.2.</span> <span class="nav-text">Model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Experiment-1"><span class="nav-number">2.3.</span> <span class="nav-text">Experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">3.</span> <span class="nav-text">References</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
