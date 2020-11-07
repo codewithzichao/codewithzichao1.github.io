@@ -222,7 +222,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <section class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#rcnn模型简介"><span class="nav-number">1.</span> <span class="nav-text">RCNN模型简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rcnn模型实现"><span class="nav-number">2.</span> <span class="nav-text">RCNN模型实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#RCNN模型简介"><span class="nav-number">1.</span> <span class="nav-text">RCNN模型简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RCNN模型实现"><span class="nav-number">2.</span> <span class="nav-text">RCNN模型实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
         </section>
         <!--/noindex-->
 
@@ -371,21 +371,18 @@
     <div class="post-body" itemprop="articleBody">
         <p>最近在看文本分类系列模型，应该会陆续更新几篇有关文本分类模型的博客，大概一周内更新完成，之后开始做文本匹配的东西，虽然这些模型网上有很多解读了，但是只有自己写出来了，才算是自己的呀。本篇博客讲解最为经典的RCNN模型，并采用tensorflow2来进行实现。</p>
 <a id="more"></a>
-<h2 id="rcnn模型简介">RCNN模型简介</h2>
-<p>RCNN是2015年由中科院所提出的用于文本分类的模型。一句话概括就是：RCNN的优点在于：能够尽可能的通过捕捉上下文信息来表示单词，同时又能够以较低的时间复杂度完成训练。模型整体比较简单，直接上图吧。👇</p>
-<p><img src="/2020/04/25/NLP-%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E6%A8%A1%E5%9E%8B-RCNN/RCNN模型.jpg"></p>
+<h2 id="RCNN模型简介"><a href="#RCNN模型简介" class="headerlink" title="RCNN模型简介"></a>RCNN模型简介</h2><p>RCNN是2015年由中科院所提出的用于文本分类的模型。一句话概括就是：RCNN的优点在于：能够尽可能的通过捕捉上下文信息来表示单词，同时又能够以较低的时间复杂度完成训练。模型整体比较简单，直接上图吧。👇</p>
+<p><img src="/2020/04/25/NLP-%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E6%A8%A1%E5%9E%8B-RCNN/RCNN模型.jpg" alt></p>
 <ul>
-<li>模型的第一层是一个biRNN架构，其中<span class="math inline">\(c_l(w_3)\)</span>表示单词<span class="math inline">\(w_3\)</span>的左侧所有的上下文的向量化表示；<span class="math inline">\(c_r(w_3)\)</span>表示单词<span class="math inline">\(w_3\)</span>的右侧所有的上下文的向量化表示。<span class="math inline">\(e(w_3)\)</span>表示单词<span class="math inline">\(w_3\)</span>的词向量。那么，第3个位置的向量话表示是三者的concatenate，即：<span class="math inline">\(x_3=[c_l(w_3),e(w_3),c_r(w_3)]\)</span>。这样，能够充分地利用单词的上下文信息，从而能够更好地表达单词的在上下文的含义。</li>
-<li>模型的第二层使用激活函数tanh，来对得到的<span class="math inline">\(x_i\)</span>，进行转换。那么，第二层的输出是：<span class="math inline">\(y^{(2)}_i=tanh(W^{(2)}x_i+b^{(2)})\)</span>。</li>
-<li>模型的第三层是最大池化层。用公式来表示就是：<span class="math inline">\(y^{(3)}=max_{i=1}^{n}y_{i}^{(2)}\)</span>。</li>
+<li>模型的第一层是一个biRNN架构，其中$c_l(w_3)$表示单词$w_3$的左侧所有的上下文的向量化表示；$c_r(w_3)$表示单词$w_3$的右侧所有的上下文的向量化表示。$e(w_3)$表示单词$w_3$的词向量。那么，第3个位置的向量话表示是三者的concatenate，即：$x_3=[c_l(w_3),e(w_3),c_r(w_3)]$。这样，能够充分地利用单词的上下文信息，从而能够更好地表达单词的在上下文的含义。</li>
+<li>模型的第二层使用激活函数tanh，来对得到的$x_i$，进行转换。那么，第二层的输出是：$y^{(2)}_i=tanh(W^{(2)}x_i+b^{(2)})$。</li>
+<li>模型的第三层是最大池化层。用公式来表示就是：$y^{(3)}=max_{i=1}^{n}y_{i}^{(2)}$。</li>
 <li>模型的最后一层就是softmax层。这个没有什么好说的。</li>
 </ul>
 <p>论文提到的模型训练的trick：使用SGD、使用word2vec得到的词向量来初始化、均匀分布初始化所有参数。</p>
 <p>整个模型就是这样，挺简单的，从现在的角度看，创新性真的不大，不过在当时应该有创新性的吧。</p>
-<h2 id="rcnn模型实现">RCNN模型实现</h2>
-<p>暂无。</p>
-<h2 id="参考文献">参考文献</h2>
-<p>Recurrent Convolutional Neural Networks for Text Classiﬁcation</p>
+<h2 id="RCNN模型实现"><a href="#RCNN模型实现" class="headerlink" title="RCNN模型实现"></a>RCNN模型实现</h2><p>暂无。</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>Recurrent Convolutional Neural Networks for Text Classiﬁcation</p>
 
     </div>
 

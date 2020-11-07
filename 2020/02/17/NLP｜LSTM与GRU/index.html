@@ -231,7 +231,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <section class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么要有lstm"><span class="nav-number">1.</span> <span class="nav-text">为什么要有LSTM？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lstm原理剖析"><span class="nav-number">2.</span> <span class="nav-text">LSTM原理剖析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rnn与lstm内部结构"><span class="nav-number">2.1.</span> <span class="nav-text">RNN与LSTM内部结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lstm内部结构剖析"><span class="nav-number">2.2.</span> <span class="nav-text">LSTM内部结构剖析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#遗忘门"><span class="nav-number">2.2.1.</span> <span class="nav-text">遗忘门</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#输入门"><span class="nav-number">2.2.2.</span> <span class="nav-text">输入门</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#输出门"><span class="nav-number">2.2.3.</span> <span class="nav-text">输出门</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lstm变种gru"><span class="nav-number">3.</span> <span class="nav-text">LSTM变种—GRU</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#lstm变种peehole-connection"><span class="nav-number">4.</span> <span class="nav-text">LSTM变种—peehole connection</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么要有LSTM？"><span class="nav-number">1.</span> <span class="nav-text">为什么要有LSTM？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LSTM原理剖析"><span class="nav-number">2.</span> <span class="nav-text">LSTM原理剖析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RNN与LSTM内部结构"><span class="nav-number">2.1.</span> <span class="nav-text">RNN与LSTM内部结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LSTM内部结构剖析"><span class="nav-number">2.2.</span> <span class="nav-text">LSTM内部结构剖析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#遗忘门"><span class="nav-number">2.2.1.</span> <span class="nav-text">遗忘门</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#输入门"><span class="nav-number">2.2.2.</span> <span class="nav-text">输入门</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#输出门"><span class="nav-number">2.2.3.</span> <span class="nav-text">输出门</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LSTM变种—GRU"><span class="nav-number">3.</span> <span class="nav-text">LSTM变种—GRU</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LSTM变种—peehole-connection"><span class="nav-number">4.</span> <span class="nav-text">LSTM变种—peehole connection</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一些细节"><span class="nav-number">5.</span> <span class="nav-text">一些细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考链接"><span class="nav-number">6.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
         </section>
         <!--/noindex-->
 
@@ -379,54 +379,39 @@
 <blockquote>
 <p>本文的符号体系借鉴andrew Ng的《deep learning》课程。</p>
 </blockquote>
-<h2 id="为什么要有lstm">为什么要有LSTM？</h2>
-<p>首先我们来回顾一下基本的RNN网络架构：</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/RNN.jpg"></p>
+<h2 id="为什么要有LSTM？"><a href="#为什么要有LSTM？" class="headerlink" title="为什么要有LSTM？"></a>为什么要有LSTM？</h2><p>首先我们来回顾一下基本的RNN网络架构：</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/RNN.jpg" alt></p>
 <p><strong>前向传播过程：</strong></p>
 <p>t时刻的激活值与输出值的计算公式如下：</p>
-<p><span class="math display">\[a^{&lt;t&gt;}=tanh(W_a[a^{&lt;t-1&gt;},x^{&lt;t&gt;}]+b_a)\]</span></p>
-<p><span class="math display">\[y^{&lt;t&gt;}=g(W_ya^{&lt;t&gt;}+b_y)\]</span></p>
-<blockquote>
-<p>注意：同一层，所有的<span class="math inline">\(W_a\)</span>参数都是共享的，所有的<span class="math inline">\(W_y\)</span>参数都是共享的，所有的<span class="math inline">\(b_a\)</span>参数都是共享的，所有的<span class="math inline">\(b_y\)</span>参数都是共享的。</p>
+<script type="math/tex; mode=display">a^{<t>}=tanh(W_a[a^{<t-1>},x^{<t>}]+b_a)</script><script type="math/tex; mode=display">y^{<t>}=g(W_ya^{<t>}+b_y)</script><blockquote>
+<p> 注意：同一层，所有的$W_a$参数都是共享的，所有的$W_y$参数都是共享的，所有的$b_a$参数都是共享的，所有的$b_y$参数都是共享的。</p>
 </blockquote>
 <p><strong>反向传播过程（BPTT）：</strong></p>
-<p>确定优化参数：<span class="math inline">\(W_a\)</span>、<span class="math inline">\(W_y\)</span>、<span class="math inline">\(b_a\)</span>、<span class="math inline">\(b_y\)</span>。</p>
+<p>确定优化参数：$W_a$、$W_y$、$b_a$、$b_y$。</p>
 <p>接下来需要定义loss function，以二分类问题为例，使用后交叉熵，则计算公式如下：</p>
-<p><span class="math display">\[L^{&lt;t&gt;}(y^{&lt;t&gt;},\widehat{y}^{&lt;t&gt;})=-y^{&lt;t&gt;}log(\widehat{y}^{&lt;t&gt;})-(1-y^{&lt;t&gt;})log(\widehat{y}^{&lt;1-t&gt;})\]</span></p>
-<p><span class="math display">\[L(y^{&lt;t&gt;},\widehat{y}^{&lt;t&gt;})=\sum_{t=1}^{T_x}L^{}(y^{&lt;t&gt;},\widehat{y}^{&lt;t&gt;})\]</span></p>
-<p>之后不断使用SGD/mini-batch GD或者其他的优化算法，优化参数：<span class="math inline">\(W_a\)</span>、<span class="math inline">\(W_y\)</span>、<span class="math inline">\(b_a\)</span>、<span class="math inline">\(b_y\)</span>，便可完成整个反向传播过程。</p>
+<script type="math/tex; mode=display">L^{<t>}(y^{<t>},\widehat{y}^{<t>})=-y^{<t>}log(\widehat{y}^{<t>})-(1-y^{<t>})log(\widehat{y}^{<1-t>})</script><script type="math/tex; mode=display">L(y^{<t>},\widehat{y}^{<t>})=\sum_{t=1}^{T_x}L^{}(y^{<t>},\widehat{y}^{<t>})</script><p>之后不断使用SGD/mini-batch GD或者其他的优化算法，优化参数：$W_a$、$W_y$、$b_a$、$b_y$，便可完成整个反向传播过程。</p>
 <p><strong>梯度消失</strong></p>
-<p>但是RNN与传统的神经网络一样，如果随着序列长度的增加，会存在梯度消失问题。原因在于：当我们对进行反向传播的时候，譬如我们计算<span class="math inline">\(W_a\)</span>，我们会得到这个式子：<span class="math inline">\(W_a=\prod_{t=1}^{T_x}{tanh}&#39;W_a\)</span>。由于tanh函数的导数在(0,1)之间，如果在反向传播的时候，当参数<span class="math inline">\(W_a\)</span>初始化为小于1的数，那么偏导相乘的结果就会远远小于1，从而导致梯度消失。但是由于RNN中梯度相加，所以梯度永远不会等于0。参看链接：<a href="https://blog.csdn.net/jizhidexiaoming/article/details/81743584" target="_blank" rel="noopener">RNN梯度消失的原因</a></p>
+<p>但是RNN与传统的神经网络一样，如果随着序列长度的增加，会存在梯度消失问题。原因在于：当我们对进行反向传播的时候，譬如我们计算$W_a$，我们会得到这个式子：$W_a=\prod_{t=1}^{T_x}{tanh}’W_a$。由于tanh函数的导数在(0,1)之间，如果在反向传播的时候，当参数$W_a$初始化为小于1的数，那么偏导相乘的结果就会远远小于1，从而导致梯度消失。但是由于RNN中梯度相加，所以梯度永远不会等于0。参看链接：<a href="https://blog.csdn.net/jizhidexiaoming/article/details/81743584" target="_blank" rel="noopener">RNN梯度消失的原因</a></p>
 <p>由于RNN梯度消失的问题，就会导致梯度被近距离主导，从而导致模型难以学到远距离的依赖关系（长时期依赖问题）。这也就是为什么LSTM被提出的原因，因为LSTM能够很好地解决这一问题。</p>
-<h2 id="lstm原理剖析">LSTM原理剖析</h2>
-<p>LSTM，全称long-short term memory networks。LSTM的设计就是为了避免上节所说的长时期依赖问题，能够记住很长时间内地信息。</p>
-<h3 id="rnn与lstm内部结构">RNN与LSTM内部结构</h3>
-<p>RNN内部结构如下。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/2.RNN内部结构.png"></p>
+<h2 id="LSTM原理剖析"><a href="#LSTM原理剖析" class="headerlink" title="LSTM原理剖析"></a>LSTM原理剖析</h2><p>LSTM，全称long-short term memory networks。LSTM的设计就是为了避免上节所说的长时期依赖问题，能够记住很长时间内地信息。</p>
+<h3 id="RNN与LSTM内部结构"><a href="#RNN与LSTM内部结构" class="headerlink" title="RNN与LSTM内部结构"></a>RNN与LSTM内部结构</h3><p>RNN内部结构如下。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/2.RNN内部结构.png" alt></p>
 <p>LSTM内部结构如下。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/3.lstm内部结构.png"></p>
-<h3 id="lstm内部结构剖析">LSTM内部结构剖析</h3>
-<h4 id="遗忘门">遗忘门</h4>
-<p>遗忘门决定要保留哪些信息继续通过当前的cell。<span class="math inline">\(f_t\)</span>通过sigmoid函数实现，从而将<span class="math inline">\(f_t\)</span>限制在(0,1)之间。0表示不让任何信息通过，1表示让所有信息通过。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/4.遗忘门.png"></p>
-<h4 id="输入门">输入门</h4>
-<p>输入门决定让多少新的信息加入到当前cell的状态中。这分成两步：首先通过sigmoid函数得到输入门<span class="math inline">\(i_t\)</span>，再通过tanh得到备选的要更新的内容。最后，联合这两部分，从而对当前cell的状态进行更新。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/5.更新门.png"></p>
-<p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/6.更新节点状态.png"></p>
-<h4 id="输出门">输出门</h4>
-<p>输出门决定要输出哪些信息，传递给下一个cell。当前cell的输出是依赖于<span class="math inline">\(C_t\)</span>的值，但是不完全依赖于<span class="math inline">\(C_t\)</span>的值，而是使用tanh函数对其进行了过滤。而输出门<span class="math inline">\(o_t\)</span>通过sigmoid函数得到一个(0,1)的值，从而决定输出过滤后的<span class="math inline">\(C_t\)</span>值的哪些部分。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/7.输出门.png"></p>
-<h2 id="lstm变种gru">LSTM变种—GRU</h2>
-<p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/8.GRU.png"></p>
-<h2 id="lstm变种peehole-connection">LSTM变种—peehole connection</h2>
-<p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/8.peehole%20connection.png"></p>
-<p>##一些细节</p>
-<p>1.LSTM为什么能够解决梯度消失？</p>
-<p>答：秘诀就在这个公式: <span class="math display">\[C_t=i_t*\widehat{C}_t+f_t*C_{t}\]</span>。在RNN中，每个记忆单元h_t-1都会乘上一个W和激活函数的导数，这种连乘使得记忆衰减的很快，而LSTM是通过记忆和当前输入"相加"，使得之前的记忆会继续存在而不是受到乘法的影响而部分“消失”，因此不会衰减。因为LSTM对记忆的操作是相加的，线性的，使得不同时序的记忆对当前的影响相同，为了让不同时序的记忆对当前影响变得可控，LSTM引入了输入门和输出门，之后又有人对LSTM进行了扩展，引入了遗忘门。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/3.lstm内部结构.png" alt></p>
+<h3 id="LSTM内部结构剖析"><a href="#LSTM内部结构剖析" class="headerlink" title="LSTM内部结构剖析"></a>LSTM内部结构剖析</h3><h4 id="遗忘门"><a href="#遗忘门" class="headerlink" title="遗忘门"></a>遗忘门</h4><p>遗忘门决定要保留哪些信息继续通过当前的cell。$f_t$通过sigmoid函数实现，从而将$f_t$限制在(0,1)之间。0表示不让任何信息通过，1表示让所有信息通过。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/4.遗忘门.png" alt></p>
+<h4 id="输入门"><a href="#输入门" class="headerlink" title="输入门"></a>输入门</h4><p>输入门决定让多少新的信息加入到当前cell的状态中。这分成两步：首先通过sigmoid函数得到输入门$i_t$，再通过tanh得到备选的要更新的内容。最后，联合这两部分，从而对当前cell的状态进行更新。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/5.更新门.png" alt></p>
+<p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/6.更新节点状态.png" alt></p>
+<h4 id="输出门"><a href="#输出门" class="headerlink" title="输出门"></a>输出门</h4><p>输出门决定要输出哪些信息，传递给下一个cell。当前cell的输出是依赖于$C_t$的值，但是不完全依赖于$C_t$的值，而是使用tanh函数对其进行了过滤。而输出门$o_t$通过sigmoid函数得到一个(0,1)的值，从而决定输出过滤后的$C_t$值的哪些部分。</p>
+<p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/7.输出门.png" alt></p>
+<h2 id="LSTM变种—GRU"><a href="#LSTM变种—GRU" class="headerlink" title="LSTM变种—GRU"></a>LSTM变种—GRU</h2><p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/8.GRU.png" alt></p>
+<h2 id="LSTM变种—peehole-connection"><a href="#LSTM变种—peehole-connection" class="headerlink" title="LSTM变种—peehole connection"></a>LSTM变种—peehole connection</h2><p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/8.peehole connection.png" alt></p>
+<h2 id="一些细节"><a href="#一些细节" class="headerlink" title="一些细节"></a>一些细节</h2><p>1.LSTM为什么能够解决梯度消失？</p>
+<p>答：秘诀就在这个公式: <script type="math/tex">C_t=i_t*\widehat{C}_t+f_t*C_{t}</script>。在RNN中，每个记忆单元h_t-1都会乘上一个W和激活函数的导数，这种连乘使得记忆衰减的很快，而LSTM是通过记忆和当前输入”相加”，使得之前的记忆会继续存在而不是受到乘法的影响而部分“消失”，因此不会衰减。因为LSTM对记忆的操作是相加的，线性的，使得不同时序的记忆对当前的影响相同，为了让不同时序的记忆对当前影响变得可控，LSTM引入了输入门和输出门，之后又有人对LSTM进行了扩展，引入了遗忘门。</p>
 <p>2.RNN中为什么要使用tanh？为啥不使用Relu？</p>
 <p>答：可以用，但是不用，原因有两个：1.relu函数的值域是0到无穷，如果直接直接把激活函数换成ReLU，会导致非常大的输出值，会造成溢出；2.使用relu仍然无法解决梯度在长程上传递的问题。当反向传播的时候，最后计算的结果会变成多个W连乘，如果W中存在特征值&gt;1的，那么经过BPTT连乘后得到的值会爆炸，产生梯度爆炸的问题，使得RNN仍然无法传递较远距离。</p>
-<p>##参考链接</p>
-<p>http://colah.github.io/posts/2015-08-Understanding-LSTMs/</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank" rel="noopener">http://colah.github.io/posts/2015-08-Understanding-LSTMs/</a></p>
 
     </div>
 

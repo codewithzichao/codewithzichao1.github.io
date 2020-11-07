@@ -363,7 +363,7 @@
 <blockquote>
 <p>x_train只能是一个二维tensor，maxlen表示最终要得到的桔句子长度。</p>
 </blockquote>
-<p><strong>tf.keras.layers.Bidirectional(layer,merge_mode="concat,None,mul,sum")</strong></p>
+<p><strong>tf.keras.layers.Bidirectional(layer,merge_mode=”concat,None,mul,sum”)</strong></p>
 <blockquote>
 <p>比如传入LSTM的话，那么就可以得到biLSTM。如果是None的话，那么就返回两个值。</p>
 </blockquote>
@@ -373,22 +373,22 @@
 <p>举个🌰：👇</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">inputs = np.random.random([<span class="number">32</span>, <span class="number">10</span>, <span class="number">8</span>]).astype(np.float32)</span><br><span class="line">lstm = tf.keras.layers.LSTM(<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">output = lstm(inputs)  <span class="comment"># The output has shape `[32, 4]`.</span></span><br><span class="line"></span><br><span class="line">lstm = tf.keras.layers.LSTM(<span class="number">4</span>, return_sequences=<span class="literal">True</span>, return_state=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># whole_sequence_output has shape `[32, 10, 4]`.</span></span><br><span class="line"><span class="comment"># final_memory_state and final_carry_state both have shape `[32, 4]`.</span></span><br><span class="line">whole_sequence_output, final_memory_state, final_carry_state = lstm(inputs)</span><br></pre></td></tr></table></figure>
 </blockquote>
-<p><strong>tf.keras.layers.MaxPool2D(pool_size=(),strides=(),padding="valid")</strong></p>
+<p><strong>tf.keras.layers.MaxPool2D(pool_size=(),strides=(),padding=”valid”)</strong></p>
 <blockquote>
 <p>输入的维度是4维的(batch_size,rows,cols,channels)，并且pool_size与strides都是tuple，这一点要记住，最后输出的维度是(batch_size,new_rows,new_cols,channels)。</p>
 </blockquote>
 <p><strong>callbacks的写法</strong></p>
 <ul>
-<li><strong>tf.keras.callbacks.EarlyStopping(monitor='val_loss',min_delta=0,patience=3)</strong></li>
+<li><strong>tf.keras.callbacks.EarlyStopping(monitor=’val_loss’,min_delta=0,patience=3)</strong></li>
 </ul>
 <blockquote>
 <p>其中，monitor表示要检测的指标，min_delta表示在被监测的数据中被认为是提升的最小变化，即绝对变化小于min_delta，将被视为没有提升；patience表示没有进步的训练轮数，在这之后训练就会被停止。</p>
 </blockquote>
-<p><strong>tf.keras.layers.Conv1D(filters=250,kernel_size=3,padding='same',strides=1)</strong></p>
+<p><strong>tf.keras.layers.Conv1D(filters=250,kernel_size=3,padding=’same’,strides=1)</strong></p>
 <blockquote>
 <p>一维卷积，输入的维度为（batch_size, steps, input_dim），输出维度为（batch_size, new_steps, filters）。</p>
 </blockquote>
-<p><strong>tf.keras.layers.MaxPool1D(pool_size=2,strides=1,padding='valid')</strong></p>
+<p><strong>tf.keras.layers.MaxPool1D(pool_size=2,strides=1,padding=’valid’)</strong></p>
 <blockquote>
 <p>输入维度为(batch_size, steps, features)，输出维度为(batch_size, downsampled_steps, features)。</p>
 </blockquote>
@@ -397,7 +397,7 @@
 <p><strong>范数的概念</strong></p>
 <p>0范数，向量中非零元素的个数。</p>
 <p>1范数，为绝对值之和。</p>
-<p>2范数，就是通常意义上的模。</p>
+<p>2范数，就是通常意义上的模。 </p>
 <p>无穷范数，就是取向量的最大值</p>
 <p><img src="/2020/04/25/Tensorflow2%E7%9A%84%E9%9B%B6%E7%A2%8E%E7%AC%94%E8%AE%B0/范数。png.png" style="zoom:80%;"></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#计算1范数</span></span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line">a=tf.norm(x,ord=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
@@ -413,7 +413,7 @@
 <p><strong>json.loads(json_str):</strong>将json_str反序列化成原本的对象</p>
 <p><strong>json.load(file):</strong>读取json文件，并反序列化成原本的对象</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line">a=&#123;<span class="string">"a"</span>: <span class="number">1</span>, <span class="string">"c"</span>: <span class="number">0</span>, <span class="string">"b"</span>: <span class="number">2</span>&#125;</span><br><span class="line"><span class="comment">#将a序列化成字符串</span></span><br><span class="line">json_str=json.dumps(a)</span><br><span class="line"><span class="comment">#序列化成字符串到文件中</span></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">"a.json"</span>.<span class="string">"w"</span>) <span class="keyword">as</span> f:</span><br><span class="line">  json.dump(a,f)</span><br><span class="line"></span><br><span class="line"><span class="comment">#读取json文件</span></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">"a.json"</span>,<span class="string">"r"</span>) <span class="keyword">as</span> f:</span><br><span class="line">  a=json.load(f)</span><br></pre></td></tr></table></figure>
-<p>pickle的使用方法与json一致！但是写文件的时候，要使用"wb"，读文件的时候，要使用“rb”。</p>
+<p>pickle的使用方法与json一致！但是写文件的时候，要使用”wb”，读文件的时候，要使用“rb”。</p>
 <p><strong>导入上级模块</strong><a href="https://www.cnblogs.com/ipersevere/p/10916803.html" target="_blank" rel="noopener">链接</a>、<a href="https://zhuanlan.zhihu.com/p/64893308" target="_blank" rel="noopener">链接2</a></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#第一步：在要访问的文件所在文件夹下，建立空的__init__.py文件</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#第二步：在要写的文件中写入下列代码：</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">sys.path.append(<span class="string">".."</span>)<span class="comment">#返回到上级目录</span></span><br><span class="line"><span class="keyword">from</span> a.ss <span class="keyword">import</span> dasj</span><br></pre></td></tr></table></figure>
 <p><strong>获取文件目录结构：tree</strong></p>
@@ -426,8 +426,8 @@
 <p>看到一篇关于mask的应用场景与方案，写的很好，记录一下🤩链接：<a href="https://www.jianshu.com/p/7b408a60ac35" target="_blank" rel="noopener">padding与mask</a></p>
 <p><strong>关于encode与decode</strong></p>
 <p><a href="https://blog.csdn.net/wz947324/article/details/80625533" target="_blank" rel="noopener">参考链接</a></p>
-<p>总的来说，如果str是字符串，如果我们要直接对它进行操作的话，就不需要encode或者decode，除非我们要将str保存到文件，那么我们就需要对其进行encode，在python代码里，具体是:<code>with codecs.open(foel_patj,"w",encoding="utf-8") as f:</code>。</p>
-<p>如果我们str是bytes，那么我们要洗那个对其进行操作的话，那么我们就需要对其进行decode，从而得到字符串，具体就是：<code>u1=str.decode("utf-8")</code>。</p>
+<p>总的来说，如果str是字符串，如果我们要直接对它进行操作的话，就不需要encode或者decode，除非我们要将str保存到文件，那么我们就需要对其进行encode，在python代码里，具体是:<code>with codecs.open(foel_patj,&quot;w&quot;,encoding=&quot;utf-8&quot;) as f:</code>。</p>
+<p>如果我们str是bytes，那么我们要洗那个对其进行操作的话，那么我们就需要对其进行decode，从而得到字符串，具体就是：<code>u1=str.decode(&quot;utf-8&quot;)</code>。</p>
 <p>我们具体在使用的时候，我们可以这样：（text是一个对象）</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> six.PY3:<span class="comment"># 如果是python3的话 </span></span><br><span class="line">  <span class="keyword">if</span> isinstance(text, str):<span class="comment"># 如果是str的话，我们就直接返回使用即可</span></span><br><span class="line">      <span class="keyword">return</span> text</span><br><span class="line">    <span class="keyword">elif</span> isinstance(text, bytes): <span class="comment"># 如果是bytes，那么我们就是需要进行decode，得到字符串来使用。</span></span><br><span class="line">      <span class="keyword">return</span> text.decode(<span class="string">"utf-8"</span>, <span class="string">"ignore"</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">      <span class="keyword">raise</span> ValueError(<span class="string">"Unsupported string type: %s"</span> % (type(text)))</span><br><span class="line"><span class="keyword">elif</span> six.PY2: <span class="comment"># 如果是python2的话</span></span><br><span class="line">  <span class="keyword">if</span> isinstance(text, str):</span><br><span class="line">    <span class="keyword">return</span> text.decode(<span class="string">"utf-8"</span>, <span class="string">"ignore"</span>)</span><br><span class="line">  <span class="keyword">elif</span> isinstance(text, unicode):</span><br><span class="line">    <span class="keyword">return</span> text</span><br><span class="line">  <span class="keyword">else</span>:</span><br></pre></td></tr></table></figure>
 <p><strong>关于TFRrecord的使用</strong></p>
