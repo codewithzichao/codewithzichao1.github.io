@@ -45,19 +45,19 @@
   };
 </script>
 
-  <meta name="description" content="由于文本与匹配的应用场景非常多，并且每个场景所采用的评价指标都不太一样，有点混乱，所以在此总结一下。">
+  <meta name="description" content="各类指标首先记录一下符号：TP(true positive)、FP(false positive)、FN(false nergative)、TN(true negative)。表格如下：     pred\real True False     True TP FP   False FN TN     accuracy与error rate accuracy&#x3D;\frac {TP+TN}{N} \">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NLP|分类与匹配的各类评价指标">
 <meta property="og:url" content="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/index.html">
 <meta property="og:site_name" content="codewithzichao">
-<meta property="og:description" content="由于文本与匹配的应用场景非常多，并且每个场景所采用的评价指标都不太一样，有点混乱，所以在此总结一下。">
+<meta property="og:description" content="各类指标首先记录一下符号：TP(true positive)、FP(false positive)、FN(false nergative)、TN(true negative)。表格如下：     pred\real True False     True TP FP   False FN TN     accuracy与error rate accuracy&#x3D;\frac {TP+TN}{N} \">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/%E5%AE%8F%E5%B9%B3%E5%9D%87%E4%B8%8E%E5%BE%AE%E5%B9%B3%E5%9D%87%E5%AF%B9%E6%AF%94.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/MRR.jpg">
 <meta property="og:image" content="https://www.zhihu.com/equation?tex=AP+%253D+%EF%BC%881%252F1%252B2%252F3%252B3%252F6%252B4%252F9%252B5%252F10%EF%BC%89%252F5%253D0.62">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/MAP.jpg">
 <meta property="article:published_time" content="2020-05-12T12:40:55.000Z">
-<meta property="article:modified_time" content="2020-11-07T14:06:08.818Z">
+<meta property="article:modified_time" content="2020-11-07T14:07:05.266Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
@@ -257,7 +257,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-11-07 22:06:08" itemprop="dateModified" datetime="2020-11-07T22:06:08+08:00">2020-11-07</time>
+                <time title="Modified: 2020-11-07 22:07:05" itemprop="dateModified" datetime="2020-11-07T22:07:05+08:00">2020-11-07</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -289,8 +289,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>由于文本与匹配的应用场景非常多，并且每个场景所采用的评价指标都不太一样，有点混乱，所以在此总结一下。</p>
-<a id="more"></a>
+        <a id="more"></a>
 <h2 id="各类指标"><a href="#各类指标" class="headerlink" title="各类指标"></a>各类指标</h2><p>首先记录一下符号：TP(true positive)、FP(false positive)、FN(false nergative)、TN(true negative)。表格如下：</p>
 <div class="table-container">
 <table>
