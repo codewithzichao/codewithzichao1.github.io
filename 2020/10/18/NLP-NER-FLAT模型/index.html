@@ -226,7 +226,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <section class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#FLAT模型提出的背景"><span class="nav-number">1.</span> <span class="nav-text">FLAT模型提出的背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FLAT模型介绍"><span class="nav-number">2.</span> <span class="nav-text">FLAT模型介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验结果"><span class="nav-number">3.</span> <span class="nav-text">实验结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#flat模型提出的背景"><span class="nav-number">1.</span> <span class="nav-text">FLAT模型提出的背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#flat模型介绍"><span class="nav-number">2.</span> <span class="nav-text">FLAT模型介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验结果"><span class="nav-number">3.</span> <span class="nav-text">实验结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
         </section>
         <!--/noindex-->
 
@@ -375,39 +375,45 @@
     <div class="post-body" itemprop="articleBody">
         <p>近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解一下《FLAT: Chinese NER Using Flat-Lattice Transformer》论文，即：FLAT模型，这是今年ACL2020上NER任务的SOTA，个人觉得模型设计上非常优雅，非常值得一读，预测以后会成为比赛的标配🧐。</p>
 <a id="more"></a>
-
-<h2 id="FLAT模型提出的背景"><a href="#FLAT模型提出的背景" class="headerlink" title="FLAT模型提出的背景"></a>FLAT模型提出的背景</h2><p>对于中文NER任务，词汇增强是有效提升效果的方法之一。LatticeLSTM是词汇增强的典型模型。但是这种Lattice结构，其模型结构比较复杂，并且由于lexicon word插入位置的动态性，导致LatticeLSTM模型无法并行，所以LatticeLSTM无法很好的利用GPU加速，其training以及inference的速度非常慢。所以怎么既能够很好的融入lexicon信息，同时又能够在不降低效果甚至提升效果的同时，大幅提升training以及inference的速度，这就是FLAT模型提出的背景。目前在NER中，处理lattice结构的方式有两大类：1. 设计一个框架，能够兼容词汇信息的输入，典型的模型有：LatticeLSTM、LRCNN，这种模型的缺点是无法对长期依赖进行建模；2.将lattice结构转换为graph结构，典型的模型有：LGN、CGN，这种模型的缺点是：1.序列结构和graph结构还是有一定的差别；2.通常需要使用RNN来捕获顺序信息。而FLAT基于transformer，能够很好的解决上述的问题，但是vanilla transformer对于位置信息的捕捉其实是很弱的，很多实验表明transformer对于NER这种对于位置信息要求很高的任务，并不是很适合，所以怎么解决这个问题，具体的将在下面几节介绍。</p>
-<h2 id="FLAT模型介绍"><a href="#FLAT模型介绍" class="headerlink" title="FLAT模型介绍"></a>FLAT模型介绍</h2><p>先放模型图～</p>
+<h2 id="flat模型提出的背景">FLAT模型提出的背景</h2>
+<p>对于中文NER任务，词汇增强是有效提升效果的方法之一。LatticeLSTM是词汇增强的典型模型。但是这种Lattice结构，其模型结构比较复杂，并且由于lexicon word插入位置的动态性，导致LatticeLSTM模型无法并行，所以LatticeLSTM无法很好的利用GPU加速，其training以及inference的速度非常慢。所以怎么既能够很好的融入lexicon信息，同时又能够在不降低效果甚至提升效果的同时，大幅提升training以及inference的速度，这就是FLAT模型提出的背景。目前在NER中，处理lattice结构的方式有两大类：1. 设计一个框架，能够兼容词汇信息的输入，典型的模型有：LatticeLSTM、LRCNN，这种模型的缺点是无法对长期依赖进行建模；2.将lattice结构转换为graph结构，典型的模型有：LGN、CGN，这种模型的缺点是：1.序列结构和graph结构还是有一定的差别；2.通常需要使用RNN来捕获顺序信息。而FLAT基于transformer，能够很好的解决上述的问题，但是vanilla transformer对于位置信息的捕捉其实是很弱的，很多实验表明transformer对于NER这种对于位置信息要求很高的任务，并不是很适合，所以怎么解决这个问题，具体的将在下面几节介绍。</p>
+<h2 id="flat模型介绍">FLAT模型介绍</h2>
+<p>先放模型图～</p>
 <p><img src="/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/FLAT.jpg"></p>
 <p>上图是FLAT模型的整体结构。整体结构就是transformer的encoder部分+CRF。主要的改进就是在position encoding部分，因为transformer使用的是self-attnetion，这种点积的方式，破坏了transformer的距离感知和方向感知性。具体怎么改呢？下面具体介绍。</p>
-<ol>
-<li><p>在FLAT中，将lattice结构转换为flat 结构。怎么做呢？每一个character以及mathced lexicon word都有head index与tail index。这样的话，我们就将lattice转换为flat结构，而且由于有了head index与tail index，所以转换是可以逆转的。</p>
-</li>
-<li><p>在FLAT中，定义了新的相对位置编码。对于span $x_i$与$x_j$，它的head与tail分别表示为：$head[i],tail[i]$与$head[j],tail[j]$。$x_i$与$x_j$的关系可以用以下四个相对距离来表示：<br>$$<br>d_{ij}^{(hh)}=head[i]-head[j] \<br>d_{ij}^{(ht)}=head[i]-tail[j] \<br>d_{ij}^{(th)}=tail[i]-head[j] \<br>d_{ij}^{(tt)}=tail[i]-tail[j] \<br>$$<br>最终，相对位置编码计算如下：<br>$$<br>R_{ij}=RELU(W_r(p_{ d_{ij}^{(hh)}}\bigoplus p_{d_{ij}^{(hh)}} \bigoplus p_{d_{ij}^{(th)}} \bigoplus p_{d_{ij}^{(tt)}} )  ) \<br>p_d^{2k}=sin(\frac {d}{10000^{2k/d_{model}}}) \<br>p_d^{2k+1}=cos(\frac {d}{10000^{2k/d_{model}}}) \<br>d\in {d_{ij}^{hh},d_{ij}^{ht},d_{ij}^{th},d_{ij}^{tt}}<br>$$<br>融合后的$R$的维度是：$[batch_size,hidden_size,seq_len,seq_len]$。当然了，既然使用了相对位置编码，那么vanilla transformer中的self attention的方式就不能用了(适用于绝对位置编码)，所以在FLAT中，采用的是transformer-xl中的variant self attention，公式如下：<br>$$<br>A_{i,j}^{*}=W_{q}^{T} E_{x_i}^TE_{x_j}W_{k,E}+ W_q^⊤E_{x_i}^⊤R_{ij}W_{k,R} </p>
-<p>+u^⊤E_{x_j}W_{k,E} + v^⊤R_{ij}W_{k,R}<br>$$<br>关于这个是怎么来的，可以参考transformer-xl原始论文或者<a href="https://zhuanlan.zhihu.com/p/84159401" target="_blank" rel="noopener">link</a>。</p>
-</li>
+<ol type="1">
+<li><p>在FLAT中，将lattice结构转换为flat 结构。怎么做呢？每一个character以及mathced lexicon word都有head index与tail index。这样的话，我们就将lattice转换为flat结构，而且由于有了head index与tail index，所以转换是可以逆转的。</p></li>
+<li><p>在FLAT中，定义了新的相对位置编码。对于span <span class="math inline">\(x_i\)</span>与<span class="math inline">\(x_j\)</span>，它的head与tail分别表示为：<span class="math inline">\(head[i],tail[i]\)</span>与<span class="math inline">\(head[j],tail[j]\)</span>。<span class="math inline">\(x_i\)</span>与<span class="math inline">\(x_j\)</span>的关系可以用以下四个相对距离来表示： <span class="math display">\[
+d_{ij}^{(hh)}=head[i]-head[j] \\
+d_{ij}^{(ht)}=head[i]-tail[j] \\
+d_{ij}^{(th)}=tail[i]-head[j] \\
+d_{ij}^{(tt)}=tail[i]-tail[j] \\
+\]</span> 最终，相对位置编码计算如下： <span class="math display">\[
+R_{ij}=RELU(W_r(p_{ d_{ij}^{(hh)}}\bigoplus p_{d_{ij}^{(hh)}} \bigoplus p_{d_{ij}^{(th)}} \bigoplus p_{d_{ij}^{(tt)}} )  ) \\
+p_d^{2k}=sin(\frac {d}{10000^{2k/d_{model}}}) \\
+p_d^{2k+1}=cos(\frac {d}{10000^{2k/d_{model}}}) \\
+d\in \{d_{ij}^{hh},d_{ij}^{ht},d_{ij}^{th},d_{ij}^{tt}\}
+\]</span> 融合后的<span class="math inline">\(R\)</span>的维度是：<span class="math inline">\([batch\_size,hidden\_size,seq\_len,seq\_len]\)</span>。当然了，既然使用了相对位置编码，那么vanilla transformer中的self attention的方式就不能用了(适用于绝对位置编码)，所以在FLAT中，采用的是transformer-xl中的variant self attention，公式如下： $$ A_{i,j}^{*}=W_{q}^{T} E_{x_i}^TE_{x_j}W_{k,E}+ W_q<sup>⊤E_{x_i}</sup>⊤R_{ij}W_{k,R}</p>
+<p>+u^⊤E_{x_j}W_{k,E} + v^⊤R_{ij}W_{k,R} $$ 关于这个是怎么来的，可以参考transformer-xl原始论文或者<a href="https://zhuanlan.zhihu.com/p/84159401" target="_blank" rel="noopener">link</a>。</p></li>
 </ol>
-<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><ol>
-<li><p>数据集：OntoNotes、MSRA、Weibo、Resume</p>
-</li>
+<h2 id="实验结果">实验结果</h2>
+<ol type="1">
+<li><p>数据集：OntoNotes、MSRA、Weibo、Resume</p></li>
 <li><p>参数设置：</p>
-<img src="/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/params_MSRA+ontonotes.jpg" style="zoom:50%;">
-
-<img src="/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/prams_weibo+resume.jpg" style="zoom:50%;">
-</li>
+<p><img src="/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/params_MSRA+ontonotes.jpg" style="zoom:50%;"></p>
+<p><img src="/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/prams_weibo+resume.jpg" style="zoom:50%;"></p></li>
 <li><p>实验结果</p>
 <p>我们首先来看一下FLAT以及其他的模型在四个数据集上的表现，如下图所示。从结果可以看到，FLAT的结果都超过了之前提出的模型。</p>
 <p><img src="/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/result.jpg"></p>
 <p>我们看一下加上了BERT之后的结果，如下图所示。NB!以后比赛可以搞起来了就不一定是BERT+BILSTM+CRF了，也可以是是BERT+FLAT+CRF，不过词汇表在其中还是占了大部分作用，以后要用的好的话，就得制作词汇表了。🧐</p>
-<img src="/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/bert.jpg" style="zoom:80%;">
-
+<p><img src="/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/bert.jpg" style="zoom:80%;"></p>
 <p>我们再来看一下推理速度，如下图所示。在batch的情况下，inferance的速度比其他模型快上好几倍，FLAT nb！这个实验另外让我非常惊奇的是，原始的LatticeLSTM的code是不能batch训练的，但是这篇paper的作者自己手撸了一个batch的LatticeLSTM，向大佬低头，有空去看看具体是怎么做到的。<a href="https://github.com/LeeSureman/Batch_Parallel_LatticeLSTM" target="_blank" rel="noopener">code</a></p>
-<p><img src="/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/speed.jpg"></p>
-</li>
+<p><img src="/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/speed.jpg"></p></li>
 </ol>
-<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>《FLAT: Chinese NER Using Flat-Lattice Transformer》</p>
+<h2 id="参考文献">参考文献</h2>
+<p>《FLAT: Chinese NER Using Flat-Lattice Transformer》</p>
 <p>《Transformer-XL: Attentive Language Models Beyond a Fixed-Length Context》</p>
-<p>code：<a href="https://github.com/LeeSureman/Flat-Lattice-Transformer" target="_blank" rel="noopener">https://github.com/LeeSureman/Flat-Lattice-Transformer</a></p>
+<p>code：https://github.com/LeeSureman/Flat-Lattice-Transformer</p>
 
     </div>
 

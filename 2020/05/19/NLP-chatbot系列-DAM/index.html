@@ -41,8 +41,8 @@
 <meta property="article:modified_time" content="2020-06-28T05:32:32.046Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
-<meta property="article:tag" content="DAM">
 <meta property="article:tag" content="tensorflow2">
+<meta property="article:tag" content="DAM">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://codewithzichao.github.io/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/DAM.jpg">
 
@@ -227,7 +227,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <section class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#DAM模型介绍"><span class="nav-number">1.</span> <span class="nav-text">DAM模型介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DAM模型架构"><span class="nav-number">1.1.</span> <span class="nav-text">DAM模型架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Input-layer"><span class="nav-number">1.1.1.</span> <span class="nav-text">Input layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#representation-layer-and-matching-layer"><span class="nav-number">1.1.2.</span> <span class="nav-text">representation layer and matching layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#aggregation-layer"><span class="nav-number">1.1.3.</span> <span class="nav-text">aggregation layer</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#details"><span class="nav-number">1.2.</span> <span class="nav-text">details</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果"><span class="nav-number">1.3.</span> <span class="nav-text">结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DAM模型实现"><span class="nav-number">2.</span> <span class="nav-text">DAM模型实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#dam模型介绍"><span class="nav-number">1.</span> <span class="nav-text">DAM模型介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dam模型架构"><span class="nav-number">1.1.</span> <span class="nav-text">DAM模型架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#input-layer"><span class="nav-number">1.1.1.</span> <span class="nav-text">Input layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#representation-layer-and-matching-layer"><span class="nav-number">1.1.2.</span> <span class="nav-text">representation layer and matching layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#aggregation-layer"><span class="nav-number">1.1.3.</span> <span class="nav-text">aggregation layer</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#details"><span class="nav-number">1.2.</span> <span class="nav-text">details</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果"><span class="nav-number">1.3.</span> <span class="nav-text">结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dam模型实现"><span class="nav-number">2.</span> <span class="nav-text">DAM模型实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
         </section>
         <!--/noindex-->
 
@@ -376,32 +376,35 @@
     <div class="post-body" itemprop="articleBody">
         <p>正式入对话的坑啦🤣对话是目前NLP技术重要的落地场景之一，但是相比于其他的方向，对话目前的应用还不算成熟，也远远没有产生它应有的巨大商业价值，但是随着物联网与5G等的发展，对话的应用前景是非常光明的。此外，既然对话的坑还有很多，这也意味着总需要人去填满这些坑，对NLPer来说，是挑战也是机会。其他的不多说，本篇着重讲讲检索式对话的经典模型DAM。</p>
 <a id="more"></a>
-
-<h2 id="DAM模型介绍"><a href="#DAM模型介绍" class="headerlink" title="DAM模型介绍"></a>DAM模型介绍</h2><p>DAM模型是2018年百度发表的论文，思路非常清晰。由于传统的RNN并行效率低，所以DAM模型中全部使用了self-attention机制；除此之外，在多个粒度上去匹配文本，能够得到更加高层的语义特征，对结果有好处，这个在SSE模型上证明了这一点。下面就具体地来讲解这些DAM模型细节～(ps：这篇论文还总结了检索式对话与生成式对话的区别，非常值得一读)</p>
-<h3 id="DAM模型架构"><a href="#DAM模型架构" class="headerlink" title="DAM模型架构"></a>DAM模型架构</h3><p>首先给出一些定义：给定训练集：$\cal D={c,r,y}<em>{z=1}^{N}$，其中，$c={u_0,u_1,…,u</em>{n-1}}$，$y={0,1}$，c表示context，r表示response，y表示标签，目标是：衡量与c与r之间的匹配度。下面直接给出模型图吧～</p>
+<h2 id="dam模型介绍">DAM模型介绍</h2>
+<p>DAM模型是2018年百度发表的论文，思路非常清晰。由于传统的RNN并行效率低，所以DAM模型中全部使用了self-attention机制；除此之外，在多个粒度上去匹配文本，能够得到更加高层的语义特征，对结果有好处，这个在SSE模型上证明了这一点。下面就具体地来讲解这些DAM模型细节～(ps：这篇论文还总结了检索式对话与生成式对话的区别，非常值得一读)</p>
+<h3 id="dam模型架构">DAM模型架构</h3>
+<p>首先给出一些定义：给定训练集：<span class="math inline">\(\cal D=\{c,r,y\}_{z=1}^{N}\)</span>，其中，<span class="math inline">\(c=\{u_0,u_1,...,u_{n-1}\}\)</span>，<span class="math inline">\(y=\{0,1\}\)</span>，c表示context，r表示response，y表示标签，目标是：衡量与c与r之间的匹配度。下面直接给出模型图吧～</p>
 <p><img src="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/DAM.jpg"></p>
 <p>DAM模型大致遵循：representation-matching-aggregation框架，下面一一介绍～</p>
-<h4 id="Input-layer"><a href="#Input-layer" class="headerlink" title="Input layer"></a>Input layer</h4><p>c与r共享word embedding，对于第i个utterance in context，它的表示为：$U_{i}^{0}={e_{u_i,0}^{0},e_{u_i,1}^{0}…,e_{u_i,n_{u_i}-1}^{0}}$，对于response，表示为：$R^0={e_{r,0}^{0},e_{r,1}^{0},…,e_{r,n_r-1}^{0}}$。</p>
-<h4 id="representation-layer-and-matching-layer"><a href="#representation-layer-and-matching-layer" class="headerlink" title="representation layer and matching layer"></a>representation layer and matching layer</h4><p>这一层主要是叠加多个self attention，从而提取出多个粒度的语义表示。假设有L层，那么每一层的结果都被保存下来，即：${U_{i}^{0},U_{i}^{1},…,U_{i}^{L}}<em>{i=0}^{n-1}$，${R^{0},R^{1},…,R^{L}}$。计算公式如下：<br>$$<br>U</em>{i}^{l+1}=attentiveModule(U_{i}^{l},U_{i}^{l},U_{i}^{l}) \<br>R^{l+1}=attentiveModule(R^{l},R^{l},R^{l})<br>$$<br>然后，根据这些结果，来构建self attention match matrix $M_{self}^{u_i,r,l}$与cross attention match matrix $M_{cross}^{u_i,r,l}$。那么，具体怎么来构建呢？如下：</p>
-<img src="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/self attention.jpg" style="zoom:50%;">
-
-<p>要计算$M_{cross}^{u_i,r,l}$，需要计算cross attention的值，公式如下：<br>$$<br>U_{i}^{l}=attentiveModule(U_{i}^{l},R^{l},R^{l}) \<br>R^{l}=attentiveModule(R^{l},U_{i}^{l},U_{i}^{l})<br>$$<br><img src="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/cross attention.jpg" style="zoom:50%;"></p>
+<h4 id="input-layer">Input layer</h4>
+<p>c与r共享word embedding，对于第i个utterance in context，它的表示为：<span class="math inline">\(U_{i}^{0}=\{e_{u_i,0}^{0},e_{u_i,1}^{0}...,e_{u_i,n_{u_i}-1}^{0}\}\)</span>，对于response，表示为：<span class="math inline">\(R^0=\{e_{r,0}^{0},e_{r,1}^{0},...,e_{r,n_r-1}^{0}\}\)</span>。</p>
+<h4 id="representation-layer-and-matching-layer">representation layer and matching layer</h4>
+<p>这一层主要是叠加多个self attention，从而提取出多个粒度的语义表示。假设有L层，那么每一层的结果都被保存下来，即：<span class="math inline">\(\{U_{i}^{0},U_{i}^{1},...,U_{i}^{L}\}_{i=0}^{n-1}\)</span>，<span class="math inline">\(\{R^{0},R^{1},...,R^{L}\}\)</span>。计算公式如下： <span class="math display">\[
+U_{i}^{l+1}=attentiveModule(U_{i}^{l},U_{i}^{l},U_{i}^{l}) \\
+R^{l+1}=attentiveModule(R^{l},R^{l},R^{l})
+\]</span> 然后，根据这些结果，来构建self attention match matrix <span class="math inline">\(M_{self}^{u_i,r,l}\)</span>与cross attention match matrix <span class="math inline">\(M_{cross}^{u_i,r,l}\)</span>。那么，具体怎么来构建呢？如下：</p>
+<p><img src="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/self attention.jpg" style="zoom:50%;"></p>
+<p>要计算<span class="math inline">\(M_{cross}^{u_i,r,l}\)</span>，需要计算cross attention的值，公式如下： <span class="math display">\[
+U_{i}^{l}=attentiveModule(U_{i}^{l},R^{l},R^{l}) \\
+R^{l}=attentiveModule(R^{l},U_{i}^{l},U_{i}^{l})
+\]</span> <img src="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/cross attention.jpg" style="zoom:50%;"></p>
 <p>从公式可以看到，两种matrix的构建实际上就是dot product。<strong>最终，对于每一个utterance in context的每一层来说，每一个矩阵的维度是：(batch_size,max_length_utterance,max_length_response)。</strong></p>
-<h4 id="aggregation-layer"><a href="#aggregation-layer" class="headerlink" title="aggregation layer"></a>aggregation layer</h4><p>aggregation layer的输入维度是：(batch_size,num_utterance,max_length_utterance,max_length_response,2(L+1))，这是一个五维向量。我们记做：$Q={\cal Q_{i,k,t}}<em>{n\times n</em>{u_i},r}$。它是self attention与cross attention矩阵concat之后的结果。然后对其使用两层的三维卷积（每一层都接上最大池化），第二个最大池化是全局最大池化，得到的输出维度是：(batch_size,filters)，最终将输出送入一层preceptron中，公式如下：</p>
-<img src="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/preceptron.jpg" style="zoom:50%;">
-
-
-
-<h3 id="details"><a href="#details" class="headerlink" title="details"></a>details</h3><ul>
-<li><p>数据集：Ubuntu Corpus、Douban Conversation Corpus</p>
-</li>
-<li><p>评价指标：$R_n@k$，MRR，MAP</p>
-</li>
-<li><p>loss function：</p>
-</li>
+<h4 id="aggregation-layer">aggregation layer</h4>
+<p>aggregation layer的输入维度是：(batch_size,num_utterance,max_length_utterance,max_length_response,2(L+1))，这是一个五维向量。我们记做：<span class="math inline">\(Q=\{\cal Q_{i,k,t}\}_{n\times n_{u_i},r}\)</span>。它是self attention与cross attention矩阵concat之后的结果。然后对其使用两层的三维卷积（每一层都接上最大池化），第二个最大池化是全局最大池化，得到的输出维度是：(batch_size,filters)，最终将输出送入一层preceptron中，公式如下：</p>
+<p><img src="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/preceptron.jpg" style="zoom:50%;"></p>
+<h3 id="details">details</h3>
+<ul>
+<li><p>数据集：Ubuntu Corpus、Douban Conversation Corpus</p></li>
+<li><p>评价指标：<span class="math inline">\(R_n@k\)</span>，MRR，MAP</p></li>
+<li><p>loss function：</p></li>
 </ul>
-<img src="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/loss function.jpg" style="zoom:50%;">
-
+<p><img src="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/loss function.jpg" style="zoom:50%;"></p>
 <ul>
 <li>每一个context最多有9个utterance，每一个utterance(reponse)最多有50个word</li>
 <li>word embedding使用word2vec得到的词向量，维度是200</li>
@@ -409,9 +412,12 @@
 <li>第一个卷积层有32个[3,3,3]的filters，stride为[1,1,1]，最大池化大小为[3,3,3]，stride为[3,3,3]；第二个卷积层有16个[3,3,3]filters，stride为[1,1,1]，最大池化大小为[3,3,3]，stride为[3,3,3]</li>
 <li>batch szie 为256</li>
 </ul>
-<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><p><img src="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/%E7%BB%93%E6%9E%9C.jpg"></p>
+<h3 id="结果">结果</h3>
+<p><img src="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/结果.jpg"></p>
 <p>从结果来看，DAM模型效果还是不错的～</p>
-<h2 id="DAM模型实现"><a href="#DAM模型实现" class="headerlink" title="DAM模型实现"></a>DAM模型实现</h2><h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>Multi-Turn Response Selection for Chatbots with Deep Attention Matching Network</p>
+<h2 id="dam模型实现">DAM模型实现</h2>
+<h2 id="参考文献">参考文献</h2>
+<p>Multi-Turn Response Selection for Chatbots with Deep Attention Matching Network</p>
 
     </div>
 
@@ -440,8 +446,8 @@
 
           <div class="post-tags">
               <a href="/tags/NLP/" rel="tag"># NLP</a>
-              <a href="/tags/DAM/" rel="tag"># DAM</a>
               <a href="/tags/tensorflow2/" rel="tag"># tensorflow2</a>
+              <a href="/tags/DAM/" rel="tag"># DAM</a>
           </div>
 
         
