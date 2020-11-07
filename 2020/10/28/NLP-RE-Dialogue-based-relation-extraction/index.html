@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 4.2.0">
-
-
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -15,14 +13,37 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
 
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
 
-<script class="hexo-configurations">
-    var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","images":"/images","scheme":"Muse","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
-  </script>
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://codewithzichao.github.io').hostname,
+    root: '/',
+    scheme: 'Muse',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: "",
+      labels: ""
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
 
   <meta name="description" content="这篇博客主要讲解两篇论文：《Dialogue-Based Relation Extraction》与《Dialogue Relation Extraction with Document-level Heterogeneous Graph Attention Networks》。">
 <meta property="og:type" content="article">
@@ -41,24 +62,24 @@
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_result.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_result_ablation.jpg">
 <meta property="article:published_time" content="2020-10-27T16:56:48.000Z">
-<meta property="article:modified_time" content="2020-11-07T17:14:08.809Z">
+<meta property="article:modified_time" content="2020-11-07T17:24:30.311Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="dialogue-based RE">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/statistics_DialogRE.jpg">
 
-
 <link rel="canonical" href="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/">
 
 
-<script class="page-configurations">
+<script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : false,
-    isPost : true,
-    lang   : 'en'
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
   };
 </script>
 
@@ -72,104 +93,88 @@
 
   <noscript>
   <style>
-  body { margin-top: 2rem; }
-
+  .use-motion .brand,
   .use-motion .menu-item,
-  .use-motion .sidebar,
+  .sidebar-inner,
   .use-motion .post-block,
   .use-motion .pagination,
   .use-motion .comments,
   .use-motion .post-header,
   .use-motion .post-body,
-  .use-motion .collection-header {
-    visibility: visible;
-  }
-
-  .use-motion .header,
-  .use-motion .site-brand-container .toggle,
-  .use-motion .footer { opacity: initial; }
+  .use-motion .collection-header { opacity: initial; }
 
   .use-motion .site-title,
-  .use-motion .site-subtitle,
-  .use-motion .custom-logo-image {
+  .use-motion .site-subtitle {
     opacity: initial;
     top: initial;
   }
 
-  .use-motion .logo-line {
-    transform: scaleX(1);
-  }
-
-  .search-pop-overlay, .sidebar-nav { display: none; }
-  .sidebar-panel { display: block; }
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
   </style>
 </noscript>
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
-  <div class="headband"></div>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
 
-  <main class="main">
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Toggle navigation bar">
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
-    </div>
-  </div>
-
   <div class="site-meta">
 
-    <a href="/" class="brand" rel="start">
-      <i class="logo-line"></i>
-      <h1 class="site-title">codewithzichao</h1>
-      <i class="logo-line"></i>
-    </a>
-      <p class="site-subtitle" itemprop="description">Confident，Modest，Patient</p>
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">codewithzichao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">Confident，Modest，Patient</p>
   </div>
 
-  <div class="site-nav-right">
-    <div class="toggle popup-trigger">
-        <i class="fa fa-search fa-fw fa-lg"></i>
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
   </div>
 </div>
 
 
-
 <nav class="site-nav">
-  <ul class="main-menu menu">
+  
+  <ul id="menu" class="menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
 
   </li>
-        <li class="menu-item menu-item-schedule">
+        <li class="menu-item menu-item-friends">
 
-    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a>
+    <a href="/Friends/" rel="section"><i class="fa fa-fw fa-address-book"></i>Friends</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -177,47 +182,300 @@
         </a>
       </li>
   </ul>
+
 </nav>
-
-
-
-  <div class="search-pop-overlay">
+  <div class="site-search">
     <div class="popup search-popup">
-        <div class="search-header">
+    <div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocapitalize="off" maxlength="80"
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
            placeholder="Searching..." spellcheck="false"
-           type="search" class="search-input">
+           type="text" id="search-input">
   </div>
   <span class="popup-btn-close">
     <i class="fa fa-times-circle"></i>
   </span>
 </div>
-<div class="search-result-container no-result">
-  <div class="search-result-icon">
-    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
   </div>
 </div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="name" content="zichao">
+      <meta itemprop="description" content="Just learning">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="codewithzichao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          NLP|RE-Dialogue-based relation extraction
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+
+            
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-10-28 00:56:48" itemprop="dateCreated datePublished" datetime="2020-10-28T00:56:48+08:00">2020-10-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-11-08 01:24:30" itemprop="dateModified" datetime="2020-11-08T01:24:30+08:00">2020-11-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index">
+                    <span itemprop="name">NLP</span>
+                  </a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96/" itemprop="url" rel="index">
+                    <span itemprop="name">关系抽取</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>这篇博客主要讲解两篇论文：《Dialogue-Based Relation Extraction》与《Dialogue Relation Extraction with Document-level Heterogeneous Graph Attention Networks》。</p>
+<a id="more"></a>
+<h2 id="dialogue-based-relation-extractionacl2020">Dialogue-Based Relation Extraction(ACL2020)</h2>
+<h3 id="background">Background</h3>
+<p>目前的document-level RE dataset都是使用比较正式的文本构建而成的，这样构建的数据集内部含有丰富的逻辑推理关系，并且有足够的信息能够提取出关键信息。但是在dialogue relation extraction中，对话文本往往是非正式的、语法不严谨的，虽然逻辑简单，但是其信息密度低，且很容易有歧义的问题。而目前针对于DRE任务仍然没有引起广泛的研究。所以这篇paper构建了第一个dialogue-based RE dataset——DialogRE，并且提出了新的评价指标：<span class="math inline">\(F1_c\)</span>以及相关的baseline，用于以后的研究。</p>
+<blockquote>
+<p>之前一直很喜欢《老友记》，有人能够根据《老友记》来构建数据集，真是有生之年啊！爱了爱了🤩</p>
+</blockquote>
+<h3 id="statistics-of-dialogre">Statistics of DialogRE</h3>
+<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/statistics_DialogRE.jpg" style="zoom:50%;"></p>
+<p>DialogRE数据集是根据美国电视情景喜剧《老友记》中共10季的台词构建而来，共有1788个dialogue，10168个triple, 其中train:dev:test=6:2:2，每一个样本的形式还是SPO，与其他的RE并无区别。但是DialogRE与其他的document-level RE dataset最大的不同是：1. argument pair的relation span sentences的比例(95.6%)要其他的数据集(40.7%)高得多高得多(95.6%)；2.以speaker为中心，77.3%的triple全是speaker name，90.0%的triple至少包含一个speaker name；3.信息密度低，只有0.21/per sen。DialogRE数据集与其他数据集的比较如下：</p>
+<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/DialogRE_otherRE.jpg"></p>
+<p>下面是dialogRE数据集中的relation type：</p>
+<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/dialog_realtion_type.jpg"></p>
+<p>⚠️在dialogRE中，有一个概念叫做trigger，其实和DocRED中的evidence是差不多的，用来证明argument pair的relation的正确性。</p>
+<h3 id="task-formulation-and-evaluation">Task formulation and Evaluation</h3>
+<p>给定一个dialogue：<span class="math inline">\(D=s_1:t_1,...,s_m:t_m\)</span>以及argument pair: <span class="math inline">\((a_1,a_2)\)</span>，其中<span class="math inline">\(s_i,t_i\)</span>表示第<span class="math inline">\(i\)</span>轮的speaker id与text，我们的目标是得到<span class="math inline">\((a_1,a_2)\)</span>的relation。有两个评价方法：<span class="math inline">\(F1\)</span>与<span class="math inline">\(F1_c\)</span>。<span class="math inline">\(F1\)</span>其实就是我们寻常用的，而<span class="math inline">\(F1_c\)</span>是这篇paper作者专门设计的，下面具体讲讲～</p>
+<p>我们首先定义一些符号：<span class="math inline">\(O_i\)</span>表示前<span class="math inline">\(i\)</span>轮对话中，使用模型预测得出的argument pair<span class="math inline">\((a_1,a_2)\)</span>的relation type set，<span class="math inline">\(L\)</span>表示在整个对话中argument pair<span class="math inline">\((a_1,a_2)\)</span>的真实的relation type set，<span class="math inline">\(R\)</span>表示所有的36个relation type，所以：<span class="math inline">\(O_i,L\in R\)</span>；我们定义辅助函数<span class="math inline">\(j(x)\)</span>，如果<span class="math inline">\(x\)</span>不出现在<span class="math inline">\(D\)</span>中，那么返回<span class="math inline">\(m\)</span>，否则的话，返回<span class="math inline">\(x\)</span>第一次出现的对话轮数<span class="math inline">\(i\)</span>；我们定义辅助函数<span class="math inline">\(i(r)\)</span>，表示：对于每一个relation type <span class="math inline">\(r\in L\)</span>，如果存在一个trigger for <span class="math inline">\(r\)</span>，那么<span class="math inline">\(i(r)=j(\lambda_r)\)</span>，其中<span class="math inline">\(\lambda_r\)</span>表示trigger，否则<span class="math inline">\(i(r)=m\)</span>，对于relation <span class="math inline">\(r{\in} R {\text \ }L\)</span>，<span class="math inline">\(i(r)=1\)</span>。我们使用<span class="math inline">\(E_i\)</span>表示前<span class="math inline">\(i\)</span>轮可以评估的relation type set，如下： <span class="math display">\[
+\begin{align}E_i=\{r|i\geq max\{j(a_1),j(a_2),i(r)\}\} \end{align}
+\]</span> <span class="math inline">\(E_i\)</span>的意思是：在前<span class="math inline">\(i\)</span>轮对话中，如果出现了<span class="math inline">\(a_1,a_2\)</span>以及与relation <span class="math inline">\(r\)</span>相关的trigger的话，那么relation <span class="math inline">\(r\)</span>就是可评估的，也就是说作为候选。之所以这样定义，是因为这样做可以知道对于每一个argument pair，我们大致可以推算预测其relation大概需要多少轮数。之后，我们定义conversation precision与recall依旧conversation F1，如下： <span class="math display">\[
+\begin{align}
+\\
+P_c(D,a_1,a_2)=\frac{\sum_{i=1}^{m}|O_i\cap L\cap E_i|}{\sum_{i=1}^{m}|O_i\cap E_i|} \\
+R_c(D,a_1,a_2)=\frac{\sum_{i=1}^{m}|O_i\cap L\cap E_i|}{\sum_{i=1}^{m}|L\cap E_i|} \\
+P_c=\frac{\sum_{D^{\prime},a_1^{\prime},a_2^{\prime}}P_c(D^{\prime},a_1^{\prime},a_2^{\prime})}{\sum_{D^{\prime},a_1^{\prime},a_2^{\prime}}1} \\
+R_c=\frac{\sum_{D^{\prime},a_1^{\prime},a_2^{\prime}}R_c(D^{\prime},a_1^{\prime},a_2^{\prime})}{\sum_{D^{\prime},a_1^{\prime},a_2^{\prime}}1} \\
+F1_c=\frac{2P_cR_c}{P_c+R_c}\\
+\end{align}
+\]</span></p>
+<h3 id="baseline">Baseline</h3>
+<p>在paper中，介绍了四种baseline：Majority、CNN/LSTM/BILSTM、BERT、BERT<span class="math inline">\(_s\)</span>。所谓的Majority就是：如果一个argument pair的relation没出现在training set当中，那么输出training set中数目最大的relation type，否则的话，输出与argument pair最相关的relation type；CNN/LSTM/BILSTM指的是：采用CNN/LSTM/BILSTM作为编码器；BERT指的是：采用BERT以及BERT-like预训练模型作为编码器，不过其输入格式是：<span class="math inline">\([CLS]d[SEP]a_1[SEP]a_2[SEP]\)</span>；BERT<span class="math inline">\(_s\)</span>是作者所改进的一个方法，指的是：仍然采用BERT以及BERT-like预训练模型作为编码器，但是其输入格式是：<span class="math inline">\([CLS]\hat d[SEP]\hat a_1[SEP]\hat a_2[SEP]\)</span>，其中： <span class="math display">\[
+\begin{align}
+\hat d=\hat s_1:\hat t_1,...,\hat s_n:\hat t_n \\
+\hat s_i=\begin{cases}[S1] &amp; if \ s_i=a_1 \\ [S2] &amp; if \ s_1=a_2 \\ s_1 &amp; otherwise \end{cases}
+\end{align}
+\]</span> 其中，<span class="math inline">\([S1],[S2]\)</span>表示两个新的特殊的token。</p>
+<h3 id="experiment">Experiment</h3>
+<p>放一下上述四种方法在DialogRE数据集上的结果:</p>
+<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/dialogRE_result2.jpg"></p>
+<p>下面是加了argument type之后的结果，发现结果是有提升的，说明argument type是有作用的。</p>
+<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/dialog_result_1.jpg" style="zoom:50%;"></p>
+<p>总的来说，DialogRE是一个新的工作，在这个上面还是可以做很多的工作的。</p>
+<h2 id="dialogue-relation-extraction-with-document-level-heterogeneous-graph-attention-networksarxiv2020">Dialogue Relation Extraction with Document-level Heterogeneous Graph Attention Networks(arxiv2020)</h2>
+<h3 id="background-1">Background</h3>
+<p>这篇paper研究的是dialogue relation extraction task。之前的关于DRE的方法都没有很好地利用好speaker的信息，所以就忽略了speaker之间的信息可能会带给argument pair的影响。怎么解决呢？在这篇paper当中，采用的是基于graph的方法，提出了HGAT模型。</p>
+<h3 id="model">Model</h3>
+<p>先放图～</p>
+<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_model.jpg"></p>
+<p>整个HGAT模型分为三部分：<strong>utterance encoder、graph construction、relation classification。</strong></p>
+<ul>
+<li><p><strong>task definition：</strong>给定含有<span class="math inline">\(N\)</span>个utterance的dialogue：<span class="math inline">\(D=\{u_1,...,u_N\}\)</span>以及argument pair：<span class="math inline">\({\cal A}={(x_1,y_1),...,(x_1,y_1)}\)</span>，其中<span class="math inline">\(x_i,y_i\)</span>是dialogue中的entity，我们的目标是：建立模型，预测argument pair的relation。</p></li>
+<li><p><strong>data processing：</strong>使用spaCy获得POS tag以及named-entity types of each token。</p></li>
+<li><p><strong>utterance encoder：</strong>对于每一个utterance <span class="math inline">\(u_i\)</span>，我们使用GloVe初始化，并且与其他两种embedding进行concat，得到最终的初始的token embedding，如下： <span class="math display">\[
+e=[e_w;e_p;e_t]
+\]</span> 其中，<span class="math inline">\(e_p\)</span>表示POS embedding，<span class="math inline">\(e_t\)</span>表示entity-type embedding；然后送入encoder当中进行编码，这里使用的是BILSTM(其实其他的编码器也是OK的)<strong>(local BILSTM)</strong>，然后得到contextual rep，如下： <span class="math display">\[
+\overleftarrow {h^{i}_{j}}=BILSTM_l(\overleftarrow {h^i_{j+1}},e^i_j) \\
+\overrightarrow {h^{i}_{j}}=BILSTM_r(\overrightarrow {h^i_{j-1}},e^i_j) \\
+h^i_j=[\overleftarrow {h^i_j};\overrightarrow {h^i_j}]
+\]</span> 其中，<span class="math inline">\(e^i_j\)</span>表示第<span class="math inline">\(i\)</span>个utterance的第<span class="math inline">\(j\)</span>个token的初始embedding rep，<span class="math inline">\(h^i_j\)</span>表示第<span class="math inline">\(i\)</span>个utterance的第<span class="math inline">\(j\)</span>个token的rep。之后，我们对其进行max over time pooling，得到sentence vecotor，再送入到BILSTM当中<strong>(global BILSTM)</strong>，得到新的contextual rep，这个时候是三维的张量。</p></li>
+<li><p><strong>graph construction：</strong>这一部分就是graph的构建，分为两部分：<strong>node construction、edge construction。</strong></p>
+<ul>
+<li><p>node construction：共有5种类型的node：utterance node、entity-type node、word node、speaker node、argument node。utterance node指的是：一个utterance是一个node，其表示就是使用的utterance encoder输出的结果；entity-type node指的是：word的type，每个named entity的每一个word都连接到其对应的entity-type node；word node指的是：对话的vocabulary，初始状态使用GloVe，每一个word node都与包含这个word的utterance node相连接，并且与在这个对话当中，这个word有可能的entity type node相连接；speaker node指的是：每一个唯一的speaker，并且其与ta自身的utterance相连接；argument node指的是：用来编码argument pair中的argument的相对位置信息(subject or object?)，每一个argument pair都有两个argument 。</p></li>
+<li><p>edge construction：<strong>⚠️graph本身是无向的，但是propagation是有方向的。</strong>这里总共有5种edge：utterance-word、utterance-argument、utterance-speaker、type-word、type-argument。所有的edge都是无向的，并且都是随机初始化(除了utterance-word，其采用POS tag来初始化)。</p>
+<blockquote>
+<p>ps：我个人觉得这种需要用已有的语法分析工具来得到feature的方法不是很优雅，一方面这些语法分析工具得到的feature并不是很准确，另一方面一体化不好，个人拙见是一个好的模型应该是其本身与数据无关的、与第三方工具无关的、针对问题本身进行建模的。</p>
+</blockquote></li>
+<li><p>message propagation：构建好graph之后，我们就需要进行aggregate。由于我们构建的是一个异质图，所以paper中采用的是GAT与metapath(HGNN中经常使用的一种方法)。GAT很简单就不提了，不懂可见<a href="https://zhuanlan.zhihu.com/p/81350196?utm_source=wechat_session" target="_blank" rel="noopener">link</a>，主要讲一下metapath的设计，这对于HGNN的效果是最重要的。</p>
+<p>Metapath：第一，使用utterance node来update word node、speaker node与argument node；第二，更新好的word node来update entity-type node；第三，更新好的entity-type node来update word node、argument node、entity-type node；第四，我们使用word node、speaker node、argument node来update utterance node；最后，utterance node再一次update word node、speaker node、argument node。即： <span class="math display">\[
+V_u\rightarrow V_b\rightarrow V_t\rightarrow V_b\rightarrow V_u\rightarrow V_b
+\]</span> 然后借鉴了ACL2020邱锡鹏老师那篇使用HGNN来做文本摘要的paper，对一个node的更新，都使用了残差链接，即：<span class="math inline">\(\hat h_i=\tilde h_i+h^{\prime}_i\)</span>，其中<span class="math inline">\(h^{\prime}_i\)</span>是GAT layer输入，<span class="math inline">\(\tilde h_i\)</span>是GAT layer的输出，然后我们使用FFN，增加非线性，即：<span class="math inline">\(h^{new}_i=FFN(\hat h_i)\)</span>。OK，在HGAT模型中，更新次数为三次，其整体而言公式如下： <span class="math display">\[
+H^1_b=GAT(H^0_b,H^0_u) \\
+H^1_t=GAT(H^0_t,H^1_b) \\
+H^2_b=GAT(H^1_b,H^1_t) \\
+H^1_u=GAT(H^0_u,H^2_b) \\
+H^3_b=GAT(H^2_b,H^1_u)
+\]</span> ⚠️注意，<span class="math inline">\(b\)</span>表示basic node，包括：word node、speaker node、argument node。</p></li>
+</ul></li>
+<li><p><strong>relation classifier：</strong>选择argument node <span class="math inline">\(\tau_x，\tau_y\)</span>与word node <span class="math inline">\(e_x,e_y\)</span>，将两者concat，并且送入到sigmoid中，如下： <span class="math display">\[
+e^{\prime}_x=[maxpooling(\tau_x);maxpooling(e_x)] \\
+e^{\prime}_y=[maxpooling(\tau_y);maxpooling(e_y)] \\
+e^{\prime}=[e^{\prime}_x;e^{\prime}_y] \\
+P(r|e_x,e_y)=sigmoid(W_ee^{\prime}+b_e)_r
+\]</span></p></li>
+</ul>
+<h3 id="experiment-1">Experiment</h3>
+<ol type="1">
+<li><p>数据集：DialogRE</p></li>
+<li><p>hyperparameters</p>
+<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_hyperparameters.jpg" style="zoom:50%;"></p></li>
+<li><p>结果</p>
+<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_result.jpg"></p>
+<p>从结果来看，提升还是蛮大的。我们再来看看消融实验与case study。</p></li>
+<li><p>消融实验</p>
+<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_result_ablation.jpg" style="zoom:50%;"></p>
+<p>从消融实验结果来看：1.去掉global BILSTM的结果与POSembedding的影响比较大，这说明如何得到一个好的sentence vector并对其进行编码是非常重要的，另外，POS embedding的结果也说明句子结构的建模也是很重要的，所以如果建模也是一个值得探讨的问题；2. 一个好的embedding初始化很重要；3. 默认update是3次，目前是最优。我觉得这个消融实验做的一般，我觉得应该对不同的node与edge的作用也要进行实验，不然怎么证明你的graph是比较好的呢？</p></li>
+<li><p>case study</p>
+<p>从case study中可以得出：95%的argument pair是span 2个sentence，所以长距离建模很重要；entity-type很重要，如果模型无法从训练数据中获取到足够的信息，那么就会判断出错。这个case study也做的一般。。。</p>
+<p>总的来说，HGAT模型一般吧，但是由于是第一个在DialogRE数据集上的模型，结果还是很令人满意的。</p></li>
+</ol>
+<h2 id="references">References</h2>
+<p>《Dialogue-Based Relation Extraction》</p>
+<p>《Dialogue Relation Extraction with Document-level Heterogeneous Graph Attention Networks》</p>
 
     </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Would you like to buy me a cup of coffee☕️～</div>
+  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="zichao Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/NLP/" rel="tag"># NLP</a>
+              <a href="/tags/dialogue-based-RE/" rel="tag"># dialogue-based RE</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/" rel="prev" title="NLP|RE-Integrate GNN into Document-level RE task|PART TWO">
+      <i class="fa fa-chevron-left"></i> NLP|RE-Integrate GNN into Document-level RE task|PART TWO
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/10/28/NLP-TST-DualRL-model/" rel="next" title="NLP|TST-DualRL model">
+      NLP|TST-DualRL model <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
   </div>
 
-</div>
-        
+
+          </div>
+          
+
+        </div>
+          
   
   <div class="toggle sidebar-toggle">
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
   </div>
 
   <aside class="sidebar">
+    <div class="sidebar-inner">
 
-    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
-      <ul class="sidebar-nav">
+      <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
           Table of Contents
         </li>
@@ -226,21 +484,20 @@
         </li>
       </ul>
 
-      <div class="sidebar-panel-container">
-        <!--noindex-->
-        <section class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Dialogue-Based-Relation-Extraction-ACL2020"><span class="nav-number">1.</span> <span class="nav-text">Dialogue-Based Relation Extraction(ACL2020)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Background"><span class="nav-number">1.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Statistics-of-DialogRE"><span class="nav-number">1.2.</span> <span class="nav-text">Statistics of DialogRE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-formulation-and-Evaluation"><span class="nav-number">1.3.</span> <span class="nav-text">Task formulation and Evaluation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Baseline"><span class="nav-number">1.4.</span> <span class="nav-text">Baseline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Experiment"><span class="nav-number">1.5.</span> <span class="nav-text">Experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dialogue-Relation-Extraction-with-Document-level-Heterogeneous-Graph-Attention-Networks-arxiv2020"><span class="nav-number">2.</span> <span class="nav-text">Dialogue Relation Extraction with Document-level Heterogeneous Graph Attention Networks(arxiv2020)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Background-1"><span class="nav-number">2.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Model"><span class="nav-number">2.2.</span> <span class="nav-text">Model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Experiment-1"><span class="nav-number">2.3.</span> <span class="nav-text">Experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">3.</span> <span class="nav-text">References</span></a></li></ol></div>
-        </section>
-        <!--/noindex-->
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#dialogue-based-relation-extractionacl2020"><span class="nav-number">1.</span> <span class="nav-text">Dialogue-Based Relation Extraction(ACL2020)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#background"><span class="nav-number">1.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#statistics-of-dialogre"><span class="nav-number">1.2.</span> <span class="nav-text">Statistics of DialogRE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#task-formulation-and-evaluation"><span class="nav-number">1.3.</span> <span class="nav-text">Task formulation and Evaluation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#baseline"><span class="nav-number">1.4.</span> <span class="nav-text">Baseline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment"><span class="nav-number">1.5.</span> <span class="nav-text">Experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dialogue-relation-extraction-with-document-level-heterogeneous-graph-attention-networksarxiv2020"><span class="nav-number">2.</span> <span class="nav-text">Dialogue Relation Extraction with Document-level Heterogeneous Graph Attention Networks(arxiv2020)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#background-1"><span class="nav-number">2.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#model"><span class="nav-number">2.2.</span> <span class="nav-text">Model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment-1"><span class="nav-number">2.3.</span> <span class="nav-text">Experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#references"><span class="nav-number">3.</span> <span class="nav-text">References</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
 
-        <section class="site-overview-wrap sidebar-panel">
-          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="zichao"
       src="/images/photo.jpg">
   <p class="site-author-name" itemprop="name">zichao</p>
   <div class="site-description" itemprop="description">Just learning</div>
 </div>
-<div class="site-state-wrap site-overview-item animated">
+<div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
@@ -263,304 +520,33 @@
       </div>
   </nav>
 </div>
-  <div class="links-of-author site-overview-item animated">
+  <div class="links-of-author motion-element">
       <span class="links-of-author-item">
-        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
       </span>
       <span class="links-of-author-item">
-        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
       </span>
       <span class="links-of-author-item">
-        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
       </span>
   </div>
 
 
 
-        </section>
       </div>
+
     </div>
   </aside>
-  <div class="sidebar-dimmer"></div>
+  <div id="sidebar-dimmer"></div>
 
 
-    </header>
-
-    
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
-
-  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
-
-<noscript>
-  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
-</noscript>
-
-
-    <div class="main-inner post posts-expand">
-      
-
-      
-
-  
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
-      <meta itemprop="name" content="zichao">
-      <meta itemprop="description" content="Just learning">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="codewithzichao">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          NLP|RE-Dialogue-based relation extraction
-        </h1>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2020-10-28 00:56:48" itemprop="dateCreated datePublished" datetime="2020-10-28T00:56:48+08:00">2020-10-28</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-11-08 01:14:08" itemprop="dateModified" datetime="2020-11-08T01:14:08+08:00">2020-11-08</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/NLP/%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96/" itemprop="url" rel="index"><span itemprop="name">关系抽取</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-      </span>
-      <span class="post-meta-item-text">Views: </span>
-      <span id="busuanzi_value_page_pv"></span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-        <p>这篇博客主要讲解两篇论文：《Dialogue-Based Relation Extraction》与《Dialogue Relation Extraction with Document-level Heterogeneous Graph Attention Networks》。</p>
-<a id="more"></a>
-<h2 id="Dialogue-Based-Relation-Extraction-ACL2020"><a href="#Dialogue-Based-Relation-Extraction-ACL2020" class="headerlink" title="Dialogue-Based Relation Extraction(ACL2020)"></a>Dialogue-Based Relation Extraction(ACL2020)</h2><h3 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h3><p>目前的document-level RE dataset都是使用比较正式的文本构建而成的，这样构建的数据集内部含有丰富的逻辑推理关系，并且有足够的信息能够提取出关键信息。但是在dialogue relation extraction中，对话文本往往是非正式的、语法不严谨的，虽然逻辑简单，但是其信息密度低，且很容易有歧义的问题。而目前针对于DRE任务仍然没有引起广泛的研究。所以这篇paper构建了第一个dialogue-based RE dataset——DialogRE，并且提出了新的评价指标：$F1_c$以及相关的baseline，用于以后的研究。</p>
-<blockquote>
-<p>之前一直很喜欢《老友记》，有人能够根据《老友记》来构建数据集，真是有生之年啊！爱了爱了🤩</p>
-</blockquote>
-<h3 id="Statistics-of-DialogRE"><a href="#Statistics-of-DialogRE" class="headerlink" title="Statistics of DialogRE"></a>Statistics of DialogRE</h3><p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/statistics_DialogRE.jpg" style="zoom:50%;"></p>
-<p>DialogRE数据集是根据美国电视情景喜剧《老友记》中共10季的台词构建而来，共有1788个dialogue，10168个triple, 其中train:dev:test=6:2:2，每一个样本的形式还是SPO，与其他的RE并无区别。但是DialogRE与其他的document-level RE dataset最大的不同是：1. argument pair的relation span sentences的比例(95.6%)要其他的数据集(40.7%)高得多高得多(95.6%)；2.以speaker为中心，77.3%的triple全是speaker name，90.0%的triple至少包含一个speaker name；3.信息密度低，只有0.21/per sen。DialogRE数据集与其他数据集的比较如下：</p>
-<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/DialogRE_otherRE.jpg" alt></p>
-<p>下面是dialogRE数据集中的relation type：</p>
-<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/dialog_realtion_type.jpg" alt></p>
-<p>⚠️在dialogRE中，有一个概念叫做trigger，其实和DocRED中的evidence是差不多的，用来证明argument pair的relation的正确性。</p>
-<h3 id="Task-formulation-and-Evaluation"><a href="#Task-formulation-and-Evaluation" class="headerlink" title="Task formulation and Evaluation"></a>Task formulation and Evaluation</h3><p>给定一个dialogue：$D=s_1:t_1,…,s_m:t_m$以及argument pair: $(a_1,a_2)$，其中$s_i,t_i$表示第$i$轮的speaker id与text，我们的目标是得到$(a_1,a_2)$的relation。有两个评价方法：$F1$与$F1_c$。$F1$其实就是我们寻常用的，而$F1_c$是这篇paper作者专门设计的，下面具体讲讲～</p>
-<p>我们首先定义一些符号：$O_i$表示前$i$轮对话中，使用模型预测得出的argument pair$(a_1,a_2)$的relation type set，$L$表示在整个对话中argument pair$(a_1,a_2)$的真实的relation type set，$R$表示所有的36个relation type，所以：$O_i,L\in R$；我们定义辅助函数$j(x)$，如果$x$不出现在$D$中，那么返回$m$，否则的话，返回$x$第一次出现的对话轮数$i$；我们定义辅助函数$i(r)$，表示：对于每一个relation type $r\in L$，如果存在一个trigger for $r$，那么$i(r)=j(\lambda_r)$，其中$\lambda_r$表示trigger，否则$i(r)=m$，对于relation $r{\in} R {\text \ }L$，$i(r)=1$。我们使用$E_i$表示前$i$轮可以评估的relation type set，如下：</p>
-<script type="math/tex; mode=display">
-E_i=\{r|i\geq max\{j(a_1),j(a_2),i(r)\}\}</script><p>$E_i$的意思是：在前$i$轮对话中，如果出现了$a_1,a_2$以及与relation $r$相关的trigger的话，那么relation $r$就是可评估的，也就是说作为候选。之所以这样定义，是因为这样做可以知道对于每一个argument pair，我们大致可以推算预测其relation大概需要多少轮数。之后，我们定义conversation precision与recall依旧conversation F1，如下：</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-P_c(D,a_1,a_2)=\frac{\sum_{i=1}^{m}|O_i\cap L\cap E_i|}{\sum_{i=1}^{m}|O_i\cap E_i|} \\
-R_c(D,a_1,a_2)=\frac{\sum_{i=1}^{m}|O_i\cap L\cap E_i|}{\sum_{i=1}^{m}|L\cap E_i|} \\
-P_c=\frac{\sum_{D^{\prime},a_1^{\prime},a_2^{\prime}}P_c(D^{\prime},a_1^{\prime},a_2^{\prime})}{\sum_{D^{\prime},a_1^{\prime},a_2^{\prime}}1} \\
-R_c=\frac{\sum_{D^{\prime},a_1^{\prime},a_2^{\prime}}R_c(D^{\prime},a_1^{\prime},a_2^{\prime})}{\sum_{D^{\prime},a_1^{\prime},a_2^{\prime}}1} \\
-F1_c=\frac{2P_cR_c}{P_c+R_c}
-\end{aligned}</script><h3 id="Baseline"><a href="#Baseline" class="headerlink" title="Baseline"></a>Baseline</h3><p>在paper中，介绍了四种baseline：Majority、CNN/LSTM/BILSTM、BERT、BERT$_s$。所谓的Majority就是：如果一个argument pair的relation没出现在training set当中，那么输出training set中数目最大的relation type，否则的话，输出与argument pair最相关的relation type；CNN/LSTM/BILSTM指的是：采用CNN/LSTM/BILSTM作为编码器；BERT指的是：采用BERT以及BERT-like预训练模型作为编码器，不过其输入格式是：$[CLS]d[SEP]a_1[SEP]a_2[SEP]$；BERT$_s$是作者所改进的一个方法，指的是：仍然采用BERT以及BERT-like预训练模型作为编码器，但是其输入格式是：$[CLS]\hat d[SEP]\hat a_1[SEP]\hat a_2[SEP]$，其中：</p>
-<script type="math/tex; mode=display">
-\hat d=\hat s_1:\hat t_1,...,\hat s_n:\hat t_n \\
-\hat s_i=\begin{cases}[S1] & if \ s_i=a_1 \\ [S2] & if \ s_1=a_2 \\ s_1 & otherwise \end{cases}</script><p>其中，$[S1],[S2]$表示两个新的特殊的token。</p>
-<h3 id="Experiment"><a href="#Experiment" class="headerlink" title="Experiment"></a>Experiment</h3><p>放一下上述四种方法在DialogRE数据集上的结果:</p>
-<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/dialogRE_result2.jpg" alt></p>
-<p>下面是加了argument type之后的结果，发现结果是有提升的，说明argument type是有作用的。</p>
-<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/dialog_result_1.jpg" style="zoom:50%;"></p>
-<p>总的来说，DialogRE是一个新的工作，在这个上面还是可以做很多的工作的。</p>
-<h2 id="Dialogue-Relation-Extraction-with-Document-level-Heterogeneous-Graph-Attention-Networks-arxiv2020"><a href="#Dialogue-Relation-Extraction-with-Document-level-Heterogeneous-Graph-Attention-Networks-arxiv2020" class="headerlink" title="Dialogue Relation Extraction with Document-level Heterogeneous Graph Attention Networks(arxiv2020)"></a>Dialogue Relation Extraction with Document-level Heterogeneous Graph Attention Networks(arxiv2020)</h2><h3 id="Background-1"><a href="#Background-1" class="headerlink" title="Background"></a>Background</h3><p>这篇paper研究的是dialogue relation extraction task。之前的关于DRE的方法都没有很好地利用好speaker的信息，所以就忽略了speaker之间的信息可能会带给argument pair的影响。怎么解决呢？在这篇paper当中，采用的是基于graph的方法，提出了HGAT模型。</p>
-<h3 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h3><p>先放图～</p>
-<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_model.jpg" alt></p>
-<p>整个HGAT模型分为三部分：<strong>utterance encoder、graph construction、relation classification。</strong></p>
-<ul>
-<li><p><strong>task definition：</strong>给定含有$N$个utterance的dialogue：$D=\{u_1,…,u_N\}$以及argument pair：${\cal A}={(x_1,y_1),…,(x_1,y_1)}$，其中$x_i,y_i$是dialogue中的entity，我们的目标是：建立模型，预测argument pair的relation。</p>
-</li>
-<li><p><strong>data processing：</strong>使用spaCy获得POS tag以及named-entity types of each token。</p>
-</li>
-<li><p><strong>utterance encoder：</strong>对于每一个utterance $u_i$，我们使用GloVe初始化，并且与其他两种embedding进行concat，得到最终的初始的token embedding，如下：</p>
-<script type="math/tex; mode=display">
-e=[e_w;e_p;e_t]</script><p>其中，$e_p$表示POS embedding，$e_t$表示entity-type embedding；然后送入encoder当中进行编码，这里使用的是BILSTM(其实其他的编码器也是OK的)<strong>(local BILSTM)</strong>，然后得到contextual rep，如下：</p>
-<script type="math/tex; mode=display">
-\overleftarrow {h^{i}_{j}}=BILSTM_l(\overleftarrow {h^i_{j+1}},e^i_j) \\
-\overrightarrow {h^{i}_{j}}=BILSTM_r(\overrightarrow {h^i_{j-1}},e^i_j) \\
-h^i_j=[\overleftarrow {h^i_j};\overrightarrow {h^i_j}]</script><p>其中，$e^i_j$表示第$i$个utterance的第$j$个token的初始embedding rep，$h^i_j$表示第$i$个utterance的第$j$个token的rep。之后，我们对其进行max over time pooling，得到sentence vecotor，再送入到BILSTM当中<strong>(global BILSTM)</strong>，得到新的contextual rep，这个时候是三维的张量。</p>
-</li>
-<li><p><strong>graph construction：</strong>这一部分就是graph的构建，分为两部分：<strong>node construction、edge construction。</strong></p>
-<ul>
-<li><p>node construction：共有5种类型的node：utterance node、entity-type node、word node、speaker node、argument node。utterance node指的是：一个utterance是一个node，其表示就是使用的utterance encoder输出的结果；entity-type node指的是：word的type，每个named entity的每一个word都连接到其对应的entity-type node；word node指的是：对话的vocabulary，初始状态使用GloVe，每一个word node都与包含这个word的utterance node相连接，并且与在这个对话当中，这个word有可能的entity type node相连接；speaker node指的是：每一个唯一的speaker，并且其与ta自身的utterance相连接；argument node指的是：用来编码argument pair中的argument的相对位置信息(subject or object?)，每一个argument pair都有两个argument 。</p>
-</li>
-<li><p>edge construction：<strong>⚠️graph本身是无向的，但是propagation是有方向的。</strong>这里总共有5种edge：utterance-word、utterance-argument、utterance-speaker、type-word、type-argument。所有的edge都是无向的，并且都是随机初始化(除了utterance-word，其采用POS tag来初始化)。</p>
-<blockquote>
-<p>ps：我个人觉得这种需要用已有的语法分析工具来得到feature的方法不是很优雅，一方面这些语法分析工具得到的feature并不是很准确，另一方面一体化不好，个人拙见是一个好的模型应该是其本身与数据无关的、与第三方工具无关的、针对问题本身进行建模的。</p>
-</blockquote>
-</li>
-<li><p>message propagation：构建好graph之后，我们就需要进行aggregate。由于我们构建的是一个异质图，所以paper中采用的是GAT与metapath(HGNN中经常使用的一种方法)。GAT很简单就不提了，不懂可见<a href="https://zhuanlan.zhihu.com/p/81350196?utm_source=wechat_session" target="_blank" rel="noopener">link</a>，主要讲一下metapath的设计，这对于HGNN的效果是最重要的。</p>
-<p>Metapath：第一，使用utterance node来update word node、speaker node与argument node；第二，更新好的word node来update entity-type node；第三，更新好的entity-type node来update word node、argument node、entity-type node；第四，我们使用word node、speaker node、argument node来update utterance node；最后，utterance node再一次update word node、speaker node、argument node。即： </p>
-<script type="math/tex; mode=display">
-V_u\rightarrow V_b\rightarrow V_t\rightarrow V_b\rightarrow V_u\rightarrow V_b</script><p>然后借鉴了ACL2020邱锡鹏老师那篇使用HGNN来做文本摘要的paper，对一个node的更新，都使用了残差链接，即：$\hat h_i=\tilde h_i+h^{\prime}_i$，其中$h^{\prime}_i$是GAT layer输入，$\tilde h_i$是GAT layer的输出，然后我们使用FFN，增加非线性，即：$h^{new}_i=FFN(\hat h_i)$。OK，在HGAT模型中，更新次数为三次，其整体而言公式如下：</p>
-<script type="math/tex; mode=display">
-H^1_b=GAT(H^0_b,H^0_u) \\
-H^1_t=GAT(H^0_t,H^1_b) \\
-H^2_b=GAT(H^1_b,H^1_t) \\
-H^1_u=GAT(H^0_u,H^2_b) \\
-H^3_b=GAT(H^2_b,H^1_u)</script><p>⚠️注意，$b$表示basic node，包括：word node、speaker node、argument node。</p>
-</li>
-</ul>
-</li>
-<li><p><strong>relation classifier：</strong>选择argument node $\tau_x，\tau_y$与word node $e_x,e_y$，将两者concat，并且送入到sigmoid中，如下：</p>
-<script type="math/tex; mode=display">
-e^{\prime}_x=[maxpooling(\tau_x);maxpooling(e_x)] \\
-e^{\prime}_y=[maxpooling(\tau_y);maxpooling(e_y)] \\
-e^{\prime}=[e^{\prime}_x;e^{\prime}_y] \\
-P(r|e_x,e_y)=sigmoid(W_ee^{\prime}+b_e)_r</script></li>
-</ul>
-<h3 id="Experiment-1"><a href="#Experiment-1" class="headerlink" title="Experiment"></a>Experiment</h3><ol>
-<li><p>数据集：DialogRE</p>
-</li>
-<li><p>hyperparameters</p>
-<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_hyperparameters.jpg" style="zoom:50%;"></p>
-</li>
-<li><p>结果</p>
-<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_result.jpg" alt></p>
-<p>从结果来看，提升还是蛮大的。我们再来看看消融实验与case study。</p>
-</li>
-<li><p>消融实验</p>
-<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_result_ablation.jpg" style="zoom:50%;"></p>
-<p>从消融实验结果来看：1.去掉global BILSTM的结果与POSembedding的影响比较大，这说明如何得到一个好的sentence vector并对其进行编码是非常重要的，另外，POS embedding的结果也说明句子结构的建模也是很重要的，所以如果建模也是一个值得探讨的问题；2. 一个好的embedding初始化很重要；3. 默认update是3次，目前是最优。我觉得这个消融实验做的一般，我觉得应该对不同的node与edge的作用也要进行实验，不然怎么证明你的graph是比较好的呢？</p>
-</li>
-<li><p>case study</p>
-<p>从case study中可以得出：95%的argument pair是span 2个sentence，所以长距离建模很重要；entity-type很重要，如果模型无法从训练数据中获取到足够的信息，那么就会判断出错。这个case study也做的一般。。。 </p>
-<p>总的来说，HGAT模型一般吧，但是由于是第一个在DialogRE数据集上的模型，结果还是很令人满意的。</p>
-</li>
-</ol>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>《Dialogue-Based Relation Extraction》</p>
-<p>《Dialogue Relation Extraction with Document-level Heterogeneous Graph Attention Networks》</p>
-
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-          <div class="reward-container">
-  <div>Would you like to buy me a cup of coffee☕️～</div>
-  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
-    Donate
-  </button>
-  <div class="post-reward">
-      <div>
-        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
-        <span>WeChat Pay</span>
       </div>
-      <div>
-        <img src="/images/alipay.jpg" alt="zichao Alipay">
-        <span>Alipay</span>
-      </div>
+    </main>
 
-  </div>
-</div>
-
-          <div class="post-tags">
-              <a href="/tags/NLP/" rel="tag"># NLP</a>
-              <a href="/tags/dialogue-based-RE/" rel="tag"># dialogue-based RE</a>
-          </div>
-
+    <footer class="footer">
+      <div class="footer-inner">
         
-
-          <div class="post-nav">
-            <div class="post-nav-item">
-                <a href="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task-PART-TWO/" rel="prev" title="NLP|RE-Integrate GNN into Document-level RE task|PART TWO">
-                  <i class="fa fa-chevron-left"></i> NLP|RE-Integrate GNN into Document-level RE task|PART TWO
-                </a>
-            </div>
-            <div class="post-nav-item">
-                <a href="/2020/10/28/NLP-TST-DualRL-model/" rel="next" title="NLP|TST-DualRL model">
-                  NLP|TST-DualRL model <i class="fa fa-chevron-right"></i>
-                </a>
-            </div>
-          </div>
-    </footer>
-  </article>
-</div>
-
-
-
-
-
-
-      
-
-<script>
-  window.addEventListener('tabs:register', () => {
-    let { activeClass } = CONFIG.comments;
-    if (CONFIG.comments.storage) {
-      activeClass = localStorage.getItem('comments_active') || activeClass;
-    }
-    if (activeClass) {
-      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
-      if (activeTab) {
-        activeTab.click();
-      }
-    }
-  });
-  if (CONFIG.comments.storage) {
-    window.addEventListener('tabs:click', event => {
-      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      const commentClass = event.target.classList[1];
-      localStorage.setItem('comments_active', commentClass);
-    });
-  }
-</script>
-
-    </div>
-  </main>
-
-  <footer class="footer">
-    <div class="footer-inner">
-      
-
-      
 
 <div class="copyright">
   
@@ -571,7 +557,15 @@ P(r|e_x,e_y)=sigmoid(W_ee^{\prime}+b_e)_r</script></li>
   </span>
   <span class="author" itemprop="copyrightHolder">zichao</span>
 </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a>
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
 <div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
       <span class="post-meta-item-icon">
         <i class="fa fa-user"></i>
@@ -580,6 +574,7 @@ P(r|e_x,e_y)=sigmoid(W_ee^{\prime}+b_e)_r</script></li>
         <span id="busuanzi_value_site_uv"></span>
       </span>
     </span>
+    <span class="post-meta-divider">|</span>
     <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
       <span class="post-meta-item-icon">
         <i class="fa fa-eye"></i>
@@ -589,91 +584,125 @@ P(r|e_x,e_y)=sigmoid(W_ee^{\prime}+b_e)_r</script></li>
       </span>
     </span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
   </div>
 
-    </div>
-  </footer>
-
   
-  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
 
-  
+<script src="/js/utils.js"></script>
 
-
-
-
-  <script src="/js/local-search.js"></script>
+<script src="/js/motion.js"></script>
 
 
+<script src="/js/schemes/muse.js"></script>
 
 
-
-
-
-
-
-
-
-
-
-
-
-  
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-
-
-
+<script src="/js/next-boot.js"></script>
 
 
 
 
   
 
+
+
+
   
-      <script>
-  if (typeof MathJax === 'undefined') {
-    window.MathJax = {
-      tex: {
-        inlineMath: {'[+]': [['$', '$']]},
-        tags: 'ams'
-      },
-      options: {
-        renderActions: {
-          findScript: [10, doc => {
-            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
-              const display = !!node.type.match(/; *mode=display/);
-              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
-              const text = document.createTextNode('');
-              node.parentNode.replaceChild(text, node);
-              math.start = {node: text, delim: '', n: 0};
-              math.end = {node: text, delim: '', n: 0};
-              doc.math.push(math);
-            });
-          }, '', false],
-          insertedScript: [200, () => {
-            document.querySelectorAll('mjx-container').forEach(node => {
-              const target = node.parentNode;
-              if (target.nodeName.toLowerCase() === 'li') {
-                target.parentNode.classList.add('has-jax');
-              }
-            });
-          }, '', false]
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('div.pdf').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
+    document.querySelectorAll('div.pdf').forEach(element => {
+      PDFObject.embed(element.getAttribute('target'), element, {
+        pdfOpenParams: {
+          navpanes: 0,
+          toolbar: 0,
+          statusbar: 0,
+          pagemode: 'thumbs',
+          view: 'FitH'
+        },
+        PDFJS_URL: '/lib/pdf/web/viewer.html',
+        height: element.getAttribute('height') || '500px'
+      });
+    });
+  }, window.PDFObject);
+}
+</script>
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
         }
       }
-    };
-    const script = document.createElement('script');
-    script.src = '//cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js';
-    script.defer = true;
-    document.head.appendChild(script);
-  } else {
-    MathJax.startup.document.state(0);
-    MathJax.typesetClear();
-    MathJax.texReset();
-    MathJax.typeset();
-  }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
 </script>
 
     

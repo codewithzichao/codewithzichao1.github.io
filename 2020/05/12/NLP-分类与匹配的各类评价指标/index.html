@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 4.2.0">
-
-
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -15,21 +13,44 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
 
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
 
-<script class="hexo-configurations">
-    var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","images":"/images","scheme":"Muse","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
-  </script>
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://codewithzichao.github.io').hostname,
+    root: '/',
+    scheme: 'Muse',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: "",
+      labels: ""
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
 
-  <meta name="description" content="各类指标首先记录一下符号：TP(true positive)、FP(false positive)、FN(false nergative)、TN(true negative)。表格如下：     pred\real True False     True TP FP   False FN TN     accuracy与error rate accuracy&#x3D;\frac {TP+TN}{N} \">
+  <meta name="description" content="各类指标 首先记录一下符号：TP(true positive)、FP(false positive)、FN(false nergative)、TN(true negative)。表格如下：    pred True False     True TP FP   False FN TN    accuracy与error rate \[ accuracy&#x3D;\frac {TP+TN}{N} \\ e">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NLP|分类与匹配的各类评价指标">
 <meta property="og:url" content="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/index.html">
 <meta property="og:site_name" content="codewithzichao">
-<meta property="og:description" content="各类指标首先记录一下符号：TP(true positive)、FP(false positive)、FN(false nergative)、TN(true negative)。表格如下：     pred\real True False     True TP FP   False FN TN     accuracy与error rate accuracy&#x3D;\frac {TP+TN}{N} \">
+<meta property="og:description" content="各类指标 首先记录一下符号：TP(true positive)、FP(false positive)、FN(false nergative)、TN(true negative)。表格如下：    pred True False     True TP FP   False FN TN    accuracy与error rate \[ accuracy&#x3D;\frac {TP+TN}{N} \\ e">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/%E5%AE%8F%E5%B9%B3%E5%9D%87%E4%B8%8E%E5%BE%AE%E5%B9%B3%E5%9D%87%E5%AF%B9%E6%AF%94.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/MRR.jpg">
@@ -42,17 +63,17 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/%E5%AE%8F%E5%B9%B3%E5%9D%87%E4%B8%8E%E5%BE%AE%E5%B9%B3%E5%9D%87%E5%AF%B9%E6%AF%94.jpg">
 
-
 <link rel="canonical" href="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/">
 
 
-<script class="page-configurations">
+<script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : false,
-    isPost : true,
-    lang   : 'en'
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
   };
 </script>
 
@@ -66,104 +87,88 @@
 
   <noscript>
   <style>
-  body { margin-top: 2rem; }
-
+  .use-motion .brand,
   .use-motion .menu-item,
-  .use-motion .sidebar,
+  .sidebar-inner,
   .use-motion .post-block,
   .use-motion .pagination,
   .use-motion .comments,
   .use-motion .post-header,
   .use-motion .post-body,
-  .use-motion .collection-header {
-    visibility: visible;
-  }
-
-  .use-motion .header,
-  .use-motion .site-brand-container .toggle,
-  .use-motion .footer { opacity: initial; }
+  .use-motion .collection-header { opacity: initial; }
 
   .use-motion .site-title,
-  .use-motion .site-subtitle,
-  .use-motion .custom-logo-image {
+  .use-motion .site-subtitle {
     opacity: initial;
     top: initial;
   }
 
-  .use-motion .logo-line {
-    transform: scaleX(1);
-  }
-
-  .search-pop-overlay, .sidebar-nav { display: none; }
-  .sidebar-panel { display: block; }
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
   </style>
 </noscript>
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
-  <div class="headband"></div>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
 
-  <main class="main">
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Toggle navigation bar">
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
-    </div>
-  </div>
-
   <div class="site-meta">
 
-    <a href="/" class="brand" rel="start">
-      <i class="logo-line"></i>
-      <h1 class="site-title">codewithzichao</h1>
-      <i class="logo-line"></i>
-    </a>
-      <p class="site-subtitle" itemprop="description">Confident，Modest，Patient</p>
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">codewithzichao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">Confident，Modest，Patient</p>
   </div>
 
-  <div class="site-nav-right">
-    <div class="toggle popup-trigger">
-        <i class="fa fa-search fa-fw fa-lg"></i>
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
   </div>
 </div>
 
 
-
 <nav class="site-nav">
-  <ul class="main-menu menu">
+  
+  <ul id="menu" class="menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
 
   </li>
-        <li class="menu-item menu-item-schedule">
+        <li class="menu-item menu-item-friends">
 
-    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a>
+    <a href="/Friends/" rel="section"><i class="fa fa-fw fa-address-book"></i>Friends</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -171,47 +176,264 @@
         </a>
       </li>
   </ul>
+
 </nav>
-
-
-
-  <div class="search-pop-overlay">
+  <div class="site-search">
     <div class="popup search-popup">
-        <div class="search-header">
+    <div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocapitalize="off" maxlength="80"
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
            placeholder="Searching..." spellcheck="false"
-           type="search" class="search-input">
+           type="text" id="search-input">
   </div>
   <span class="popup-btn-close">
     <i class="fa fa-times-circle"></i>
   </span>
 </div>
-<div class="search-result-container no-result">
-  <div class="search-result-icon">
-    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
   </div>
 </div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="name" content="zichao">
+      <meta itemprop="description" content="Just learning">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="codewithzichao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          NLP|分类与匹配的各类评价指标
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+
+            
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-05-12 20:40:55" itemprop="dateCreated datePublished" datetime="2020-05-12T20:40:55+08:00">2020-05-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-11-07 23:10:02" itemprop="dateModified" datetime="2020-11-07T23:10:02+08:00">2020-11-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index">
+                    <span itemprop="name">NLP</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <a id="more"></a>
+<h2 id="各类指标">各类指标</h2>
+<p>首先记录一下符号：TP(true positive)、FP(false positive)、FN(false nergative)、TN(true negative)。表格如下：</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">pred</th>
+<th style="text-align: center;">True</th>
+<th style="text-align: center;">False</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">True</td>
+<td style="text-align: center;">TP</td>
+<td style="text-align: center;">FP</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">False</td>
+<td style="text-align: center;">FN</td>
+<td style="text-align: center;">TN</td>
+</tr>
+</tbody>
+</table>
+<h3 id="accuracy与error-rate">accuracy与error rate</h3>
+<p><span class="math display">\[
+accuracy=\frac {TP+TN}{N} \\
+error \ rate=\frac {FP+FN}{N}
+\]</span></p>
+<h3 id="precisionrecallf1-score">precision/recall/F1 score</h3>
+<p>precision表示在预测为正的样本中，真的为正的样本的比例；</p>
+<p>recall表示在原本真的为正的样本中，预测为正的样本的比例。</p>
+<p>F1-score是精确率与召回率的权衡。 <span class="math display">\[
+precision=\frac {TP}{TP+FP} \\
+recall=\frac {TP}{TP+FN} \\
+F1-score=\frac {2}{\frac{1}{P}+\frac {1}{R}}
+\]</span></p>
+<blockquote>
+<p>注意：precison、recall、F1score仅使用于二分类问题。对于多分类问题，使用的是micro-P、micro-R、micro-F1以及macro-P、macro-R、macro-F1。</p>
+<p>micro： "Micro"是通过先计算总体的TP, FP和FN的数量，然后计算PRF。</p>
+<p>macro：“Macro”是分别计算每个类别的PRF，然后分别求平均得到PRF。</p>
+<p>链接：<a href="https://www.cnblogs.com/nana-zhang/p/11496496.html" target="_blank" rel="noopener">micro与macro</a></p>
+<p><img src="/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/宏平均与微平均对比.jpg"> 如何每个class的样本数量相差不大，那么宏平均和微平均差异也不大 如果每个class的相差较大并且你想： 更注重样本量多的class：使用微平均 更注重样本量少的class：使用宏平均 如果微平均远低于宏平均，则应该去检查样本量多的class 如果宏平均远低于微平均，则应该去检查样本量少的class</p>
+</blockquote>
+<h3 id="em">EM</h3>
+<p>EM，全称exact match。EM度量是在问答系统中广泛运用的指标。它衡量的是与任何一个真实答案完全匹配的预测的比例。是SQuAD的主要衡量指标。</p>
+<h3 id="mrr">MRR</h3>
+<p>MRR，全称mean reciprocal rank，广泛用于评估NLP中需要排序的模型与算法中，常见于信息检索与问答任务中。具体公式如下： <span class="math display">\[
+MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}
+\]</span> 其中，<span class="math inline">\(Q\)</span>表示query的个数，<span class="math inline">\(rank_i\)</span>表示第i个query在真实答案集中出现的位置。举个🌰（来源于知乎）：</p>
+<p><img src="/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/MRR.jpg"></p>
+<p>可计算这个系统的MRR值为：(1/3 + 1/2 + 1)/3 = 11/18=0.61。</p>
+<h3 id="map">MAP</h3>
+<p>mAP，顾名思义，即AP的平均值，那么就需要先计算AP，然后再对其进行平均。</p>
+<p>在信息检索中，AP指的是不同召回率上的正确率的平均值，而现在的有些检索系统为了能够快速返回结果，在计算AP时就不再考虑召回率。换句话说，如果数据库中和查询信息相关的5条信息，分别出现在查询结果中的第1、3、6、9、10位，那么这次查询的AP就是： <img src="https://www.zhihu.com/equation?tex=AP+%3D+%EF%BC%881%2F1%2B2%2F3%2B3%2F6%2B4%2F9%2B5%2F10%EF%BC%89%2F5%3D0.62" alt="[公式]"></p>
+<p>得到多条查询的AP值，对其进行平均，就得到了mAP。<a href="https://zhuanlan.zhihu.com/p/35983818" target="_blank" rel="noopener">来源</a></p>
+<p><img src="/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/MAP.jpg"></p>
+<h3 id="ndcg">NDCG</h3>
+<p><a href="https://zhuanlan.zhihu.com/p/38850753" target="_blank" rel="noopener">链接</a></p>
+<h2 id="指标在文本匹配中的应用">指标在文本匹配中的应用</h2>
+<p><strong>相似度计算与复述识别</strong></p>
+<p>这个任务是给出两句话，判断两者是不是表达了同样的含义，或者两句话的相似度有多高，一般都是当成分类问题来对待。常用的公开数据集有：STS、QQP、MSRP，当然啦，还有PPDB，但是数量太大，我没有跑过这个数据集，前面三个数据集就已经很好啦。由于是分类问题(pointwise)，所以评价指标一般使用Accuracy或者F1 score。</p>
+<p><strong>问答匹配(answer selection)</strong></p>
+<p>这个任务指的是：给定问题与问题的候选答案池，从中选择出最好的答案，如果说选择的答案在真实答案集中，说明问题被很好的回答了，否则的话，问题就没有被很好的回答。一般来说，问答匹配会采用pairwise的学习方式，即同question的一对正负样本作为一个训练样本，当然也会使用listwise。常用的数据集有：TrecQA、insuranceQA、WikiQA，还有QNLI，我一般会使用前三个，QNLI是很大的数据集，还没尝试过(关键是么得算力😫)。评价指标使用mAP与MRR等指标。</p>
+<p><strong>对话匹配(response selection)</strong></p>
+<p>对话匹配任务还没有试过，相比问答匹配来说，对话会更加难一些，因为它的回复空间非常大。常见的数据集：UDC、Douban conversation Corpus。评价指标使用Recall_n@k，也就是n个候选回复中，合理回复出现在前k个位置就算成功。当然也会使用mAP与MRR。</p>
+<p><strong>自然语言推理/文本蕴含识别</strong></p>
+<p>NLI/RTE任务指的是：给定句子A(premise)的前提下，如果句子B(hypothesis)为真，那么就是A蕴含了B；如果B为假，那么A与B互相矛盾；否则A与B相互独立。一般来说，NLI/RTE被视为三分类问题(pointwise)。常见的数据集“SNLI、XNLI、MNLI。评价指标使用micro-PRF与macro-PRF。</p>
+<p><strong>信息检索(Information Retrieval)</strong></p>
+<p>信息检索，一般都是先进行相关项的找回，然后再对其进行rank。评价指标会使用mAP与MRR。</p>
+<p><strong>机器阅读理解(Machine Reading Comprehension)</strong></p>
+<p>MRC任务就是在文本段中找寻答案的过程。常用数据集有：SQuAD、MS MARCO、CoQA等等。评价指标主要是EM。MRC任务比较难，而且需要大量的算力，所以不建议算力不充足的童鞋自己搞，容易走很多弯路。</p>
+<p>大致就是这样啦，梳理完这些评价指标后，舒服啦🤩</p>
 
     </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Would you like to buy me a cup of coffee☕️～</div>
+  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="zichao Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/NLP/" rel="tag"># NLP</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/05/02/NLP-gensim-boy%E7%9A%84%E4%BF%AE%E7%82%BC%E4%B9%8B%E8%B7%AF/" rel="prev" title="NLP|gensim boy的修炼之路">
+      <i class="fa fa-chevron-left"></i> NLP|gensim boy的修炼之路
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/" rel="next" title="NLP|文本匹配模型-BIMPM">
+      NLP|文本匹配模型-BIMPM <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
   </div>
 
-</div>
-        
+
+          </div>
+          
+
+        </div>
+          
   
   <div class="toggle sidebar-toggle">
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
   </div>
 
   <aside class="sidebar">
+    <div class="sidebar-inner">
 
-    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
-      <ul class="sidebar-nav">
+      <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
           Table of Contents
         </li>
@@ -220,21 +442,20 @@
         </li>
       </ul>
 
-      <div class="sidebar-panel-container">
-        <!--noindex-->
-        <section class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#各类指标"><span class="nav-number">1.</span> <span class="nav-text">各类指标</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#accuracy与error-rate"><span class="nav-number">1.1.</span> <span class="nav-text">accuracy与error rate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#precision-recall-F1-score"><span class="nav-number">1.2.</span> <span class="nav-text">precision&#x2F;recall&#x2F;F1 score</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EM"><span class="nav-number">1.3.</span> <span class="nav-text">EM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MRR"><span class="nav-number">1.4.</span> <span class="nav-text">MRR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MAP"><span class="nav-number">1.5.</span> <span class="nav-text">MAP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NDCG"><span class="nav-number">1.6.</span> <span class="nav-text">NDCG</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指标在文本匹配中的应用"><span class="nav-number">2.</span> <span class="nav-text">指标在文本匹配中的应用</span></a></li></ol></div>
-        </section>
-        <!--/noindex-->
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#各类指标"><span class="nav-number">1.</span> <span class="nav-text">各类指标</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#accuracy与error-rate"><span class="nav-number">1.1.</span> <span class="nav-text">accuracy与error rate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#precisionrecallf1-score"><span class="nav-number">1.2.</span> <span class="nav-text">precision&#x2F;recall&#x2F;F1 score</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#em"><span class="nav-number">1.3.</span> <span class="nav-text">EM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mrr"><span class="nav-number">1.4.</span> <span class="nav-text">MRR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#map"><span class="nav-number">1.5.</span> <span class="nav-text">MAP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ndcg"><span class="nav-number">1.6.</span> <span class="nav-text">NDCG</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指标在文本匹配中的应用"><span class="nav-number">2.</span> <span class="nav-text">指标在文本匹配中的应用</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
 
-        <section class="site-overview-wrap sidebar-panel">
-          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="zichao"
       src="/images/photo.jpg">
   <p class="site-author-name" itemprop="name">zichao</p>
   <div class="site-description" itemprop="description">Just learning</div>
 </div>
-<div class="site-state-wrap site-overview-item animated">
+<div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
@@ -257,264 +478,33 @@
       </div>
   </nav>
 </div>
-  <div class="links-of-author site-overview-item animated">
+  <div class="links-of-author motion-element">
       <span class="links-of-author-item">
-        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
       </span>
       <span class="links-of-author-item">
-        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
       </span>
       <span class="links-of-author-item">
-        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
       </span>
   </div>
 
 
 
-        </section>
       </div>
+
     </div>
   </aside>
-  <div class="sidebar-dimmer"></div>
+  <div id="sidebar-dimmer"></div>
 
 
-    </header>
-
-    
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
-
-  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
-
-<noscript>
-  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
-</noscript>
-
-
-    <div class="main-inner post posts-expand">
-      
-
-      
-
-  
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
-      <meta itemprop="name" content="zichao">
-      <meta itemprop="description" content="Just learning">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="codewithzichao">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          NLP|分类与匹配的各类评价指标
-        </h1>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2020-05-12 20:40:55" itemprop="dateCreated datePublished" datetime="2020-05-12T20:40:55+08:00">2020-05-12</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-11-07 23:10:02" itemprop="dateModified" datetime="2020-11-07T23:10:02+08:00">2020-11-07</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-      </span>
-      <span class="post-meta-item-text">Views: </span>
-      <span id="busuanzi_value_page_pv"></span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-        <a id="more"></a>
-<h2 id="各类指标"><a href="#各类指标" class="headerlink" title="各类指标"></a>各类指标</h2><p>首先记录一下符号：TP(true positive)、FP(false positive)、FN(false nergative)、TN(true negative)。表格如下：</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th style="text-align:center">pred\real</th>
-<th style="text-align:center">True</th>
-<th style="text-align:center">False</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">True</td>
-<td style="text-align:center">TP</td>
-<td style="text-align:center">FP</td>
-</tr>
-<tr>
-<td style="text-align:center">False</td>
-<td style="text-align:center">FN</td>
-<td style="text-align:center">TN</td>
-</tr>
-</tbody>
-</table>
-</div>
-<h3 id="accuracy与error-rate"><a href="#accuracy与error-rate" class="headerlink" title="accuracy与error rate"></a>accuracy与error rate</h3><script type="math/tex; mode=display">
-accuracy=\frac {TP+TN}{N} \\
-error \ rate=\frac {FP+FN}{N}</script><h3 id="precision-recall-F1-score"><a href="#precision-recall-F1-score" class="headerlink" title="precision/recall/F1 score"></a>precision/recall/F1 score</h3><p>precision表示在预测为正的样本中，真的为正的样本的比例；</p>
-<p>recall表示在原本真的为正的样本中，预测为正的样本的比例。</p>
-<p>F1-score是精确率与召回率的权衡。</p>
-<script type="math/tex; mode=display">
-precision=\frac {TP}{TP+FP} \\
-recall=\frac {TP}{TP+FN} \\
-F1-score=\frac {2}{\frac{1}{P}+\frac {1}{R}}</script><blockquote>
-<p>注意：precison、recall、F1score仅使用于二分类问题。对于多分类问题，使用的是micro-P、micro-R、micro-F1以及macro-P、macro-R、macro-F1。</p>
-<p>micro： “Micro”是通过先计算总体的TP, FP和FN的数量，然后计算PRF。</p>
-<p>macro：“Macro”是分别计算每个类别的PRF，然后分别求平均得到PRF。</p>
-<p>链接：<a href="https://www.cnblogs.com/nana-zhang/p/11496496.html" target="_blank" rel="noopener">micro与macro</a></p>
-<p><img src="/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/宏平均与微平均对比.jpg" alt><br>如何每个class的样本数量相差不大，那么宏平均和微平均差异也不大<br>如果每个class的相差较大并且你想：<br>更注重样本量多的class：使用微平均<br>更注重样本量少的class：使用宏平均<br>如果微平均远低于宏平均，则应该去检查样本量多的class<br>如果宏平均远低于微平均，则应该去检查样本量少的class</p>
-</blockquote>
-<h3 id="EM"><a href="#EM" class="headerlink" title="EM"></a>EM</h3><p>EM，全称exact match。EM度量是在问答系统中广泛运用的指标。它衡量的是与任何一个真实答案完全匹配的预测的比例。是SQuAD的主要衡量指标。</p>
-<h3 id="MRR"><a href="#MRR" class="headerlink" title="MRR"></a>MRR</h3><p>MRR，全称mean reciprocal rank，广泛用于评估NLP中需要排序的模型与算法中，常见于信息检索与问答任务中。具体公式如下：</p>
-<script type="math/tex; mode=display">
-MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}</script><p>其中，$Q$表示query的个数，$rank_i$表示第i个query在真实答案集中出现的位置。举个🌰（来源于知乎）：</p>
-<p><img src="/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/MRR.jpg" alt></p>
-<p>可计算这个系统的MRR值为：(1/3 + 1/2 + 1)/3 = 11/18=0.61。</p>
-<h3 id="MAP"><a href="#MAP" class="headerlink" title="MAP"></a>MAP</h3><p>mAP，顾名思义，即AP的平均值，那么就需要先计算AP，然后再对其进行平均。</p>
-<p>在信息检索中，AP指的是不同召回率上的正确率的平均值，而现在的有些检索系统为了能够快速返回结果，在计算AP时就不再考虑召回率。换句话说，如果数据库中和查询信息相关的5条信息，分别出现在查询结果中的第1、3、6、9、10位，那么这次查询的AP就是： <img src="https://www.zhihu.com/equation?tex=AP+%3D+%EF%BC%881%2F1%2B2%2F3%2B3%2F6%2B4%2F9%2B5%2F10%EF%BC%89%2F5%3D0.62" alt="[公式]"></p>
-<p>得到多条查询的AP值，对其进行平均，就得到了mAP。<a href="https://zhuanlan.zhihu.com/p/35983818" target="_blank" rel="noopener">来源</a></p>
-<p><img src="/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/MAP.jpg" alt></p>
-<h3 id="NDCG"><a href="#NDCG" class="headerlink" title="NDCG"></a>NDCG</h3><p><a href="https://zhuanlan.zhihu.com/p/38850753" target="_blank" rel="noopener">链接</a></p>
-<h2 id="指标在文本匹配中的应用"><a href="#指标在文本匹配中的应用" class="headerlink" title="指标在文本匹配中的应用"></a>指标在文本匹配中的应用</h2><p><strong>相似度计算与复述识别</strong></p>
-<p>这个任务是给出两句话，判断两者是不是表达了同样的含义，或者两句话的相似度有多高，一般都是当成分类问题来对待。常用的公开数据集有：STS、QQP、MSRP，当然啦，还有PPDB，但是数量太大，我没有跑过这个数据集，前面三个数据集就已经很好啦。由于是分类问题(pointwise)，所以评价指标一般使用Accuracy或者F1 score。</p>
-<p><strong>问答匹配(answer selection)</strong></p>
-<p>这个任务指的是：给定问题与问题的候选答案池，从中选择出最好的答案，如果说选择的答案在真实答案集中，说明问题被很好的回答了，否则的话，问题就没有被很好的回答。一般来说，问答匹配会采用pairwise的学习方式，即同question的一对正负样本作为一个训练样本，当然也会使用listwise。常用的数据集有：TrecQA、insuranceQA、WikiQA，还有QNLI，我一般会使用前三个，QNLI是很大的数据集，还没尝试过(关键是么得算力😫)。评价指标使用mAP与MRR等指标。</p>
-<p><strong>对话匹配(response selection)</strong></p>
-<p>对话匹配任务还没有试过，相比问答匹配来说，对话会更加难一些，因为它的回复空间非常大。常见的数据集：UDC、Douban conversation Corpus。评价指标使用Recall_n@k，也就是n个候选回复中，合理回复出现在前k个位置就算成功。当然也会使用mAP与MRR。</p>
-<p><strong>自然语言推理/文本蕴含识别</strong></p>
-<p>NLI/RTE任务指的是：给定句子A(premise)的前提下，如果句子B(hypothesis)为真，那么就是A蕴含了B；如果B为假，那么A与B互相矛盾；否则A与B相互独立。一般来说，NLI/RTE被视为三分类问题(pointwise)。常见的数据集“SNLI、XNLI、MNLI。评价指标使用micro-PRF与macro-PRF。</p>
-<p><strong>信息检索(Information Retrieval)</strong></p>
-<p>信息检索，一般都是先进行相关项的找回，然后再对其进行rank。评价指标会使用mAP与MRR。</p>
-<p><strong>机器阅读理解(Machine Reading Comprehension)</strong></p>
-<p>MRC任务就是在文本段中找寻答案的过程。常用数据集有：SQuAD、MS MARCO、CoQA等等。评价指标主要是EM。MRC任务比较难，而且需要大量的算力，所以不建议算力不充足的童鞋自己搞，容易走很多弯路。</p>
-<p>大致就是这样啦，梳理完这些评价指标后，舒服啦🤩</p>
-
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-          <div class="reward-container">
-  <div>Would you like to buy me a cup of coffee☕️～</div>
-  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
-    Donate
-  </button>
-  <div class="post-reward">
-      <div>
-        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
-        <span>WeChat Pay</span>
       </div>
-      <div>
-        <img src="/images/alipay.jpg" alt="zichao Alipay">
-        <span>Alipay</span>
-      </div>
+    </main>
 
-  </div>
-</div>
-
-          <div class="post-tags">
-              <a href="/tags/NLP/" rel="tag"># NLP</a>
-          </div>
-
+    <footer class="footer">
+      <div class="footer-inner">
         
-
-          <div class="post-nav">
-            <div class="post-nav-item">
-                <a href="/2020/05/02/NLP-gensim-boy%E7%9A%84%E4%BF%AE%E7%82%BC%E4%B9%8B%E8%B7%AF/" rel="prev" title="NLP|gensim boy的修炼之路">
-                  <i class="fa fa-chevron-left"></i> NLP|gensim boy的修炼之路
-                </a>
-            </div>
-            <div class="post-nav-item">
-                <a href="/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/" rel="next" title="NLP|文本匹配模型-BIMPM">
-                  NLP|文本匹配模型-BIMPM <i class="fa fa-chevron-right"></i>
-                </a>
-            </div>
-          </div>
-    </footer>
-  </article>
-</div>
-
-
-
-
-
-
-      
-
-<script>
-  window.addEventListener('tabs:register', () => {
-    let { activeClass } = CONFIG.comments;
-    if (CONFIG.comments.storage) {
-      activeClass = localStorage.getItem('comments_active') || activeClass;
-    }
-    if (activeClass) {
-      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
-      if (activeTab) {
-        activeTab.click();
-      }
-    }
-  });
-  if (CONFIG.comments.storage) {
-    window.addEventListener('tabs:click', event => {
-      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      const commentClass = event.target.classList[1];
-      localStorage.setItem('comments_active', commentClass);
-    });
-  }
-</script>
-
-    </div>
-  </main>
-
-  <footer class="footer">
-    <div class="footer-inner">
-      
-
-      
 
 <div class="copyright">
   
@@ -525,7 +515,15 @@ MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}</script><p>其中，$Q$表示qu
   </span>
   <span class="author" itemprop="copyrightHolder">zichao</span>
 </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a>
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
 <div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
       <span class="post-meta-item-icon">
         <i class="fa fa-user"></i>
@@ -534,6 +532,7 @@ MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}</script><p>其中，$Q$表示qu
         <span id="busuanzi_value_site_uv"></span>
       </span>
     </span>
+    <span class="post-meta-divider">|</span>
     <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
       <span class="post-meta-item-icon">
         <i class="fa fa-eye"></i>
@@ -543,91 +542,125 @@ MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}</script><p>其中，$Q$表示qu
       </span>
     </span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
   </div>
 
-    </div>
-  </footer>
-
   
-  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
 
-  
+<script src="/js/utils.js"></script>
 
-
-
-
-  <script src="/js/local-search.js"></script>
+<script src="/js/motion.js"></script>
 
 
+<script src="/js/schemes/muse.js"></script>
 
 
-
-
-
-
-
-
-
-
-
-
-
-  
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-
-
-
+<script src="/js/next-boot.js"></script>
 
 
 
 
   
 
+
+
+
   
-      <script>
-  if (typeof MathJax === 'undefined') {
-    window.MathJax = {
-      tex: {
-        inlineMath: {'[+]': [['$', '$']]},
-        tags: 'ams'
-      },
-      options: {
-        renderActions: {
-          findScript: [10, doc => {
-            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
-              const display = !!node.type.match(/; *mode=display/);
-              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
-              const text = document.createTextNode('');
-              node.parentNode.replaceChild(text, node);
-              math.start = {node: text, delim: '', n: 0};
-              math.end = {node: text, delim: '', n: 0};
-              doc.math.push(math);
-            });
-          }, '', false],
-          insertedScript: [200, () => {
-            document.querySelectorAll('mjx-container').forEach(node => {
-              const target = node.parentNode;
-              if (target.nodeName.toLowerCase() === 'li') {
-                target.parentNode.classList.add('has-jax');
-              }
-            });
-          }, '', false]
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('div.pdf').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
+    document.querySelectorAll('div.pdf').forEach(element => {
+      PDFObject.embed(element.getAttribute('target'), element, {
+        pdfOpenParams: {
+          navpanes: 0,
+          toolbar: 0,
+          statusbar: 0,
+          pagemode: 'thumbs',
+          view: 'FitH'
+        },
+        PDFJS_URL: '/lib/pdf/web/viewer.html',
+        height: element.getAttribute('height') || '500px'
+      });
+    });
+  }, window.PDFObject);
+}
+</script>
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
         }
       }
-    };
-    const script = document.createElement('script');
-    script.src = '//cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js';
-    script.defer = true;
-    document.head.appendChild(script);
-  } else {
-    MathJax.startup.document.state(0);
-    MathJax.typesetClear();
-    MathJax.texReset();
-    MathJax.typeset();
-  }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
 </script>
 
     

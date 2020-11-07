@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 4.2.0">
-
-
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -15,14 +13,37 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
 
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
 
-<script class="hexo-configurations">
-    var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","images":"/images","scheme":"Muse","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
-  </script>
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://codewithzichao.github.io').hostname,
+    root: '/',
+    scheme: 'Muse',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: "",
+      labels: ""
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
 
   <meta name="description" content="条件随机场(CRF)，属于判别模型，它在自然语言处理领域用途非常广泛。由于其涉及较多的概率图模型的知识，所以，这篇博客将首先介绍一下关于CRF模型的提出的原因，接着再介绍CRF模型需要解决的问题，并针对每个问题介绍其解决的算法，最后将使用python与sklearn库来对其进行实现。">
 <meta property="og:type" content="article">
@@ -51,17 +72,17 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://codewithzichao.github.io/2020/02/24/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/0.jpg">
 
-
 <link rel="canonical" href="http://codewithzichao.github.io/2020/02/24/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/">
 
 
-<script class="page-configurations">
+<script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : false,
-    isPost : true,
-    lang   : 'en'
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
   };
 </script>
 
@@ -75,104 +96,88 @@
 
   <noscript>
   <style>
-  body { margin-top: 2rem; }
-
+  .use-motion .brand,
   .use-motion .menu-item,
-  .use-motion .sidebar,
+  .sidebar-inner,
   .use-motion .post-block,
   .use-motion .pagination,
   .use-motion .comments,
   .use-motion .post-header,
   .use-motion .post-body,
-  .use-motion .collection-header {
-    visibility: visible;
-  }
-
-  .use-motion .header,
-  .use-motion .site-brand-container .toggle,
-  .use-motion .footer { opacity: initial; }
+  .use-motion .collection-header { opacity: initial; }
 
   .use-motion .site-title,
-  .use-motion .site-subtitle,
-  .use-motion .custom-logo-image {
+  .use-motion .site-subtitle {
     opacity: initial;
     top: initial;
   }
 
-  .use-motion .logo-line {
-    transform: scaleX(1);
-  }
-
-  .search-pop-overlay, .sidebar-nav { display: none; }
-  .sidebar-panel { display: block; }
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
   </style>
 </noscript>
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
-  <div class="headband"></div>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
 
-  <main class="main">
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Toggle navigation bar">
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
-    </div>
-  </div>
-
   <div class="site-meta">
 
-    <a href="/" class="brand" rel="start">
-      <i class="logo-line"></i>
-      <h1 class="site-title">codewithzichao</h1>
-      <i class="logo-line"></i>
-    </a>
-      <p class="site-subtitle" itemprop="description">Confident，Modest，Patient</p>
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">codewithzichao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">Confident，Modest，Patient</p>
   </div>
 
-  <div class="site-nav-right">
-    <div class="toggle popup-trigger">
-        <i class="fa fa-search fa-fw fa-lg"></i>
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
   </div>
 </div>
 
 
-
 <nav class="site-nav">
-  <ul class="main-menu menu">
+  
+  <ul id="menu" class="menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
 
   </li>
-        <li class="menu-item menu-item-schedule">
+        <li class="menu-item menu-item-friends">
 
-    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a>
+    <a href="/Friends/" rel="section"><i class="fa fa-fw fa-address-book"></i>Friends</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -180,47 +185,248 @@
         </a>
       </li>
   </ul>
+
 </nav>
-
-
-
-  <div class="search-pop-overlay">
+  <div class="site-search">
     <div class="popup search-popup">
-        <div class="search-header">
+    <div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocapitalize="off" maxlength="80"
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
            placeholder="Searching..." spellcheck="false"
-           type="search" class="search-input">
+           type="text" id="search-input">
   </div>
   <span class="popup-btn-close">
     <i class="fa fa-times-circle"></i>
   </span>
 </div>
-<div class="search-result-container no-result">
-  <div class="search-result-icon">
-    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
   </div>
 </div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/02/24/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="name" content="zichao">
+      <meta itemprop="description" content="Just learning">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="codewithzichao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          统计学习方法|条件随机场模型原理详解与实现
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+
+            
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-02-24 15:58:06" itemprop="dateCreated datePublished" datetime="2020-02-24T15:58:06+08:00">2020-02-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-02-26 11:17:03" itemprop="dateModified" datetime="2020-02-26T11:17:03+08:00">2020-02-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" itemprop="url" rel="index">
+                    <span itemprop="name">统计学习方法</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>条件随机场(CRF)，属于判别模型，它在自然语言处理领域用途非常广泛。由于其涉及较多的概率图模型的知识，所以，这篇博客将首先介绍一下关于CRF模型的提出的原因，接着再介绍CRF模型需要解决的问题，并针对每个问题介绍其解决的算法，最后将使用python与sklearn库来对其进行实现。</p>
+<a id="more"></a>
+<h2 id="条件随机场模型提出的原因">条件随机场模型提出的原因</h2>
+<p>如果用一句话来总结CRF被提出的原因就是：<strong>CRF解决了MEMM模型的标注偏差问题，打破了齐次markov假设，使得模型更加合理。</strong>（如果不想看分析过程的话，可以直接跳过，看第二部分CRF模型的介绍。）具体分析过程，如下：</p>
+<h3 id="分类模型">分类模型</h3>
+<p>首先，我们可以大致看一下分类模型。整个分类模型可以被分为：<strong>硬分类与软分类</strong>。硬分类的代表模型有：<strong>感知机(PLA)、支持向量机(SVM)、线性判别分析(LDA)</strong>；软分类模型又可分为两类：判别模型与生成模型。判别模型的代表：<strong>逻辑回归(LR)模型以及最大熵(MaxEnt)模型</strong>；生成模型的代表：<strong>朴素贝叶斯(Naive Bayes)模型、隐马尔可夫(HMM)模型</strong>。之后，我们根据MaxEnt模型与HMM模型，可以得出一个<strong>判别模型——最大熵马尔可夫模型(MEMM)</strong>，最后在MEMM模型的基础上，得出了<strong>条件随机场(CRF)模型</strong>。</p>
+<p><img src="/2020/02/24/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/0.jpg"></p>
+<p>所以，CRF模型是从HMM到MEMM模型，一步步推出来的。那么，接下来，我们来具体看看是怎么得来的。</p>
+<h3 id="hmm-vs-memm">HMM vs MEMM</h3>
+<p>HMM模型，相信大家都很熟悉了，它可被用来解决词性标注等问题。HMM模型有两个很著名的假设：<strong>齐次一阶Markov假设与观测独立性假设</strong>。但是这两个假设都是合理的吗？其实不是的，如果对概率图模型的基本知识有些了解的话，我们会发现这两个假设其实都是为了简化运算。譬如说，我们来看<strong>观测独立性假设</strong>。它被描述为观测变量 <span class="math inline">\(o_t\)</span> 只与 <span class="math inline">\(i_t\)</span> 有关系，其实这是不合理的。以词性标注问题为例，单词与单词之间其实都是有关系的。那么，为了解决这个问题，MEMM模型便被提出来了，具体做法是：<strong>将原来的观测变量变为输入(从图的角度来说，就是剪箭头反向，具体为什么这样做就打破了观测独立性假设呢？其实和有向图的D-seperation有关，感兴趣的可以去了解了解这个)</strong>。MEMM的优点有：<strong>1.打破了观测独立性假设，使得模型更加合理；2.MEMM模型是判别模型，相比HMM模型来说，计算更为简单</strong>。但是MEMM模型也存在一个非常严重的缺陷：<strong>标注偏差问题(label bias problem)</strong>。这个问题会导致词性标注准确率大为降低。这也是MEMM模型没有流行的原因。</p>
+<p><img src="/2020/02/24/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/1.jpg"></p>
+<h3 id="memm-vs-crf">MEMM vs CRF</h3>
+<p>MEMM模型存在标注偏差问题，那么到底什么是标注偏差问题呢？(如果想深入了解的话，可以去看John Lafferty的那篇论文)。 如下：</p>
+<p><img src="/2020/02/24/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/2.png"></p>
+<p>图中，每一列表示一个时刻，也就代表一个状态。当我们使用Viterbi算法去求具有最大概率的路径的时候，我们会得到1-&gt;2-&gt;2-&gt;2，概率是0.6*0.3*0.3=0.054，然而实际上最大概率的路径是:1-&gt;1-&gt;1-&gt;1，其概率是：0.4*0.45*0.5=0.09。那么，如果在词性标注问题中，就会导致标注发生错误。这就是标注偏差问题。那么导致这一问题的根本原因在于：<strong>局部归一化</strong>。也就是每一次从t时刻转移到t+1时刻的时候，都会对转移概率做归一化。从而，就会<strong>导致模型偏向于状态转移少的标签，从而使得后验概率最大</strong>，导致模型越不会去理睬观测变量的值，就会进行词性标注。</p>
+<p>为了解决这一问题，就提出了CRF模型。CRF模型的具体做法是：<strong>将模型变成无向图，这样一来，就不需要在每一步都进行归一化，只需要进行全局归一化即可</strong>。这样，就解决了标注偏差问题。下面就讲具体介绍CRF模型。</p>
+<h2 id="条件随机场模型介绍">条件随机场模型介绍</h2>
+<p>在介绍CRF之前，首先得先去了解有向图模型(贝叶斯网络)的因子分解与D-seperation，以及无向图(markov随机场)的D-separation(严格来讲，无向图没有D-seperation，但是它的结构和有向图的D-separation差不多，其实就是全局markov性)与因子分解。实际上，所谓的因子分解其实都是为了体现概率图模型的条件独立性。在无向图中，条件独立性表现在三个方面：全局markov性、局部markov性、成对markov性。那么因子分解为了表现其条件独立性，使用了基于团的方法，并有hammesley-Clifford定理得以保证。在这里，我就不详细讲了，如果讲的话，那就太多太多啦～感兴趣的同学可以去补补概率图的知识，就按照我上面讲的这些即可～</p>
+<p>OK，直接进入主题。</p>
+<p>CRF模型是给定随机变量<span class="math inline">\(X\)</span>的条件下，随机变量<span class="math inline">\(Y\)</span>的markov随机场。其概率图如下：</p>
+<p><img src="/2020/02/24/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/3.jpg"></p>
+<p>由于CRF模型是判别式模型，所以建模对象就是：<span class="math inline">\(P(Y|X)\)</span>。也就是说，我们要求的是<span class="math inline">\(P(Y|X)\)</span>。下面我们就来推导一下线性链CRF的参数形式。如下：</p>
+<p><img src="/2020/02/24/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/4.jpg"></p>
+<p>所以，我们现在得到了CRF的参数形式，当随机变量<span class="math inline">\(X\)</span>取<span class="math inline">\(x\)</span>，随机变量<span class="math inline">\(Y\)</span>取<span class="math inline">\(y\)</span>的时候，如下： <span class="math display">\[
+P(y|x)=\frac {1}{z}exp\sum_{t=1}^{T}[\sum_{k=1}^{K}\lambda_kf_k(y_{t-1},y_t,x_{1:T})+\sum_{l=1}^{L}\eta_lg_l(y_t,x_{1:T})]
+\]</span> 其中，<span class="math inline">\(\lambda、\eta\)</span> 都是需要训练的参数，<span class="math inline">\(f、g\)</span> 是特征函数，当满足某一条件的时候，为1，否则为0。在这里，需要注意的是，我所使用的符号与李航老师的《统计学习方法》不太一样，但是表达都是一样的，《统计学习方法》中将最外面的那个<span class="math inline">\(\sum\)</span>放进去了，所以特征函数的参数就会多一个。其实都是一样的，<strong>我觉得最重要的是自己能够理解，并且方便自己记忆和推导就可以了</strong>：</p>
+<p><img src="/2020/02/24/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/6.jpg" style="zoom:50%;"></p>
+<p>那么，我们使用将其化简为向量化的形式，如下：</p>
+<p><img src="/2020/02/24/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/5.jpg"></p>
+<p>所以，我们就得到了CRF的向量化形式： <span class="math display">\[
+P(y|x)=\frac {1}{z(x,\theta)}exp[\theta^T(H(y_{t-1},y_t,x)]
+\]</span> 那么，得到这个之后，我们就来解决CRF模型中的问题。CRF总共需要解决三个问题：</p>
+<ul>
+<li>求边缘概率。即：求<span class="math inline">\(P(y_t|x)\)</span>。</li>
+<li>学习问题。即：给定训练集<span class="math inline">\(\{x^{(i)},y^{(i)}\}_1^N\)</span>，求：<span class="math inline">\(\theta=\mathop{argmax}\limits_{\theta}\prod_{i=1}^{N}P(y^{(i)}|x^{(i)})\)</span>。N个样本，其中x都是T维的。</li>
+<li>Decoding问题。即：求：<span class="math inline">\(y=\mathop{argmax}\limits_{y}P(y|x)\)</span>。</li>
+</ul>
+<h2 id="边缘概率问题的求解">边缘概率问题的求解</h2>
+<p>在这里，其实计算过程与HMM中的概率计算其实是一样的，同样引进<strong>前向后向算法</strong>，来减小计算复杂度。具体推导过程如下（推导过程采用了<strong>变量消除法</strong>）：</p>
+<p><img src="/2020/02/24/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/7.jpg"></p>
+<p>我们可以看到，原来的计算复杂度为：<span class="math inline">\(O(T|S|^T)\)</span>。当<span class="math inline">\(T\)</span>很大的时候，复杂度是以指数形式增长的，这是不可解的。当我们已经引进前向向量与后向向量，那么就可解了。</p>
+<h2 id="模型参数的求解">模型参数的求解</h2>
+<p>关于CRF模型参数的求解方法，其实有很多。比如有：改进的迭代尺度法、拟牛顿法、牛顿法等等。在这里，我采用的是梯度上升法，因为是求最大，当然也可以将其转换为求最小问题，使用梯度下降法来解决。其实过程差不多的。具体推导过程如下(原谅我手机的渣渣像素，以后有时间再用markdown把公式打出来吧😩)：</p>
+<p><img src="/2020/02/24/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/9.jpg"></p>
+<h2 id="decoding问题的求解">Decoding问题的求解</h2>
+<p>每次写博客，都感觉好累🥱。CRF的decoding问题，仍然是使用Viterbi算法进行求解，在这里，我就不推导了，直接放《统计学习方法》的截图吧，如果你之前看过我关于HMM模型的讲解那一篇的话，那么CRF的Viterbi算法也绝对能看得懂～</p>
+<p><img src="/2020/02/24/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/8.jpg"></p>
+<p>至此，关于CRF的理论部分就讲完了～</p>
+<h2 id="crf模型的实现">CRF模型的实现</h2>
+<p>把模型实现一遍才算是真正的吃透了这个模型呀。在这里，我采取了两种方式来实现CRF模型：python实现以及调用scikit-learn库来实现。我的github里面可以下在到所有的代码，欢迎访问我的github，也欢迎大家star和fork。附上<strong>GitHub地址: <a href="https://github.com/codewithzichao/Machine_Learning_Code" target="_blank" rel="noopener">《统计学习方法》及常规机器学习模型实现</a></strong>。具体代码如下：</p>
+<h3 id="python实现">python实现</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="comment">#Author:codewithzichao</span></span><br><span class="line"><span class="comment">#E-mail:lizichao@pku.edu.cn</span></span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">由于CRF模型，一般都是来解决其Decoding问题，所以在此，我只实现Viterbi算法～</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CRF</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="string">'''实现条件随机场预测问题的维特比算法</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, V, VW, E, EW)</span>:</span></span><br><span class="line">        <span class="string">'''</span></span><br><span class="line"><span class="string">        :param V:是定义在节点上的特征函数，称为状态特征</span></span><br><span class="line"><span class="string">        :param VW:是V对应的权值</span></span><br><span class="line"><span class="string">        :param E:是定义在边上的特征函数，称为转移特征</span></span><br><span class="line"><span class="string">        :param EW:是E对应的权值</span></span><br><span class="line"><span class="string">        '''</span></span><br><span class="line">        self.V = V  <span class="comment"># 点分布表</span></span><br><span class="line">        self.VW = VW  <span class="comment"># 点权值表</span></span><br><span class="line">        self.E = E  <span class="comment"># 边分布表</span></span><br><span class="line">        self.EW = EW  <span class="comment"># 边权值表</span></span><br><span class="line">        self.D = []  <span class="comment"># Delta表，最大非规范化概率的局部状态路径概率</span></span><br><span class="line">        self.P = []  <span class="comment"># Psi表，当前状态和最优前导状态的索引表s</span></span><br><span class="line">        self.BP = []  <span class="comment"># BestPath，最优路径</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">Viterbi</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">'''</span></span><br><span class="line"><span class="string">        条件随机场预测问题的维特比算法，此算法一定要结合CRF参数化形式对应的状态路径图来理解，更容易理解.</span></span><br><span class="line"><span class="string">        '''</span></span><br><span class="line">        self.D = np.full(shape=(np.shape(self.V)), fill_value=<span class="number">.0</span>)</span><br><span class="line">        self.P = np.full(shape=(np.shape(self.V)), fill_value=<span class="number">.0</span>)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(np.shape(self.V)[<span class="number">0</span>]):</span><br><span class="line">            <span class="comment"># 初始化</span></span><br><span class="line">            <span class="keyword">if</span> <span class="number">0</span> == i:</span><br><span class="line">                self.D[i] = np.multiply(self.V[i], self.VW[i])</span><br><span class="line">                self.P[i] = np.array([<span class="number">0</span>, <span class="number">0</span>])</span><br><span class="line">                print(<span class="string">'self.V[%d]='</span> % i, self.V[i], <span class="string">'self.VW[%d]='</span> % i, self.VW[i], <span class="string">'self.D[%d]='</span> % i, self.D[i])</span><br><span class="line">                print(<span class="string">'self.P:'</span>, self.P)</span><br><span class="line">                <span class="keyword">pass</span></span><br><span class="line">            <span class="comment"># 递推求解布局最优状态路径</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">for</span> y <span class="keyword">in</span> range(np.shape(self.V)[<span class="number">1</span>]):  <span class="comment"># delta[i][y=1,2...]</span></span><br><span class="line">                    <span class="keyword">for</span> l <span class="keyword">in</span> range(np.shape(self.V)[<span class="number">1</span>]):  <span class="comment"># V[i-1][l=1,2...]</span></span><br><span class="line">                        delta = <span class="number">0.0</span></span><br><span class="line">                        delta += self.D[i - <span class="number">1</span>, l]  <span class="comment"># 前导状态的最优状态路径的概率</span></span><br><span class="line">                        delta += self.E[i - <span class="number">1</span>][l, y] * self.EW[i - <span class="number">1</span>][l, y]  <span class="comment"># 前导状态到当前状体的转移概率</span></span><br><span class="line">                        delta += self.V[i, y] * self.VW[i, y]  <span class="comment"># 当前状态的概率</span></span><br><span class="line">                        print(<span class="string">'(x%d,y=%d)--&gt;(x%d,y=%d):%.2f + %.2f + %.2f='</span> % (i - <span class="number">1</span>, l, i, y, \</span><br><span class="line">                                                                               self.D[i - <span class="number">1</span>, l], \</span><br><span class="line">                                                                               self.E[i - <span class="number">1</span>][l, y] * self.EW[i - <span class="number">1</span>][</span><br><span class="line">                                                                                   l, y], \</span><br><span class="line">                                                                               self.V[i, y] * self.VW[i, y]), delta)</span><br><span class="line">                        <span class="keyword">if</span> <span class="number">0</span> == l <span class="keyword">or</span> delta &gt; self.D[i, y]:</span><br><span class="line">                            self.D[i, y] = delta</span><br><span class="line">                            self.P[i, y] = l</span><br><span class="line">                    print(<span class="string">'self.D[x%d,y=%d]=%.2f\n'</span> % (i, y, self.D[i, y]))</span><br><span class="line">        print(<span class="string">'self.Delta:\n'</span>, self.D)</span><br><span class="line">        print(<span class="string">'self.Psi:\n'</span>, self.P)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 返回，得到所有的最优前导状态</span></span><br><span class="line">        N = np.shape(self.V)[<span class="number">0</span>]</span><br><span class="line">        self.BP = np.full(shape=(N,), fill_value=<span class="number">0.0</span>)</span><br><span class="line">        t_range = <span class="number">-1</span> * np.array(sorted(<span class="number">-1</span> * np.arange(N)))</span><br><span class="line">        <span class="keyword">for</span> t <span class="keyword">in</span> t_range:</span><br><span class="line">            <span class="keyword">if</span> N - <span class="number">1</span> == t:  <span class="comment"># 得到最优状态</span></span><br><span class="line">                self.BP[t] = np.argmax(self.D[<span class="number">-1</span>])</span><br><span class="line">            <span class="keyword">else</span>:  <span class="comment"># 得到最优前导状态</span></span><br><span class="line">                self.BP[t] = self.P[t + <span class="number">1</span>, int(self.BP[t + <span class="number">1</span>])]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 最优状态路径表现在存储的是状态的下标，我们执行存储值+1转换成示例中的状态值</span></span><br><span class="line">        <span class="comment"># 也可以不用转换，只要你能理解，self.BP中存储的0是状态1就可以~~~~</span></span><br><span class="line">        self.BP += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        print(<span class="string">'最优状态路径为：'</span>, self.BP)</span><br><span class="line">        <span class="keyword">return</span> self.BP</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    S = np.array([[<span class="number">1</span>, <span class="number">1</span>],  <span class="comment"># X1:S(Y1=1), S(Y1=2)</span></span><br><span class="line">                  [<span class="number">1</span>, <span class="number">1</span>],  <span class="comment"># X2:S(Y2=1), S(Y2=2)</span></span><br><span class="line">                  [<span class="number">1</span>, <span class="number">1</span>]])  <span class="comment"># X3:S(Y3=1), S(Y3=1)</span></span><br><span class="line">    SW = np.array([[<span class="number">1.0</span>, <span class="number">0.5</span>],  <span class="comment"># X1:SW(Y1=1), SW(Y1=2)</span></span><br><span class="line">                   [<span class="number">0.8</span>, <span class="number">0.5</span>],  <span class="comment"># X2:SW(Y2=1), SW(Y2=2)</span></span><br><span class="line">                   [<span class="number">0.8</span>, <span class="number">0.5</span>]])  <span class="comment"># X3:SW(Y3=1), SW(Y3=1)</span></span><br><span class="line">    E = np.array([[[<span class="number">1</span>, <span class="number">1</span>],  <span class="comment"># Edge:Y1=1---&gt;(Y2=1, Y2=2)</span></span><br><span class="line">                   [<span class="number">1</span>, <span class="number">0</span>]],  <span class="comment"># Edge:Y1=2---&gt;(Y2=1, Y2=2)</span></span><br><span class="line">                  [[<span class="number">0</span>, <span class="number">1</span>],  <span class="comment"># Edge:Y2=1---&gt;(Y3=1, Y3=2)</span></span><br><span class="line">                   [<span class="number">1</span>, <span class="number">1</span>]]])  <span class="comment"># Edge:Y2=2---&gt;(Y3=1, Y3=2)</span></span><br><span class="line">    EW = np.array([[[<span class="number">0.6</span>, <span class="number">1</span>],  <span class="comment"># EdgeW:Y1=1---&gt;(Y2=1, Y2=2)</span></span><br><span class="line">                    [<span class="number">1</span>, <span class="number">0.0</span>]],  <span class="comment"># EdgeW:Y1=2---&gt;(Y2=1, Y2=2)</span></span><br><span class="line">                   [[<span class="number">0.0</span>, <span class="number">1</span>],  <span class="comment"># EdgeW:Y2=1---&gt;(Y3=1, Y3=2)</span></span><br><span class="line">                    [<span class="number">1</span>, <span class="number">0.2</span>]]])  <span class="comment"># EdgeW:Y2=2---&gt;(Y3=1, Y3=2)</span></span><br><span class="line"></span><br><span class="line">    crf = CRF(S, SW, E, EW)</span><br><span class="line">    ret = crf.Viterbi()</span><br><span class="line">    print(<span class="string">'最优状态路径为:'</span>, ret)</span><br></pre></td></tr></table></figure>
+<h3 id="sklearn实现">sklearn实现</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="comment">#Author:codewithzichao</span></span><br><span class="line"><span class="comment">#E-mail:lizichao@pku.edu.cn</span></span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">训练数据集：1998人民日报标注语料库</span></span><br><span class="line"><span class="string">目标：对其进行命名实体识别</span></span><br><span class="line"><span class="string">结果：</span></span><br><span class="line"><span class="string">数据：新华社北京十二月三十一日电(中央人民广播电台记者刘振英、新华社记者张宿堂)今天是一九九七年的最后一天。</span></span><br><span class="line"><span class="string">结果：新华社 北京 十二月三十一日  中央人民广播电台  刘振英  新华社  张宿堂  今天  一九九七年</span></span><br><span class="line"><span class="string">----------------------------------------------------------</span></span><br><span class="line"><span class="string">数据：中国，我爱你。</span></span><br><span class="line"><span class="string">结果：中国</span></span><br><span class="line"><span class="string">来源：https://www.jianshu.com/p/7fa260e91382</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> sklearn_crfsuite</span><br><span class="line"><span class="keyword">from</span> sklearn_crfsuite <span class="keyword">import</span> metrics</span><br><span class="line"><span class="keyword">import</span> joblib</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CorpusProcess</span><span class="params">(object)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""初始化"""</span></span><br><span class="line">        self.train_corpus_path =<span class="string">"1980_01.txt"</span></span><br><span class="line">        self.process_corpus_path =<span class="string">"result-rmrb.txt"</span></span><br><span class="line">        self._maps = &#123;<span class="string">u't'</span>: <span class="string">u'T'</span>, <span class="string">u'nr'</span>: <span class="string">u'PER'</span>, <span class="string">u'ns'</span>: <span class="string">u'ORG'</span>, <span class="string">u'nt'</span>: <span class="string">u'LOC'</span>&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">read_corpus_from_file</span><span class="params">(self, file_path)</span>:</span></span><br><span class="line">        <span class="string">"""读取语料"""</span></span><br><span class="line">        f = open(file_path, <span class="string">'r'</span>, encoding=<span class="string">'utf-8'</span>)</span><br><span class="line">        lines = f.readlines()</span><br><span class="line">        f.close()</span><br><span class="line">        <span class="keyword">return</span> lines</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">write_corpus_to_file</span><span class="params">(self, data, file_path)</span>:</span></span><br><span class="line">        <span class="string">"""写语料"""</span></span><br><span class="line">        f = open(file_path, <span class="string">'wb'</span>)</span><br><span class="line">        f.write(data)</span><br><span class="line">        f.close()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">q_to_b</span><span class="params">(self, q_str)</span>:</span></span><br><span class="line">        <span class="string">"""全角转半角"""</span></span><br><span class="line">        b_str = <span class="string">""</span></span><br><span class="line">        <span class="keyword">for</span> uchar <span class="keyword">in</span> q_str:</span><br><span class="line">            inside_code = ord(uchar)</span><br><span class="line">            <span class="keyword">if</span> inside_code == <span class="number">12288</span>:  <span class="comment"># 全角空格直接转换</span></span><br><span class="line">                inside_code = <span class="number">32</span></span><br><span class="line">            <span class="keyword">elif</span> <span class="number">65374</span> &gt;= inside_code &gt;= <span class="number">65281</span>:  <span class="comment"># 全角字符（除空格）根据关系转化</span></span><br><span class="line">                inside_code -= <span class="number">65248</span></span><br><span class="line">            b_str += chr(inside_code)</span><br><span class="line">        <span class="keyword">return</span> b_str</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">b_to_q</span><span class="params">(self, b_str)</span>:</span></span><br><span class="line">        <span class="string">"""半角转全角"""</span></span><br><span class="line">        q_str = <span class="string">""</span></span><br><span class="line">        <span class="keyword">for</span> uchar <span class="keyword">in</span> b_str:</span><br><span class="line">            inside_code = ord(uchar)</span><br><span class="line">            <span class="keyword">if</span> inside_code == <span class="number">32</span>:  <span class="comment"># 半角空格直接转化</span></span><br><span class="line">                inside_code = <span class="number">12288</span></span><br><span class="line">            <span class="keyword">elif</span> <span class="number">126</span> &gt;= inside_code &gt;= <span class="number">32</span>:  <span class="comment"># 半角字符（除空格）根据关系转化</span></span><br><span class="line">                inside_code += <span class="number">65248</span></span><br><span class="line">            q_str += chr(inside_code)</span><br><span class="line">        <span class="keyword">return</span> q_str</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">pre_process</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""语料预处理 """</span></span><br><span class="line">        lines = self.read_corpus_from_file(self.train_corpus_path)</span><br><span class="line">        new_lines = []</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> lines:</span><br><span class="line">            words = self.q_to_b(line.strip()).split(<span class="string">u'  '</span>)</span><br><span class="line">            pro_words = self.process_t(words)</span><br><span class="line">            pro_words = self.process_nr(pro_words)</span><br><span class="line">            pro_words = self.process_k(pro_words)</span><br><span class="line">            new_lines.append(<span class="string">'  '</span>.join(pro_words[<span class="number">1</span>:]))</span><br><span class="line">        self.write_corpus_to_file(data=<span class="string">'\n'</span>.join(new_lines).encode(<span class="string">'utf-8'</span>), file_path=self.process_corpus_path)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_k</span><span class="params">(self, words)</span>:</span></span><br><span class="line">        <span class="string">"""处理大粒度分词,合并语料库中括号中的大粒度分词,类似：[国家/n  环保局/n]nt """</span></span><br><span class="line">        pro_words = []</span><br><span class="line">        index = <span class="number">0</span></span><br><span class="line">        temp = <span class="string">u''</span></span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            word = words[index] <span class="keyword">if</span> index &lt; len(words) <span class="keyword">else</span> <span class="string">u''</span></span><br><span class="line">            <span class="keyword">if</span> <span class="string">u'['</span> <span class="keyword">in</span> word:</span><br><span class="line">                temp += re.sub(pattern=<span class="string">u'/[a-zA-Z]*'</span>, repl=<span class="string">u''</span>, string=word.replace(<span class="string">u'['</span>, <span class="string">u''</span>))</span><br><span class="line">            <span class="keyword">elif</span> <span class="string">u']'</span> <span class="keyword">in</span> word:</span><br><span class="line">                w = word.split(<span class="string">u']'</span>)</span><br><span class="line">                temp += re.sub(pattern=<span class="string">u'/[a-zA-Z]*'</span>, repl=<span class="string">u''</span>, string=w[<span class="number">0</span>])</span><br><span class="line">                pro_words.append(temp + <span class="string">u'/'</span> + w[<span class="number">1</span>])</span><br><span class="line">                temp = <span class="string">u''</span></span><br><span class="line">            <span class="keyword">elif</span> temp:</span><br><span class="line">                temp += re.sub(pattern=<span class="string">u'/[a-zA-Z]*'</span>, repl=<span class="string">u''</span>, string=word)</span><br><span class="line">            <span class="keyword">elif</span> word:</span><br><span class="line">                pro_words.append(word)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            index += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> pro_words</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_nr</span><span class="params">(self, words)</span>:</span></span><br><span class="line">        <span class="string">""" 处理姓名，合并语料库分开标注的姓和名，类似：温/nr  家宝/nr"""</span></span><br><span class="line">        pro_words = []</span><br><span class="line">        index = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            word = words[index] <span class="keyword">if</span> index &lt; len(words) <span class="keyword">else</span> <span class="string">u''</span></span><br><span class="line">            <span class="keyword">if</span> <span class="string">u'/nr'</span> <span class="keyword">in</span> word:</span><br><span class="line">                next_index = index + <span class="number">1</span></span><br><span class="line">                <span class="keyword">if</span> next_index &lt; len(words) <span class="keyword">and</span> <span class="string">u'/nr'</span> <span class="keyword">in</span> words[next_index]:</span><br><span class="line">                    pro_words.append(word.replace(<span class="string">u'/nr'</span>, <span class="string">u''</span>) + words[next_index])</span><br><span class="line">                    index = next_index</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    pro_words.append(word)</span><br><span class="line">            <span class="keyword">elif</span> word:</span><br><span class="line">                pro_words.append(word)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            index += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> pro_words</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_t</span><span class="params">(self, words)</span>:</span></span><br><span class="line">        <span class="string">"""处理时间,合并语料库分开标注的时间词，类似： （/w  一九九七年/t  十二月/t  三十一日/t  ）/w   """</span></span><br><span class="line">        pro_words = []</span><br><span class="line">        index = <span class="number">0</span></span><br><span class="line">        temp = <span class="string">u''</span></span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            word = words[index] <span class="keyword">if</span> index &lt; len(words) <span class="keyword">else</span> <span class="string">u''</span></span><br><span class="line">            <span class="keyword">if</span> <span class="string">u'/t'</span> <span class="keyword">in</span> word:</span><br><span class="line">                temp = temp.replace(<span class="string">u'/t'</span>, <span class="string">u''</span>) + word</span><br><span class="line">            <span class="keyword">elif</span> temp:</span><br><span class="line">                pro_words.append(temp)</span><br><span class="line">                pro_words.append(word)</span><br><span class="line">                temp = <span class="string">u''</span></span><br><span class="line">            <span class="keyword">elif</span> word:</span><br><span class="line">                pro_words.append(word)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            index += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> pro_words</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">pos_to_tag</span><span class="params">(self, p)</span>:</span></span><br><span class="line">        <span class="string">"""由词性提取标签"""</span></span><br><span class="line">        t = self._maps.get(p, <span class="literal">None</span>)</span><br><span class="line">        <span class="keyword">return</span> t <span class="keyword">if</span> t <span class="keyword">else</span> <span class="string">u'O'</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">tag_perform</span><span class="params">(self, tag, index)</span>:</span></span><br><span class="line">        <span class="string">"""标签使用BIO模式"""</span></span><br><span class="line">        <span class="keyword">if</span> index == <span class="number">0</span> <span class="keyword">and</span> tag != <span class="string">u'O'</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">u'B_&#123;&#125;'</span>.format(tag)</span><br><span class="line">        <span class="keyword">elif</span> tag != <span class="string">u'O'</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">u'I_&#123;&#125;'</span>.format(tag)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> tag</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">pos_perform</span><span class="params">(self, pos)</span>:</span></span><br><span class="line">        <span class="string">"""去除词性携带的标签先验知识"""</span></span><br><span class="line">        <span class="keyword">if</span> pos <span class="keyword">in</span> self._maps.keys() <span class="keyword">and</span> pos != <span class="string">u't'</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">u'n'</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> pos</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">initialize</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""初始化 """</span></span><br><span class="line">        lines = self.read_corpus_from_file(self.process_corpus_path)</span><br><span class="line">        words_list = [line.strip().split(<span class="string">'  '</span>) <span class="keyword">for</span> line <span class="keyword">in</span> lines <span class="keyword">if</span> line.strip()]</span><br><span class="line">        <span class="keyword">del</span> lines</span><br><span class="line">        self.init_sequence(words_list)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">init_sequence</span><span class="params">(self, words_list)</span>:</span></span><br><span class="line">        <span class="string">"""初始化字序列、词性序列、标记序列 """</span></span><br><span class="line">        words_seq = [[word.split(<span class="string">u'/'</span>)[<span class="number">0</span>] <span class="keyword">for</span> word <span class="keyword">in</span> words] <span class="keyword">for</span> words <span class="keyword">in</span> words_list]</span><br><span class="line">        pos_seq = [[word.split(<span class="string">u'/'</span>)[<span class="number">1</span>] <span class="keyword">for</span> word <span class="keyword">in</span> words] <span class="keyword">for</span> words <span class="keyword">in</span> words_list]</span><br><span class="line">        tag_seq = [[self.pos_to_tag(p) <span class="keyword">for</span> p <span class="keyword">in</span> pos] <span class="keyword">for</span> pos <span class="keyword">in</span> pos_seq]</span><br><span class="line">        self.pos_seq = [[[pos_seq[index][i] <span class="keyword">for</span> _ <span class="keyword">in</span> range(len(words_seq[index][i]))]</span><br><span class="line">                         <span class="keyword">for</span> i <span class="keyword">in</span> range(len(pos_seq[index]))] <span class="keyword">for</span> index <span class="keyword">in</span> range(len(pos_seq))]</span><br><span class="line">        self.tag_seq = [[[self.tag_perform(tag_seq[index][i], w) <span class="keyword">for</span> w <span class="keyword">in</span> range(len(words_seq[index][i]))]</span><br><span class="line">                         <span class="keyword">for</span> i <span class="keyword">in</span> range(len(tag_seq[index]))] <span class="keyword">for</span> index <span class="keyword">in</span> range(len(tag_seq))]</span><br><span class="line">        self.pos_seq = [[<span class="string">u'un'</span>] + [self.pos_perform(p) <span class="keyword">for</span> pos <span class="keyword">in</span> pos_seq <span class="keyword">for</span> p <span class="keyword">in</span> pos] + [<span class="string">u'un'</span>] <span class="keyword">for</span> pos_seq <span class="keyword">in</span></span><br><span class="line">                        self.pos_seq]</span><br><span class="line">        self.tag_seq = [[t <span class="keyword">for</span> tag <span class="keyword">in</span> tag_seq <span class="keyword">for</span> t <span class="keyword">in</span> tag] <span class="keyword">for</span> tag_seq <span class="keyword">in</span> self.tag_seq]</span><br><span class="line">        self.word_seq = [[<span class="string">u'&lt;BOS&gt;'</span>] + [w <span class="keyword">for</span> word <span class="keyword">in</span> word_seq <span class="keyword">for</span> w <span class="keyword">in</span> word] + [<span class="string">u'&lt;EOS&gt;'</span>] <span class="keyword">for</span> word_seq <span class="keyword">in</span> words_seq]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">extract_feature</span><span class="params">(self, word_grams)</span>:</span></span><br><span class="line">        <span class="string">"""特征选取"""</span></span><br><span class="line">        features, feature_list = [], []</span><br><span class="line">        <span class="keyword">for</span> index <span class="keyword">in</span> range(len(word_grams)):</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> range(len(word_grams[index])):</span><br><span class="line">                word_gram = word_grams[index][i]</span><br><span class="line">                feature = &#123;<span class="string">u'w-1'</span>: word_gram[<span class="number">0</span>], <span class="string">u'w'</span>: word_gram[<span class="number">1</span>], <span class="string">u'w+1'</span>: word_gram[<span class="number">2</span>],</span><br><span class="line">                           <span class="string">u'w-1:w'</span>: word_gram[<span class="number">0</span>] + word_gram[<span class="number">1</span>], <span class="string">u'w:w+1'</span>: word_gram[<span class="number">1</span>] + word_gram[<span class="number">2</span>],</span><br><span class="line">                           <span class="comment"># u'p-1': self.pos_seq[index][i], u'p': self.pos_seq[index][i+1],</span></span><br><span class="line">                           <span class="comment"># u'p+1': self.pos_seq[index][i+2],</span></span><br><span class="line">                           <span class="comment"># u'p-1:p': self.pos_seq[index][i]+self.pos_seq[index][i+1],</span></span><br><span class="line">                           <span class="comment"># u'p:p+1': self.pos_seq[index][i+1]+self.pos_seq[index][i+2],</span></span><br><span class="line">                           <span class="string">u'bias'</span>: <span class="number">1.0</span>&#125;</span><br><span class="line">                feature_list.append(feature)</span><br><span class="line">            features.append(feature_list)</span><br><span class="line">            feature_list = []</span><br><span class="line">        <span class="keyword">return</span> features</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">segment_by_window</span><span class="params">(self, words_list=None, window=<span class="number">3</span>)</span>:</span></span><br><span class="line">        <span class="string">"""窗口切分"""</span></span><br><span class="line">        words = []</span><br><span class="line">        begin, end = <span class="number">0</span>, window</span><br><span class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> range(<span class="number">1</span>, len(words_list)):</span><br><span class="line">            <span class="keyword">if</span> end &gt; len(words_list): <span class="keyword">break</span></span><br><span class="line">            words.append(words_list[begin:end])</span><br><span class="line">            begin = begin + <span class="number">1</span></span><br><span class="line">            end = end + <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> words</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""训练数据"""</span></span><br><span class="line">        word_grams = [self.segment_by_window(word_list) <span class="keyword">for</span> word_list <span class="keyword">in</span> self.word_seq]</span><br><span class="line">        features = self.extract_feature(word_grams)</span><br><span class="line">        <span class="keyword">return</span> features, self.tag_seq</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CRF_NER</span><span class="params">(object)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""初始化参数"""</span></span><br><span class="line">        self.algorithm = <span class="string">"lbfgs"</span></span><br><span class="line">        self.c1 = <span class="string">"0.1"</span></span><br><span class="line">        self.c2 = <span class="string">"0.1"</span></span><br><span class="line">        self.max_iterations = <span class="number">100</span></span><br><span class="line">        self.model_path =<span class="string">"model.pkl"</span></span><br><span class="line">        self.corpus = CorpusProcess()  <span class="comment"># Corpus 实例</span></span><br><span class="line">        self.corpus.pre_process()  <span class="comment"># 语料预处理</span></span><br><span class="line">        self.corpus.initialize()  <span class="comment"># 初始化语料</span></span><br><span class="line">        self.model = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">initialize_model</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""初始化"""</span></span><br><span class="line">        algorithm = self.algorithm</span><br><span class="line">        c1 = float(self.c1)</span><br><span class="line">        c2 = float(self.c2)</span><br><span class="line">        max_iterations = int(self.max_iterations)</span><br><span class="line">        self.model = sklearn_crfsuite.CRF(algorithm=algorithm, c1=c1, c2=c2,</span><br><span class="line">                                          max_iterations=max_iterations, all_possible_transitions=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">train</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""训练"""</span></span><br><span class="line">        self.initialize_model()</span><br><span class="line">        x, y = self.corpus.generator()</span><br><span class="line">        x_train, y_train = x[<span class="number">500</span>:], y[<span class="number">500</span>:]</span><br><span class="line">        x_test, y_test = x[:<span class="number">500</span>], y[:<span class="number">500</span>]</span><br><span class="line">        self.model.fit(x_train, y_train)</span><br><span class="line">        labels = list(self.model.classes_)</span><br><span class="line">        labels.remove(<span class="string">'O'</span>)</span><br><span class="line">        y_predict = self.model.predict(x_test)</span><br><span class="line">        metrics.flat_f1_score(y_test, y_predict, average=<span class="string">'weighted'</span>, labels=labels)</span><br><span class="line">        sorted_labels = sorted(labels, key=<span class="keyword">lambda</span> name: (name[<span class="number">1</span>:], name[<span class="number">0</span>]))</span><br><span class="line">        print(metrics.flat_classification_report(y_test, y_predict, labels=sorted_labels, digits=<span class="number">3</span>))</span><br><span class="line">        self.save_model()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(self, sentence)</span>:</span></span><br><span class="line">        <span class="string">"""预测"""</span></span><br><span class="line">        self.load_model()</span><br><span class="line">        u_sent = self.corpus.q_to_b(sentence)</span><br><span class="line">        word_lists = [[<span class="string">u'&lt;BOS&gt;'</span>] + [c <span class="keyword">for</span> c <span class="keyword">in</span> u_sent] + [<span class="string">u'&lt;EOS&gt;'</span>]]</span><br><span class="line">        word_grams = [self.corpus.segment_by_window(word_list) <span class="keyword">for</span> word_list <span class="keyword">in</span> word_lists]</span><br><span class="line">        features = self.corpus.extract_feature(word_grams)</span><br><span class="line">        y_predict = self.model.predict(features)</span><br><span class="line">        entity = <span class="string">u''</span></span><br><span class="line">        <span class="keyword">for</span> index <span class="keyword">in</span> range(len(y_predict[<span class="number">0</span>])):</span><br><span class="line">            <span class="keyword">if</span> y_predict[<span class="number">0</span>][index] != <span class="string">u'O'</span>:</span><br><span class="line">                <span class="keyword">if</span> index &gt; <span class="number">0</span> <span class="keyword">and</span> y_predict[<span class="number">0</span>][index][<span class="number">-1</span>] != y_predict[<span class="number">0</span>][index - <span class="number">1</span>][<span class="number">-1</span>]:</span><br><span class="line">                    entity += <span class="string">u' '</span></span><br><span class="line">                entity += u_sent[index]</span><br><span class="line">            <span class="keyword">elif</span> entity[<span class="number">-1</span>] != <span class="string">u' '</span>:</span><br><span class="line">                entity += <span class="string">u' '</span></span><br><span class="line">        <span class="keyword">return</span> entity</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">load_model</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""加载模型 """</span></span><br><span class="line">        self.model = joblib.load(self.model_path)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">save_model</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""保存模型"""</span></span><br><span class="line">        joblib.dump(self.model, self.model_path)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">"__main__"</span>:</span><br><span class="line"></span><br><span class="line">    ner = CRF_NER()</span><br><span class="line">    <span class="comment">#训练模型，当训练完毕后，就可以直接加载模型参数，不用再次训练了</span></span><br><span class="line">    <span class="comment">#mode=ner.train()</span></span><br><span class="line"></span><br><span class="line">    result1=ner.predict(<span class="string">u'新华社北京十二月三十一日电(中央人民广播电台记者刘振英、新华社记者张宿堂)今天是一九九七年的最后一天。'</span>)</span><br><span class="line">    print(result1)</span><br><span class="line">    result2=ner.predict(<span class="string">u'中国，我爱你。'</span>)</span><br><span class="line">    print(result2)</span><br></pre></td></tr></table></figure>
 
     </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Would you like to buy me a cup of coffee☕️～</div>
+  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="zichao Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+              <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" rel="tag"># 统计学习方法</a>
+              <a href="/tags/scikit-learn/" rel="tag"># scikit-learn</a>
+              <a href="/tags/CRF/" rel="tag"># CRF</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/" rel="prev" title="统计学习方法|隐马尔可夫模型原理详解与实现">
+      <i class="fa fa-chevron-left"></i> 统计学习方法|隐马尔可夫模型原理详解与实现
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/02/26/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%EF%BD%9C%E6%9C%80%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/" rel="next" title="统计学习方法|K近邻算法原理详解与实现">
+      统计学习方法|K近邻算法原理详解与实现 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
   </div>
 
-</div>
-        
+
+          </div>
+          
+
+        </div>
+          
   
   <div class="toggle sidebar-toggle">
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
   </div>
 
   <aside class="sidebar">
+    <div class="sidebar-inner">
 
-    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
-      <ul class="sidebar-nav">
+      <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
           Table of Contents
         </li>
@@ -229,21 +435,20 @@
         </li>
       </ul>
 
-      <div class="sidebar-panel-container">
-        <!--noindex-->
-        <section class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#条件随机场模型提出的原因"><span class="nav-number">1.</span> <span class="nav-text">条件随机场模型提出的原因</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分类模型"><span class="nav-number">1.1.</span> <span class="nav-text">分类模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HMM-vs-MEMM"><span class="nav-number">1.2.</span> <span class="nav-text">HMM vs MEMM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MEMM-vs-CRF"><span class="nav-number">1.3.</span> <span class="nav-text">MEMM vs CRF</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#条件随机场模型介绍"><span class="nav-number">2.</span> <span class="nav-text">条件随机场模型介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#边缘概率问题的求解"><span class="nav-number">3.</span> <span class="nav-text">边缘概率问题的求解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模型参数的求解"><span class="nav-number">4.</span> <span class="nav-text">模型参数的求解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Decoding问题的求解"><span class="nav-number">5.</span> <span class="nav-text">Decoding问题的求解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CRF模型的实现"><span class="nav-number">6.</span> <span class="nav-text">CRF模型的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#python实现"><span class="nav-number">6.1.</span> <span class="nav-text">python实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sklearn实现"><span class="nav-number">6.2.</span> <span class="nav-text">sklearn实现</span></a></li></ol></li></ol></div>
-        </section>
-        <!--/noindex-->
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#条件随机场模型提出的原因"><span class="nav-number">1.</span> <span class="nav-text">条件随机场模型提出的原因</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分类模型"><span class="nav-number">1.1.</span> <span class="nav-text">分类模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hmm-vs-memm"><span class="nav-number">1.2.</span> <span class="nav-text">HMM vs MEMM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#memm-vs-crf"><span class="nav-number">1.3.</span> <span class="nav-text">MEMM vs CRF</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#条件随机场模型介绍"><span class="nav-number">2.</span> <span class="nav-text">条件随机场模型介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#边缘概率问题的求解"><span class="nav-number">3.</span> <span class="nav-text">边缘概率问题的求解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模型参数的求解"><span class="nav-number">4.</span> <span class="nav-text">模型参数的求解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#decoding问题的求解"><span class="nav-number">5.</span> <span class="nav-text">Decoding问题的求解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#crf模型的实现"><span class="nav-number">6.</span> <span class="nav-text">CRF模型的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#python实现"><span class="nav-number">6.1.</span> <span class="nav-text">python实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sklearn实现"><span class="nav-number">6.2.</span> <span class="nav-text">sklearn实现</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
 
-        <section class="site-overview-wrap sidebar-panel">
-          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="zichao"
       src="/images/photo.jpg">
   <p class="site-author-name" itemprop="name">zichao</p>
   <div class="site-description" itemprop="description">Just learning</div>
 </div>
-<div class="site-state-wrap site-overview-item animated">
+<div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
@@ -266,246 +471,33 @@
       </div>
   </nav>
 </div>
-  <div class="links-of-author site-overview-item animated">
+  <div class="links-of-author motion-element">
       <span class="links-of-author-item">
-        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
       </span>
       <span class="links-of-author-item">
-        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
       </span>
       <span class="links-of-author-item">
-        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
       </span>
   </div>
 
 
 
-        </section>
       </div>
+
     </div>
   </aside>
-  <div class="sidebar-dimmer"></div>
+  <div id="sidebar-dimmer"></div>
 
 
-    </header>
-
-    
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
-
-  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
-
-<noscript>
-  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
-</noscript>
-
-
-    <div class="main-inner post posts-expand">
-      
-
-      
-
-  
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/02/24/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
-      <meta itemprop="name" content="zichao">
-      <meta itemprop="description" content="Just learning">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="codewithzichao">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          统计学习方法|条件随机场模型原理详解与实现
-        </h1>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2020-02-24 15:58:06" itemprop="dateCreated datePublished" datetime="2020-02-24T15:58:06+08:00">2020-02-24</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-02-26 11:17:03" itemprop="dateModified" datetime="2020-02-26T11:17:03+08:00">2020-02-26</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">统计学习方法</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-      </span>
-      <span class="post-meta-item-text">Views: </span>
-      <span id="busuanzi_value_page_pv"></span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-        <p>条件随机场(CRF)，属于判别模型，它在自然语言处理领域用途非常广泛。由于其涉及较多的概率图模型的知识，所以，这篇博客将首先介绍一下关于CRF模型的提出的原因，接着再介绍CRF模型需要解决的问题，并针对每个问题介绍其解决的算法，最后将使用python与sklearn库来对其进行实现。</p>
-<a id="more"></a>
-<h2 id="条件随机场模型提出的原因"><a href="#条件随机场模型提出的原因" class="headerlink" title="条件随机场模型提出的原因"></a>条件随机场模型提出的原因</h2><p>如果用一句话来总结CRF被提出的原因就是：<strong>CRF解决了MEMM模型的标注偏差问题，打破了齐次markov假设，使得模型更加合理。</strong>（如果不想看分析过程的话，可以直接跳过，看第二部分CRF模型的介绍。）具体分析过程，如下：</p>
-<h3 id="分类模型"><a href="#分类模型" class="headerlink" title="分类模型"></a>分类模型</h3><p>首先，我们可以大致看一下分类模型。整个分类模型可以被分为：<strong>硬分类与软分类</strong>。硬分类的代表模型有：<strong>感知机(PLA)、支持向量机(SVM)、线性判别分析(LDA)</strong>；软分类模型又可分为两类：判别模型与生成模型。判别模型的代表：<strong>逻辑回归(LR)模型以及最大熵(MaxEnt)模型</strong>；生成模型的代表：<strong>朴素贝叶斯(Naive Bayes)模型、隐马尔可夫(HMM)模型</strong>。之后，我们根据MaxEnt模型与HMM模型，可以得出一个<strong>判别模型——最大熵马尔可夫模型(MEMM)</strong>，最后在MEMM模型的基础上，得出了<strong>条件随机场(CRF)模型</strong>。</p>
-<p><img src="/2020/02/24/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/0.jpg" alt></p>
-<p>所以，CRF模型是从HMM到MEMM模型，一步步推出来的。那么，接下来，我们来具体看看是怎么得来的。</p>
-<h3 id="HMM-vs-MEMM"><a href="#HMM-vs-MEMM" class="headerlink" title="HMM vs MEMM"></a>HMM vs MEMM</h3><p>HMM模型，相信大家都很熟悉了，它可被用来解决词性标注等问题。HMM模型有两个很著名的假设：<strong>齐次一阶Markov假设与观测独立性假设</strong>。但是这两个假设都是合理的吗？其实不是的，如果对概率图模型的基本知识有些了解的话，我们会发现这两个假设其实都是为了简化运算。譬如说，我们来看<strong>观测独立性假设</strong>。它被描述为观测变量 $o_t$ 只与 $i_t$ 有关系，其实这是不合理的。以词性标注问题为例，单词与单词之间其实都是有关系的。那么，为了解决这个问题，MEMM模型便被提出来了，具体做法是：<strong>将原来的观测变量变为输入(从图的角度来说，就是剪箭头反向，具体为什么这样做就打破了观测独立性假设呢？其实和有向图的D-seperation有关，感兴趣的可以去了解了解这个)</strong>。MEMM的优点有：<strong>1.打破了观测独立性假设，使得模型更加合理；2.MEMM模型是判别模型，相比HMM模型来说，计算更为简单</strong>。但是MEMM模型也存在一个非常严重的缺陷：<strong>标注偏差问题(label bias problem)</strong>。这个问题会导致词性标注准确率大为降低。这也是MEMM模型没有流行的原因。</p>
-<p><img src="/2020/02/24/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/1.jpg" alt></p>
-<h3 id="MEMM-vs-CRF"><a href="#MEMM-vs-CRF" class="headerlink" title="MEMM vs CRF"></a>MEMM vs CRF</h3><p>MEMM模型存在标注偏差问题，那么到底什么是标注偏差问题呢？(如果想深入了解的话，可以去看John Lafferty的那篇论文)。 如下：</p>
-<p><img src="/2020/02/24/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/2.png" alt></p>
-<p>图中，每一列表示一个时刻，也就代表一个状态。当我们使用Viterbi算法去求具有最大概率的路径的时候，我们会得到1-&gt;2-&gt;2-&gt;2，概率是0.6*0.3*0.3=0.054，然而实际上最大概率的路径是:1-&gt;1-&gt;1-&gt;1，其概率是：0.4*0.45*0.5=0.09。那么，如果在词性标注问题中，就会导致标注发生错误。这就是标注偏差问题。那么导致这一问题的根本原因在于：<strong>局部归一化</strong>。也就是每一次从t时刻转移到t+1时刻的时候，都会对转移概率做归一化。从而，就会<strong>导致模型偏向于状态转移少的标签，从而使得后验概率最大</strong>，导致模型越不会去理睬观测变量的值，就会进行词性标注。</p>
-<p>为了解决这一问题，就提出了CRF模型。CRF模型的具体做法是：<strong>将模型变成无向图，这样一来，就不需要在每一步都进行归一化，只需要进行全局归一化即可</strong>。这样，就解决了标注偏差问题。下面就讲具体介绍CRF模型。</p>
-<h2 id="条件随机场模型介绍"><a href="#条件随机场模型介绍" class="headerlink" title="条件随机场模型介绍"></a>条件随机场模型介绍</h2><p>在介绍CRF之前，首先得先去了解有向图模型(贝叶斯网络)的因子分解与D-seperation，以及无向图(markov随机场)的D-separation(严格来讲，无向图没有D-seperation，但是它的结构和有向图的D-separation差不多，其实就是全局markov性)与因子分解。实际上，所谓的因子分解其实都是为了体现概率图模型的条件独立性。在无向图中，条件独立性表现在三个方面：全局markov性、局部markov性、成对markov性。那么因子分解为了表现其条件独立性，使用了基于团的方法，并有hammesley-Clifford定理得以保证。在这里，我就不详细讲了，如果讲的话，那就太多太多啦～感兴趣的同学可以去补补概率图的知识，就按照我上面讲的这些即可～</p>
-<p>OK，直接进入主题。</p>
-<p>CRF模型是给定随机变量$X$的条件下，随机变量$Y$的markov随机场。其概率图如下：</p>
-<p><img src="/2020/02/24/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/3.jpg" alt></p>
-<p>由于CRF模型是判别式模型，所以建模对象就是：$P(Y|X)$。也就是说，我们要求的是$P(Y|X)$。下面我们就来推导一下线性链CRF的参数形式。如下：</p>
-<p><img src="/2020/02/24/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/4.jpg" alt></p>
-<p>所以，我们现在得到了CRF的参数形式，当随机变量$X$取$x$，随机变量$Y$取$y$的时候，如下：</p>
-<script type="math/tex; mode=display">
-P(y|x)=\frac {1}{z}exp\sum_{t=1}^{T}[\sum_{k=1}^{K}\lambda_kf_k(y_{t-1},y_t,x_{1:T})+\sum_{l=1}^{L}\eta_lg_l(y_t,x_{1:T})]</script><p>其中，$\lambda、\eta$ 都是需要训练的参数，$f、g$ 是特征函数，当满足某一条件的时候，为1，否则为0。在这里，需要注意的是，我所使用的符号与李航老师的《统计学习方法》不太一样，但是表达都是一样的，《统计学习方法》中将最外面的那个$\sum$放进去了，所以特征函数的参数就会多一个。其实都是一样的，<strong>我觉得最重要的是自己能够理解，并且方便自己记忆和推导就可以了</strong>：</p>
-<p><img src="/2020/02/24/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/6.jpg" style="zoom:50%;"></p>
-<p>那么，我们使用将其化简为向量化的形式，如下：</p>
-<p><img src="/2020/02/24/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/5.jpg" alt></p>
-<p>所以，我们就得到了CRF的向量化形式：</p>
-<script type="math/tex; mode=display">
-P(y|x)=\frac {1}{z(x,\theta)}exp[\theta^T(H(y_{t-1},y_t,x)]</script><p> 那么，得到这个之后，我们就来解决CRF模型中的问题。CRF总共需要解决三个问题：</p>
-<ul>
-<li>求边缘概率。即：求$P(y_t|x)$。</li>
-<li>学习问题。即：给定训练集$\{x^{(i)},y^{(i)}\}_1^N$，求：$\theta=\mathop{argmax}\limits_{\theta}\prod_{i=1}^{N}P(y^{(i)}|x^{(i)})$。N个样本，其中x都是T维的。</li>
-<li>Decoding问题。即：求：$y=\mathop{argmax}\limits_{y}P(y|x)$。</li>
-</ul>
-<h2 id="边缘概率问题的求解"><a href="#边缘概率问题的求解" class="headerlink" title="边缘概率问题的求解"></a>边缘概率问题的求解</h2><p>在这里，其实计算过程与HMM中的概率计算其实是一样的，同样引进<strong>前向后向算法</strong>，来减小计算复杂度。具体推导过程如下（推导过程采用了<strong>变量消除法</strong>）：</p>
-<p><img src="/2020/02/24/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/7.jpg" alt></p>
-<p>我们可以看到，原来的计算复杂度为：$O(T|S|^T)$。当$T$很大的时候，复杂度是以指数形式增长的，这是不可解的。当我们已经引进前向向量与后向向量，那么就可解了。</p>
-<h2 id="模型参数的求解"><a href="#模型参数的求解" class="headerlink" title="模型参数的求解"></a>模型参数的求解</h2><p>关于CRF模型参数的求解方法，其实有很多。比如有：改进的迭代尺度法、拟牛顿法、牛顿法等等。在这里，我采用的是梯度上升法，因为是求最大，当然也可以将其转换为求最小问题，使用梯度下降法来解决。其实过程差不多的。具体推导过程如下(原谅我手机的渣渣像素，以后有时间再用markdown把公式打出来吧😩)：</p>
-<p><img src="/2020/02/24/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/9.jpg" alt></p>
-<h2 id="Decoding问题的求解"><a href="#Decoding问题的求解" class="headerlink" title="Decoding问题的求解"></a>Decoding问题的求解</h2><p>每次写博客，都感觉好累🥱。CRF的decoding问题，仍然是使用Viterbi算法进行求解，在这里，我就不推导了，直接放《统计学习方法》的截图吧，如果你之前看过我关于HMM模型的讲解那一篇的话，那么CRF的Viterbi算法也绝对能看得懂～</p>
-<p><img src="/2020/02/24/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9D%A1%E4%BB%B6%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/8.jpg" alt></p>
-<p>至此，关于CRF的理论部分就讲完了～</p>
-<h2 id="CRF模型的实现"><a href="#CRF模型的实现" class="headerlink" title="CRF模型的实现"></a>CRF模型的实现</h2><p>把模型实现一遍才算是真正的吃透了这个模型呀。在这里，我采取了两种方式来实现CRF模型：python实现以及调用scikit-learn库来实现。我的github里面可以下在到所有的代码，欢迎访问我的github，也欢迎大家star和fork。附上<strong>GitHub地址: <a href="https://github.com/codewithzichao/Machine_Learning_Code" target="_blank" rel="noopener">《统计学习方法》及常规机器学习模型实现</a></strong>。具体代码如下：</p>
-<h3 id="python实现"><a href="#python实现" class="headerlink" title="python实现"></a>python实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="comment">#Author:codewithzichao</span></span><br><span class="line"><span class="comment">#E-mail:lizichao@pku.edu.cn</span></span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">由于CRF模型，一般都是来解决其Decoding问题，所以在此，我只实现Viterbi算法～</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CRF</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="string">'''实现条件随机场预测问题的维特比算法</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, V, VW, E, EW)</span>:</span></span><br><span class="line">        <span class="string">'''</span></span><br><span class="line"><span class="string">        :param V:是定义在节点上的特征函数，称为状态特征</span></span><br><span class="line"><span class="string">        :param VW:是V对应的权值</span></span><br><span class="line"><span class="string">        :param E:是定义在边上的特征函数，称为转移特征</span></span><br><span class="line"><span class="string">        :param EW:是E对应的权值</span></span><br><span class="line"><span class="string">        '''</span></span><br><span class="line">        self.V = V  <span class="comment"># 点分布表</span></span><br><span class="line">        self.VW = VW  <span class="comment"># 点权值表</span></span><br><span class="line">        self.E = E  <span class="comment"># 边分布表</span></span><br><span class="line">        self.EW = EW  <span class="comment"># 边权值表</span></span><br><span class="line">        self.D = []  <span class="comment"># Delta表，最大非规范化概率的局部状态路径概率</span></span><br><span class="line">        self.P = []  <span class="comment"># Psi表，当前状态和最优前导状态的索引表s</span></span><br><span class="line">        self.BP = []  <span class="comment"># BestPath，最优路径</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">Viterbi</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">'''</span></span><br><span class="line"><span class="string">        条件随机场预测问题的维特比算法，此算法一定要结合CRF参数化形式对应的状态路径图来理解，更容易理解.</span></span><br><span class="line"><span class="string">        '''</span></span><br><span class="line">        self.D = np.full(shape=(np.shape(self.V)), fill_value=<span class="number">.0</span>)</span><br><span class="line">        self.P = np.full(shape=(np.shape(self.V)), fill_value=<span class="number">.0</span>)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(np.shape(self.V)[<span class="number">0</span>]):</span><br><span class="line">            <span class="comment"># 初始化</span></span><br><span class="line">            <span class="keyword">if</span> <span class="number">0</span> == i:</span><br><span class="line">                self.D[i] = np.multiply(self.V[i], self.VW[i])</span><br><span class="line">                self.P[i] = np.array([<span class="number">0</span>, <span class="number">0</span>])</span><br><span class="line">                print(<span class="string">'self.V[%d]='</span> % i, self.V[i], <span class="string">'self.VW[%d]='</span> % i, self.VW[i], <span class="string">'self.D[%d]='</span> % i, self.D[i])</span><br><span class="line">                print(<span class="string">'self.P:'</span>, self.P)</span><br><span class="line">                <span class="keyword">pass</span></span><br><span class="line">            <span class="comment"># 递推求解布局最优状态路径</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">for</span> y <span class="keyword">in</span> range(np.shape(self.V)[<span class="number">1</span>]):  <span class="comment"># delta[i][y=1,2...]</span></span><br><span class="line">                    <span class="keyword">for</span> l <span class="keyword">in</span> range(np.shape(self.V)[<span class="number">1</span>]):  <span class="comment"># V[i-1][l=1,2...]</span></span><br><span class="line">                        delta = <span class="number">0.0</span></span><br><span class="line">                        delta += self.D[i - <span class="number">1</span>, l]  <span class="comment"># 前导状态的最优状态路径的概率</span></span><br><span class="line">                        delta += self.E[i - <span class="number">1</span>][l, y] * self.EW[i - <span class="number">1</span>][l, y]  <span class="comment"># 前导状态到当前状体的转移概率</span></span><br><span class="line">                        delta += self.V[i, y] * self.VW[i, y]  <span class="comment"># 当前状态的概率</span></span><br><span class="line">                        print(<span class="string">'(x%d,y=%d)--&gt;(x%d,y=%d):%.2f + %.2f + %.2f='</span> % (i - <span class="number">1</span>, l, i, y, \</span><br><span class="line">                                                                               self.D[i - <span class="number">1</span>, l], \</span><br><span class="line">                                                                               self.E[i - <span class="number">1</span>][l, y] * self.EW[i - <span class="number">1</span>][</span><br><span class="line">                                                                                   l, y], \</span><br><span class="line">                                                                               self.V[i, y] * self.VW[i, y]), delta)</span><br><span class="line">                        <span class="keyword">if</span> <span class="number">0</span> == l <span class="keyword">or</span> delta &gt; self.D[i, y]:</span><br><span class="line">                            self.D[i, y] = delta</span><br><span class="line">                            self.P[i, y] = l</span><br><span class="line">                    print(<span class="string">'self.D[x%d,y=%d]=%.2f\n'</span> % (i, y, self.D[i, y]))</span><br><span class="line">        print(<span class="string">'self.Delta:\n'</span>, self.D)</span><br><span class="line">        print(<span class="string">'self.Psi:\n'</span>, self.P)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 返回，得到所有的最优前导状态</span></span><br><span class="line">        N = np.shape(self.V)[<span class="number">0</span>]</span><br><span class="line">        self.BP = np.full(shape=(N,), fill_value=<span class="number">0.0</span>)</span><br><span class="line">        t_range = <span class="number">-1</span> * np.array(sorted(<span class="number">-1</span> * np.arange(N)))</span><br><span class="line">        <span class="keyword">for</span> t <span class="keyword">in</span> t_range:</span><br><span class="line">            <span class="keyword">if</span> N - <span class="number">1</span> == t:  <span class="comment"># 得到最优状态</span></span><br><span class="line">                self.BP[t] = np.argmax(self.D[<span class="number">-1</span>])</span><br><span class="line">            <span class="keyword">else</span>:  <span class="comment"># 得到最优前导状态</span></span><br><span class="line">                self.BP[t] = self.P[t + <span class="number">1</span>, int(self.BP[t + <span class="number">1</span>])]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 最优状态路径表现在存储的是状态的下标，我们执行存储值+1转换成示例中的状态值</span></span><br><span class="line">        <span class="comment"># 也可以不用转换，只要你能理解，self.BP中存储的0是状态1就可以~~~~</span></span><br><span class="line">        self.BP += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        print(<span class="string">'最优状态路径为：'</span>, self.BP)</span><br><span class="line">        <span class="keyword">return</span> self.BP</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    S = np.array([[<span class="number">1</span>, <span class="number">1</span>],  <span class="comment"># X1:S(Y1=1), S(Y1=2)</span></span><br><span class="line">                  [<span class="number">1</span>, <span class="number">1</span>],  <span class="comment"># X2:S(Y2=1), S(Y2=2)</span></span><br><span class="line">                  [<span class="number">1</span>, <span class="number">1</span>]])  <span class="comment"># X3:S(Y3=1), S(Y3=1)</span></span><br><span class="line">    SW = np.array([[<span class="number">1.0</span>, <span class="number">0.5</span>],  <span class="comment"># X1:SW(Y1=1), SW(Y1=2)</span></span><br><span class="line">                   [<span class="number">0.8</span>, <span class="number">0.5</span>],  <span class="comment"># X2:SW(Y2=1), SW(Y2=2)</span></span><br><span class="line">                   [<span class="number">0.8</span>, <span class="number">0.5</span>]])  <span class="comment"># X3:SW(Y3=1), SW(Y3=1)</span></span><br><span class="line">    E = np.array([[[<span class="number">1</span>, <span class="number">1</span>],  <span class="comment"># Edge:Y1=1---&gt;(Y2=1, Y2=2)</span></span><br><span class="line">                   [<span class="number">1</span>, <span class="number">0</span>]],  <span class="comment"># Edge:Y1=2---&gt;(Y2=1, Y2=2)</span></span><br><span class="line">                  [[<span class="number">0</span>, <span class="number">1</span>],  <span class="comment"># Edge:Y2=1---&gt;(Y3=1, Y3=2)</span></span><br><span class="line">                   [<span class="number">1</span>, <span class="number">1</span>]]])  <span class="comment"># Edge:Y2=2---&gt;(Y3=1, Y3=2)</span></span><br><span class="line">    EW = np.array([[[<span class="number">0.6</span>, <span class="number">1</span>],  <span class="comment"># EdgeW:Y1=1---&gt;(Y2=1, Y2=2)</span></span><br><span class="line">                    [<span class="number">1</span>, <span class="number">0.0</span>]],  <span class="comment"># EdgeW:Y1=2---&gt;(Y2=1, Y2=2)</span></span><br><span class="line">                   [[<span class="number">0.0</span>, <span class="number">1</span>],  <span class="comment"># EdgeW:Y2=1---&gt;(Y3=1, Y3=2)</span></span><br><span class="line">                    [<span class="number">1</span>, <span class="number">0.2</span>]]])  <span class="comment"># EdgeW:Y2=2---&gt;(Y3=1, Y3=2)</span></span><br><span class="line"></span><br><span class="line">    crf = CRF(S, SW, E, EW)</span><br><span class="line">    ret = crf.Viterbi()</span><br><span class="line">    print(<span class="string">'最优状态路径为:'</span>, ret)</span><br></pre></td></tr></table></figure>
-<h3 id="sklearn实现"><a href="#sklearn实现" class="headerlink" title="sklearn实现"></a>sklearn实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="comment">#Author:codewithzichao</span></span><br><span class="line"><span class="comment">#E-mail:lizichao@pku.edu.cn</span></span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">训练数据集：1998人民日报标注语料库</span></span><br><span class="line"><span class="string">目标：对其进行命名实体识别</span></span><br><span class="line"><span class="string">结果：</span></span><br><span class="line"><span class="string">数据：新华社北京十二月三十一日电(中央人民广播电台记者刘振英、新华社记者张宿堂)今天是一九九七年的最后一天。</span></span><br><span class="line"><span class="string">结果：新华社 北京 十二月三十一日  中央人民广播电台  刘振英  新华社  张宿堂  今天  一九九七年</span></span><br><span class="line"><span class="string">----------------------------------------------------------</span></span><br><span class="line"><span class="string">数据：中国，我爱你。</span></span><br><span class="line"><span class="string">结果：中国</span></span><br><span class="line"><span class="string">来源：https://www.jianshu.com/p/7fa260e91382</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> sklearn_crfsuite</span><br><span class="line"><span class="keyword">from</span> sklearn_crfsuite <span class="keyword">import</span> metrics</span><br><span class="line"><span class="keyword">import</span> joblib</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CorpusProcess</span><span class="params">(object)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""初始化"""</span></span><br><span class="line">        self.train_corpus_path =<span class="string">"1980_01.txt"</span></span><br><span class="line">        self.process_corpus_path =<span class="string">"result-rmrb.txt"</span></span><br><span class="line">        self._maps = &#123;<span class="string">u't'</span>: <span class="string">u'T'</span>, <span class="string">u'nr'</span>: <span class="string">u'PER'</span>, <span class="string">u'ns'</span>: <span class="string">u'ORG'</span>, <span class="string">u'nt'</span>: <span class="string">u'LOC'</span>&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">read_corpus_from_file</span><span class="params">(self, file_path)</span>:</span></span><br><span class="line">        <span class="string">"""读取语料"""</span></span><br><span class="line">        f = open(file_path, <span class="string">'r'</span>, encoding=<span class="string">'utf-8'</span>)</span><br><span class="line">        lines = f.readlines()</span><br><span class="line">        f.close()</span><br><span class="line">        <span class="keyword">return</span> lines</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">write_corpus_to_file</span><span class="params">(self, data, file_path)</span>:</span></span><br><span class="line">        <span class="string">"""写语料"""</span></span><br><span class="line">        f = open(file_path, <span class="string">'wb'</span>)</span><br><span class="line">        f.write(data)</span><br><span class="line">        f.close()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">q_to_b</span><span class="params">(self, q_str)</span>:</span></span><br><span class="line">        <span class="string">"""全角转半角"""</span></span><br><span class="line">        b_str = <span class="string">""</span></span><br><span class="line">        <span class="keyword">for</span> uchar <span class="keyword">in</span> q_str:</span><br><span class="line">            inside_code = ord(uchar)</span><br><span class="line">            <span class="keyword">if</span> inside_code == <span class="number">12288</span>:  <span class="comment"># 全角空格直接转换</span></span><br><span class="line">                inside_code = <span class="number">32</span></span><br><span class="line">            <span class="keyword">elif</span> <span class="number">65374</span> &gt;= inside_code &gt;= <span class="number">65281</span>:  <span class="comment"># 全角字符（除空格）根据关系转化</span></span><br><span class="line">                inside_code -= <span class="number">65248</span></span><br><span class="line">            b_str += chr(inside_code)</span><br><span class="line">        <span class="keyword">return</span> b_str</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">b_to_q</span><span class="params">(self, b_str)</span>:</span></span><br><span class="line">        <span class="string">"""半角转全角"""</span></span><br><span class="line">        q_str = <span class="string">""</span></span><br><span class="line">        <span class="keyword">for</span> uchar <span class="keyword">in</span> b_str:</span><br><span class="line">            inside_code = ord(uchar)</span><br><span class="line">            <span class="keyword">if</span> inside_code == <span class="number">32</span>:  <span class="comment"># 半角空格直接转化</span></span><br><span class="line">                inside_code = <span class="number">12288</span></span><br><span class="line">            <span class="keyword">elif</span> <span class="number">126</span> &gt;= inside_code &gt;= <span class="number">32</span>:  <span class="comment"># 半角字符（除空格）根据关系转化</span></span><br><span class="line">                inside_code += <span class="number">65248</span></span><br><span class="line">            q_str += chr(inside_code)</span><br><span class="line">        <span class="keyword">return</span> q_str</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">pre_process</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""语料预处理 """</span></span><br><span class="line">        lines = self.read_corpus_from_file(self.train_corpus_path)</span><br><span class="line">        new_lines = []</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> lines:</span><br><span class="line">            words = self.q_to_b(line.strip()).split(<span class="string">u'  '</span>)</span><br><span class="line">            pro_words = self.process_t(words)</span><br><span class="line">            pro_words = self.process_nr(pro_words)</span><br><span class="line">            pro_words = self.process_k(pro_words)</span><br><span class="line">            new_lines.append(<span class="string">'  '</span>.join(pro_words[<span class="number">1</span>:]))</span><br><span class="line">        self.write_corpus_to_file(data=<span class="string">'\n'</span>.join(new_lines).encode(<span class="string">'utf-8'</span>), file_path=self.process_corpus_path)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_k</span><span class="params">(self, words)</span>:</span></span><br><span class="line">        <span class="string">"""处理大粒度分词,合并语料库中括号中的大粒度分词,类似：[国家/n  环保局/n]nt """</span></span><br><span class="line">        pro_words = []</span><br><span class="line">        index = <span class="number">0</span></span><br><span class="line">        temp = <span class="string">u''</span></span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            word = words[index] <span class="keyword">if</span> index &lt; len(words) <span class="keyword">else</span> <span class="string">u''</span></span><br><span class="line">            <span class="keyword">if</span> <span class="string">u'['</span> <span class="keyword">in</span> word:</span><br><span class="line">                temp += re.sub(pattern=<span class="string">u'/[a-zA-Z]*'</span>, repl=<span class="string">u''</span>, string=word.replace(<span class="string">u'['</span>, <span class="string">u''</span>))</span><br><span class="line">            <span class="keyword">elif</span> <span class="string">u']'</span> <span class="keyword">in</span> word:</span><br><span class="line">                w = word.split(<span class="string">u']'</span>)</span><br><span class="line">                temp += re.sub(pattern=<span class="string">u'/[a-zA-Z]*'</span>, repl=<span class="string">u''</span>, string=w[<span class="number">0</span>])</span><br><span class="line">                pro_words.append(temp + <span class="string">u'/'</span> + w[<span class="number">1</span>])</span><br><span class="line">                temp = <span class="string">u''</span></span><br><span class="line">            <span class="keyword">elif</span> temp:</span><br><span class="line">                temp += re.sub(pattern=<span class="string">u'/[a-zA-Z]*'</span>, repl=<span class="string">u''</span>, string=word)</span><br><span class="line">            <span class="keyword">elif</span> word:</span><br><span class="line">                pro_words.append(word)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            index += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> pro_words</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_nr</span><span class="params">(self, words)</span>:</span></span><br><span class="line">        <span class="string">""" 处理姓名，合并语料库分开标注的姓和名，类似：温/nr  家宝/nr"""</span></span><br><span class="line">        pro_words = []</span><br><span class="line">        index = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            word = words[index] <span class="keyword">if</span> index &lt; len(words) <span class="keyword">else</span> <span class="string">u''</span></span><br><span class="line">            <span class="keyword">if</span> <span class="string">u'/nr'</span> <span class="keyword">in</span> word:</span><br><span class="line">                next_index = index + <span class="number">1</span></span><br><span class="line">                <span class="keyword">if</span> next_index &lt; len(words) <span class="keyword">and</span> <span class="string">u'/nr'</span> <span class="keyword">in</span> words[next_index]:</span><br><span class="line">                    pro_words.append(word.replace(<span class="string">u'/nr'</span>, <span class="string">u''</span>) + words[next_index])</span><br><span class="line">                    index = next_index</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    pro_words.append(word)</span><br><span class="line">            <span class="keyword">elif</span> word:</span><br><span class="line">                pro_words.append(word)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            index += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> pro_words</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_t</span><span class="params">(self, words)</span>:</span></span><br><span class="line">        <span class="string">"""处理时间,合并语料库分开标注的时间词，类似： （/w  一九九七年/t  十二月/t  三十一日/t  ）/w   """</span></span><br><span class="line">        pro_words = []</span><br><span class="line">        index = <span class="number">0</span></span><br><span class="line">        temp = <span class="string">u''</span></span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">            word = words[index] <span class="keyword">if</span> index &lt; len(words) <span class="keyword">else</span> <span class="string">u''</span></span><br><span class="line">            <span class="keyword">if</span> <span class="string">u'/t'</span> <span class="keyword">in</span> word:</span><br><span class="line">                temp = temp.replace(<span class="string">u'/t'</span>, <span class="string">u''</span>) + word</span><br><span class="line">            <span class="keyword">elif</span> temp:</span><br><span class="line">                pro_words.append(temp)</span><br><span class="line">                pro_words.append(word)</span><br><span class="line">                temp = <span class="string">u''</span></span><br><span class="line">            <span class="keyword">elif</span> word:</span><br><span class="line">                pro_words.append(word)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            index += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> pro_words</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">pos_to_tag</span><span class="params">(self, p)</span>:</span></span><br><span class="line">        <span class="string">"""由词性提取标签"""</span></span><br><span class="line">        t = self._maps.get(p, <span class="literal">None</span>)</span><br><span class="line">        <span class="keyword">return</span> t <span class="keyword">if</span> t <span class="keyword">else</span> <span class="string">u'O'</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">tag_perform</span><span class="params">(self, tag, index)</span>:</span></span><br><span class="line">        <span class="string">"""标签使用BIO模式"""</span></span><br><span class="line">        <span class="keyword">if</span> index == <span class="number">0</span> <span class="keyword">and</span> tag != <span class="string">u'O'</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">u'B_&#123;&#125;'</span>.format(tag)</span><br><span class="line">        <span class="keyword">elif</span> tag != <span class="string">u'O'</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">u'I_&#123;&#125;'</span>.format(tag)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> tag</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">pos_perform</span><span class="params">(self, pos)</span>:</span></span><br><span class="line">        <span class="string">"""去除词性携带的标签先验知识"""</span></span><br><span class="line">        <span class="keyword">if</span> pos <span class="keyword">in</span> self._maps.keys() <span class="keyword">and</span> pos != <span class="string">u't'</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">u'n'</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> pos</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">initialize</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""初始化 """</span></span><br><span class="line">        lines = self.read_corpus_from_file(self.process_corpus_path)</span><br><span class="line">        words_list = [line.strip().split(<span class="string">'  '</span>) <span class="keyword">for</span> line <span class="keyword">in</span> lines <span class="keyword">if</span> line.strip()]</span><br><span class="line">        <span class="keyword">del</span> lines</span><br><span class="line">        self.init_sequence(words_list)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">init_sequence</span><span class="params">(self, words_list)</span>:</span></span><br><span class="line">        <span class="string">"""初始化字序列、词性序列、标记序列 """</span></span><br><span class="line">        words_seq = [[word.split(<span class="string">u'/'</span>)[<span class="number">0</span>] <span class="keyword">for</span> word <span class="keyword">in</span> words] <span class="keyword">for</span> words <span class="keyword">in</span> words_list]</span><br><span class="line">        pos_seq = [[word.split(<span class="string">u'/'</span>)[<span class="number">1</span>] <span class="keyword">for</span> word <span class="keyword">in</span> words] <span class="keyword">for</span> words <span class="keyword">in</span> words_list]</span><br><span class="line">        tag_seq = [[self.pos_to_tag(p) <span class="keyword">for</span> p <span class="keyword">in</span> pos] <span class="keyword">for</span> pos <span class="keyword">in</span> pos_seq]</span><br><span class="line">        self.pos_seq = [[[pos_seq[index][i] <span class="keyword">for</span> _ <span class="keyword">in</span> range(len(words_seq[index][i]))]</span><br><span class="line">                         <span class="keyword">for</span> i <span class="keyword">in</span> range(len(pos_seq[index]))] <span class="keyword">for</span> index <span class="keyword">in</span> range(len(pos_seq))]</span><br><span class="line">        self.tag_seq = [[[self.tag_perform(tag_seq[index][i], w) <span class="keyword">for</span> w <span class="keyword">in</span> range(len(words_seq[index][i]))]</span><br><span class="line">                         <span class="keyword">for</span> i <span class="keyword">in</span> range(len(tag_seq[index]))] <span class="keyword">for</span> index <span class="keyword">in</span> range(len(tag_seq))]</span><br><span class="line">        self.pos_seq = [[<span class="string">u'un'</span>] + [self.pos_perform(p) <span class="keyword">for</span> pos <span class="keyword">in</span> pos_seq <span class="keyword">for</span> p <span class="keyword">in</span> pos] + [<span class="string">u'un'</span>] <span class="keyword">for</span> pos_seq <span class="keyword">in</span></span><br><span class="line">                        self.pos_seq]</span><br><span class="line">        self.tag_seq = [[t <span class="keyword">for</span> tag <span class="keyword">in</span> tag_seq <span class="keyword">for</span> t <span class="keyword">in</span> tag] <span class="keyword">for</span> tag_seq <span class="keyword">in</span> self.tag_seq]</span><br><span class="line">        self.word_seq = [[<span class="string">u'&lt;BOS&gt;'</span>] + [w <span class="keyword">for</span> word <span class="keyword">in</span> word_seq <span class="keyword">for</span> w <span class="keyword">in</span> word] + [<span class="string">u'&lt;EOS&gt;'</span>] <span class="keyword">for</span> word_seq <span class="keyword">in</span> words_seq]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">extract_feature</span><span class="params">(self, word_grams)</span>:</span></span><br><span class="line">        <span class="string">"""特征选取"""</span></span><br><span class="line">        features, feature_list = [], []</span><br><span class="line">        <span class="keyword">for</span> index <span class="keyword">in</span> range(len(word_grams)):</span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> range(len(word_grams[index])):</span><br><span class="line">                word_gram = word_grams[index][i]</span><br><span class="line">                feature = &#123;<span class="string">u'w-1'</span>: word_gram[<span class="number">0</span>], <span class="string">u'w'</span>: word_gram[<span class="number">1</span>], <span class="string">u'w+1'</span>: word_gram[<span class="number">2</span>],</span><br><span class="line">                           <span class="string">u'w-1:w'</span>: word_gram[<span class="number">0</span>] + word_gram[<span class="number">1</span>], <span class="string">u'w:w+1'</span>: word_gram[<span class="number">1</span>] + word_gram[<span class="number">2</span>],</span><br><span class="line">                           <span class="comment"># u'p-1': self.pos_seq[index][i], u'p': self.pos_seq[index][i+1],</span></span><br><span class="line">                           <span class="comment"># u'p+1': self.pos_seq[index][i+2],</span></span><br><span class="line">                           <span class="comment"># u'p-1:p': self.pos_seq[index][i]+self.pos_seq[index][i+1],</span></span><br><span class="line">                           <span class="comment"># u'p:p+1': self.pos_seq[index][i+1]+self.pos_seq[index][i+2],</span></span><br><span class="line">                           <span class="string">u'bias'</span>: <span class="number">1.0</span>&#125;</span><br><span class="line">                feature_list.append(feature)</span><br><span class="line">            features.append(feature_list)</span><br><span class="line">            feature_list = []</span><br><span class="line">        <span class="keyword">return</span> features</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">segment_by_window</span><span class="params">(self, words_list=None, window=<span class="number">3</span>)</span>:</span></span><br><span class="line">        <span class="string">"""窗口切分"""</span></span><br><span class="line">        words = []</span><br><span class="line">        begin, end = <span class="number">0</span>, window</span><br><span class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> range(<span class="number">1</span>, len(words_list)):</span><br><span class="line">            <span class="keyword">if</span> end &gt; len(words_list): <span class="keyword">break</span></span><br><span class="line">            words.append(words_list[begin:end])</span><br><span class="line">            begin = begin + <span class="number">1</span></span><br><span class="line">            end = end + <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> words</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""训练数据"""</span></span><br><span class="line">        word_grams = [self.segment_by_window(word_list) <span class="keyword">for</span> word_list <span class="keyword">in</span> self.word_seq]</span><br><span class="line">        features = self.extract_feature(word_grams)</span><br><span class="line">        <span class="keyword">return</span> features, self.tag_seq</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CRF_NER</span><span class="params">(object)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""初始化参数"""</span></span><br><span class="line">        self.algorithm = <span class="string">"lbfgs"</span></span><br><span class="line">        self.c1 = <span class="string">"0.1"</span></span><br><span class="line">        self.c2 = <span class="string">"0.1"</span></span><br><span class="line">        self.max_iterations = <span class="number">100</span></span><br><span class="line">        self.model_path =<span class="string">"model.pkl"</span></span><br><span class="line">        self.corpus = CorpusProcess()  <span class="comment"># Corpus 实例</span></span><br><span class="line">        self.corpus.pre_process()  <span class="comment"># 语料预处理</span></span><br><span class="line">        self.corpus.initialize()  <span class="comment"># 初始化语料</span></span><br><span class="line">        self.model = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">initialize_model</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""初始化"""</span></span><br><span class="line">        algorithm = self.algorithm</span><br><span class="line">        c1 = float(self.c1)</span><br><span class="line">        c2 = float(self.c2)</span><br><span class="line">        max_iterations = int(self.max_iterations)</span><br><span class="line">        self.model = sklearn_crfsuite.CRF(algorithm=algorithm, c1=c1, c2=c2,</span><br><span class="line">                                          max_iterations=max_iterations, all_possible_transitions=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">train</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""训练"""</span></span><br><span class="line">        self.initialize_model()</span><br><span class="line">        x, y = self.corpus.generator()</span><br><span class="line">        x_train, y_train = x[<span class="number">500</span>:], y[<span class="number">500</span>:]</span><br><span class="line">        x_test, y_test = x[:<span class="number">500</span>], y[:<span class="number">500</span>]</span><br><span class="line">        self.model.fit(x_train, y_train)</span><br><span class="line">        labels = list(self.model.classes_)</span><br><span class="line">        labels.remove(<span class="string">'O'</span>)</span><br><span class="line">        y_predict = self.model.predict(x_test)</span><br><span class="line">        metrics.flat_f1_score(y_test, y_predict, average=<span class="string">'weighted'</span>, labels=labels)</span><br><span class="line">        sorted_labels = sorted(labels, key=<span class="keyword">lambda</span> name: (name[<span class="number">1</span>:], name[<span class="number">0</span>]))</span><br><span class="line">        print(metrics.flat_classification_report(y_test, y_predict, labels=sorted_labels, digits=<span class="number">3</span>))</span><br><span class="line">        self.save_model()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(self, sentence)</span>:</span></span><br><span class="line">        <span class="string">"""预测"""</span></span><br><span class="line">        self.load_model()</span><br><span class="line">        u_sent = self.corpus.q_to_b(sentence)</span><br><span class="line">        word_lists = [[<span class="string">u'&lt;BOS&gt;'</span>] + [c <span class="keyword">for</span> c <span class="keyword">in</span> u_sent] + [<span class="string">u'&lt;EOS&gt;'</span>]]</span><br><span class="line">        word_grams = [self.corpus.segment_by_window(word_list) <span class="keyword">for</span> word_list <span class="keyword">in</span> word_lists]</span><br><span class="line">        features = self.corpus.extract_feature(word_grams)</span><br><span class="line">        y_predict = self.model.predict(features)</span><br><span class="line">        entity = <span class="string">u''</span></span><br><span class="line">        <span class="keyword">for</span> index <span class="keyword">in</span> range(len(y_predict[<span class="number">0</span>])):</span><br><span class="line">            <span class="keyword">if</span> y_predict[<span class="number">0</span>][index] != <span class="string">u'O'</span>:</span><br><span class="line">                <span class="keyword">if</span> index &gt; <span class="number">0</span> <span class="keyword">and</span> y_predict[<span class="number">0</span>][index][<span class="number">-1</span>] != y_predict[<span class="number">0</span>][index - <span class="number">1</span>][<span class="number">-1</span>]:</span><br><span class="line">                    entity += <span class="string">u' '</span></span><br><span class="line">                entity += u_sent[index]</span><br><span class="line">            <span class="keyword">elif</span> entity[<span class="number">-1</span>] != <span class="string">u' '</span>:</span><br><span class="line">                entity += <span class="string">u' '</span></span><br><span class="line">        <span class="keyword">return</span> entity</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">load_model</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""加载模型 """</span></span><br><span class="line">        self.model = joblib.load(self.model_path)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">save_model</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""保存模型"""</span></span><br><span class="line">        joblib.dump(self.model, self.model_path)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">"__main__"</span>:</span><br><span class="line"></span><br><span class="line">    ner = CRF_NER()</span><br><span class="line">    <span class="comment">#训练模型，当训练完毕后，就可以直接加载模型参数，不用再次训练了</span></span><br><span class="line">    <span class="comment">#mode=ner.train()</span></span><br><span class="line"></span><br><span class="line">    result1=ner.predict(<span class="string">u'新华社北京十二月三十一日电(中央人民广播电台记者刘振英、新华社记者张宿堂)今天是一九九七年的最后一天。'</span>)</span><br><span class="line">    print(result1)</span><br><span class="line">    result2=ner.predict(<span class="string">u'中国，我爱你。'</span>)</span><br><span class="line">    print(result2)</span><br></pre></td></tr></table></figure>
-
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-          <div class="reward-container">
-  <div>Would you like to buy me a cup of coffee☕️～</div>
-  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
-    Donate
-  </button>
-  <div class="post-reward">
-      <div>
-        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
-        <span>WeChat Pay</span>
       </div>
-      <div>
-        <img src="/images/alipay.jpg" alt="zichao Alipay">
-        <span>Alipay</span>
-      </div>
+    </main>
 
-  </div>
-</div>
-
-          <div class="post-tags">
-              <a href="/tags/python/" rel="tag"># python</a>
-              <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" rel="tag"># 统计学习方法</a>
-              <a href="/tags/scikit-learn/" rel="tag"># scikit-learn</a>
-              <a href="/tags/CRF/" rel="tag"># CRF</a>
-          </div>
-
+    <footer class="footer">
+      <div class="footer-inner">
         
-
-          <div class="post-nav">
-            <div class="post-nav-item">
-                <a href="/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/" rel="prev" title="统计学习方法|隐马尔可夫模型原理详解与实现">
-                  <i class="fa fa-chevron-left"></i> 统计学习方法|隐马尔可夫模型原理详解与实现
-                </a>
-            </div>
-            <div class="post-nav-item">
-                <a href="/2020/02/26/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%EF%BD%9C%E6%9C%80%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/" rel="next" title="统计学习方法|K近邻算法原理详解与实现">
-                  统计学习方法|K近邻算法原理详解与实现 <i class="fa fa-chevron-right"></i>
-                </a>
-            </div>
-          </div>
-    </footer>
-  </article>
-</div>
-
-
-
-
-
-
-      
-
-<script>
-  window.addEventListener('tabs:register', () => {
-    let { activeClass } = CONFIG.comments;
-    if (CONFIG.comments.storage) {
-      activeClass = localStorage.getItem('comments_active') || activeClass;
-    }
-    if (activeClass) {
-      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
-      if (activeTab) {
-        activeTab.click();
-      }
-    }
-  });
-  if (CONFIG.comments.storage) {
-    window.addEventListener('tabs:click', event => {
-      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      const commentClass = event.target.classList[1];
-      localStorage.setItem('comments_active', commentClass);
-    });
-  }
-</script>
-
-    </div>
-  </main>
-
-  <footer class="footer">
-    <div class="footer-inner">
-      
-
-      
 
 <div class="copyright">
   
@@ -516,7 +508,15 @@ P(y|x)=\frac {1}{z(x,\theta)}exp[\theta^T(H(y_{t-1},y_t,x)]</script><p> 那么�
   </span>
   <span class="author" itemprop="copyrightHolder">zichao</span>
 </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a>
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
 <div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
       <span class="post-meta-item-icon">
         <i class="fa fa-user"></i>
@@ -525,6 +525,7 @@ P(y|x)=\frac {1}{z(x,\theta)}exp[\theta^T(H(y_{t-1},y_t,x)]</script><p> 那么�
         <span id="busuanzi_value_site_uv"></span>
       </span>
     </span>
+    <span class="post-meta-divider">|</span>
     <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
       <span class="post-meta-item-icon">
         <i class="fa fa-eye"></i>
@@ -534,91 +535,125 @@ P(y|x)=\frac {1}{z(x,\theta)}exp[\theta^T(H(y_{t-1},y_t,x)]</script><p> 那么�
       </span>
     </span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
   </div>
 
-    </div>
-  </footer>
-
   
-  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
 
-  
+<script src="/js/utils.js"></script>
 
-
-
-
-  <script src="/js/local-search.js"></script>
+<script src="/js/motion.js"></script>
 
 
+<script src="/js/schemes/muse.js"></script>
 
 
-
-
-
-
-
-
-
-
-
-
-
-  
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-
-
-
+<script src="/js/next-boot.js"></script>
 
 
 
 
   
 
+
+
+
   
-      <script>
-  if (typeof MathJax === 'undefined') {
-    window.MathJax = {
-      tex: {
-        inlineMath: {'[+]': [['$', '$']]},
-        tags: 'ams'
-      },
-      options: {
-        renderActions: {
-          findScript: [10, doc => {
-            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
-              const display = !!node.type.match(/; *mode=display/);
-              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
-              const text = document.createTextNode('');
-              node.parentNode.replaceChild(text, node);
-              math.start = {node: text, delim: '', n: 0};
-              math.end = {node: text, delim: '', n: 0};
-              doc.math.push(math);
-            });
-          }, '', false],
-          insertedScript: [200, () => {
-            document.querySelectorAll('mjx-container').forEach(node => {
-              const target = node.parentNode;
-              if (target.nodeName.toLowerCase() === 'li') {
-                target.parentNode.classList.add('has-jax');
-              }
-            });
-          }, '', false]
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('div.pdf').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
+    document.querySelectorAll('div.pdf').forEach(element => {
+      PDFObject.embed(element.getAttribute('target'), element, {
+        pdfOpenParams: {
+          navpanes: 0,
+          toolbar: 0,
+          statusbar: 0,
+          pagemode: 'thumbs',
+          view: 'FitH'
+        },
+        PDFJS_URL: '/lib/pdf/web/viewer.html',
+        height: element.getAttribute('height') || '500px'
+      });
+    });
+  }, window.PDFObject);
+}
+</script>
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
         }
       }
-    };
-    const script = document.createElement('script');
-    script.src = '//cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js';
-    script.defer = true;
-    document.head.appendChild(script);
-  } else {
-    MathJax.startup.document.state(0);
-    MathJax.typesetClear();
-    MathJax.texReset();
-    MathJax.typeset();
-  }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
 </script>
 
     

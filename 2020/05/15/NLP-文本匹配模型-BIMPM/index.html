@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 4.2.0">
-
-
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -15,14 +13,37 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
 
-<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
 
-<script class="hexo-configurations">
-    var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","images":"/images","scheme":"Muse","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
-  </script>
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://codewithzichao.github.io').hostname,
+    root: '/',
+    scheme: 'Muse',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: "",
+      labels: ""
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
 
   <meta name="description" content="正式开始看文本匹配的东西啦！文本匹配对NLPer来说是很重要的，不管是最后是做对话、推荐、搜索，文本匹配都是必不可少的。当然啦，BERT系列的模型出来之后，其实传统的深度学习模型效果是远远比不上的。不过这些预训练模型效果好是好，但是训练代价昂贵，当然啦，有人会说，现在已经有剪枝、量化、蒸馏这样的方法来减小预训练模型的大小，从而降低训练所需的代价(所以说模型压缩、加速这个方向还是很有前景的🤩咦，好">
 <meta property="og:type" content="article">
@@ -50,17 +71,17 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://codewithzichao.github.io/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/BIMPM.jpg">
 
-
 <link rel="canonical" href="http://codewithzichao.github.io/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/">
 
 
-<script class="page-configurations">
+<script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : false,
-    isPost : true,
-    lang   : 'en'
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
   };
 </script>
 
@@ -74,104 +95,88 @@
 
   <noscript>
   <style>
-  body { margin-top: 2rem; }
-
+  .use-motion .brand,
   .use-motion .menu-item,
-  .use-motion .sidebar,
+  .sidebar-inner,
   .use-motion .post-block,
   .use-motion .pagination,
   .use-motion .comments,
   .use-motion .post-header,
   .use-motion .post-body,
-  .use-motion .collection-header {
-    visibility: visible;
-  }
-
-  .use-motion .header,
-  .use-motion .site-brand-container .toggle,
-  .use-motion .footer { opacity: initial; }
+  .use-motion .collection-header { opacity: initial; }
 
   .use-motion .site-title,
-  .use-motion .site-subtitle,
-  .use-motion .custom-logo-image {
+  .use-motion .site-subtitle {
     opacity: initial;
     top: initial;
   }
 
-  .use-motion .logo-line {
-    transform: scaleX(1);
-  }
-
-  .search-pop-overlay, .sidebar-nav { display: none; }
-  .sidebar-panel { display: block; }
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
   </style>
 </noscript>
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
-  <div class="headband"></div>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
 
-  <main class="main">
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Toggle navigation bar">
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
-    </div>
-  </div>
-
   <div class="site-meta">
 
-    <a href="/" class="brand" rel="start">
-      <i class="logo-line"></i>
-      <h1 class="site-title">codewithzichao</h1>
-      <i class="logo-line"></i>
-    </a>
-      <p class="site-subtitle" itemprop="description">Confident，Modest，Patient</p>
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">codewithzichao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">Confident，Modest，Patient</p>
   </div>
 
-  <div class="site-nav-right">
-    <div class="toggle popup-trigger">
-        <i class="fa fa-search fa-fw fa-lg"></i>
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
     </div>
   </div>
 </div>
 
 
-
 <nav class="site-nav">
-  <ul class="main-menu menu">
+  
+  <ul id="menu" class="menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
 
   </li>
-        <li class="menu-item menu-item-schedule">
+        <li class="menu-item menu-item-friends">
 
-    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a>
+    <a href="/Friends/" rel="section"><i class="fa fa-fw fa-address-book"></i>Friends</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -179,47 +184,257 @@
         </a>
       </li>
   </ul>
+
 </nav>
-
-
-
-  <div class="search-pop-overlay">
+  <div class="site-search">
     <div class="popup search-popup">
-        <div class="search-header">
+    <div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocapitalize="off" maxlength="80"
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
            placeholder="Searching..." spellcheck="false"
-           type="search" class="search-input">
+           type="text" id="search-input">
   </div>
   <span class="popup-btn-close">
     <i class="fa fa-times-circle"></i>
   </span>
 </div>
-<div class="search-result-container no-result">
-  <div class="search-result-icon">
-    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
   </div>
 </div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="name" content="zichao">
+      <meta itemprop="description" content="Just learning">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="codewithzichao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          NLP|文本匹配模型-BIMPM
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+
+            
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-05-15 10:26:23" itemprop="dateCreated datePublished" datetime="2020-05-15T10:26:23+08:00">2020-05-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-10-19 22:04:08" itemprop="dateModified" datetime="2020-10-19T22:04:08+08:00">2020-10-19</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index">
+                    <span itemprop="name">NLP</span>
+                  </a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index">
+                    <span itemprop="name">文本匹配模型</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>正式开始看文本匹配的东西啦！文本匹配对NLPer来说是很重要的，不管是最后是做对话、推荐、搜索，文本匹配都是必不可少的。当然啦，BERT系列的模型出来之后，其实传统的深度学习模型效果是远远比不上的。不过这些预训练模型效果好是好，但是训练代价昂贵，当然啦，有人会说，现在已经有剪枝、量化、蒸馏这样的方法来减小预训练模型的大小，从而降低训练所需的代价(所以说模型压缩、加速这个方向还是很有前景的🤩咦，好像跑偏了，anyway)，但是这仍然远远不够，所以熟悉传统的文本匹配模型是非常有必要的。本篇博客讲解经典的BIMPM模型，并采用tensorflow2实现。</p>
+<a id="more"></a>
+<h2 id="bimpm模型的介绍">BIMPM模型的介绍</h2>
+<p>BIMPM模型来源于2017年的《Bilateral Multi-Perspective Matching for Natural Language Sentences》论文。这篇文章总结了Siamese架构与matching-aggregate架构的优缺点，非常值得一读，有时间的童鞋一定要去读读原始论文🤩</p>
+<h3 id="bimpm模型提出的原因">BIMPM模型提出的原因</h3>
+<p>在文本匹配模型中，大致可以分为两大类：基于表示的文本匹配模型，即Siamese架构，以及基于交互的文本匹配模型，即matching-aggregate架构(有时候也称作compare-aggregate架构)。两种结构的优缺点如下：</p>
+<ul>
+<li>Siamese架构的优点在于两个句子可以共享参数，所以模型容量比较小，也容易训练；但是其缺点也很明显，由于在encoder部分没有明显的交互，所以会导致失去某些重要的信息，即没法捕获到更加丰富的语义特征。</li>
+<li>matching-aggregate架构的优点可以及早地捕获更为丰富的交互特征，因此效果通常来说会更好一些。但是其缺点在于：一方面，很多模型只考虑了单个细粒度的匹配，比如word by word，而没有考虑其他细粒度的匹配；另一方面，匹配往往是单向的，即只有P对Q的匹配，或者是Q对P的匹配。</li>
+</ul>
+<p>知道了两种架构的优缺点后，作者提出了BIMPM模型。该模型本质上还是属于matching-aggregate架构，但是与其他模型不同的地方在于：其考虑了两个方向的匹配，即P对Q与Q对P。这样的话，就可以得到更为丰富的语义特征。事实证明，其确实取得了比较好的效果。</p>
+<h3 id="bimpm模型的架构">BIMPM模型的架构</h3>
+<p>首先给出相关定义。假设sample的形式为三元组：<span class="math inline">\((P,Q,y)\)</span>，其中<span class="math inline">\(P=\{p_1,p_2,p_3,...,p_M\}，Q=\{q_1,q_2,q_3,...,q_N\}\)</span>。其中，每一个token的维度均是d维的；<span class="math inline">\(y\)</span>是label。从这里可以看出，BIMPM模型属于pointwise的学习方式。</p>
+<p><img src="/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/BIMPM.jpg" style="zoom: 67%;"></p>
+<p>上图就是BIMPM模型的整体架构。可以看到，BIMPM模型分为五层，下面一一介绍。</p>
+<h4 id="word-representation-layer">word representation layer</h4>
+<p>这一层包含两个部分：一部分是固定的词向量，比如使用Google的300维的word2vec词向量或者Glove词向量；另一部分是将每一个单词的每一个输入到LSTM网络中，得到的词向量，这一层最终的输出是将这两部分的词向量进行concat之后的结果。</p>
+<h4 id="context-representation-layer">context representation layer</h4>
+<p>这一层是对P和Q进行进一步的encoding，将上下文信息融入到每一个time step。具体来说，是使用一层BILSTM。注意：P与Q使用同样的BILSTM，即共享参数。</p>
+<p><img src="/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/BILSTM1.jpg" style="zoom:50%;"></p>
+<p><img src="/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/BILSTM2.jpg" style="zoom:50%;"></p>
+<h4 id="matching-layer">matching layer</h4>
+<p>这一部分是BIMPM模型真正创新的地方。它采用了双向的matching方法，即：比较P的每一个timestep的向量与Q的所有timestep向量，比较Q的每一个timestep的向量与P的所有timestep向量。在论文中，作者设计了一种multi-perspective的方法。整个multi-perspective方法包含两步：第一步：给出cosine matching function的定义；第二步，在给出的函数的基础上，使用四种匹配策略（full-matching、Maxpooling-matching、attentive-matching、max-attentive-matching），从而得到最终的输出。</p>
+<p><strong>step1：</strong>首先要明白给出的cosine matching function的定义，如下：</p>
+<p><img src="/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/cosine.jpg" style="zoom:50%;"></p>
+<p>其中，<span class="math inline">\(v_1,v_2\)</span>是两个向量，假设其维度是<span class="math inline">\(d\)</span>维；<span class="math inline">\(W\)</span>是参数，其维度是<span class="math inline">\(R^{l\times d}\)</span>，<span class="math inline">\(l\)</span>是perspective的数量；得到的输出<span class="math inline">\(m=\{m_1,m_2,m_3,...,m_l\},m\in R^l\)</span>。具体来说，$ m_k=cosine(W_k<em>v_1,W_k</em>v_2) $。</p>
+<p><strong>step2：</strong>在第一步的基础上，给出了四种匹配策略。下面演示的是P对Q的matching，即P的每一个timestep对Q进行matching。</p>
+<p><img src="/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/matching strategiesjpg.jpg" style="zoom:50%;"></p>
+<ul>
+<li><strong>full matching：</strong>对于P的一个timestep的向量，只与Q的最后一个状态相比较(前向的或者后向的)。对应上图的a，具体公式如下：</li>
+</ul>
+<p><img src="/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/full-matching.jpg" style="zoom:50%;"></p>
+<ul>
+<li><strong>maxpooling matching：</strong>对于P的一个timestep的向量，分别与Q的每一个timestep的向量进行比较，最后选择结果最大的输出。对应于上图的b，具体公式如下：</li>
+</ul>
+<p><img src="/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/Maxpooling-matching.jpg" style="zoom:50%;"></p>
+<ul>
+<li><strong>attentive matching：</strong>对于P的每一个timestep的向量，分别与Q的每一个timestep进行余弦相似度的计算，最后得到加权后的向量。对应于上图的c，具体公式如下：</li>
+</ul>
+<p><img src="/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/attentive-matching1.jpg" style="zoom:50%;"></p>
+<p>得到余弦相似度，然后得到进行加权，如下：</p>
+<p><img src="/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/attentive-matching2.jpg" style="zoom:50%;"></p>
+<p><img src="/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/attentive-matching3.jpg" style="zoom:50%;"></p>
+<ul>
+<li><strong>max-attentive matching：</strong>与attentive matching不同·的地方在于，注意力向量并不是加权得到的，而是从中选取最大的作为注意力向量，启宇的与attentive matching一样。</li>
+</ul>
+<p>最后，这一层的输出是上面四种策略的concat之后的结果。<strong>注意，因为是双向的BLSTM，所以一个句子最后聚合的是8个向量！！！</strong></p>
+<h4 id="aggregate-layer">aggregate layer</h4>
+<p>这一层主要是去聚合两个句子。具体来说，使用的是一个BILSTM，我们取前向的LSTM与后向的LSTM的最后一个状态，由于是两个句子，所以最后是concat4个向量。</p>
+<h4 id="prediction-layer">prediction layer</h4>
+<p>这一层就是要得到最后的分类结果啦。具体来说，就是使用两层的MLP，最后使用softmax，得到最终的输出。</p>
+<p>上述就是BIMPM模型的全部内容啦🎉</p>
+<blockquote>
+<p>稍微啰嗦一下吧，目前基本的文本匹配模型就看完了，总的来说，还是比较简单，实现起来也不难。要说难的地方，就是pairwise的训练方式与listwise的训练方式了吧，这个对于数据的处理是需要下一点功夫的，最好去借鉴一下别人的代码是怎么写的。pointwise是比较简单的，这个不用说什么。接下来的话，如果还需要接触文本匹配的模型的话，那就是MRC了吧。说实话，这个单独搞真不好搞，但是MRC毕竟是目前研究的热点方向，经典的BIDAF、R-net等模型还是需要去看的，VQA也需要去接触一下。不过，主线还是要放在检索式对话这块，先把检索式对话看完，然后再去熟悉生成式对话。毕竟生成式任务真的不好弄，而且还是对话这块，还是需要有人带。</p>
+</blockquote>
+<h2 id="bimpm模型的实现">BIMPM模型的实现</h2>
+<h2 id="参考文献">参考文献</h2>
+<p>Bilateral Multi-Perspective Matching for Natural Language Sentences</p>
 
     </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>Would you like to buy me a cup of coffee☕️～</div>
+  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="zichao Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/NLP/" rel="tag"># NLP</a>
+              <a href="/tags/tensorflow2/" rel="tag"># tensorflow2</a>
+              <a href="/tags/BIMPM/" rel="tag"># BIMPM</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/" rel="prev" title="NLP|分类与匹配的各类评价指标">
+      <i class="fa fa-chevron-left"></i> NLP|分类与匹配的各类评价指标
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/05/15/NLP-chatbot%E7%B3%BB%E5%88%97-Multi-view/" rel="next" title="NLP|chatbot系列-Multi-view">
+      NLP|chatbot系列-Multi-view <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
   </div>
 
-</div>
-        
+
+          </div>
+          
+
+        </div>
+          
   
   <div class="toggle sidebar-toggle">
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
   </div>
 
   <aside class="sidebar">
+    <div class="sidebar-inner">
 
-    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
-      <ul class="sidebar-nav">
+      <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
           Table of Contents
         </li>
@@ -228,21 +443,20 @@
         </li>
       </ul>
 
-      <div class="sidebar-panel-container">
-        <!--noindex-->
-        <section class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#BIMPM模型的介绍"><span class="nav-number">1.</span> <span class="nav-text">BIMPM模型的介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#BIMPM模型提出的原因"><span class="nav-number">1.1.</span> <span class="nav-text">BIMPM模型提出的原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BIMPM模型的架构"><span class="nav-number">1.2.</span> <span class="nav-text">BIMPM模型的架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#word-representation-layer"><span class="nav-number">1.2.1.</span> <span class="nav-text">word representation layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#context-representation-layer"><span class="nav-number">1.2.2.</span> <span class="nav-text">context representation layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#matching-layer"><span class="nav-number">1.2.3.</span> <span class="nav-text">matching layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#aggregate-layer"><span class="nav-number">1.2.4.</span> <span class="nav-text">aggregate layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#prediction-layer"><span class="nav-number">1.2.5.</span> <span class="nav-text">prediction layer</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BIMPM模型的实现"><span class="nav-number">2.</span> <span class="nav-text">BIMPM模型的实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
-        </section>
-        <!--/noindex-->
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#bimpm模型的介绍"><span class="nav-number">1.</span> <span class="nav-text">BIMPM模型的介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#bimpm模型提出的原因"><span class="nav-number">1.1.</span> <span class="nav-text">BIMPM模型提出的原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bimpm模型的架构"><span class="nav-number">1.2.</span> <span class="nav-text">BIMPM模型的架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#word-representation-layer"><span class="nav-number">1.2.1.</span> <span class="nav-text">word representation layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#context-representation-layer"><span class="nav-number">1.2.2.</span> <span class="nav-text">context representation layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#matching-layer"><span class="nav-number">1.2.3.</span> <span class="nav-text">matching layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#aggregate-layer"><span class="nav-number">1.2.4.</span> <span class="nav-text">aggregate layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#prediction-layer"><span class="nav-number">1.2.5.</span> <span class="nav-text">prediction layer</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bimpm模型的实现"><span class="nav-number">2.</span> <span class="nav-text">BIMPM模型的实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
 
-        <section class="site-overview-wrap sidebar-panel">
-          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="zichao"
       src="/images/photo.jpg">
   <p class="site-author-name" itemprop="name">zichao</p>
   <div class="site-description" itemprop="description">Just learning</div>
 </div>
-<div class="site-state-wrap site-overview-item animated">
+<div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
@@ -265,254 +479,33 @@
       </div>
   </nav>
 </div>
-  <div class="links-of-author site-overview-item animated">
+  <div class="links-of-author motion-element">
       <span class="links-of-author-item">
-        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
       </span>
       <span class="links-of-author-item">
-        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
       </span>
       <span class="links-of-author-item">
-        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
       </span>
   </div>
 
 
 
-        </section>
       </div>
+
     </div>
   </aside>
-  <div class="sidebar-dimmer"></div>
+  <div id="sidebar-dimmer"></div>
 
 
-    </header>
-
-    
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
-
-  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
-
-<noscript>
-  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
-</noscript>
-
-
-    <div class="main-inner post posts-expand">
-      
-
-      
-
-  
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
-      <meta itemprop="name" content="zichao">
-      <meta itemprop="description" content="Just learning">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="codewithzichao">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          NLP|文本匹配模型-BIMPM
-        </h1>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2020-05-15 10:26:23" itemprop="dateCreated datePublished" datetime="2020-05-15T10:26:23+08:00">2020-05-15</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2020-10-19 22:04:08" itemprop="dateModified" datetime="2020-10-19T22:04:08+08:00">2020-10-19</time>
-      </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">In</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
-        </span>
-          , 
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/NLP/%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index"><span itemprop="name">文本匹配模型</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-      </span>
-      <span class="post-meta-item-text">Views: </span>
-      <span id="busuanzi_value_page_pv"></span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-        <p>正式开始看文本匹配的东西啦！文本匹配对NLPer来说是很重要的，不管是最后是做对话、推荐、搜索，文本匹配都是必不可少的。当然啦，BERT系列的模型出来之后，其实传统的深度学习模型效果是远远比不上的。不过这些预训练模型效果好是好，但是训练代价昂贵，当然啦，有人会说，现在已经有剪枝、量化、蒸馏这样的方法来减小预训练模型的大小，从而降低训练所需的代价(所以说模型压缩、加速这个方向还是很有前景的🤩咦，好像跑偏了，anyway)，但是这仍然远远不够，所以熟悉传统的文本匹配模型是非常有必要的。本篇博客讲解经典的BIMPM模型，并采用tensorflow2实现。</p>
-<a id="more"></a>
-<h2 id="BIMPM模型的介绍"><a href="#BIMPM模型的介绍" class="headerlink" title="BIMPM模型的介绍"></a>BIMPM模型的介绍</h2><p>BIMPM模型来源于2017年的《Bilateral Multi-Perspective Matching for Natural Language Sentences》论文。这篇文章总结了Siamese架构与matching-aggregate架构的优缺点，非常值得一读，有时间的童鞋一定要去读读原始论文🤩</p>
-<h3 id="BIMPM模型提出的原因"><a href="#BIMPM模型提出的原因" class="headerlink" title="BIMPM模型提出的原因"></a>BIMPM模型提出的原因</h3><p>在文本匹配模型中，大致可以分为两大类：基于表示的文本匹配模型，即Siamese架构，以及基于交互的文本匹配模型，即matching-aggregate架构(有时候也称作compare-aggregate架构)。两种结构的优缺点如下：</p>
-<ul>
-<li>Siamese架构的优点在于两个句子可以共享参数，所以模型容量比较小，也容易训练；但是其缺点也很明显，由于在encoder部分没有明显的交互，所以会导致失去某些重要的信息，即没法捕获到更加丰富的语义特征。</li>
-<li>matching-aggregate架构的优点可以及早地捕获更为丰富的交互特征，因此效果通常来说会更好一些。但是其缺点在于：一方面，很多模型只考虑了单个细粒度的匹配，比如word by word，而没有考虑其他细粒度的匹配；另一方面，匹配往往是单向的，即只有P对Q的匹配，或者是Q对P的匹配。</li>
-</ul>
-<p>知道了两种架构的优缺点后，作者提出了BIMPM模型。该模型本质上还是属于matching-aggregate架构，但是与其他模型不同的地方在于：其考虑了两个方向的匹配，即P对Q与Q对P。这样的话，就可以得到更为丰富的语义特征。事实证明，其确实取得了比较好的效果。</p>
-<h3 id="BIMPM模型的架构"><a href="#BIMPM模型的架构" class="headerlink" title="BIMPM模型的架构"></a>BIMPM模型的架构</h3><p>首先给出相关定义。假设sample的形式为三元组：$(P,Q,y)$，其中$P=\{p_1,p_2,p_3,…,p_M\}，Q=\{q_1,q_2,q_3,…,q_N\}$。其中，每一个token的维度均是d维的；$y$是label。从这里可以看出，BIMPM模型属于pointwise的学习方式。</p>
-<p><img src="/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/BIMPM.jpg" style="zoom: 67%;"></p>
-<p>上图就是BIMPM模型的整体架构。可以看到，BIMPM模型分为五层，下面一一介绍。</p>
-<h4 id="word-representation-layer"><a href="#word-representation-layer" class="headerlink" title="word representation layer"></a>word representation layer</h4><p>这一层包含两个部分：一部分是固定的词向量，比如使用Google的300维的word2vec词向量或者Glove词向量；另一部分是将每一个单词的每一个输入到LSTM网络中，得到的词向量，这一层最终的输出是将这两部分的词向量进行concat之后的结果。</p>
-<h4 id="context-representation-layer"><a href="#context-representation-layer" class="headerlink" title="context representation layer"></a>context representation layer</h4><p>这一层是对P和Q进行进一步的encoding，将上下文信息融入到每一个time step。具体来说，是使用一层BILSTM。注意：P与Q使用同样的BILSTM，即共享参数。</p>
-<p><img src="/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/BILSTM1.jpg" style="zoom:50%;"></p>
-<p><img src="/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/BILSTM2.jpg" style="zoom:50%;"></p>
-<h4 id="matching-layer"><a href="#matching-layer" class="headerlink" title="matching layer"></a>matching layer</h4><p>这一部分是BIMPM模型真正创新的地方。它采用了双向的matching方法，即：比较P的每一个timestep的向量与Q的所有timestep向量，比较Q的每一个timestep的向量与P的所有timestep向量。在论文中，作者设计了一种multi-perspective的方法。整个multi-perspective方法包含两步：第一步：给出cosine matching function的定义；第二步，在给出的函数的基础上，使用四种匹配策略（full-matching、Maxpooling-matching、attentive-matching、max-attentive-matching），从而得到最终的输出。</p>
-<p><strong>step1：</strong>首先要明白给出的cosine matching function的定义，如下：</p>
-<p><img src="/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/cosine.jpg" style="zoom:50%;"></p>
-<p>其中，$v_1,v_2$是两个向量，假设其维度是$d$维；$W$是参数，其维度是$R^{l\times d}$，$l$是perspective的数量；得到的输出$m=\{m_1,m_2,m_3,…,m_l\},m\in R^l$。具体来说，$ m_k=cosine(W_k<em>v_1,W_k</em>v_2) $。</p>
-<p><strong>step2：</strong>在第一步的基础上，给出了四种匹配策略。下面演示的是P对Q的matching，即P的每一个timestep对Q进行matching。</p>
-<p><img src="/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/matching strategiesjpg.jpg" style="zoom:50%;"></p>
-<ul>
-<li><strong>full matching：</strong>对于P的一个timestep的向量，只与Q的最后一个状态相比较(前向的或者后向的)。对应上图的a，具体公式如下：</li>
-</ul>
-<p><img src="/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/full-matching.jpg" style="zoom:50%;"></p>
-<ul>
-<li><strong>maxpooling matching：</strong>对于P的一个timestep的向量，分别与Q的每一个timestep的向量进行比较，最后选择结果最大的输出。对应于上图的b，具体公式如下：</li>
-</ul>
-<p><img src="/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/Maxpooling-matching.jpg" style="zoom:50%;"></p>
-<ul>
-<li><strong>attentive matching：</strong>对于P的每一个timestep的向量，分别与Q的每一个timestep进行余弦相似度的计算，最后得到加权后的向量。对应于上图的c，具体公式如下：</li>
-</ul>
-<p><img src="/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/attentive-matching1.jpg" style="zoom:50%;"></p>
-<p>得到余弦相似度，然后得到进行加权，如下：</p>
-<p><img src="/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/attentive-matching2.jpg" style="zoom:50%;"></p>
-<p><img src="/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/attentive-matching3.jpg" style="zoom:50%;"></p>
-<ul>
-<li><strong>max-attentive matching：</strong>与attentive matching不同·的地方在于，注意力向量并不是加权得到的，而是从中选取最大的作为注意力向量，启宇的与attentive matching一样。</li>
-</ul>
-<p>最后，这一层的输出是上面四种策略的concat之后的结果。<strong>注意，因为是双向的BLSTM，所以一个句子最后聚合的是8个向量！！！</strong></p>
-<h4 id="aggregate-layer"><a href="#aggregate-layer" class="headerlink" title="aggregate layer"></a>aggregate layer</h4><p>这一层主要是去聚合两个句子。具体来说，使用的是一个BILSTM，我们取前向的LSTM与后向的LSTM的最后一个状态，由于是两个句子，所以最后是concat4个向量。</p>
-<h4 id="prediction-layer"><a href="#prediction-layer" class="headerlink" title="prediction layer"></a>prediction layer</h4><p>这一层就是要得到最后的分类结果啦。具体来说，就是使用两层的MLP，最后使用softmax，得到最终的输出。</p>
-<p>上述就是BIMPM模型的全部内容啦🎉</p>
-<blockquote>
-<p>稍微啰嗦一下吧，目前基本的文本匹配模型就看完了，总的来说，还是比较简单，实现起来也不难。要说难的地方，就是pairwise的训练方式与listwise的训练方式了吧，这个对于数据的处理是需要下一点功夫的，最好去借鉴一下别人的代码是怎么写的。pointwise是比较简单的，这个不用说什么。接下来的话，如果还需要接触文本匹配的模型的话，那就是MRC了吧。说实话，这个单独搞真不好搞，但是MRC毕竟是目前研究的热点方向，经典的BIDAF、R-net等模型还是需要去看的，VQA也需要去接触一下。不过，主线还是要放在检索式对话这块，先把检索式对话看完，然后再去熟悉生成式对话。毕竟生成式任务真的不好弄，而且还是对话这块，还是需要有人带。</p>
-</blockquote>
-<h2 id="BIMPM模型的实现"><a href="#BIMPM模型的实现" class="headerlink" title="BIMPM模型的实现"></a>BIMPM模型的实现</h2><h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>Bilateral Multi-Perspective Matching for Natural Language Sentences</p>
-
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-          <div class="reward-container">
-  <div>Would you like to buy me a cup of coffee☕️～</div>
-  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
-    Donate
-  </button>
-  <div class="post-reward">
-      <div>
-        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
-        <span>WeChat Pay</span>
       </div>
-      <div>
-        <img src="/images/alipay.jpg" alt="zichao Alipay">
-        <span>Alipay</span>
-      </div>
+    </main>
 
-  </div>
-</div>
-
-          <div class="post-tags">
-              <a href="/tags/NLP/" rel="tag"># NLP</a>
-              <a href="/tags/tensorflow2/" rel="tag"># tensorflow2</a>
-              <a href="/tags/BIMPM/" rel="tag"># BIMPM</a>
-          </div>
-
+    <footer class="footer">
+      <div class="footer-inner">
         
-
-          <div class="post-nav">
-            <div class="post-nav-item">
-                <a href="/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/" rel="prev" title="NLP|分类与匹配的各类评价指标">
-                  <i class="fa fa-chevron-left"></i> NLP|分类与匹配的各类评价指标
-                </a>
-            </div>
-            <div class="post-nav-item">
-                <a href="/2020/05/15/NLP-chatbot%E7%B3%BB%E5%88%97-Multi-view/" rel="next" title="NLP|chatbot系列-Multi-view">
-                  NLP|chatbot系列-Multi-view <i class="fa fa-chevron-right"></i>
-                </a>
-            </div>
-          </div>
-    </footer>
-  </article>
-</div>
-
-
-
-
-
-
-      
-
-<script>
-  window.addEventListener('tabs:register', () => {
-    let { activeClass } = CONFIG.comments;
-    if (CONFIG.comments.storage) {
-      activeClass = localStorage.getItem('comments_active') || activeClass;
-    }
-    if (activeClass) {
-      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
-      if (activeTab) {
-        activeTab.click();
-      }
-    }
-  });
-  if (CONFIG.comments.storage) {
-    window.addEventListener('tabs:click', event => {
-      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      const commentClass = event.target.classList[1];
-      localStorage.setItem('comments_active', commentClass);
-    });
-  }
-</script>
-
-    </div>
-  </main>
-
-  <footer class="footer">
-    <div class="footer-inner">
-      
-
-      
 
 <div class="copyright">
   
@@ -523,7 +516,15 @@
   </span>
   <span class="author" itemprop="copyrightHolder">zichao</span>
 </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a>
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
 <div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
       <span class="post-meta-item-icon">
         <i class="fa fa-user"></i>
@@ -532,6 +533,7 @@
         <span id="busuanzi_value_site_uv"></span>
       </span>
     </span>
+    <span class="post-meta-divider">|</span>
     <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
       <span class="post-meta-item-icon">
         <i class="fa fa-eye"></i>
@@ -541,91 +543,125 @@
       </span>
     </span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
   </div>
 
-    </div>
-  </footer>
-
   
-  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
-<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
 
-  
+<script src="/js/utils.js"></script>
 
-
-
-
-  <script src="/js/local-search.js"></script>
+<script src="/js/motion.js"></script>
 
 
+<script src="/js/schemes/muse.js"></script>
 
 
-
-
-
-
-
-
-
-
-
-
-
-  
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-
-
-
+<script src="/js/next-boot.js"></script>
 
 
 
 
   
 
+
+
+
   
-      <script>
-  if (typeof MathJax === 'undefined') {
-    window.MathJax = {
-      tex: {
-        inlineMath: {'[+]': [['$', '$']]},
-        tags: 'ams'
-      },
-      options: {
-        renderActions: {
-          findScript: [10, doc => {
-            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
-              const display = !!node.type.match(/; *mode=display/);
-              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
-              const text = document.createTextNode('');
-              node.parentNode.replaceChild(text, node);
-              math.start = {node: text, delim: '', n: 0};
-              math.end = {node: text, delim: '', n: 0};
-              doc.math.push(math);
-            });
-          }, '', false],
-          insertedScript: [200, () => {
-            document.querySelectorAll('mjx-container').forEach(node => {
-              const target = node.parentNode;
-              if (target.nodeName.toLowerCase() === 'li') {
-                target.parentNode.classList.add('has-jax');
-              }
-            });
-          }, '', false]
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('div.pdf').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
+    document.querySelectorAll('div.pdf').forEach(element => {
+      PDFObject.embed(element.getAttribute('target'), element, {
+        pdfOpenParams: {
+          navpanes: 0,
+          toolbar: 0,
+          statusbar: 0,
+          pagemode: 'thumbs',
+          view: 'FitH'
+        },
+        PDFJS_URL: '/lib/pdf/web/viewer.html',
+        height: element.getAttribute('height') || '500px'
+      });
+    });
+  }, window.PDFObject);
+}
+</script>
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
         }
       }
-    };
-    const script = document.createElement('script');
-    script.src = '//cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js';
-    script.defer = true;
-    document.head.appendChild(script);
-  } else {
-    MathJax.startup.document.state(0);
-    MathJax.typesetClear();
-    MathJax.texReset();
-    MathJax.typeset();
-  }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
 </script>
 
     
