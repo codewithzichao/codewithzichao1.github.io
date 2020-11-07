@@ -52,12 +52,18 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="这篇博客主要讲解两篇论文：《Dialogue-Based Relation Extraction》与《Dialogue Relation Extraction with Document-level Heterogeneous Graph Attention Networks》。">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/statistics_DialogRE.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/DialogRE_otherRE.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/dialog_realtion_type.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/dialogRE_result2.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/dialog_result_1.jpg">
 <meta property="article:published_time" content="2020-10-27T16:56:48.000Z">
-<meta property="article:modified_time" content="2020-11-01T16:33:15.612Z">
+<meta property="article:modified_time" content="2020-11-07T08:43:23.860Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="dialogue-based RE">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/statistics_DialogRE.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/">
 
@@ -253,7 +259,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-11-02 00:33:15" itemprop="dateModified" datetime="2020-11-02T00:33:15+08:00">2020-11-02</time>
+                <time title="Modified: 2020-11-07 16:43:23" itemprop="dateModified" datetime="2020-11-07T16:43:23+08:00">2020-11-07</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -293,6 +299,36 @@
       
         <p>这篇博客主要讲解两篇论文：《Dialogue-Based Relation Extraction》与《Dialogue Relation Extraction with Document-level Heterogeneous Graph Attention Networks》。</p>
 <a id="more"></a>
+<h2 id="Dialogue-Based-Relation-Extraction-ACL2020"><a href="#Dialogue-Based-Relation-Extraction-ACL2020" class="headerlink" title="Dialogue-Based Relation Extraction(ACL2020)"></a>Dialogue-Based Relation Extraction(ACL2020)</h2><h3 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h3><p>目前的document-level RE dataset都是使用比较正式的文本构建而成的，这样构建的数据集内部含有丰富的逻辑推理关系，并且有足够的信息能够提取出关键信息。但是在dialogue relation extraction中，对话文本往往是非正式的、语法不严谨的，虽然逻辑简单，但是其信息密度低，且很容易有歧义的问题。而目前针对于DRE任务仍然没有引起广泛的研究。所以这篇paper构建了第一个dialogue-based RE dataset——DialogRE，并且提出了新的评价指标：$F1_c$以及相关的baseline，用于以后的研究。</p>
+<blockquote>
+<p>之前一直很喜欢《老友记》，有人能够根据《老友记》来构建数据集，真是有生之年啊！爱了爱了🤩</p>
+</blockquote>
+<h3 id="Statistics-of-DialogRE"><a href="#Statistics-of-DialogRE" class="headerlink" title="Statistics of DialogRE"></a>Statistics of DialogRE</h3><p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/statistics_DialogRE.jpg" style="zoom:50%;"></p>
+<p>DialogRE数据集是根据美国电视情景喜剧《老友记》中共10季的台词构建而来，共有1788个dialogue，10168个triple, 其中train:dev:test=6:2:2，每一个样本的形式还是SPO，与其他的RE并无区别。但是DialogRE与其他的document-level RE dataset最大的不同是：1. argument pair的relation span sentences的比例(95.6%)要其他的数据集(40.7%)高得多高得多(95.6%)；2.以speaker为中心，77.3%的triple全是speaker name，90.0%的triple至少包含一个speaker name；3.信息密度低，只有0.21/per sen。DialogRE数据集与其他数据集的比较如下：</p>
+<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/DialogRE_otherRE.jpg" alt></p>
+<p>下面是dialogRE数据集中的relation type：</p>
+<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/dialog_realtion_type.jpg" alt></p>
+<p>⚠️在dialogRE中，有一个概念叫做trigger，其实和DocRED中的evidence是差不多的，用来证明argument pair的relation的正确性。</p>
+<h3 id="Task-formulation-and-Evaluation"><a href="#Task-formulation-and-Evaluation" class="headerlink" title="Task formulation and Evaluation"></a>Task formulation and Evaluation</h3><p>给定一个dialogue：$D=s_1:t_1,…,s_m:t_m$以及argument pair: $(a_1,a_2)$，其中$s_i,t_i$表示第$i$轮的speaker id与text，我们的目标是得到$(a_1,a_2)$的relation。有两个评价方法：$F1$与$F1_c$。$F1$其实就是我们寻常用的，而$F1_c$是这篇paper作者专门设计的，下面具体讲讲～</p>
+<p>我们首先定义一些符号：$O_i$表示前$i$轮对话中，使用模型预测得出的argument pair$(a_1,a_2)$的relation type set，$L$表示在整个对话中argument pair$(a_1,a_2)$的真实的relation type set，$R$表示所有的36个relation type，所以：$O_i,L\in R$；我们定义辅助函数$j(x)$，如果$x$不出现在$D$中，那么返回$m$，否则的话，返回$x$第一次出现的对话轮数$i$；我们定义辅助函数$i(r)$，表示：对于每一个relation type $r\in L$，如果存在一个trigger for $r$，那么$i(r)=j(\lambda_r)$，其中$\lambda_r$表示trigger，否则$i(r)=m$，对于relation $r{\in} R {\text \ }L$，$i(r)=1$。我们使用$E_i$表示前$i$轮可以评估的relation type set，如下：</p>
+<script type="math/tex; mode=display">
+E_i=\{r|i\geq max\{j(a_1),j(a_2),i(r)\}\}</script><p>$E_i$的意思是：在前$i$轮对话中，如果出现了$a_1,a_2$以及与relation $r$相关的trigger的话，那么relation $r$就是可评估的，也就是说作为候选。之所以这样定义，是因为这样做可以知道对于每一个argument pair，我们大致可以推算预测其relation大概需要多少轮数。之后，我们定义conversation precision与recall依旧conversation F1，如下：</p>
+<script type="math/tex; mode=display">
+P_c(D,a_1,a_2)=\frac{\sum_{i=1}^{m}|O_i\cap L\cap E_i|}{\sum_{i=1}^{m}|O_i\cap E_i|} \\
+R_c(D,a_1,a_2)=\frac{\sum_{i=1}^{m}|O_i\cap L\cap E_i|}{\sum_{i=1}^{m}|L\cap E_i|} \\
+P_c=\frac{\sum_{D^{\prime},a_1^{\prime},a_2^{\prime}}P_c(D^{\prime},a_1^{\prime},a_2^{\prime})}{\sum_{D^{\prime},a_1^{\prime},a_2^{\prime}}1} \\
+R_c=\frac{\sum_{D^{\prime},a_1^{\prime},a_2^{\prime}}R_c(D^{\prime},a_1^{\prime},a_2^{\prime})}{\sum_{D^{\prime},a_1^{\prime},a_2^{\prime}}1} \\
+F1_c=\frac{2P_cR_c}{P_c+R_c}</script><h3 id="Baseline"><a href="#Baseline" class="headerlink" title="Baseline"></a>Baseline</h3><p>在paper中，介绍了四种baseline：Majority、CNN/LSTM/BILSTM、BERT、BERT$_s$。所谓的Majority就是：如果一个argument pair的relation没出现在training set当中，那么输出training set中数目最大的relation type，否则的话，输出与argument pair最相关的relation type；CNN/LSTM/BILSTM指的是：采用CNN/LSTM/BILSTM作为编码器；BERT指的是：采用BERT以及BERT-like预训练模型作为编码器，不过其输入格式是：$[CLS]d[SEP]a_1[SEP]a_2[SEP]$；BERT$_s$是作者所改进的一个方法，指的是：仍然采用BERT以及BERT-like预训练模型作为编码器，但是其输入格式是：$[CLS]\hat d[SEP]\hat a_1[SEP]\hat a_2[SEP]$，其中：</p>
+<script type="math/tex; mode=display">
+\hat d=\hat s_1:\hat t_1,...,\hat s_n:\hat t_n \\
+\hat s_i=\begin{cases}[S1] & if \ s_i=a_1 \\ [S2] & if \ s_1=a_2 \\ s_1 & otherwise \end{cases}</script><p>其中，$[S1],[S2]$表示两个新的特殊的token。</p>
+<h3 id="Experiment"><a href="#Experiment" class="headerlink" title="Experiment"></a>Experiment</h3><p>放一下上述四种方法在DialogRE数据集上的结果:</p>
+<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/dialogRE_result2.jpg" alt></p>
+<p>下面是加了argument type之后的结果，发现结果是有提升的，说明argument type是有作用的。</p>
+<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/dialog_result_1.jpg" style="zoom:50%;"></p>
+<p>总的来说，DialogRE是一个新的工作，在这个上面还是可以做很多的工作的。</p>
+<h2 id="Dialogue-Relation-Extraction-with-Document-level-Heterogeneous-Graph-Attention-Networks-arxiv2020"><a href="#Dialogue-Relation-Extraction-with-Document-level-Heterogeneous-Graph-Attention-Networks-arxiv2020" class="headerlink" title="Dialogue Relation Extraction with Document-level Heterogeneous Graph Attention Networks(arxiv2020)"></a>Dialogue Relation Extraction with Document-level Heterogeneous Graph Attention Networks(arxiv2020)</h2><h3 id="Background-1"><a href="#Background-1" class="headerlink" title="Background"></a>Background</h3><h3 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h3><h3 id="Experiment-1"><a href="#Experiment-1" class="headerlink" title="Experiment"></a>Experiment</h3><h2 id><a href="#" class="headerlink" title=" "></a> </h2><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>《Dialogue-Based Relation Extraction》</p>
+<p>《Dialogue Relation Extraction with Document-level Heterogeneous Graph Attention Networks》</p>
 
     </div>
 
@@ -376,6 +412,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Dialogue-Based-Relation-Extraction-ACL2020"><span class="nav-number">1.</span> <span class="nav-text">Dialogue-Based Relation Extraction(ACL2020)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Background"><span class="nav-number">1.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Statistics-of-DialogRE"><span class="nav-number">1.2.</span> <span class="nav-text">Statistics of DialogRE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Task-formulation-and-Evaluation"><span class="nav-number">1.3.</span> <span class="nav-text">Task formulation and Evaluation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Baseline"><span class="nav-number">1.4.</span> <span class="nav-text">Baseline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Experiment"><span class="nav-number">1.5.</span> <span class="nav-text">Experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dialogue-Relation-Extraction-with-Document-level-Heterogeneous-Graph-Attention-Networks-arxiv2020"><span class="nav-number">2.</span> <span class="nav-text">Dialogue Relation Extraction with Document-level Heterogeneous Graph Attention Networks(arxiv2020)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Background-1"><span class="nav-number">2.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Model"><span class="nav-number">2.2.</span> <span class="nav-text">Model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Experiment-1"><span class="nav-number">2.3.</span> <span class="nav-text">Experiment</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number">3.</span> <span class="nav-text"> </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">4.</span> <span class="nav-text">References</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
