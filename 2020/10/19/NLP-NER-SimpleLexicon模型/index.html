@@ -380,12 +380,13 @@
     <div class="post-body" itemprop="articleBody">
         <p>近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解中文NER的Adaptive Embedding paradigm。所谓的Adaptive Embedding paradigm，指的是只在embedding部分进行改进，从而让我们不需要设计非常的复杂的结构，能够迁移到不同的模型结构上(RNN/CNN/transformer etc)，所以这种方法的好处就在于其可迁移性。这篇文章主要讲解三篇论文：《An Encoding Strategy Based Word-Character LSTM for Chinese NER》、《A Neural Multi-digraph Model for Chinese NER with Gazetteers》以及ACL2020的《Simplify the Usage of Lexicon in Chinese NER》。</p>
 <a id="more"></a>
+
 <h2 id="WC-LSTM模型"><a href="#WC-LSTM模型" class="headerlink" title="WC-LSTM模型"></a>WC-LSTM模型</h2><h3 id="提出的背景"><a href="#提出的背景" class="headerlink" title="提出的背景"></a>提出的背景</h3><p>WC-LSTM模型是2019年发表在NAACL上的《An Encoding Strategy Based Word-Character LSTM for Chinese NER》论文。提出的背景还是因为LatticeLSTM模型。LatticeLSTM是词汇增强的典型模型，但是其存在一个很严重的问题：<strong>由于每一个sentence所被匹配到的word的数量与位置都不一样，所以导致LatticeLSTM模型无法batch训练与inference。</strong>在WC-LSTM中，为了实现并行化，需要对每一个character所匹配到的words进行编码，从而得到一个fixed embedding，再与character本身的embedding进行融合，最后输送到网络中进行训练。所以，关键就在于：<strong>怎么得到一个fixed embedding？</strong>下面具体介绍。</p>
 <h3 id="WC-LSTM模型介绍"><a href="#WC-LSTM模型介绍" class="headerlink" title="WC-LSTM模型介绍"></a>WC-LSTM模型介绍</h3><p>先放图～</p>
-<p><img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/wc-lstm.jpg" alt></p>
+<p><img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/wc-lstm.jpg"></p>
 <ol>
-<li><strong>input：</strong>输入有两部分：sentence以及与sentence相匹配的lexicon words，假设输入的sentence表示为：$s=\{c_1,c_2,…,c_n\}$，其中$c_i$表示sentence的第$i$个character；lexicon words表示为：$c_{b,e}$，在前向的wc-lstm中，使用$\overrightarrow{ws_i} $来表示以$c_i$的结尾的matched lexicon words的集合，后向的也是类似的。所以最终的输入是：$\overrightarrow{rs}=\{(c_1,\overrightarrow{ws_1}),(c_2,\overrightarrow{ws_2}),…,(c_n,\overrightarrow{ws_n})\}$，在WC-LSTM中，使用双向的LSTM，所以还有$\overleftarrow{rs}=\{(c_n,\overleftarrow{ws_n}),(c_{n-1},\overleftarrow{ws_{n-1}}),…,(c_1,\overleftarrow{ws_1})\}$。</li>
-<li><strong>word-character embedding layer：</strong>在$\overrightarrow {rs}$中，对于每一个character $c_i$，对应一个lexicon words集合$\overrightarrow{ws_i}=\{\overrightarrow{w_{i1}},…,\overrightarrow{w_{s^p_i}}\}$，$\overrightarrow{ws_i}$中的word数目记为：$s^t_i$，对于一个batch来说，我门通过padding的方式让每一个sentence的相同位置有同样的$s^p_i$。每一个character的embedding，可以通过查pretrained char embedding table得到，记做：$x^c_i=e^c(c_i)$，每一个lexicon word的embedding也可以查表，记做：$x^{\overrightarrow{w}}_{il}=e(\overrightarrow{w_{il}})$。</li>
+<li><strong>input：</strong>输入有两部分：sentence以及与sentence相匹配的lexicon words，假设输入的sentence表示为：$s={c_1,c_2,…,c_n}$，其中$c_i$表示sentence的第$i$个character；lexicon words表示为：$c_{b,e}$，在前向的wc-lstm中，使用$\overrightarrow{ws_i} $来表示以$c_i$的结尾的matched lexicon words的集合，后向的也是类似的。所以最终的输入是：$\overrightarrow{rs}={(c_1,\overrightarrow{ws_1}),(c_2,\overrightarrow{ws_2}),…,(c_n,\overrightarrow{ws_n})}$，在WC-LSTM中，使用双向的LSTM，所以还有$\overleftarrow{rs}={(c_n,\overleftarrow{ws_n}),(c_{n-1},\overleftarrow{ws_{n-1}}),…,(c_1,\overleftarrow{ws_1})}$。</li>
+<li><strong>word-character embedding layer：</strong>在$\overrightarrow {rs}$中，对于每一个character $c_i$，对应一个lexicon words集合$\overrightarrow{ws_i}={\overrightarrow{w_{i1}},…,\overrightarrow{w_{s^p_i}}}$，$\overrightarrow{ws_i}$中的word数目记为：$s^t_i$，对于一个batch来说，我门通过padding的方式让每一个sentence的相同位置有同样的$s^p_i$。每一个character的embedding，可以通过查pretrained char embedding table得到，记做：$x^c_i=e^c(c_i)$，每一个lexicon word的embedding也可以查表，记做：$x^{\overrightarrow{w}}<em>{il}=e(\overrightarrow{w</em>{il}})$。</li>
 <li><strong>word encoding strategy：</strong>在WC-LSTM中，探索了四种encoding策略：最短词汇信息、最长词汇信息、avg、self-attention。最短词汇信息指的是：使用$c_i$中的词汇集合中长度最短的词作为$c_i$的词汇信息；最长词汇信息指的是：使用当前character的词汇集合中的最长的词作为$c_i$的词汇信息；avg是对所有的词汇信息进行简单的算术平均；self-attention就是自己对自己进行attention，比较简单。得到$c_i$的词汇信息后，将其与$c_i$的embeding进行concat，作为后续的输入。</li>
 <li><strong>wc-lstm：</strong>这就是前向的LSTM的结果与后向的LSTM的结果进行concat，作为CRF的输入。</li>
 <li><strong>decoding：</strong>使用标准的CRF层。</li>
@@ -397,45 +398,38 @@
 </ol>
 <h2 id="Multi-digraph模型"><a href="#Multi-digraph模型" class="headerlink" title="Multi-digraph模型"></a>Multi-digraph模型</h2><h3 id="提出的背景-1"><a href="#提出的背景-1" class="headerlink" title="提出的背景"></a>提出的背景</h3><p>Multi-digraph模型是2019年发表在ACL上的《A Neural Multi-digraph Model for Chinese NER with Gazetteers》论文。这个模型所关注的问题word conflicts，具体来说就是：在融合词汇信息的时候，如果有多个词汇表的话，不同的词汇表对于某些话有不同的匹配，这样的话对于句子中的character的标注就会有干扰，<strong>那么怎么很好地建模character与词典之间的关系以及怎么很好地融合不同词典的词汇信息？</strong>这就是multi-digraph模型提出的背景。</p>
 <h3 id="Multi-digraph模型介绍"><a href="#Multi-digraph模型介绍" class="headerlink" title="Multi-digraph模型介绍"></a>Multi-digraph模型介绍</h3><p>先放图～</p>
-<p><img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/multi-graph.jpg" style="zoom: 67%;"></p>
+<img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/multi-graph.jpg" style="zoom: 67%;">
+
 <p>整体模型主要分为两大块：embedding部分+(LSTM+CRF)部分，第二部分没什么可讲的，主要介绍一下embedding部分。</p>
 <p>embeding 部分主要是根据GGNN来进行构建。怎么构建图呢？首先明确模型的输入：sentence以及实体词典(gazetteer)，那么node set就是：sentence中每一个chatacter作为node+<strong>每一种词典的每一类</strong>对应一对节点(起始与结束)，上方有四种词典，因此有四对节点。在模型图中，raw space中五颜六色的箭头就是edge。构建好图后，就可以使用GGNN来进行aggregate，从而产生更好的node representation。下面介绍一下什么是GGNN，以及为什么要选择GGNN而不是其他的GNN。</p>
 <p><strong>GGNN</strong>：全称是Gated graph sequence neural networks，是一种spatial GNN，其aggregate的方式优点类似于GRU，如下：</p>
-<p><img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/ggnn.jpg" alt></p>
+<p><img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/ggnn.jpg"></p>
 <p>其中，$h_v^{(1)}$表示的是初始的embedding，具体的可见<a href="https://zhuanlan.zhihu.com/p/83410937" target="_blank" rel="noopener">link</a>。从aggregate更新的方式来看，就是知道GGNN相比于GCN等GNN来说，最大的优势是比较适用于序列，能够更好地提取文本信息。不过说实话，这里使用GNN有点强行上的意思，没看出来为什么一定要用GGNN。🧐</p>
 <h3 id="实验结果-1"><a href="#实验结果-1" class="headerlink" title="实验结果"></a>实验结果</h3><ol>
 <li><p>数据集：OntoNotes、MSRA、Weibo、E-commerce(released by this paper)</p>
 </li>
 <li><p>结果如下：</p>
-<p><img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/multi-digraph-result.jpg" style="zoom:80%;"></p>
+<img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/multi-digraph-result.jpg" style="zoom:80%;">
+
 <p>在OntoNotes和MSRA上的结果比大部分模型要好，在Weibo数据集上的结果要差一些，所以多加词汇表果然还是王道啊，不过相对的，估计也无法并行了吧。</p>
 </li>
 </ol>
 <h2 id="SoftLexicon模型"><a href="#SoftLexicon模型" class="headerlink" title="SoftLexicon模型"></a>SoftLexicon模型</h2><h3 id="提出的背景-2"><a href="#提出的背景-2" class="headerlink" title="提出的背景"></a>提出的背景</h3><p>像LatticeLSTM模型，它的缺点就是：<strong>1.模型结构过于复杂，无法迁移到其他架构上，而且无法并行化；2.并没有完全融入lexicon的所有信息，也就是有信息损失。</strong>针对第一点，softlexicon和wclstm模型一样，通过将character所匹配到的lexicon words编码为一个fixed vector，并与character embedding进行concat，作为后续模型的输入；针对第二点，softlexicon通过categorizing 所匹配到的lexicon words，从而避免信息损失。具体的在下面小节介绍～</p>
 <h3 id="SoftLexicon模型介绍"><a href="#SoftLexicon模型介绍" class="headerlink" title="SoftLexicon模型介绍"></a>SoftLexicon模型介绍</h3><p>先放图～</p>
-<p><img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/softlexicon.jpg" alt></p>
-<p>假设输入的sentence表示为：$s=\{c_1,c_2,…,c_n\}$，$w_{i,j}$表示sentence中与lexicon中相匹配的word。为了不损失任何信息，我们首先对所有的与character $c_i$相匹配的lexicon words都采用<code>BMES</code>来进行编码，从而每一个character都有4个word sets。其公式如下：</p>
-<script type="math/tex; mode=display">
-B(c_i)=\{w_{i,k},\forall w_{i,k}\in L,i<k<=n\} \\
-M(c_i)=\{w_{j,k},\forall w_{j,k}\in L,1<=i<j<k<=n\} \\
-E(c_i)=\{w_{j,i},\forall w_{j,i}\in L,1<=j<i<=n\} \\
-S(c_i)=\{c_i,\exists c_i\in L\}</script><p>其中，$L$是lexicon,当然如果word set为空的话，那么会添加一个<code>NONE</code>进去。具体的例子如下：</p>
-<p><img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/softlexicon_example.jpg" alt></p>
-<p>对于每一个character $c_i$，我们都能得到word sets。得到word sets之后，我们需要对word sets进行压缩。论文里实验了两种方法：mean-pooling与weighting method，实验表明后者要更好一些。具体来说，假设我们要计算character $c_i$的$B(c_i)$的representation vector，我们使用每一个word的frequency作为该词的权重，之所以这样做而没有使用像attention这样的方法，是因为想要提高速度。具体公式如下：</p>
-<script type="math/tex; mode=display">
-v^s(S)=\frac{4}{Z}\sum_{w\in S}z(w)e^w(w) \\
-Z=\sum_{w\in B\cup M\cup E\cup S}z(w)</script><p>其中，$S\in \{B,M,E,S\}$，$z(w)$表示word $w$的词频。</p>
-<p>分别得到<code>BMES</code>的representation vector之后，我们需要将其与character进行concat，具体如下：</p>
-<script type="math/tex; mode=display">
-x^c=[x^c,e^s(B,M,E,S)] \\
-e^s(B,M,E,S)=[v^s(B),v^s(M),v^s(E),v^s(S)]</script><p>然后将$x^c$输入到BILSTM+CRF中，得到最终的结果。</p>
+<p><img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/softlexicon.jpg"></p>
+<p>假设输入的sentence表示为：$s={c_1,c_2,…,c_n}$，$w_{i,j}$表示sentence中与lexicon中相匹配的word。为了不损失任何信息，我们首先对所有的与character $c_i$相匹配的lexicon words都采用<code>BMES</code>来进行编码，从而每一个character都有4个word sets。其公式如下：<br>$$<br>B(c_i)={w_{i,k},\forall w_{i,k}\in L,i&lt;k&lt;=n} \<br>M(c_i)={w_{j,k},\forall w_{j,k}\in L,1&lt;=i&lt;j&lt;k&lt;=n} \<br>E(c_i)={w_{j,i},\forall w_{j,i}\in L,1&lt;=j&lt;i&lt;=n} \<br>S(c_i)={c_i,\exists c_i\in L}<br>$$<br>其中，$L$是lexicon,当然如果word set为空的话，那么会添加一个<code>NONE</code>进去。具体的例子如下：</p>
+<p><img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/softlexicon_example.jpg"></p>
+<p>对于每一个character $c_i$，我们都能得到word sets。得到word sets之后，我们需要对word sets进行压缩。论文里实验了两种方法：mean-pooling与weighting method，实验表明后者要更好一些。具体来说，假设我们要计算character $c_i$的$B(c_i)$的representation vector，我们使用每一个word的frequency作为该词的权重，之所以这样做而没有使用像attention这样的方法，是因为想要提高速度。具体公式如下：<br>$$<br>v^s(S)=\frac{4}{Z}\sum_{w\in S}z(w)e^w(w) \<br>Z=\sum_{w\in B\cup M\cup E\cup S}z(w)<br>$$<br>其中，$S\in {B,M,E,S}$，$z(w)$表示word $w$的词频。</p>
+<p>分别得到<code>BMES</code>的representation vector之后，我们需要将其与character进行concat，具体如下：<br>$$<br>x^c=[x^c,e^s(B,M,E,S)] \<br>e^s(B,M,E,S)=[v^s(B),v^s(M),v^s(E),v^s(S)]<br>$$<br>然后将$x^c$输入到BILSTM+CRF中，得到最终的结果。</p>
 <h3 id="实验结果-2"><a href="#实验结果-2" class="headerlink" title="实验结果"></a>实验结果</h3><ol>
 <li><p>数据集：OntoNotes、MSRA、Weibo、resume</p>
 </li>
 <li><p>实验结果</p>
-<p><img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/ontonotes_msra_softlexicon.jpg" alt></p>
-<p><img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/weibo_softmlexicon.jpg" style="zoom:50%;"></p>
-<p><img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/resume_softlexicon.jpg" style="zoom:50%;"></p>
+<p><img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/ontonotes_msra_softlexicon.jpg"></p>
+<img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/weibo_softmlexicon.jpg" style="zoom:50%;">
+
+<img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/resume_softlexicon.jpg" style="zoom:50%;">
+
 <p>从结果上看，还是不错的，而且speed上有了很大的提升。</p>
 </li>
 </ol>

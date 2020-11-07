@@ -375,13 +375,15 @@
     <div class="post-body" itemprop="articleBody">
         <p>正式入对话的坑啦🤣对话是目前NLP技术重要的落地场景之一，但是相比于其他的方向，对话目前的应用还不算成熟，也远远没有产生它应有的巨大商业价值，但是随着物联网与5G等的发展，对话的应用前景是非常光明的。此外，既然对话的坑还有很多，这也意味着总需要人去填满这些坑，对NLPer来说，是挑战也是机会。其他的不多说，本篇着重讲讲检索式对话的经典模型MRFN。</p>
 <a id="more"></a>
+
 <h2 id="MRFN模型介绍"><a href="#MRFN模型介绍" class="headerlink" title="MRFN模型介绍"></a>MRFN模型介绍</h2><p>MRFN模型是2019年PKU与MSRA在WSDM顶会上所发表的关于检索式对话的论文。个人认为这是一篇不可多得的好论文，实验做的很详细，而且在representation或者说是granularities上做到了极致，综合了目前几乎所有的表示方法。MRFN模型解决的是两个问题：<strong>1.怎么对多个representation进行融合？2.不同的representation对最终matching performance的贡献是怎么样的？</strong>下面就来一一介绍～</p>
-<h3 id="MRFN模型架构"><a href="#MRFN模型架构" class="headerlink" title="MRFN模型架构"></a>MRFN模型架构</h3><p>首先给出一些定义：给定数据集：$\cal D=\{c_i,r_i,y\}_{i=1}^{N}$，其中，$c_i=\{u_{i,1},u_{i,2},..,u_{i,m_i}\}$，$u_{i,j}$表示第i个样本的第j个utterance in context，$y_i\in\{0,1\}$，目标是：衡量$c_i$与$r_i$之间的匹配度。下面直接模型结构图～</p>
-<p><img src="/2020/06/04/NLP-chatbot%E7%B3%BB%E5%88%97-MRFN/MRFN.jpg" alt></p>
+<h3 id="MRFN模型架构"><a href="#MRFN模型架构" class="headerlink" title="MRFN模型架构"></a>MRFN模型架构</h3><p>首先给出一些定义：给定数据集：$\cal D={c_i,r_i,y}<em>{i=1}^{N}$，其中，$c_i={u_{i,1},u</em>{i,2},..,u_{i,m_i}}$，$u_{i,j}$表示第i个样本的第j个utterance in context，$y_i\in{0,1}$，目标是：衡量$c_i$与$r_i$之间的匹配度。下面直接模型结构图～</p>
+<p><img src="/2020/06/04/NLP-chatbot%E7%B3%BB%E5%88%97-MRFN/MRFN.jpg"></p>
 <p>MRFN模型主要分为两大部分：<strong>Representations与Fusion strategies。</strong>下面依次介绍～</p>
 <h4 id="Representations"><a href="#Representations" class="headerlink" title="Representations"></a>Representations</h4><p>在MRFN模型中，有三种类型的representation：<strong>word representations, contextual representations, and attention-based representations。</strong></p>
 <ul>
-<li>word representation分为两种：<strong>Character-based Word Embedding与Word2Vec。</strong>前者能够将subword的信息考虑进去，后者能够考虑corpus中的共现信息，为其他的表示打下基础。<ul>
+<li><p>word representation分为两种：<strong>Character-based Word Embedding与Word2Vec。</strong>前者能够将subword的信息考虑进去，后者能够考虑corpus中的共现信息，为其他的表示打下基础。</p>
+<ul>
 <li>Character-based Word Embedding指的是将文本按照character来划分，得到的是4维向量，将这四维向量进行reshape，输入到激活函数为tanh的一维卷积中，再经过全局池化，得到二维向量，再经过reshape得到最终的三维向量；</li>
 <li>Word2Vec指的是使用word2vec训练得到的词向量作为初始化，并在训练过程中进行微调。</li>
 </ul>
@@ -396,26 +398,30 @@
 <ul>
 <li>self attention指的就是transformer中的attention机制，用公式来表达utterance $u$ 经过attention之后，得到的表示如下：</li>
 </ul>
-<script type="math/tex; mode=display">
-\cal O=MultiHeadAttention(U,U,U)</script></li>
+<p>$$<br>\cal O=MultiHeadAttention(U,U,U)<br>$$</p>
+</li>
 </ul>
 <ul>
 <li><p>self attention与self attentio就在输入不一样，用公式来表达utterance $u_i$经过attention之后，得到的表示如下：</p>
-<script type="math/tex; mode=display">
-\cal O=MultiHeadAttention(U_i,R,R) \\
-\cal O=MultiHeadAttention(R,U_i,U_i)</script></li>
+<p>$$<br>\cal O=MultiHeadAttention(U_i,R,R) \<br>\cal O=MultiHeadAttention(R,U_i,U_i)<br>$$</p>
+</li>
 </ul>
 <blockquote>
 <p>注意：attention的输出是word2vec初始化的三维向量！</p>
 </blockquote>
-<h4 id="Fusion-Strategies"><a href="#Fusion-Strategies" class="headerlink" title="Fusion Strategies"></a>Fusion Strategies</h4><p>首先明确一下，经过上一步，我们现在得到的是：对于utterance $u_i$ in context，表示为：$\{U_i^k\}_{k=1}^K,K=6$；对于reponse r，表示为：$\{R^k\}_{k=1}^K,K=6$。也就是说，现在对于网络的输入是：context：$\{U_i^k\}_{k=1}^K,1&lt;=i&lt;=m$，response：$\{R^k\}_{k=1}^K$。OK，接着往下走～</p>
-<p>我们得到了这么多的表示后，要得到最终的matching score，就必须要对这些表示进行融合，那么怎么融合呢？论文里考虑了三种融合策略：<strong>FES(Fusing at an early stage)、FIS(Fusion at an intermediate stage)、FLS(Fusion at the last stage)</strong>。下面依次来看～</p>
-<h5 id="FES"><a href="#FES" class="headerlink" title="FES"></a>FES</h5><p>所谓的FES指的是，在utterance与response进行交互之前，就将各种表示进行融合。具体来说，对于utterance $u_i$来说，它的6种表示可以表述为：$\{U_i^k\}_{k=1}^K,K=6$，由于这6种表示都是三维的，且batch_size维度与seq_lengt维度相同，所以一个做法就是将这6种表示在最后一个维度上进行concat，最后得到的向量为：U_i*，其维度是：(batch_size,seq_length_u_i,hidden_units)；同样的，得到的reponse的向量为：R*，其维度是：(batch_size,seq_length_r,hidden_units)。</p>
+<h4 id="Fusion-Strategies"><a href="#Fusion-Strategies" class="headerlink" title="Fusion Strategies"></a>Fusion Strategies</h4><p>首先明确一下，经过上一步，我们现在得到的是：对于utterance $u_i$ in context，表示为：${U_i^k}<em>{k=1}^K,K=6$；对于reponse r，表示为：${R^k}</em>{k=1}^K,K=6$。也就是说，现在对于网络的输入是：context：${U_i^k}<em>{k=1}^K,1&lt;=i&lt;=m$，response：${R^k}</em>{k=1}^K$。OK，接着往下走～</p>
+<p>我们得到了这么多的表示后，要得到最终的matching score，就必须要对这些表示进行融合，那么怎么融合呢？论文里考虑了三种融合策略：**FES(Fusing at an early stage)、FIS(Fusion at an intermediate stage)、FLS(Fusion at the last stage)**。下面依次来看～</p>
+<h5 id="FES"><a href="#FES" class="headerlink" title="FES"></a>FES</h5><p>所谓的FES指的是，在utterance与response进行交互之前，就将各种表示进行融合。具体来说，对于utterance $u_i$来说，它的6种表示可以表述为：${U_i^k}_{k=1}^K,K=6$，由于这6种表示都是三维的，且batch_size维度与seq_lengt维度相同，所以一个做法就是将这6种表示在最后一个维度上进行concat，最后得到的向量为：U_i*，其维度是：(batch_size,seq_length_u_i,hidden_units)；同样的，得到的reponse的向量为：R*，其维度是：(batch_size,seq_length_r,hidden_units)。</p>
 <p>得到每一个utterance与response的表示之后，就需要对utterance in context与response进行交互。如下：</p>
-<p><img src="/2020/06/04/NLP-chatbot%E7%B3%BB%E5%88%97-MRFN/FES.jpg" style="zoom:50%;"></p>
-<p><img src="/2020/06/04/NLP-chatbot%E7%B3%BB%E5%88%97-MRFN/Xnip2020-06-08_16-04-22.jpg" style="zoom:50%;"></p>
+<img src="/2020/06/04/NLP-chatbot%E7%B3%BB%E5%88%97-MRFN/FES.jpg" style="zoom:50%;">
+
+<img src="/2020/06/04/NLP-chatbot%E7%B3%BB%E5%88%97-MRFN/Xnip2020-06-08_16-04-22.jpg" style="zoom:50%;">
+
 <p>然后将 U_i*  与   $\overline e_{i,j}$ 一起送入CompAgg模型中提出的SUBMULT+NN方法中，从而得到 $T_i^*\in R^{n_i\times d}$。具体 $t_{i,j}$ 的计算如下：</p>
-<p><img src="/2020/06/04/NLP-chatbot%E7%B3%BB%E5%88%97-MRFN/Xnip2020-06-08_16-08-07.jpg" style="zoom:50%;"></p>
+<img src="/2020/06/04/NLP-chatbot%E7%B3%BB%E5%88%97-MRFN/Xnip2020-06-08_16-08-07.jpg" style="zoom:50%;">
+
+
+
 <p>然后在此基础上，使用GRU+MLP，得到最终的matching score。</p>
 <h5 id="FIS"><a href="#FIS" class="headerlink" title="FIS"></a>FIS</h5><p>在FIS中，对每种表示形式都执行utterance与response交互。然后对结果进行fusion，在经过GRU+MLP，得到matching score。</p>
 <h5 id="FLS"><a href="#FLS" class="headerlink" title="FLS"></a>FLS</h5><p>在FLS中，对每种表示形式都执行utterance与response交互，经过GRU，然后对结果进行fusion，在经过GRU+MLP，得到matching score。</p>
@@ -426,7 +432,7 @@
 <li>sequential representation使用的GRU的维度为200，其他部分使用的GRU的最佳维度是1000</li>
 <li>batch size为100，学习率为0.001，采用earlystoping</li>
 </ul>
-<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p><img src="/2020/06/04/NLP-chatbot%E7%B3%BB%E5%88%97-MRFN/Xnip2020-06-08_16-30-41.jpg" alt></p>
+<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p><img src="/2020/06/04/NLP-chatbot%E7%B3%BB%E5%88%97-MRFN/Xnip2020-06-08_16-30-41.jpg"></p>
 <p>结果不错～</p>
 <p>最后说一点点叭，关于检索式对话近期可能不会再看了。看了这么多篇paper，其实都差不多，基本上就是representation-matching-aggregation这样一个框架，但是每一个部分都能够去做修改和探索。之后可能会去看看生成式对话的东西（不知道为什么，总是对生成式任务有着谜一般的执念🤣），然后可能再去看看强化学习的东西吧，毕竟对话要离开DRL的东西很难。其实我还是蛮想做pretraining的东西，或者MRC/VQA也行啊(如果有人带我的话)，但是摸得GPU啊，要是intern能做preretraining这块的话，就灰常好了(洗洗睡吧)。然后主要就是去做实现这块吧，感觉代码能力还是蛮重要的。就是这样了，keep learning，加油～</p>
 <h2 id="MRFN模型实现"><a href="#MRFN模型实现" class="headerlink" title="MRFN模型实现"></a>MRFN模型实现</h2><h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>Multi-Representation Fusion Network for Multi-turn Response Selection in Retrieval-based Chatbots</p>

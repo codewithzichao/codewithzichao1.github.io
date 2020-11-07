@@ -371,23 +371,16 @@
     <div class="post-body" itemprop="articleBody">
         <p>最近在看文本分类系列模型，应该会陆续更新几篇有关文本分类模型的博客，大概一周内更新完成，之后开始做文本匹配的东西。虽然这些模型网上有很多解读了，但是只有自己写出来了，才算是自己的呀。本篇博客讲解最为经典的HAN模型，并采用tensorflow2来进行实现。</p>
 <a id="more"></a>
+
 <h2 id="HAN模型简介"><a href="#HAN模型简介" class="headerlink" title="HAN模型简介"></a>HAN模型简介</h2><p>HAN模型大体的思想是：将word embedding通过attention机制得到sentence embedding，再通过sentence embedding 得到document embedding，最后加上一个分类层，得到最终的文本分类结果。模型架构如下：👇</p>
-<p><img src="/2020/04/25/NLP-%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E6%A8%A1%E5%9E%8B-HAN/HAN模型架构jpg.jpg" style="zoom: 67%;"></p>
+<img src="/2020/04/25/NLP-%E6%96%87%E6%9C%AC%E5%88%86%E7%B1%BB%E6%A8%A1%E5%9E%8B-HAN/HAN模型架构jpg.jpg" style="zoom: 67%;">
+
 <p>整体架构比较简单，在这里，说几点需要注意的地方：</p>
 <ul>
 <li><p>模型的输入是：(batch_size,max_sentence,max_word)，这点非常重要。</p>
 </li>
-<li><script type="math/tex; mode=display">
-word \ encoder+word \ attention部分：\\
-u_w=tanh(Wh_{i,j}+b_w) \\
-\alpha_{it}=softmax(u_{it}^Tu_{w})\\
-s_i=\sum_{t=1}^{T}\alpha_{it}h_{it}\\
-\\
-\\
-sentence \ encoder+sentence \ attention部分：\\
-u_s=tanh(W_sh_{i}+b_s)\\
-\alpha_i=softmax(u_i^Tu_s)\\
-v=\sum_{l=1}^{L}\alpha_ih_i</script></li>
+<li><p>$$<br>word \ encoder+word \ attention部分：\<br>u_w=tanh(Wh_{i,j}+b_w) \<br>\alpha_{it}=softmax(u_{it}^Tu_{w})\<br>s_i=\sum_{t=1}^{T}\alpha_{it}h_{it}\<br>\<br>\<br>sentence \ encoder+sentence \ attention部分：\<br>u_s=tanh(W_sh_{i}+b_s)\<br>\alpha_i=softmax(u_i^Tu_s)\<br>v=\sum_{l=1}^{L}\alpha_ih_i<br>$$</p>
+</li>
 </ul>
 <h2 id="HAN模型实现"><a href="#HAN模型实现" class="headerlink" title="HAN模型实现"></a>HAN模型实现</h2><p>暂无。</p>
 <h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>Hierarchical Attention Networks for Document Classiﬁcation</p>
