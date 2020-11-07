@@ -65,11 +65,15 @@
 <script type="math/tex; mode=display">
 E_i=\{r|i\geq max\{j(a_1),j(a_2),i(r)\}\}</script><p>$E_i$的意思是：在前$i$轮对话中，如果出现了$a_1,a_2$以及与relation $r$相关的trigger的话，那么relation $r$就是可评估的，也就是说作为候选。之所以这样定义，是因为这样做可以知道对于每一个argument pair，我们大致可以推算预测其relation大概需要多少轮数。之后，我们定义conversation precision与recall依旧conversation F1，如下：</p>
 <script type="math/tex; mode=display">
+\begin{equation} 
+\begin{aligned}
 P_c(D,a_1,a_2)=\frac{\sum_{i=1}^{m}|O_i\cap L\cap E_i|}{\sum_{i=1}^{m}|O_i\cap E_i|} \\
 R_c(D,a_1,a_2)=\frac{\sum_{i=1}^{m}|O_i\cap L\cap E_i|}{\sum_{i=1}^{m}|L\cap E_i|} \\
 P_c=\frac{\sum_{D^{\prime},a_1^{\prime},a_2^{\prime}}P_c(D^{\prime},a_1^{\prime},a_2^{\prime})}{\sum_{D^{\prime},a_1^{\prime},a_2^{\prime}}1} \\
 R_c=\frac{\sum_{D^{\prime},a_1^{\prime},a_2^{\prime}}R_c(D^{\prime},a_1^{\prime},a_2^{\prime})}{\sum_{D^{\prime},a_1^{\prime},a_2^{\prime}}1} \\
-F1_c=\frac{2P_cR_c}{P_c+R_c}</script><h3 id="Baseline"><a href="#Baseline" class="headerlink" title="Baseline"></a>Baseline</h3><p>在paper中，介绍了四种baseline：Majority、CNN/LSTM/BILSTM、BERT、BERT$_s$。所谓的Majority就是：如果一个argument pair的relation没出现在training set当中，那么输出training set中数目最大的relation type，否则的话，输出与argument pair最相关的relation type；CNN/LSTM/BILSTM指的是：采用CNN/LSTM/BILSTM作为编码器；BERT指的是：采用BERT以及BERT-like预训练模型作为编码器，不过其输入格式是：$[CLS]d[SEP]a_1[SEP]a_2[SEP]$；BERT$_s$是作者所改进的一个方法，指的是：仍然采用BERT以及BERT-like预训练模型作为编码器，但是其输入格式是：$[CLS]\hat d[SEP]\hat a_1[SEP]\hat a_2[SEP]$，其中：</p>
+F1_c=\frac{2P_cR_c}{P_c+R_c} 
+\end{aligned}
+\end{equation}</script><h3 id="Baseline"><a href="#Baseline" class="headerlink" title="Baseline"></a>Baseline</h3><p>在paper中，介绍了四种baseline：Majority、CNN/LSTM/BILSTM、BERT、BERT$_s$。所谓的Majority就是：如果一个argument pair的relation没出现在training set当中，那么输出training set中数目最大的relation type，否则的话，输出与argument pair最相关的relation type；CNN/LSTM/BILSTM指的是：采用CNN/LSTM/BILSTM作为编码器；BERT指的是：采用BERT以及BERT-like预训练模型作为编码器，不过其输入格式是：$[CLS]d[SEP]a_1[SEP]a_2[SEP]$；BERT$_s$是作者所改进的一个方法，指的是：仍然采用BERT以及BERT-like预训练模型作为编码器，但是其输入格式是：$[CLS]\hat d[SEP]\hat a_1[SEP]\hat a_2[SEP]$，其中：</p>
 <script type="math/tex; mode=display">
 \hat d=\hat s_1:\hat t_1,...,\hat s_n:\hat t_n \\
 \hat s_i=\begin{cases}[S1] & if \ s_i=a_1 \\ [S2] & if \ s_1=a_2 \\ s_1 & otherwise \end{cases}</script><p>其中，$[S1],[S2]$表示两个新的特殊的token。</p>
