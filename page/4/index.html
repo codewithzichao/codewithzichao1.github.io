@@ -15,35 +15,10 @@
 
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
 
-
 <script id="hexo-configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    hostname: new URL('http://codewithzichao.github.io').hostname,
-    root: '/',
-    scheme: 'Muse',
-    version: '7.6.0',
-    exturl: false,
-    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},
-    copycode: {"enable":true,"show_result":true,"style":null},
-    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
-    bookmark: {"enable":false,"color":"#222","save":"auto"},
-    fancybox: false,
-    mediumzoom: false,
-    lazyload: false,
-    pangu: false,
-    algolia: {
-      appID: '',
-      apiKey: '',
-      indexName: '',
-      hits: "",
-      labels: ""
-    },
-    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},
-    path: 'search.xml',
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
-  };
-</script>
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
 
   <meta name="description" content="Just learning">
 <meta property="og:type" content="website">
@@ -62,10 +37,9 @@
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome: true,
-    isPost: false,
-    isPage: false,
-    isArchive: false
+    isHome : true,
+    isPost : false,
+    lang   : 'en'
   };
 </script>
 
@@ -108,18 +82,6 @@
 
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
-  <div class="site-meta">
-
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">codewithzichao</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">Confident，Modest，Patient</p>
-  </div>
-
   <div class="site-nav-toggle">
     <div class="toggle" aria-label="Toggle navigation bar">
       <span class="toggle-line toggle-line-first"></span>
@@ -127,11 +89,27 @@
       <span class="toggle-line toggle-line-last"></span>
     </div>
   </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">codewithzichao</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Confident，Modest，Patient</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
 </div>
 
 
+
+
 <nav class="site-nav">
-  
   <ul id="menu" class="menu">
         <li class="menu-item menu-item-home">
 
@@ -158,39 +136,12 @@
     <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
 
   </li>
-        <li class="menu-item menu-item-friends">
-
-    <a href="/Friends/" rel="section"><i class="fa fa-fw fa-address-book"></i>Friends</a>
-
-  </li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
-        </a>
-      </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="popup search-popup">
-    <div class="search-header">
-  <span class="search-icon">
-    <i class="fa fa-search"></i>
-  </span>
-  <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="none"
-           placeholder="Searching..." spellcheck="false"
-           type="text" id="search-input">
-  </div>
-  <span class="popup-btn-close">
-    <i class="fa fa-times-circle"></i>
-  </span>
-</div>
-<div id="search-result"></div>
 
-</div>
-<div class="search-pop-overlay"></div>
 
-  </div>
+
+
 </div>
     </header>
 
@@ -200,26 +151,22 @@
     <span>0%</span>
   </div>
 
-  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
-
 
     <main class="main">
       <div class="main-inner">
         <div class="content-wrap">
           
 
-          <div class="content">
+          <div class="content index posts-expand">
             
-
-  <div class="posts-expand">
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="zichao">
       <meta itemprop="description" content="Just learning">
     </span>
@@ -228,16 +175,13 @@
       <meta itemprop="name" content="codewithzichao">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
             <a href="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DAM/" class="post-title-link" itemprop="url">NLP|chatbot系列-DAM</a>
-        </h1>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
-
-            
-
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
@@ -258,15 +202,11 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/" itemprop="url" rel="index">
-                    <span itemprop="name">NLP</span>
-                  </a>
+                  <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/chatbot/" itemprop="url" rel="index">
-                    <span itemprop="name">chatbot</span>
-                  </a>
+                  <a href="/categories/NLP/chatbot/" itemprop="url" rel="index"><span itemprop="name">chatbot</span></a>
                 </span>
             </span>
 
@@ -304,14 +244,14 @@
   
   
 
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DUA/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="zichao">
       <meta itemprop="description" content="Just learning">
     </span>
@@ -320,16 +260,13 @@
       <meta itemprop="name" content="codewithzichao">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
             <a href="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DUA/" class="post-title-link" itemprop="url">NLP|chatbot系列-DUA</a>
-        </h1>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
-
-            
-
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
@@ -350,15 +287,11 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/" itemprop="url" rel="index">
-                    <span itemprop="name">NLP</span>
-                  </a>
+                  <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/chatbot/" itemprop="url" rel="index">
-                    <span itemprop="name">chatbot</span>
-                  </a>
+                  <a href="/categories/NLP/chatbot/" itemprop="url" rel="index"><span itemprop="name">chatbot</span></a>
                 </span>
             </span>
 
@@ -396,14 +329,14 @@
   
   
 
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-SMN/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="zichao">
       <meta itemprop="description" content="Just learning">
     </span>
@@ -412,16 +345,13 @@
       <meta itemprop="name" content="codewithzichao">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
             <a href="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-SMN/" class="post-title-link" itemprop="url">NLP|chatbot系列-SMN</a>
-        </h1>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
-
-            
-
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
@@ -442,15 +372,11 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/" itemprop="url" rel="index">
-                    <span itemprop="name">NLP</span>
-                  </a>
+                  <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/chatbot/" itemprop="url" rel="index">
-                    <span itemprop="name">chatbot</span>
-                  </a>
+                  <a href="/categories/NLP/chatbot/" itemprop="url" rel="index"><span itemprop="name">chatbot</span></a>
                 </span>
             </span>
 
@@ -488,14 +414,14 @@
   
   
 
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/05/15/NLP-chatbot%E7%B3%BB%E5%88%97-Multi-view/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="zichao">
       <meta itemprop="description" content="Just learning">
     </span>
@@ -504,16 +430,13 @@
       <meta itemprop="name" content="codewithzichao">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
             <a href="/2020/05/15/NLP-chatbot%E7%B3%BB%E5%88%97-Multi-view/" class="post-title-link" itemprop="url">NLP|chatbot系列-Multi-view</a>
-        </h1>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
-
-            
-
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
@@ -534,15 +457,11 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/" itemprop="url" rel="index">
-                    <span itemprop="name">NLP</span>
-                  </a>
+                  <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/chatbot/" itemprop="url" rel="index">
-                    <span itemprop="name">chatbot</span>
-                  </a>
+                  <a href="/categories/NLP/chatbot/" itemprop="url" rel="index"><span itemprop="name">chatbot</span></a>
                 </span>
             </span>
 
@@ -580,14 +499,14 @@
   
   
 
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="zichao">
       <meta itemprop="description" content="Just learning">
     </span>
@@ -596,16 +515,13 @@
       <meta itemprop="name" content="codewithzichao">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
             <a href="/2020/05/15/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-BIMPM/" class="post-title-link" itemprop="url">NLP|文本匹配模型-BIMPM</a>
-        </h1>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
-
-            
-
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
@@ -626,15 +542,11 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/" itemprop="url" rel="index">
-                    <span itemprop="name">NLP</span>
-                  </a>
+                  <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index">
-                    <span itemprop="name">文本匹配模型</span>
-                  </a>
+                  <a href="/categories/NLP/%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index"><span itemprop="name">文本匹配模型</span></a>
                 </span>
             </span>
 
@@ -672,14 +584,14 @@
   
   
 
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="zichao">
       <meta itemprop="description" content="Just learning">
     </span>
@@ -688,16 +600,13 @@
       <meta itemprop="name" content="codewithzichao">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
             <a href="/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/" class="post-title-link" itemprop="url">NLP|分类与匹配的各类评价指标</a>
-        </h1>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
-
-            
-
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
@@ -718,9 +627,7 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/" itemprop="url" rel="index">
-                    <span itemprop="name">NLP</span>
-                  </a>
+                  <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
                 </span>
             </span>
 
@@ -736,57 +643,66 @@
 
       
           <a id="more"></a>
-<h2 id="各类指标"><a href="#各类指标" class="headerlink" title="各类指标"></a>各类指标</h2><p>首先记录一下符号：TP(true positive)、FP(false positive)、FN(false nergative)、TN(true negative)。表格如下：</p>
-<div class="table-container">
+<h2 id="各类指标">各类指标</h2>
+<p>首先记录一下符号：TP(true positive)、FP(false positive)、FN(false nergative)、TN(true negative)。表格如下：</p>
 <table>
 <thead>
-<tr>
-<th style="text-align:center">pred\real</th>
-<th style="text-align:center">True</th>
-<th style="text-align:center">False</th>
+<tr class="header">
+<th style="text-align: center;">pred</th>
+<th style="text-align: center;">True</th>
+<th style="text-align: center;">False</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:center">True</td>
-<td style="text-align:center">TP</td>
-<td style="text-align:center">FP</td>
+<tr class="odd">
+<td style="text-align: center;">True</td>
+<td style="text-align: center;">TP</td>
+<td style="text-align: center;">FP</td>
 </tr>
-<tr>
-<td style="text-align:center">False</td>
-<td style="text-align:center">FN</td>
-<td style="text-align:center">TN</td>
+<tr class="even">
+<td style="text-align: center;">False</td>
+<td style="text-align: center;">FN</td>
+<td style="text-align: center;">TN</td>
 </tr>
 </tbody>
 </table>
-</div>
-<h3 id="accuracy与error-rate"><a href="#accuracy与error-rate" class="headerlink" title="accuracy与error rate"></a>accuracy与error rate</h3><script type="math/tex; mode=display">
+<h3 id="accuracy与error-rate">accuracy与error rate</h3>
+<p><span class="math display">\[
 accuracy=\frac {TP+TN}{N} \\
-error \ rate=\frac {FP+FN}{N}</script><h3 id="precision-recall-F1-score"><a href="#precision-recall-F1-score" class="headerlink" title="precision/recall/F1 score"></a>precision/recall/F1 score</h3><p>precision表示在预测为正的样本中，真的为正的样本的比例；</p>
+error \ rate=\frac {FP+FN}{N}
+\]</span></p>
+<h3 id="precisionrecallf1-score">precision/recall/F1 score</h3>
+<p>precision表示在预测为正的样本中，真的为正的样本的比例；</p>
 <p>recall表示在原本真的为正的样本中，预测为正的样本的比例。</p>
-<p>F1-score是精确率与召回率的权衡。</p>
-<script type="math/tex; mode=display">
+<p>F1-score是精确率与召回率的权衡。 <span class="math display">\[
 precision=\frac {TP}{TP+FP} \\
 recall=\frac {TP}{TP+FN} \\
-F1-score=\frac {2}{\frac{1}{P}+\frac {1}{R}}</script><blockquote>
+F1-score=\frac {2}{\frac{1}{P}+\frac {1}{R}}
+\]</span></p>
+<blockquote>
 <p>注意：precison、recall、F1score仅使用于二分类问题。对于多分类问题，使用的是micro-P、micro-R、micro-F1以及macro-P、macro-R、macro-F1。</p>
-<p>micro： “Micro”是通过先计算总体的TP, FP和FN的数量，然后计算PRF。</p>
+<p>micro： "Micro"是通过先计算总体的TP, FP和FN的数量，然后计算PRF。</p>
 <p>macro：“Macro”是分别计算每个类别的PRF，然后分别求平均得到PRF。</p>
 <p>链接：<a href="https://www.cnblogs.com/nana-zhang/p/11496496.html" target="_blank" rel="noopener">micro与macro</a></p>
-<p><img src="/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/宏平均与微平均对比.jpg" alt><br>如何每个class的样本数量相差不大，那么宏平均和微平均差异也不大<br>如果每个class的相差较大并且你想：<br>更注重样本量多的class：使用微平均<br>更注重样本量少的class：使用宏平均<br>如果微平均远低于宏平均，则应该去检查样本量多的class<br>如果宏平均远低于微平均，则应该去检查样本量少的class</p>
+<p><img src="/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/宏平均与微平均对比.jpg"> 如何每个class的样本数量相差不大，那么宏平均和微平均差异也不大 如果每个class的相差较大并且你想： 更注重样本量多的class：使用微平均 更注重样本量少的class：使用宏平均 如果微平均远低于宏平均，则应该去检查样本量多的class 如果宏平均远低于微平均，则应该去检查样本量少的class</p>
 </blockquote>
-<h3 id="EM"><a href="#EM" class="headerlink" title="EM"></a>EM</h3><p>EM，全称exact match。EM度量是在问答系统中广泛运用的指标。它衡量的是与任何一个真实答案完全匹配的预测的比例。是SQuAD的主要衡量指标。</p>
-<h3 id="MRR"><a href="#MRR" class="headerlink" title="MRR"></a>MRR</h3><p>MRR，全称mean reciprocal rank，广泛用于评估NLP中需要排序的模型与算法中，常见于信息检索与问答任务中。具体公式如下：</p>
-<script type="math/tex; mode=display">
-MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}</script><p>其中，$Q$表示query的个数，$rank_i$表示第i个query在真实答案集中出现的位置。举个🌰（来源于知乎）：</p>
-<p><img src="/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/MRR.jpg" alt></p>
+<h3 id="em">EM</h3>
+<p>EM，全称exact match。EM度量是在问答系统中广泛运用的指标。它衡量的是与任何一个真实答案完全匹配的预测的比例。是SQuAD的主要衡量指标。</p>
+<h3 id="mrr">MRR</h3>
+<p>MRR，全称mean reciprocal rank，广泛用于评估NLP中需要排序的模型与算法中，常见于信息检索与问答任务中。具体公式如下： <span class="math display">\[
+MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}
+\]</span> 其中，<span class="math inline">\(Q\)</span>表示query的个数，<span class="math inline">\(rank_i\)</span>表示第i个query在真实答案集中出现的位置。举个🌰（来源于知乎）：</p>
+<p><img src="/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/MRR.jpg"></p>
 <p>可计算这个系统的MRR值为：(1/3 + 1/2 + 1)/3 = 11/18=0.61。</p>
-<h3 id="MAP"><a href="#MAP" class="headerlink" title="MAP"></a>MAP</h3><p>mAP，顾名思义，即AP的平均值，那么就需要先计算AP，然后再对其进行平均。</p>
+<h3 id="map">MAP</h3>
+<p>mAP，顾名思义，即AP的平均值，那么就需要先计算AP，然后再对其进行平均。</p>
 <p>在信息检索中，AP指的是不同召回率上的正确率的平均值，而现在的有些检索系统为了能够快速返回结果，在计算AP时就不再考虑召回率。换句话说，如果数据库中和查询信息相关的5条信息，分别出现在查询结果中的第1、3、6、9、10位，那么这次查询的AP就是： <img src="https://www.zhihu.com/equation?tex=AP+%3D+%EF%BC%881%2F1%2B2%2F3%2B3%2F6%2B4%2F9%2B5%2F10%EF%BC%89%2F5%3D0.62" alt="[公式]"></p>
 <p>得到多条查询的AP值，对其进行平均，就得到了mAP。<a href="https://zhuanlan.zhihu.com/p/35983818" target="_blank" rel="noopener">来源</a></p>
-<p><img src="/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/MAP.jpg" alt></p>
-<h3 id="NDCG"><a href="#NDCG" class="headerlink" title="NDCG"></a>NDCG</h3><p><a href="https://zhuanlan.zhihu.com/p/38850753" target="_blank" rel="noopener">链接</a></p>
-<h2 id="指标在文本匹配中的应用"><a href="#指标在文本匹配中的应用" class="headerlink" title="指标在文本匹配中的应用"></a>指标在文本匹配中的应用</h2><p><strong>相似度计算与复述识别</strong></p>
+<p><img src="/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/MAP.jpg"></p>
+<h3 id="ndcg">NDCG</h3>
+<p><a href="https://zhuanlan.zhihu.com/p/38850753" target="_blank" rel="noopener">链接</a></p>
+<h2 id="指标在文本匹配中的应用">指标在文本匹配中的应用</h2>
+<p><strong>相似度计算与复述识别</strong></p>
 <p>这个任务是给出两句话，判断两者是不是表达了同样的含义，或者两句话的相似度有多高，一般都是当成分类问题来对待。常用的公开数据集有：STS、QQP、MSRP，当然啦，还有PPDB，但是数量太大，我没有跑过这个数据集，前面三个数据集就已经很好啦。由于是分类问题(pointwise)，所以评价指标一般使用Accuracy或者F1 score。</p>
 <p><strong>问答匹配(answer selection)</strong></p>
 <p>这个任务指的是：给定问题与问题的候选答案池，从中选择出最好的答案，如果说选择的答案在真实答案集中，说明问题被很好的回答了，否则的话，问题就没有被很好的回答。一般来说，问答匹配会采用pairwise的学习方式，即同question的一对正负样本作为一个训练样本，当然也会使用listwise。常用的数据集有：TrecQA、insuranceQA、WikiQA，还有QNLI，我一般会使用前三个，QNLI是很大的数据集，还没尝试过(关键是么得算力😫)。评价指标使用mAP与MRR等指标。</p>
@@ -814,14 +730,14 @@ MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}</script><p>其中，$Q$表示qu
   
   
 
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/05/02/NLP-gensim-boy%E7%9A%84%E4%BF%AE%E7%82%BC%E4%B9%8B%E8%B7%AF/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="zichao">
       <meta itemprop="description" content="Just learning">
     </span>
@@ -830,16 +746,13 @@ MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}</script><p>其中，$Q$表示qu
       <meta itemprop="name" content="codewithzichao">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
             <a href="/2020/05/02/NLP-gensim-boy%E7%9A%84%E4%BF%AE%E7%82%BC%E4%B9%8B%E8%B7%AF/" class="post-title-link" itemprop="url">NLP|gensim boy的修炼之路</a>
-        </h1>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
-
-            
-
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
@@ -860,9 +773,7 @@ MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}</script><p>其中，$Q$表示qu
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/" itemprop="url" rel="index">
-                    <span itemprop="name">NLP</span>
-                  </a>
+                  <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
                 </span>
             </span>
 
@@ -900,14 +811,14 @@ MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}</script><p>其中，$Q$表示qu
   
   
 
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-HCAN/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="zichao">
       <meta itemprop="description" content="Just learning">
     </span>
@@ -916,16 +827,13 @@ MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}</script><p>其中，$Q$表示qu
       <meta itemprop="name" content="codewithzichao">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
             <a href="/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-HCAN/" class="post-title-link" itemprop="url">NLP|文本匹配模型-HCAN</a>
-        </h1>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
-
-            
-
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
@@ -946,15 +854,11 @@ MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}</script><p>其中，$Q$表示qu
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/" itemprop="url" rel="index">
-                    <span itemprop="name">NLP</span>
-                  </a>
+                  <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index">
-                    <span itemprop="name">文本匹配模型</span>
-                  </a>
+                  <a href="/categories/NLP/%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index"><span itemprop="name">文本匹配模型</span></a>
                 </span>
             </span>
 
@@ -992,14 +896,14 @@ MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}</script><p>其中，$Q$表示qu
   
   
 
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-DSSM-CDSSM/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="zichao">
       <meta itemprop="description" content="Just learning">
     </span>
@@ -1008,16 +912,13 @@ MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}</script><p>其中，$Q$表示qu
       <meta itemprop="name" content="codewithzichao">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
             <a href="/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-DSSM-CDSSM/" class="post-title-link" itemprop="url">NLP|文本匹配模型-DSSM/CDSSM</a>
-        </h1>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
-
-            
-
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
@@ -1038,15 +939,11 @@ MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}</script><p>其中，$Q$表示qu
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/" itemprop="url" rel="index">
-                    <span itemprop="name">NLP</span>
-                  </a>
+                  <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index">
-                    <span itemprop="name">文本匹配模型</span>
-                  </a>
+                  <a href="/categories/NLP/%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index"><span itemprop="name">文本匹配模型</span></a>
                 </span>
             </span>
 
@@ -1084,14 +981,14 @@ MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}</script><p>其中，$Q$表示qu
   
   
 
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="en">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-InferSent/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="zichao">
       <meta itemprop="description" content="Just learning">
     </span>
@@ -1100,16 +997,13 @@ MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}</script><p>其中，$Q$表示qu
       <meta itemprop="name" content="codewithzichao">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
+        <h2 class="post-title" itemprop="name headline">
           
             <a href="/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-InferSent/" class="post-title-link" itemprop="url">NLP|文本匹配模型-InferSent</a>
-        </h1>
+        </h2>
 
         <div class="post-meta">
             <span class="post-meta-item">
-
-            
-
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
@@ -1130,15 +1024,11 @@ MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}</script><p>其中，$Q$表示qu
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/" itemprop="url" rel="index">
-                    <span itemprop="name">NLP</span>
-                  </a>
+                  <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index">
-                    <span itemprop="name">文本匹配模型</span>
-                  </a>
+                  <a href="/categories/NLP/%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index"><span itemprop="name">文本匹配模型</span></a>
                 </span>
             </span>
 
@@ -1176,7 +1066,6 @@ MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}</script><p>其中，$Q$表示qu
   
   
 
-  </div>
 
   
   <nav class="pagination">
@@ -1187,6 +1076,28 @@ MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}</script><p>其中，$Q$表示qu
 
           </div>
           
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
 
         </div>
           
@@ -1216,8 +1127,6 @@ MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}</script><p>其中，$Q$表示qu
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="zichao"
-      src="/images/photo.jpg">
   <p class="site-author-name" itemprop="name">zichao</p>
   <div class="site-description" itemprop="description">Just learning</div>
 </div>
@@ -1244,17 +1153,6 @@ MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}</script><p>其中，$Q$表示qu
       </div>
   </nav>
 </div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
-      </span>
-  </div>
 
 
 
@@ -1272,42 +1170,21 @@ MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}</script><p>其中，$Q$表示qu
       <div class="footer-inner">
         
 
+        
+
 <div class="copyright">
   
   &copy; 
   <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
-    <i class="fa fa-heart"></i>
+    <i class="fa fa-user"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">zichao</span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a>
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
 
         
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-user"></i>
-      </span>
-      <span class="site-uv" title="Total Visitors">
-        <span id="busuanzi_value_site_uv"></span>
-      </span>
-    </span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-eye"></i>
-      </span>
-      <span class="site-pv" title="Total Views">
-        <span id="busuanzi_value_site_pv"></span>
-      </span>
-    </span>
-</div>
 
 
 
@@ -1316,7 +1193,6 @@ MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}</script><p>其中，$Q$表示qu
 
 
 
-        
       </div>
     </footer>
   </div>
@@ -1344,92 +1220,18 @@ MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}</script><p>其中，$Q$表示qu
 
 
 
-  
-<script src="/js/local-search.js"></script>
 
 
 
 
 
 
-
-
-
-<script>
-if (document.querySelectorAll('div.pdf').length) {
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
-    document.querySelectorAll('div.pdf').forEach(element => {
-      PDFObject.embed(element.getAttribute('target'), element, {
-        pdfOpenParams: {
-          navpanes: 0,
-          toolbar: 0,
-          statusbar: 0,
-          pagemode: 'thumbs',
-          view: 'FitH'
-        },
-        PDFJS_URL: '/lib/pdf/web/viewer.html',
-        height: element.getAttribute('height') || '500px'
-      });
-    });
-  }, window.PDFObject);
-}
-</script>
 
 
 
 
 
   
-
-  
-      
-<script type="text/x-mathjax-config">
-
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      equationNumbers: {
-        autoNumber: 'AMS'
-      }
-    }
-  });
-
-  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
-    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
-      if (data.display) {
-        var next = data.script.nextSibling;
-        while (next && next.nodeName.toLowerCase() === '#text') {
-          next = next.nextSibling;
-        }
-        if (next && next.nodeName.toLowerCase() === 'br') {
-          next.parentNode.removeChild(next);
-        }
-      }
-    });
-  });
-
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i = 0; i < all.length; i += 1) {
-      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
-      if (element.nodeName.toLowerCase() == 'li') {
-        element = element.parentNode;
-      }
-      element.classList.add('has-jax');
-    }
-  });
-</script>
-<script>
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
-    MathJax.Hub.Typeset();
-  }, window.MathJax);
-</script>
-
-    
 
   
 

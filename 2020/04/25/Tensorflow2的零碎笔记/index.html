@@ -15,35 +15,10 @@
 
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
 
-
 <script id="hexo-configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    hostname: new URL('http://codewithzichao.github.io').hostname,
-    root: '/',
-    scheme: 'Muse',
-    version: '7.6.0',
-    exturl: false,
-    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},
-    copycode: {"enable":true,"show_result":true,"style":null},
-    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
-    bookmark: {"enable":false,"color":"#222","save":"auto"},
-    fancybox: false,
-    mediumzoom: false,
-    lazyload: false,
-    pangu: false,
-    algolia: {
-      appID: '',
-      apiKey: '',
-      indexName: '',
-      hits: "",
-      labels: ""
-    },
-    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},
-    path: 'search.xml',
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
-  };
-</script>
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
 
   <meta name="description" content="这篇文章主要是记录使用tensorflow2的一些笔记吧，因为有时候是真的容易忘。">
 <meta property="og:type" content="article">
@@ -67,10 +42,9 @@
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome: false,
-    isPost: true,
-    isPage: false,
-    isArchive: false
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
   };
 </script>
 
@@ -113,18 +87,6 @@
 
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
-  <div class="site-meta">
-
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">codewithzichao</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">Confident，Modest，Patient</p>
-  </div>
-
   <div class="site-nav-toggle">
     <div class="toggle" aria-label="Toggle navigation bar">
       <span class="toggle-line toggle-line-first"></span>
@@ -132,11 +94,27 @@
       <span class="toggle-line toggle-line-last"></span>
     </div>
   </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">codewithzichao</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Confident，Modest，Patient</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
 </div>
 
 
+
+
 <nav class="site-nav">
-  
   <ul id="menu" class="menu">
         <li class="menu-item menu-item-home">
 
@@ -163,39 +141,12 @@
     <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
 
   </li>
-        <li class="menu-item menu-item-friends">
-
-    <a href="/Friends/" rel="section"><i class="fa fa-fw fa-address-book"></i>Friends</a>
-
-  </li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
-        </a>
-      </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="popup search-popup">
-    <div class="search-header">
-  <span class="search-icon">
-    <i class="fa fa-search"></i>
-  </span>
-  <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="none"
-           placeholder="Searching..." spellcheck="false"
-           type="text" id="search-input">
-  </div>
-  <span class="popup-btn-close">
-    <i class="fa fa-times-circle"></i>
-  </span>
-</div>
-<div id="search-result"></div>
 
-</div>
-<div class="search-pop-overlay"></div>
 
-  </div>
+
+
 </div>
     </header>
 
@@ -205,26 +156,23 @@
     <span>0%</span>
   </div>
 
-  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
-
 
     <main class="main">
       <div class="main-inner">
         <div class="content-wrap">
           
 
-          <div class="content">
+          <div class="content post posts-expand">
             
 
-  <div class="posts-expand">
-      
+    
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/04/25/Tensorflow2%E7%9A%84%E9%9B%B6%E7%A2%8E%E7%AC%94%E8%AE%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="zichao">
       <meta itemprop="description" content="Just learning">
     </span>
@@ -239,9 +187,6 @@
 
         <div class="post-meta">
             <span class="post-meta-item">
-
-            
-
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
@@ -258,13 +203,6 @@
               </span>
 
           
-            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">Views: </span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span>
 
         </div>
       </header>
@@ -285,7 +223,7 @@
 <blockquote>
 <p>x_train只能是一个二维tensor，maxlen表示最终要得到的桔句子长度。</p>
 </blockquote>
-<p><strong>tf.keras.layers.Bidirectional(layer,merge_mode=”concat,None,mul,sum”)</strong></p>
+<p><strong>tf.keras.layers.Bidirectional(layer,merge_mode="concat,None,mul,sum")</strong></p>
 <blockquote>
 <p>比如传入LSTM的话，那么就可以得到biLSTM。如果是None的话，那么就返回两个值。</p>
 </blockquote>
@@ -295,22 +233,22 @@
 <p>举个🌰：👇</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">inputs = np.random.random([<span class="number">32</span>, <span class="number">10</span>, <span class="number">8</span>]).astype(np.float32)</span><br><span class="line">lstm = tf.keras.layers.LSTM(<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">output = lstm(inputs)  <span class="comment"># The output has shape `[32, 4]`.</span></span><br><span class="line"></span><br><span class="line">lstm = tf.keras.layers.LSTM(<span class="number">4</span>, return_sequences=<span class="literal">True</span>, return_state=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># whole_sequence_output has shape `[32, 10, 4]`.</span></span><br><span class="line"><span class="comment"># final_memory_state and final_carry_state both have shape `[32, 4]`.</span></span><br><span class="line">whole_sequence_output, final_memory_state, final_carry_state = lstm(inputs)</span><br></pre></td></tr></table></figure>
 </blockquote>
-<p><strong>tf.keras.layers.MaxPool2D(pool_size=(),strides=(),padding=”valid”)</strong></p>
+<p><strong>tf.keras.layers.MaxPool2D(pool_size=(),strides=(),padding="valid")</strong></p>
 <blockquote>
 <p>输入的维度是4维的(batch_size,rows,cols,channels)，并且pool_size与strides都是tuple，这一点要记住，最后输出的维度是(batch_size,new_rows,new_cols,channels)。</p>
 </blockquote>
 <p><strong>callbacks的写法</strong></p>
 <ul>
-<li><strong>tf.keras.callbacks.EarlyStopping(monitor=’val_loss’,min_delta=0,patience=3)</strong></li>
+<li><strong>tf.keras.callbacks.EarlyStopping(monitor='val_loss',min_delta=0,patience=3)</strong></li>
 </ul>
 <blockquote>
 <p>其中，monitor表示要检测的指标，min_delta表示在被监测的数据中被认为是提升的最小变化，即绝对变化小于min_delta，将被视为没有提升；patience表示没有进步的训练轮数，在这之后训练就会被停止。</p>
 </blockquote>
-<p><strong>tf.keras.layers.Conv1D(filters=250,kernel_size=3,padding=’same’,strides=1)</strong></p>
+<p><strong>tf.keras.layers.Conv1D(filters=250,kernel_size=3,padding='same',strides=1)</strong></p>
 <blockquote>
 <p>一维卷积，输入的维度为（batch_size, steps, input_dim），输出维度为（batch_size, new_steps, filters）。</p>
 </blockquote>
-<p><strong>tf.keras.layers.MaxPool1D(pool_size=2,strides=1,padding=’valid’)</strong></p>
+<p><strong>tf.keras.layers.MaxPool1D(pool_size=2,strides=1,padding='valid')</strong></p>
 <blockquote>
 <p>输入维度为(batch_size, steps, features)，输出维度为(batch_size, downsampled_steps, features)。</p>
 </blockquote>
@@ -319,7 +257,7 @@
 <p><strong>范数的概念</strong></p>
 <p>0范数，向量中非零元素的个数。</p>
 <p>1范数，为绝对值之和。</p>
-<p>2范数，就是通常意义上的模。 </p>
+<p>2范数，就是通常意义上的模。</p>
 <p>无穷范数，就是取向量的最大值</p>
 <p><img src="/2020/04/25/Tensorflow2%E7%9A%84%E9%9B%B6%E7%A2%8E%E7%AC%94%E8%AE%B0/范数。png.png" style="zoom:80%;"></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#计算1范数</span></span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line">a=tf.norm(x,ord=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
@@ -335,7 +273,7 @@
 <p><strong>json.loads(json_str):</strong>将json_str反序列化成原本的对象</p>
 <p><strong>json.load(file):</strong>读取json文件，并反序列化成原本的对象</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line">a=&#123;<span class="string">"a"</span>: <span class="number">1</span>, <span class="string">"c"</span>: <span class="number">0</span>, <span class="string">"b"</span>: <span class="number">2</span>&#125;</span><br><span class="line"><span class="comment">#将a序列化成字符串</span></span><br><span class="line">json_str=json.dumps(a)</span><br><span class="line"><span class="comment">#序列化成字符串到文件中</span></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">"a.json"</span>.<span class="string">"w"</span>) <span class="keyword">as</span> f:</span><br><span class="line">  json.dump(a,f)</span><br><span class="line"></span><br><span class="line"><span class="comment">#读取json文件</span></span><br><span class="line"><span class="keyword">with</span> open(<span class="string">"a.json"</span>,<span class="string">"r"</span>) <span class="keyword">as</span> f:</span><br><span class="line">  a=json.load(f)</span><br></pre></td></tr></table></figure>
-<p>pickle的使用方法与json一致！但是写文件的时候，要使用”wb”，读文件的时候，要使用“rb”。</p>
+<p>pickle的使用方法与json一致！但是写文件的时候，要使用"wb"，读文件的时候，要使用“rb”。</p>
 <p><strong>导入上级模块</strong><a href="https://www.cnblogs.com/ipersevere/p/10916803.html" target="_blank" rel="noopener">链接</a>、<a href="https://zhuanlan.zhihu.com/p/64893308" target="_blank" rel="noopener">链接2</a></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#第一步：在要访问的文件所在文件夹下，建立空的__init__.py文件</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#第二步：在要写的文件中写入下列代码：</span></span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">sys.path.append(<span class="string">".."</span>)<span class="comment">#返回到上级目录</span></span><br><span class="line"><span class="keyword">from</span> a.ss <span class="keyword">import</span> dasj</span><br></pre></td></tr></table></figure>
 <p><strong>获取文件目录结构：tree</strong></p>
@@ -348,8 +286,8 @@
 <p>看到一篇关于mask的应用场景与方案，写的很好，记录一下🤩链接：<a href="https://www.jianshu.com/p/7b408a60ac35" target="_blank" rel="noopener">padding与mask</a></p>
 <p><strong>关于encode与decode</strong></p>
 <p><a href="https://blog.csdn.net/wz947324/article/details/80625533" target="_blank" rel="noopener">参考链接</a></p>
-<p>总的来说，如果str是字符串，如果我们要直接对它进行操作的话，就不需要encode或者decode，除非我们要将str保存到文件，那么我们就需要对其进行encode，在python代码里，具体是:<code>with codecs.open(foel_patj,&quot;w&quot;,encoding=&quot;utf-8&quot;) as f:</code>。</p>
-<p>如果我们str是bytes，那么我们要洗那个对其进行操作的话，那么我们就需要对其进行decode，从而得到字符串，具体就是：<code>u1=str.decode(&quot;utf-8&quot;)</code>。</p>
+<p>总的来说，如果str是字符串，如果我们要直接对它进行操作的话，就不需要encode或者decode，除非我们要将str保存到文件，那么我们就需要对其进行encode，在python代码里，具体是:<code>with codecs.open(foel_patj,"w",encoding="utf-8") as f:</code>。</p>
+<p>如果我们str是bytes，那么我们要洗那个对其进行操作的话，那么我们就需要对其进行decode，从而得到字符串，具体就是：<code>u1=str.decode("utf-8")</code>。</p>
 <p>我们具体在使用的时候，我们可以这样：（text是一个对象）</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> six.PY3:<span class="comment"># 如果是python3的话 </span></span><br><span class="line">  <span class="keyword">if</span> isinstance(text, str):<span class="comment"># 如果是str的话，我们就直接返回使用即可</span></span><br><span class="line">      <span class="keyword">return</span> text</span><br><span class="line">    <span class="keyword">elif</span> isinstance(text, bytes): <span class="comment"># 如果是bytes，那么我们就是需要进行decode，得到字符串来使用。</span></span><br><span class="line">      <span class="keyword">return</span> text.decode(<span class="string">"utf-8"</span>, <span class="string">"ignore"</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">      <span class="keyword">raise</span> ValueError(<span class="string">"Unsupported string type: %s"</span> % (type(text)))</span><br><span class="line"><span class="keyword">elif</span> six.PY2: <span class="comment"># 如果是python2的话</span></span><br><span class="line">  <span class="keyword">if</span> isinstance(text, str):</span><br><span class="line">    <span class="keyword">return</span> text.decode(<span class="string">"utf-8"</span>, <span class="string">"ignore"</span>)</span><br><span class="line">  <span class="keyword">elif</span> isinstance(text, unicode):</span><br><span class="line">    <span class="keyword">return</span> text</span><br><span class="line">  <span class="keyword">else</span>:</span><br></pre></td></tr></table></figure>
 <p><strong>关于TFRrecord的使用</strong></p>
@@ -380,26 +318,6 @@
     
     
     
-        <div class="reward-container">
-  <div>Would you like to buy me a cup of coffee☕️～</div>
-  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
-    Donate
-  </button>
-  <div id="qr" style="display: none;">
-      
-      <div style="display: inline-block;">
-        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
-        <p>WeChat Pay</p>
-      </div>
-      
-      <div style="display: inline-block;">
-        <img src="/images/alipay.jpg" alt="zichao Alipay">
-        <p>Alipay</p>
-      </div>
-
-  </div>
-</div>
-
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -427,11 +345,32 @@
   
   
 
-  </div>
 
 
           </div>
           
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
 
         </div>
           
@@ -461,8 +400,6 @@
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="zichao"
-      src="/images/photo.jpg">
   <p class="site-author-name" itemprop="name">zichao</p>
   <div class="site-description" itemprop="description">Just learning</div>
 </div>
@@ -489,17 +426,6 @@
       </div>
   </nav>
 </div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
-      </span>
-  </div>
 
 
 
@@ -517,42 +443,21 @@
       <div class="footer-inner">
         
 
+        
+
 <div class="copyright">
   
   &copy; 
   <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
-    <i class="fa fa-heart"></i>
+    <i class="fa fa-user"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">zichao</span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a>
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
 
         
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-user"></i>
-      </span>
-      <span class="site-uv" title="Total Visitors">
-        <span id="busuanzi_value_site_uv"></span>
-      </span>
-    </span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-eye"></i>
-      </span>
-      <span class="site-pv" title="Total Views">
-        <span id="busuanzi_value_site_pv"></span>
-      </span>
-    </span>
-</div>
 
 
 
@@ -561,7 +466,6 @@
 
 
 
-        
       </div>
     </footer>
   </div>
@@ -589,92 +493,18 @@
 
 
 
-  
-<script src="/js/local-search.js"></script>
 
 
 
 
 
 
-
-
-
-<script>
-if (document.querySelectorAll('div.pdf').length) {
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
-    document.querySelectorAll('div.pdf').forEach(element => {
-      PDFObject.embed(element.getAttribute('target'), element, {
-        pdfOpenParams: {
-          navpanes: 0,
-          toolbar: 0,
-          statusbar: 0,
-          pagemode: 'thumbs',
-          view: 'FitH'
-        },
-        PDFJS_URL: '/lib/pdf/web/viewer.html',
-        height: element.getAttribute('height') || '500px'
-      });
-    });
-  }, window.PDFObject);
-}
-</script>
 
 
 
 
 
   
-
-  
-      
-<script type="text/x-mathjax-config">
-
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      equationNumbers: {
-        autoNumber: 'AMS'
-      }
-    }
-  });
-
-  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
-    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
-      if (data.display) {
-        var next = data.script.nextSibling;
-        while (next && next.nodeName.toLowerCase() === '#text') {
-          next = next.nextSibling;
-        }
-        if (next && next.nodeName.toLowerCase() === 'br') {
-          next.parentNode.removeChild(next);
-        }
-      }
-    });
-  });
-
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i = 0; i < all.length; i += 1) {
-      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
-      if (element.nodeName.toLowerCase() == 'li') {
-        element = element.parentNode;
-      }
-      element.classList.add('has-jax');
-    }
-  });
-</script>
-<script>
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
-    MathJax.Hub.Typeset();
-  }, window.MathJax);
-</script>
-
-    
 
   
 

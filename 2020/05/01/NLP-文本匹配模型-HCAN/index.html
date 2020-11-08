@@ -15,35 +15,10 @@
 
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
 
-
 <script id="hexo-configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    hostname: new URL('http://codewithzichao.github.io').hostname,
-    root: '/',
-    scheme: 'Muse',
-    version: '7.6.0',
-    exturl: false,
-    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},
-    copycode: {"enable":true,"show_result":true,"style":null},
-    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
-    bookmark: {"enable":false,"color":"#222","save":"auto"},
-    fancybox: false,
-    mediumzoom: false,
-    lazyload: false,
-    pangu: false,
-    algolia: {
-      appID: '',
-      apiKey: '',
-      indexName: '',
-      hits: "",
-      labels: ""
-    },
-    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},
-    path: 'search.xml',
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
-  };
-</script>
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
 
   <meta name="description" content="正式开始看文本匹配的东西啦！文本匹配对NLPer来说是很重要的，不管是最后是做对话、推荐、搜索，文本匹配都是必不可少的。当然啦，BERT系列的模型出来之后，其实传统的深度学习模型效果是远远比不上的。不过这些预训练模型效果好是好，但是训练代价昂贵，当然啦，有人会说，现在已经有剪枝、量化、蒸馏这样的方法来减小预训练模型的大小，从而降低训练所需的代价(所以说模型压缩、加速这个方向还是很有前景的🤩咦，好">
 <meta property="og:type" content="article">
@@ -77,10 +52,9 @@
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome: false,
-    isPost: true,
-    isPage: false,
-    isArchive: false
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
   };
 </script>
 
@@ -123,18 +97,6 @@
 
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
-  <div class="site-meta">
-
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">codewithzichao</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">Confident，Modest，Patient</p>
-  </div>
-
   <div class="site-nav-toggle">
     <div class="toggle" aria-label="Toggle navigation bar">
       <span class="toggle-line toggle-line-first"></span>
@@ -142,11 +104,27 @@
       <span class="toggle-line toggle-line-last"></span>
     </div>
   </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">codewithzichao</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Confident，Modest，Patient</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
 </div>
 
 
+
+
 <nav class="site-nav">
-  
   <ul id="menu" class="menu">
         <li class="menu-item menu-item-home">
 
@@ -173,39 +151,12 @@
     <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
 
   </li>
-        <li class="menu-item menu-item-friends">
-
-    <a href="/Friends/" rel="section"><i class="fa fa-fw fa-address-book"></i>Friends</a>
-
-  </li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
-        </a>
-      </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="popup search-popup">
-    <div class="search-header">
-  <span class="search-icon">
-    <i class="fa fa-search"></i>
-  </span>
-  <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="none"
-           placeholder="Searching..." spellcheck="false"
-           type="text" id="search-input">
-  </div>
-  <span class="popup-btn-close">
-    <i class="fa fa-times-circle"></i>
-  </span>
-</div>
-<div id="search-result"></div>
 
-</div>
-<div class="search-pop-overlay"></div>
 
-  </div>
+
+
 </div>
     </header>
 
@@ -215,26 +166,23 @@
     <span>0%</span>
   </div>
 
-  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
-
 
     <main class="main">
       <div class="main-inner">
         <div class="content-wrap">
           
 
-          <div class="content">
+          <div class="content post posts-expand">
             
 
-  <div class="posts-expand">
-      
+    
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-HCAN/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="zichao">
       <meta itemprop="description" content="Just learning">
     </span>
@@ -249,9 +197,6 @@
 
         <div class="post-meta">
             <span class="post-meta-item">
-
-            
-
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
@@ -272,26 +217,15 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/" itemprop="url" rel="index">
-                    <span itemprop="name">NLP</span>
-                  </a>
+                  <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index">
-                    <span itemprop="name">文本匹配模型</span>
-                  </a>
+                  <a href="/categories/NLP/%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index"><span itemprop="name">文本匹配模型</span></a>
                 </span>
             </span>
 
           
-            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">Views: </span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span>
 
         </div>
       </header>
@@ -304,79 +238,69 @@
       
         <p>正式开始看文本匹配的东西啦！文本匹配对NLPer来说是很重要的，不管是最后是做对话、推荐、搜索，文本匹配都是必不可少的。当然啦，BERT系列的模型出来之后，其实传统的深度学习模型效果是远远比不上的。不过这些预训练模型效果好是好，但是训练代价昂贵，当然啦，有人会说，现在已经有剪枝、量化、蒸馏这样的方法来减小预训练模型的大小，从而降低训练所需的代价(所以说模型压缩、加速这个方向还是很有前景的🤩咦，好像跑偏了，anyway)，但是这仍然远远不够，所以熟悉传统的文本匹配模型是非常有必要的。本篇博客讲解经典的HCAN模型，并采用tensorflow2实现。</p>
 <a id="more"></a>
-<h2 id="HCAN模型介绍"><a href="#HCAN模型介绍" class="headerlink" title="HCAN模型介绍"></a>HCAN模型介绍</h2><p>HCAN模型来源于2019年的《Bridging the Gap Between Relevance Matching and Semantic Matching for Short Text Similarity Modeling》论文。整体来说不算太难。</p>
-<h3 id="HCAN模型提出的原因"><a href="#HCAN模型提出的原因" class="headerlink" title="HCAN模型提出的原因"></a>HCAN模型提出的原因</h3><p>在NLP中，存在着两大任务：relevance matching(RM)与semantic matching(SM)。所谓的RM常见于信息检索中，其目的在于根据query与documents的relevance，对documents进行排序，其核心是关键字匹配；而SM，其目的在于计算两个句子的相似度或者匹配度，其核心是句子语义上的匹配。从这个定义中，可以看出RM本质上也是语义匹配，所以RM与SM有一定的相似性。那么问题来了：<strong>能不能提出一种模型，在RM与SM上都能取得非常好的效果呢？</strong>这就是HCAN模型提出的原因。</p>
-<h3 id="HCAN模型架构"><a href="#HCAN模型架构" class="headerlink" title="HCAN模型架构"></a>HCAN模型架构</h3><p>整个架构比较简单：word embedding层、hybrid encoder层、relevance matching与semantic matching层、最后的分类层。直接放图吧～</p>
+<h2 id="hcan模型介绍">HCAN模型介绍</h2>
+<p>HCAN模型来源于2019年的《Bridging the Gap Between Relevance Matching and Semantic Matching for Short Text Similarity Modeling》论文。整体来说不算太难。</p>
+<h3 id="hcan模型提出的原因">HCAN模型提出的原因</h3>
+<p>在NLP中，存在着两大任务：relevance matching(RM)与semantic matching(SM)。所谓的RM常见于信息检索中，其目的在于根据query与documents的relevance，对documents进行排序，其核心是关键字匹配；而SM，其目的在于计算两个句子的相似度或者匹配度，其核心是句子语义上的匹配。从这个定义中，可以看出RM本质上也是语义匹配，所以RM与SM有一定的相似性。那么问题来了：<strong>能不能提出一种模型，在RM与SM上都能取得非常好的效果呢？</strong>这就是HCAN模型提出的原因。</p>
+<h3 id="hcan模型架构">HCAN模型架构</h3>
+<p>整个架构比较简单：word embedding层、hybrid encoder层、relevance matching与semantic matching层、最后的分类层。直接放图吧～</p>
 <p><img src="/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-HCAN/HCAN模型架构.jpg" style="zoom:50%;"></p>
-<h4 id="Embedding-layer"><a href="#Embedding-layer" class="headerlink" title="Embedding layer"></a>Embedding layer</h4><p>输入句子对，记作$(q,c)$，在QA任务中，其表示question与answer，在信息检索中，其表示query与document。其中，$q、c$均表示句子的token的集合，它们的embedding记作：$\{w_1^q,w_2^q,w_3^q,…,w_n^q\}$与$\{w_1^c,w_2^c,w_3^c,…,w_m^c\}$，embeddding的维度为$L$，$n、m$是句子的长度，所以，$q\in R^{n\times L}、c\in R^{m\times L}$。</p>
-<h4 id="Hybrid-Encoders"><a href="#Hybrid-Encoders" class="headerlink" title="Hybrid Encoders"></a>Hybrid Encoders</h4><p>在得到句子的embedding后，为了进一步得到更加丰富的表示，在HCAN中，使用了三种不同类型的encoders：<strong>deep、wide、contextual。</strong></p>
-<p><strong>Deep Encoder：</strong>所谓的Deep encoder，就是叠加多个卷积层，从而得到更加丰富的语义表示，在论文中，称作phrase-level representation，第$h$个卷积层的输出记作：$U^h$。这个和DPCNN中的region embedding有点相似，不熟悉DPCNN的，可以移步我的文章：<a href="https://codewithzichao.github.io/2020/04/25/NLP-文本分类模型-DPCNN/#more">DPCNN</a></p>
+<h4 id="embedding-layer">Embedding layer</h4>
+<p>输入句子对，记作<span class="math inline">\((q,c)\)</span>，在QA任务中，其表示question与answer，在信息检索中，其表示query与document。其中，<span class="math inline">\(q、c\)</span>均表示句子的token的集合，它们的embedding记作：<span class="math inline">\(\{w_1^q,w_2^q,w_3^q,...,w_n^q\}\)</span>与<span class="math inline">\(\{w_1^c,w_2^c,w_3^c,...,w_m^c\}\)</span>，embeddding的维度为<span class="math inline">\(L\)</span>，<span class="math inline">\(n、m\)</span>是句子的长度，所以，<span class="math inline">\(q\in R^{n\times L}、c\in R^{m\times L}\)</span>。</p>
+<h4 id="hybrid-encoders">Hybrid Encoders</h4>
+<p>在得到句子的embedding后，为了进一步得到更加丰富的表示，在HCAN中，使用了三种不同类型的encoders：<strong>deep、wide、contextual。</strong></p>
+<p><strong>Deep Encoder：</strong>所谓的Deep encoder，就是叠加多个卷积层，从而得到更加丰富的语义表示，在论文中，称作phrase-level representation，第<span class="math inline">\(h\)</span>个卷积层的输出记作：<span class="math inline">\(U^h\)</span>。这个和DPCNN中的region embedding有点相似，不熟悉DPCNN的，可以移步我的文章：<a href="https://codewithzichao.github.io/2020/04/25/NLP-文本分类模型-DPCNN/#more">DPCNN</a></p>
 <blockquote>
 <p>注意，q与c是共享这些参数的！</p>
 </blockquote>
-<p><strong>Wide encoder：</strong>wide encoder则是换了一种思路，并联多个卷积层，也就是“变宽”。给定$N$个卷积层，假设第一个卷积层的窗口大小为k，那么N个卷积层的窗口大小依次是：$[k,k+1,k+2,k+3,..,k+N-1]$.</p>
-<p><strong>Contextual encoder</strong>：contextual encoder不使用卷积层，转而使用BILSTM来提取更为丰富的语义特征。给定$N$个BILSTM层，第$h$个BILSTM层的输出是：$U^h$。</p>
+<p><strong>Wide encoder：</strong>wide encoder则是换了一种思路，并联多个卷积层，也就是“变宽”。给定<span class="math inline">\(N\)</span>个卷积层，假设第一个卷积层的窗口大小为k，那么N个卷积层的窗口大小依次是：<span class="math inline">\([k,k+1,k+2,k+3,..,k+N-1]\)</span>.</p>
+<p><strong>Contextual encoder</strong>：contextual encoder不使用卷积层，转而使用BILSTM来提取更为丰富的语义特征。给定<span class="math inline">\(N\)</span>个BILSTM层，第<span class="math inline">\(h\)</span>个BILSTM层的输出是：<span class="math inline">\(U^h\)</span>。</p>
 <p><strong>三种encoder的比较</strong></p>
 <blockquote>
-<ol>
+<ol type="1">
 <li>deep与wide由于使用CNN，所以并行计算效率比contextual要高，训练要快；此外，使用CNN的话，我们可以控制窗口大小，能够得到不同phrase level的语义表示。同时，这样对于relevance matching也是非常有用的。</li>
 <li>deep的参数数量更少，因为deep中所有层的filter是一样的，所以可以实现参数共享。</li>
 </ol>
 </blockquote>
-<h4 id="Relevance-Matching"><a href="#Relevance-Matching" class="headerlink" title="Relevance Matching"></a>Relevance Matching</h4><blockquote>
+<h4 id="relevance-matching">Relevance Matching</h4>
+<blockquote>
 <p>注意：下面所示的维度均没有带上batch_size！</p>
 </blockquote>
-<p>通过hybrid encoders之后，我们可以得到q与c的深层次的向量化表示：$ U_q\in R^{n\times F}、U_c\in R^{m\times F}$。在此基础上，我们首先要去得到relevance matching。采用的方式就是dot。公式如下：</p>
-<script type="math/tex; mode=display">
-S=U_qU_c^T, \ \ \ \ \ \ \ \ \ \ S\in R^{n\times m}</script><p>然后，在此基础上，在context列上使用softmax，公式如下：</p>
-<script type="math/tex; mode=display">
-\tilde S=softmax(S)</script><p>这一步的意义在于让得到的similarity score的范围处于[0,1]，此外，softmax也能够让score之间的区分度变大。</p>
+<p>通过hybrid encoders之后，我们可以得到q与c的深层次的向量化表示：$ U_qR<sup>{nF}、U_cR</sup>{mF}$。在此基础上，我们首先要去得到relevance matching。采用的方式就是dot。公式如下： <span class="math display">\[
+S=U_qU_c^T, \ \ \ \ \ \ \ \ \ \ S\in R^{n\times m} 
+\]</span> 然后，在此基础上，在context列上使用softmax，公式如下： <span class="math display">\[
+\tilde S=softmax(S)
+\]</span> 这一步的意义在于让得到的similarity score的范围处于[0,1]，此外，softmax也能够让score之间的区分度变大。</p>
 <p>然后再对其使用最大池化和平均池化（注意，是全局池化，也就是说，池化后，会减少一个维度），论文中指出，平均池化要好一点。公式如下：</p>
 <p><img src="/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-HCAN/RM.jpg" style="zoom:50%;"></p>
 <p>接下来，作者还引入了IDF来作为不同的query term与phrase的权重，衡量其重要性程度。</p>
 <p><img src="/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-HCAN/IDF.jpg" style="zoom:50%;"></p>
 <p>这样加权的方法也可以减小得分比较大的token(譬如停用词)的影响。</p>
-<h4 id="Semantic-Matching"><a href="#Semantic-Matching" class="headerlink" title="Semantic Matching"></a>Semantic Matching</h4><p>Semantic Matching的输出仍然采用hybird encoders的输出，即q与c的深层次的向量化表示：$U_q\in R^{n\times F}、U_c\in R^{m\times F}$。在此基础上，使用co-attention机制，不熟悉co-attention机制的童鞋，可以参看论文《BIDIRECTIONAL ATTENTION F LOW FOR MACHINE COMPREHENSION》，这是在MRC任务中大名鼎鼎的BIDAF模型，非常值得一看🤩。使用co-attention机制的公式如下：</p>
+<h4 id="semantic-matching">Semantic Matching</h4>
+<p>Semantic Matching的输出仍然采用hybird encoders的输出，即q与c的深层次的向量化表示：<span class="math inline">\(U_q\in R^{n\times F}、U_c\in R^{m\times F}\)</span>。在此基础上，使用co-attention机制，不熟悉co-attention机制的童鞋，可以参看论文《BIDIRECTIONAL ATTENTION F LOW FOR MACHINE COMPREHENSION》，这是在MRC任务中大名鼎鼎的BIDAF模型，非常值得一看🤩。使用co-attention机制的公式如下：</p>
 <p><img src="/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-HCAN/co-attention.jpg" style="zoom:50%;"></p>
-<p>其中，REP表示将input转化为n✖️m的矩阵，$W_q,W_c\in R^{F}，W_b\in R^{F\times F}$。</p>
+<p>其中，REP表示将input转化为n✖️m的矩阵，<span class="math inline">\(W_q,W_c\in R^{F}，W_b\in R^{F\times F}\)</span>。</p>
 <p>在两个方向上使用co-attention机制：query-to-context和context-to-query。</p>
 <p><img src="/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-HCAN/co-ten.jpg" style="zoom:50%;"></p>
 <p>然后对得到的向量进行concat，再使用BILSTM来进行编码，得到输出。公式如下：</p>
 <p><img src="/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-HCAN/bilstm.jpg" style="zoom:50%;"></p>
 <p>注意，我们只使用BILSTM的最后一个输出。</p>
-<h4 id="Final-classification"><a href="#Final-classification" class="headerlink" title="Final classification"></a>Final classification</h4><p>对relevance matching与semantic matching得到的输出进行concat，然后使用两层的MLP，从而得到最终的输出。</p>
+<h4 id="final-classification">Final classification</h4>
+<p>对relevance matching与semantic matching得到的输出进行concat，然后使用两层的MLP，从而得到最终的输出。</p>
 <p><img src="/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-HCAN/final.jpg" style="zoom:50%;"></p>
 <p>HCAN在answer selection(使用TrecQA数据集、评价指标MAP与MRR)、paraphrase identification(使用TwitterURL数据集、评价指标macro-F1)、semantic textual similarity(使用Quora数据集，评价指标准确率)、Tweet Search(TREC Microblog数据集、评价指标P@30)。结果如下：</p>
 <p><img src="/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-HCAN/结果1.jpg" style="zoom:50%;"></p>
 <p><img src="/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-HCAN/jieguo2.jpg" style="zoom:50%;"></p>
 <p>从结果可以看到，HCAN模型吊打了DecAtt、ESIM、InferSent等一众模型，但是仍然打不过BERT。所以，要在文本匹配任务重取得更好的结果，目前还是离不开预训练模型。</p>
-<h2 id="HCAN模型实现"><a href="#HCAN模型实现" class="headerlink" title="HCAN模型实现"></a>HCAN模型实现</h2><h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>Bridging the Gap Between Relevance Matching and Semantic Matching for Short Text Similarity Modeling</p>
+<h2 id="hcan模型实现">HCAN模型实现</h2>
+<h2 id="参考文献">参考文献</h2>
+<p>Bridging the Gap Between Relevance Matching and Semantic Matching for Short Text Similarity Modeling</p>
 
     </div>
 
     
     
     
-        <div class="reward-container">
-  <div>Would you like to buy me a cup of coffee☕️～</div>
-  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
-    Donate
-  </button>
-  <div id="qr" style="display: none;">
-      
-      <div style="display: inline-block;">
-        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
-        <p>WeChat Pay</p>
-      </div>
-      
-      <div style="display: inline-block;">
-        <img src="/images/alipay.jpg" alt="zichao Alipay">
-        <p>Alipay</p>
-      </div>
-
-  </div>
-</div>
-
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -406,11 +330,32 @@ S=U_qU_c^T, \ \ \ \ \ \ \ \ \ \ S\in R^{n\times m}</script><p>然后，在此基
   
   
 
-  </div>
 
 
           </div>
           
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
 
         </div>
           
@@ -435,14 +380,12 @@ S=U_qU_c^T, \ \ \ \ \ \ \ \ \ \ S\in R^{n\times m}</script><p>然后，在此基
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#HCAN模型介绍"><span class="nav-number">1.</span> <span class="nav-text">HCAN模型介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HCAN模型提出的原因"><span class="nav-number">1.1.</span> <span class="nav-text">HCAN模型提出的原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HCAN模型架构"><span class="nav-number">1.2.</span> <span class="nav-text">HCAN模型架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Embedding-layer"><span class="nav-number">1.2.1.</span> <span class="nav-text">Embedding layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hybrid-Encoders"><span class="nav-number">1.2.2.</span> <span class="nav-text">Hybrid Encoders</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Relevance-Matching"><span class="nav-number">1.2.3.</span> <span class="nav-text">Relevance Matching</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Semantic-Matching"><span class="nav-number">1.2.4.</span> <span class="nav-text">Semantic Matching</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Final-classification"><span class="nav-number">1.2.5.</span> <span class="nav-text">Final classification</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HCAN模型实现"><span class="nav-number">2.</span> <span class="nav-text">HCAN模型实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#hcan模型介绍"><span class="nav-number">1.</span> <span class="nav-text">HCAN模型介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#hcan模型提出的原因"><span class="nav-number">1.1.</span> <span class="nav-text">HCAN模型提出的原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hcan模型架构"><span class="nav-number">1.2.</span> <span class="nav-text">HCAN模型架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#embedding-layer"><span class="nav-number">1.2.1.</span> <span class="nav-text">Embedding layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#hybrid-encoders"><span class="nav-number">1.2.2.</span> <span class="nav-text">Hybrid Encoders</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#relevance-matching"><span class="nav-number">1.2.3.</span> <span class="nav-text">Relevance Matching</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#semantic-matching"><span class="nav-number">1.2.4.</span> <span class="nav-text">Semantic Matching</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#final-classification"><span class="nav-number">1.2.5.</span> <span class="nav-text">Final classification</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hcan模型实现"><span class="nav-number">2.</span> <span class="nav-text">HCAN模型实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="zichao"
-      src="/images/photo.jpg">
   <p class="site-author-name" itemprop="name">zichao</p>
   <div class="site-description" itemprop="description">Just learning</div>
 </div>
@@ -469,17 +412,6 @@ S=U_qU_c^T, \ \ \ \ \ \ \ \ \ \ S\in R^{n\times m}</script><p>然后，在此基
       </div>
   </nav>
 </div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
-      </span>
-  </div>
 
 
 
@@ -497,42 +429,21 @@ S=U_qU_c^T, \ \ \ \ \ \ \ \ \ \ S\in R^{n\times m}</script><p>然后，在此基
       <div class="footer-inner">
         
 
+        
+
 <div class="copyright">
   
   &copy; 
   <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
-    <i class="fa fa-heart"></i>
+    <i class="fa fa-user"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">zichao</span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a>
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
 
         
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-user"></i>
-      </span>
-      <span class="site-uv" title="Total Visitors">
-        <span id="busuanzi_value_site_uv"></span>
-      </span>
-    </span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-eye"></i>
-      </span>
-      <span class="site-pv" title="Total Views">
-        <span id="busuanzi_value_site_pv"></span>
-      </span>
-    </span>
-</div>
 
 
 
@@ -541,7 +452,6 @@ S=U_qU_c^T, \ \ \ \ \ \ \ \ \ \ S\in R^{n\times m}</script><p>然后，在此基
 
 
 
-        
       </div>
     </footer>
   </div>
@@ -569,92 +479,18 @@ S=U_qU_c^T, \ \ \ \ \ \ \ \ \ \ S\in R^{n\times m}</script><p>然后，在此基
 
 
 
-  
-<script src="/js/local-search.js"></script>
 
 
 
 
 
 
-
-
-
-<script>
-if (document.querySelectorAll('div.pdf').length) {
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
-    document.querySelectorAll('div.pdf').forEach(element => {
-      PDFObject.embed(element.getAttribute('target'), element, {
-        pdfOpenParams: {
-          navpanes: 0,
-          toolbar: 0,
-          statusbar: 0,
-          pagemode: 'thumbs',
-          view: 'FitH'
-        },
-        PDFJS_URL: '/lib/pdf/web/viewer.html',
-        height: element.getAttribute('height') || '500px'
-      });
-    });
-  }, window.PDFObject);
-}
-</script>
 
 
 
 
 
   
-
-  
-      
-<script type="text/x-mathjax-config">
-
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      equationNumbers: {
-        autoNumber: 'AMS'
-      }
-    }
-  });
-
-  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
-    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
-      if (data.display) {
-        var next = data.script.nextSibling;
-        while (next && next.nodeName.toLowerCase() === '#text') {
-          next = next.nextSibling;
-        }
-        if (next && next.nodeName.toLowerCase() === 'br') {
-          next.parentNode.removeChild(next);
-        }
-      }
-    });
-  });
-
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i = 0; i < all.length; i += 1) {
-      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
-      if (element.nodeName.toLowerCase() == 'li') {
-        element = element.parentNode;
-      }
-      element.classList.add('has-jax');
-    }
-  });
-</script>
-<script>
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
-    MathJax.Hub.Typeset();
-  }, window.MathJax);
-</script>
-
-    
 
   
 

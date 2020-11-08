@@ -15,35 +15,10 @@
 
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
 
-
 <script id="hexo-configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    hostname: new URL('http://codewithzichao.github.io').hostname,
-    root: '/',
-    scheme: 'Muse',
-    version: '7.6.0',
-    exturl: false,
-    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},
-    copycode: {"enable":true,"show_result":true,"style":null},
-    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
-    bookmark: {"enable":false,"color":"#222","save":"auto"},
-    fancybox: false,
-    mediumzoom: false,
-    lazyload: false,
-    pangu: false,
-    algolia: {
-      appID: '',
-      apiKey: '',
-      indexName: '',
-      hits: "",
-      labels: ""
-    },
-    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},
-    path: 'search.xml',
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
-  };
-</script>
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
 
   <meta name="description" content="在如今的NLP领域中，预训练模型占据着愈发重要的地位。而BERT的出世，更是几乎横扫了NLP中所有的任务记录。本篇博客将详解几大预训练模型：ELMo、GPT、BERT、XLNet、ERNIE、ALBERT。(下图是可爱的bert😋注意，这真不是芝麻街啊喂！)">
 <meta property="og:type" content="article">
@@ -87,10 +62,9 @@
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome: false,
-    isPost: true,
-    isPage: false,
-    isArchive: false
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
   };
 </script>
 
@@ -133,18 +107,6 @@
 
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
-  <div class="site-meta">
-
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">codewithzichao</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">Confident，Modest，Patient</p>
-  </div>
-
   <div class="site-nav-toggle">
     <div class="toggle" aria-label="Toggle navigation bar">
       <span class="toggle-line toggle-line-first"></span>
@@ -152,11 +114,27 @@
       <span class="toggle-line toggle-line-last"></span>
     </div>
   </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">codewithzichao</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Confident，Modest，Patient</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
 </div>
 
 
+
+
 <nav class="site-nav">
-  
   <ul id="menu" class="menu">
         <li class="menu-item menu-item-home">
 
@@ -183,39 +161,12 @@
     <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
 
   </li>
-        <li class="menu-item menu-item-friends">
-
-    <a href="/Friends/" rel="section"><i class="fa fa-fw fa-address-book"></i>Friends</a>
-
-  </li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
-        </a>
-      </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="popup search-popup">
-    <div class="search-header">
-  <span class="search-icon">
-    <i class="fa fa-search"></i>
-  </span>
-  <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="none"
-           placeholder="Searching..." spellcheck="false"
-           type="text" id="search-input">
-  </div>
-  <span class="popup-btn-close">
-    <i class="fa fa-times-circle"></i>
-  </span>
-</div>
-<div id="search-result"></div>
 
-</div>
-<div class="search-pop-overlay"></div>
 
-  </div>
+
+
 </div>
     </header>
 
@@ -225,26 +176,23 @@
     <span>0%</span>
   </div>
 
-  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
-
 
     <main class="main">
       <div class="main-inner">
         <div class="content-wrap">
           
 
-          <div class="content">
+          <div class="content post posts-expand">
             
 
-  <div class="posts-expand">
-      
+    
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="zichao">
       <meta itemprop="description" content="Just learning">
     </span>
@@ -259,9 +207,6 @@
 
         <div class="post-meta">
             <span class="post-meta-item">
-
-            
-
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
@@ -282,26 +227,15 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/" itemprop="url" rel="index">
-                    <span itemprop="name">NLP</span>
-                  </a>
+                  <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index">
-                    <span itemprop="name">预训练模型</span>
-                  </a>
+                  <a href="/categories/NLP/%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index"><span itemprop="name">预训练模型</span></a>
                 </span>
             </span>
 
           
-            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">Views: </span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span>
 
         </div>
       </header>
@@ -313,13 +247,15 @@
 
       
         <p>在如今的NLP领域中，预训练模型占据着愈发重要的地位。而BERT的出世，更是几乎横扫了NLP中所有的任务记录。本篇博客将详解几大预训练模型：ELMo、GPT、BERT、XLNet、ERNIE、ALBERT。(下图是可爱的bert😋注意，这真不是芝麻街啊喂！)</p>
-<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/0.bert.jpg" alt></p>
+<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/0.bert.jpg"></p>
 <a id="more"></a>
 <blockquote>
 <p>本篇文章致力于讲解清楚各个预训练语言模型的原理，但是细节部分不会展开讨论，譬如transformer架构的原理、self-attention的原理、highway network的原理等等，这些基础的东西请自行查找资料进行补充～</p>
 </blockquote>
-<h2 id="ELMo模型介绍"><a href="#ELMo模型介绍" class="headerlink" title="ELMo模型介绍"></a>ELMo模型介绍</h2><p>ELMo模型，全称：Embedding from Language Models。这个模型所要解决的问题是：<strong>1.词向量要更好地表达语法与语义等信息；2.单词在不同的上下文会有不同的意思，而传统的word2vec等word embedding模型，每一个单词的词向量都是固定的，也就是与上下文无关，这对于处理单词的多义性非常地不友好。</strong>所以，ELMo模型就是利用深度的双向LSTM模型来解决这些问题。</p>
-<h3 id="ELMo模型的大体结结构"><a href="#ELMo模型的大体结结构" class="headerlink" title="ELMo模型的大体结结构"></a>ELMo模型的大体结结构</h3><p>ELMo模型的大体结构是：多层的biLSTM语言模型。结果如下：</p>
+<h2 id="elmo模型介绍">ELMo模型介绍</h2>
+<p>ELMo模型，全称：Embedding from Language Models。这个模型所要解决的问题是：<strong>1.词向量要更好地表达语法与语义等信息；2.单词在不同的上下文会有不同的意思，而传统的word2vec等word embedding模型，每一个单词的词向量都是固定的，也就是与上下文无关，这对于处理单词的多义性非常地不友好。</strong>所以，ELMo模型就是利用深度的双向LSTM模型来解决这些问题。</p>
+<h3 id="elmo模型的大体结结构">ELMo模型的大体结结构</h3>
+<p>ELMo模型的大体结构是：多层的biLSTM语言模型。结果如下：</p>
 <p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/0.png" style="zoom: 67%;"></p>
 <ul>
 <li>首先是输入<code>Input Sentence</code>。它的shape是<code>(B,W,C)</code>。其中，<code>B</code>表示batch_size，<code>W</code>表示一个句子的token的数目， <code>C</code>表示一个token的最大字符数，在论文里是固定的数目：50。在这里，需要明确的是：<strong>ELMo模型是以字符为单位进行编码的。</strong></li>
@@ -328,7 +264,8 @@
 <li>最后，将<code>(L+1,B,W,2*D)</code>的输出作为 scalar Mixer的输入，其实就是将这L+1个输出<strong>进行加权平均并且放缩</strong>，最终的输出的维度是：<code>(B,W,2*D)</code>。这就是最终生成的ELMo词向量。</li>
 </ul>
 <p>下面来具体介绍一下每一层的结构。</p>
-<h3 id="Char-Encoder-Layer"><a href="#Char-Encoder-Layer" class="headerlink" title="Char Encoder Layer"></a>Char Encoder Layer</h3><p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/1.png" style="zoom:80%;"></p>
+<h3 id="char-encoder-layer">Char Encoder Layer</h3>
+<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/1.png" style="zoom:80%;"></p>
 <ul>
 <li>char encoder layer的输入维度是<code>(B,W,C)</code>，然后需要被reshape为<code>(B*W,C)</code>。之后针对每一个token的每一个字符进行编码。字符表总共有262个，其中，0-255是unicode编码，其余的是：<code>&lt;bos&gt;,&lt;eos&gt;,&lt;bow&gt;,&lt;eow&gt;,&lt;pow&gt;,&lt;pos&gt;</code>。其中每一个字符的embeddng的维度是d。所以，整个词表的维度是：<code>262*d</code>。经过char embedding之后，输出为：<code>(B*W,C,d)</code>。</li>
 <li>紧接着，我们需要使用一维卷积。这里需要注意的是：<strong>并不是在纵向上叠加很多卷积层，而是在横向上使用若干个一维卷积层</strong>。在ELMo中，使用了m个一维卷积。以第一个为例：卷积核为k1，个数为d1，那么一维卷积后得到的维度是：<code>(B*W,C1,d1)</code>；接着，再使用maxpooling(之所以要使用maxpooling，是因为经过卷积之后，各个向量维度可能不一致，无法合并，所以才需要进行pooling操作)，从中选择出最大的单词，其维度变为：<code>(B*W,d1)</code>，最后再经过激活函数，就完成了一个操作。</li>
@@ -336,25 +273,27 @@
 <li>接着，我们在经过若干个highway层。所谓的highway层的作用与残差连接是一样的，能够让网络训练的效率随着深度的增加不降低。具体的公式请参看highway的原始论文。</li>
 <li>最后，需要进行一个线性变换，将维度从<code>(B*W,(d1+d2+d3+...+dm))</code>变为<code>(B,W,D)</code>。这里的<code>D</code>是最后我们得到的ELMo词向量维度的一半。</li>
 </ul>
-<h3 id="biLSTM-layers"><a href="#biLSTM-layers" class="headerlink" title="biLSTM layers"></a>biLSTM layers</h3><p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/2.png" style="zoom:80%;"></p>
+<h3 id="bilstm-layers">biLSTM layers</h3>
+<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/2.png" style="zoom:80%;"></p>
 <ul>
 <li>biLSTM layers是接在 char encoder layer之后的，它的输入维度是：<code>(B,W,D)</code>。biLSTM相信大家都很熟悉了，在这里，假设LSTM的 hidden state的维度是h，那么LSTM的输出是<code>(B,W,h)</code>。当然，我们需要进行一个线性变换，将维度从<code>(B,W,h)</code>变成<code>(B,W,D)</code>。由于是双向的，所以，我们concat之后，得到的一层的输出是：<code>(B,W,2D)</code>。</li>
 <li><strong>注意，在biLSTM层，每一层的LSTM的输出作为下一层LSTM的输入。假设有L层biLSTM，那么，我们最后得到的输出向量个数为L+1个，因为最初的char encoder layer的输出也要算进去。</strong>所以biLSTM layers最终的输出维度是：<code>(L+1,B,W,2D)</code>。</li>
 </ul>
 <p><strong>这里需要着重讲一下ELMo中biLSTM的使用，这也是其与BERT最大的不同。</strong></p>
-<p>在ELMo中，其实是训练了两个正反向的语言模型。前向的语言模型的概率如下：</p>
-<script type="math/tex; mode=display">
-P(t_1,t_2,...,t_N)=\prod_{k=1}^{N}P(t_k|t_1,t_2,..,t_{k-1})</script><p>后向的语言模型的概率如下：</p>
-<script type="math/tex; mode=display">
-P(t_1,t_2,...,t_N)=\prod_{k=1}^{N}P(t_k|t_{k+1},t_{k+2},..,t_{N})</script><p>ELMo模型的目标函数是：</p>
-<script type="math/tex; mode=display">
-maximize \ \sum_{k=1}^{N}(logP(t_k|t_1,t_2,...,t_{k-1},\theta_x,\overrightarrow{\theta_{LSTM}},\theta_s)+logP(t_k|t_{k+1},t_{k+2},...,t_{N},\theta_x,\overleftarrow{\theta_{LSTM}},\theta_s))</script><p>其中$\theta_x$表示词嵌入的参数；$\theta_s$表示softmax之前的参数，即输出层的参数；$\overrightarrow{\theta_{LSTM}},,\overleftarrow{\theta_{LSTM}}$表示biLSTM层的参数。所以，我们可以看出，<strong>ELMo模型是分别训练两个LM，并不是真正的双向语言模型，这就是ELMo模型与BERT最大的区别。</strong></p>
-<h3 id="Scalar-Mixer"><a href="#Scalar-Mixer" class="headerlink" title="Scalar Mixer"></a>Scalar Mixer</h3><p>在biLSTM layers之后，我们需要输入到scalar mixer，即做一个变换，得到最终的ELMo词向量。我们需要注意的是，在每一个位置k，每一层都会生成一个关于词向量的表示$\overrightarrow {h_{k,j}^{LM}}$。其中，j表示第j层。一个L层的biLSTM，会生成2L+1个词汇表征。</p>
-<script type="math/tex; mode=display">
+<p>在ELMo中，其实是训练了两个正反向的语言模型。前向的语言模型的概率如下： <span class="math display">\[
+P(t_1,t_2,...,t_N)=\prod_{k=1}^{N}P(t_k|t_1,t_2,..,t_{k-1})
+\]</span> 后向的语言模型的概率如下： <span class="math display">\[
+P(t_1,t_2,...,t_N)=\prod_{k=1}^{N}P(t_k|t_{k+1},t_{k+2},..,t_{N})
+\]</span> ELMo模型的目标函数是： <span class="math display">\[
+maximize \ \sum_{k=1}^{N}(logP(t_k|t_1,t_2,...,t_{k-1},\theta_x,\overrightarrow{\theta_{LSTM}},\theta_s)+logP(t_k|t_{k+1},t_{k+2},...,t_{N},\theta_x,\overleftarrow{\theta_{LSTM}},\theta_s))
+\]</span> 其中<span class="math inline">\(\theta_x\)</span>表示词嵌入的参数；<span class="math inline">\(\theta_s\)</span>表示softmax之前的参数，即输出层的参数；<span class="math inline">\(\overrightarrow{\theta_{LSTM}},,\overleftarrow{\theta_{LSTM}}\)</span>表示biLSTM层的参数。所以，我们可以看出，<strong>ELMo模型是分别训练两个LM，并不是真正的双向语言模型，这就是ELMo模型与BERT最大的区别。</strong></p>
+<h3 id="scalar-mixer">Scalar Mixer</h3>
+<p>在biLSTM layers之后，我们需要输入到scalar mixer，即做一个变换，得到最终的ELMo词向量。我们需要注意的是，在每一个位置k，每一层都会生成一个关于词向量的表示<span class="math inline">\(\overrightarrow {h_{k,j}^{LM}}\)</span>。其中，j表示第j层。一个L层的biLSTM，会生成2L+1个词汇表征。 <span class="math display">\[
 R_k=\{h_{k,j}^{LM}|j=0,...,L\},\\
-h_{k,j}^{LM}=[\overrightarrow {h_{k,j}^{LM}},\overleftarrow {h_{k,j}^{LM}}]</script><p>第k个位置的最终的词向量如下公式：</p>
-<script type="math/tex; mode=display">
-ELMo_k=\gamma\sum_{j=0}^{L}s_jh_{k,j}^{LM}</script><p>其中，$s_j$表示经过softmax之后的概率值，可以理解为各个层的输出的权重；常数参数$\gamma$是缩放参数，用来对整个ELMo词向量进行缩放。这两个参数是需要学习的超参数。此外，<strong>每一层的输出的分布会有比较大的差别，有时候使用layer normalization。</strong>经过 scalar mixer之后，我们得到的最终的ELMo词向量的的维度是：<code>(B,W,2*D)</code>。</p>
+h_{k,j}^{LM}=[\overrightarrow {h_{k,j}^{LM}},\overleftarrow {h_{k,j}^{LM}}]
+\]</span> 第k个位置的最终的词向量如下公式： <span class="math display">\[
+ELMo_k=\gamma\sum_{j=0}^{L}s_jh_{k,j}^{LM}
+\]</span> 其中，<span class="math inline">\(s_j\)</span>表示经过softmax之后的概率值，可以理解为各个层的输出的权重；常数参数<span class="math inline">\(\gamma\)</span>是缩放参数，用来对整个ELMo词向量进行缩放。这两个参数是需要学习的超参数。此外，<strong>每一层的输出的分布会有比较大的差别，有时候使用layer normalization。</strong>经过 scalar mixer之后，我们得到的最终的ELMo词向量的的维度是：<code>(B,W,2*D)</code>。</p>
 <p>之后如果介入NLP下游任务，那么可以固定ELMo模型，不让其参与训练，也可以让ELMo模型参与训练，对词向量模型进行fine-tune。</p>
 <p><strong>总结，ELMo的优势在于：</strong></p>
 <ul>
@@ -362,32 +301,39 @@ ELMo_k=\gamma\sum_{j=0}^{L}s_jh_{k,j}^{LM}</script><p>其中，$s_j$表示经过
 <li>使用了深层网络的所有的输出，比只是用顶层的LSTM layer更好；具体来说，低层的LSTM layer能够表示单词的语法信息；高层的LSTM layer能够表示单词的语义信息；</li>
 <li>基于字符进行embedding，解决了OOV问题。<strong>但是注意，我们最后得到的是词向量！</strong></li>
 </ul>
-<h2 id="GPT模型介绍"><a href="#GPT模型介绍" class="headerlink" title="GPT模型介绍"></a>GPT模型介绍</h2><p>GPT模型，全称：Generative Pre-Training。它的整个过程分为两个阶段：<strong>1.无监督的预训练；2.有监督的微调。</strong>下面依次介绍这两个阶段。</p>
-<h3 id="pre-training"><a href="#pre-training" class="headerlink" title="pre-training"></a>pre-training</h3><p>GPT模型，采用的是Transformer的 decoder部分作为language model，但是稍微有点不同：其去掉了encoder-decoder attention layer。它的目标函数是：</p>
-<script type="math/tex; mode=display">
-maximize \ L_1= \sum_{i}logP(u_i|u_{i-k},u_{i-k+1},...,u_{i-1};\theta)</script><p>这就是一般的LM的目标函数。其中，$k$表示的是context window。(使用了markov假设？) $\theta$表示网络的参数；我们使用SGD来进行训练。</p>
-<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/3.jpg" alt></p>
-<p>上图就是GPT的模型。左边就是使用transformer的去掉了encoder-decoder attention layer的decoder。注意，<strong>既然使用了decoder部分，那么网络在预测当前词的时候，就不能看到未来的信息，并且也无法并行化操作。</strong>如果使用公式来表示的话，则有：</p>
-<script type="math/tex; mode=display">
+<h2 id="gpt模型介绍">GPT模型介绍</h2>
+<p>GPT模型，全称：Generative Pre-Training。它的整个过程分为两个阶段：<strong>1.无监督的预训练；2.有监督的微调。</strong>下面依次介绍这两个阶段。</p>
+<h3 id="pre-training">pre-training</h3>
+<p>GPT模型，采用的是Transformer的 decoder部分作为language model，但是稍微有点不同：其去掉了encoder-decoder attention layer。它的目标函数是： <span class="math display">\[
+maximize \ L_1= \sum_{i}logP(u_i|u_{i-k},u_{i-k+1},...,u_{i-1};\theta)
+\]</span> 这就是一般的LM的目标函数。其中，<span class="math inline">\(k\)</span>表示的是context window。(使用了markov假设？) <span class="math inline">\(\theta\)</span>表示网络的参数；我们使用SGD来进行训练。</p>
+<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/3.jpg"></p>
+<p>上图就是GPT的模型。左边就是使用transformer的去掉了encoder-decoder attention layer的decoder。注意，<strong>既然使用了decoder部分，那么网络在预测当前词的时候，就不能看到未来的信息，并且也无法并行化操作。</strong>如果使用公式来表示的话，则有： <span class="math display">\[
 h_0=UW_e+W_p \\
 h_l=transformer_block(h_{l-1}),l\in[1,L]       \\
-P(u)=softmax(h_LW)</script><h3 id="fine-tune"><a href="#fine-tune" class="headerlink" title="fine-tune"></a>fine-tune</h3><p>以分类任务为例，我们在使用LM得到最后一步的输出之后，我们再接上一个线性层。譬如现在有一个句子，表示为：$(x_1,x_2,…,x_m)$，其标签为$y$。我们使用LM得到最后一个输出是$h_l^m$，在将其喂入一个线性层，从而得到结果，表示如下：</p>
-<script type="math/tex; mode=display">
-P(y|x_1,x_2,...,x_m)=softmax(h_l^mW_y)</script><p>目标函数如下：</p>
-<script type="math/tex; mode=display">
-maximize \ L_2=\sum_{x,y}logP(y|x_1,x_2,...,x_m)</script><p>那么，我们将LM作为一个辅助的目标函数，这样做的好处有两个：1. 提高模型的泛化能力；2. 加速收敛。如下：</p>
-<script type="math/tex; mode=display">
-maximize \ L_3=L_2+\lambda L_1</script><p>模型的一些修正细节：</p>
-<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/4.jpg" alt></p>
+P(u)=softmax(h_LW)
+\]</span></p>
+<h3 id="fine-tune">fine-tune</h3>
+<p>以分类任务为例，我们在使用LM得到最后一步的输出之后，我们再接上一个线性层。譬如现在有一个句子，表示为：<span class="math inline">\((x_1,x_2,...,x_m)\)</span>，其标签为<span class="math inline">\(y\)</span>。我们使用LM得到最后一个输出是<span class="math inline">\(h_l^m\)</span>，在将其喂入一个线性层，从而得到结果，表示如下： <span class="math display">\[
+P(y|x_1,x_2,...,x_m)=softmax(h_l^mW_y)
+\]</span></p>
+<p>目标函数如下： <span class="math display">\[
+maximize \ L_2=\sum_{x,y}logP(y|x_1,x_2,...,x_m)
+\]</span> 那么，我们将LM作为一个辅助的目标函数，这样做的好处有两个：1. 提高模型的泛化能力；2. 加速收敛。如下： <span class="math display">\[
+maximize \ L_3=L_2+\lambda L_1
+\]</span> 模型的一些修正细节：</p>
+<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/4.jpg"></p>
 <p><strong>总结，GPT模型的优势如下：</strong></p>
 <ul>
 <li>使用了transformer而不是biLSTM，这样大大增强了模型的捕捉依赖关系的能力；</li>
 <li>GPT是把模型接入到下游任务进行训练，可以加上原来的LM作为辅助目标函数。不侧重生成offline的词向量。</li>
 </ul>
-<h2 id="BERT模型介绍"><a href="#BERT模型介绍" class="headerlink" title="BERT模型介绍"></a>BERT模型介绍</h2><p>终于写到BERT啦，哈哈哈。BERT可以说是带火了预训练模型，BERT系现在大有统一NLP之势啊。废话不多说，直接进入正题！🤩</p>
+<h2 id="bert模型介绍">BERT模型介绍</h2>
+<p>终于写到BERT啦，哈哈哈。BERT可以说是带火了预训练模型，BERT系现在大有统一NLP之势啊。废话不多说，直接进入正题！🤩</p>
 <p>BERT模型，全称叫做：Bidirectional Encoder Representations from Transformers。从名字看就很直观，BERT是双向transformer的encoder部分。它所要解决的问题是：不管ELMo还是GPT，语言模型都是单向的，而BERT的作者发现，单向语言模型限制了fine-tuning的表达能力。所以，<strong>BERT所采取的方式是：使用双向的Transformer的encoder部分进行预训练，并采用MLM与NSP两种任务对BERT进行pre-training，之后在对接下游任务的时候，fine-tuning。</strong></p>
-<h3 id="输入是什么？"><a href="#输入是什么？" class="headerlink" title="输入是什么？"></a>输入是什么？</h3><p>BERT的输入，可以是单个句子，也可以是句子对。<strong>但是在预训练的时候，实际上都是输入的句子对。</strong>在BERT中，使用的是BPE vocabulary，size为30000，最长的输入长度为512。之所以是512，是为了减少padding的计算浪费。这个在源码中可以看到。</p>
-<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/5.jpg" alt></p>
+<h3 id="输入是什么">输入是什么？</h3>
+<p>BERT的输入，可以是单个句子，也可以是句子对。<strong>但是在预训练的时候，实际上都是输入的句子对。</strong>在BERT中，使用的是BPE vocabulary，size为30000，最长的输入长度为512。之所以是512，是为了减少padding的计算浪费。这个在源码中可以看到。</p>
+<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/5.jpg"></p>
 <p>这是BERT的输入，有三部分：<strong>token embedding</strong>，就是每一个token的embedding，这个可以使用 word2vec的结果，也可以随机初始化；<strong>segment embedding</strong>，就是就来区别两个句子；<strong>position embedding</strong>，就是用来表示每一个token的位置信息，和transformer一样。<strong>这里需要注意的是：句子的第一个token一定是CLS，这是为了给后面做分类准备的，实际上是NSP任务来训练CLS token的。</strong></p>
 <p>BERT中给的例子如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">This text is included to make sure Unicode is handled properly: 力加勝北区ᴵᴺᵀᵃছজটডণত</span><br><span class="line">Text should be one-sentence-per-line, with empty lines between documents.</span><br><span class="line">This sample text is public domain and was randomly selected from Project Guttenberg.</span><br><span class="line"></span><br><span class="line">The rain had only ceased with the gray streaks of morning at Blazing Star, and the settlement awoke to a moral sense of cleanliness, and the finding of forgotten knives, tin cups, and smaller camp utensils, where the heavy showers had washed away the debris and dust heaps before the cabin doors.</span><br><span class="line">Indeed, it was recorded in Blazing Star that a fortunate early riser had once picked up on the highway a solid chunk of gold quartz which the rain had freed from its incumbering soil, and washed into immediate and glittering popularity.</span><br><span class="line">Possibly this may have been the reason why early risers in that locality, during the rainy season, adopted a thoughtful habit of body, and seldom lifted their eyes to the rifted or india-ink washed skies above them.</span><br><span class="line">&quot;Cass&quot; Beard had risen early that morning, but not with a view to discovery.</span><br><span class="line">A leak in his cabin roof,--quite consistent with his careless, improvident habits,--had roused him at 4 A. M., with a flooded &quot;bunk&quot; and wet blankets.</span><br><span class="line">The chips from his wood pile refused to kindle a fire to dry his bed-clothes, and he had recourse to a more provident neighbor&#39;s to supply the deficiency.</span><br><span class="line">This was nearly opposite.</span><br><span class="line">Mr. Cassius crossed the highway, and stopped suddenly.</span><br><span class="line">Something glittered in the nearest red pool before him.</span><br><span class="line">Gold, surely!</span><br><span class="line">But, wonderful to relate, not an irregular, shapeless fragment of crude ore, fresh from Nature&#39;s crucible, but a bit of jeweler&#39;s handicraft in the form of a plain gold ring.</span><br><span class="line">Looking at it more attentively, he saw that it bore the inscription, &quot;May to Cass.&quot;</span><br><span class="line">Like most of his fellow gold-seekers, Cass was superstitious.</span><br><span class="line"></span><br><span class="line">The fountain of classic wisdom, Hypatia herself.</span><br><span class="line">As the ancient sage--the name is unimportant to a monk--pumped water nightly that he might study by day, so I, the guardian of cloaks and parasols, at the sacred doors of her lecture-room, imbibe celestial knowledge.</span><br><span class="line">From my youth I felt in me a soul above the matter-entangled herd.</span><br><span class="line">She revealed to me the glorious fact, that I am a spark of Divinity itself.</span><br><span class="line">A fallen star, I am, sir!&#39; continued he, pensively, stroking his lean stomach--&#39;a fallen star!--fallen, if the dignity of philosophy will allow of the simile, among the hogs of the lower world--indeed, even into the hog-bucket itself. Well, after all, I will show you the way to the Archbishop&#39;s.</span><br><span class="line">There is a philosophic pleasure in opening one&#39;s treasures to the modest young.</span><br><span class="line">Perhaps you will assist me by carrying this basket of fruit?&#39; And the little man jumped up, put his basket on Philammon&#39;s head, and trotted off up a neighbouring street.</span><br><span class="line">Philammon followed, half contemptuous, half wondering at what this philosophy might be, which could feed the self-conceit of anything so abject as his ragged little apish guide;</span><br><span class="line">but the novel roar and whirl of the street, the perpetual stream of busy faces, the line of curricles, palanquins, laden asses, camels, elephants, which met and passed him, and squeezed him up steps and into doorways, as they threaded their way through the great Moon-gate into the ample street beyond, drove everything from his mind but wondering curiosity, and a vague, helpless dread of that great living wilderness, more terrible than any dead wilderness of sand which he had left behind.</span><br><span class="line">Already he longed for the repose, the silence of the Laura--for faces which knew him and smiled upon him; but it was too late to turn back now.</span><br><span class="line">His guide held on for more than a mile up the great main street, crossed in the centre of the city, at right angles, by one equally magnificent, at each end of which, miles away, appeared, dim and distant over the heads of the living stream of passengers, the yellow sand-hills of the desert;</span><br><span class="line">while at the end of the vista in front of them gleamed the blue harbour, through a network of countless masts.</span><br><span class="line">At last they reached the quay at the opposite end of the street;</span><br><span class="line">and there burst on Philammon&#39;s astonished eyes a vast semicircle of blue sea, ringed with palaces and towers.</span><br><span class="line">He stopped involuntarily; and his little guide stopped also, and looked askance at the young monk, to watch the effect which that grand panorama should produce on him.</span><br></pre></td></tr></table></figure>
@@ -400,7 +346,8 @@ maximize \ L_3=L_2+\lambda L_1</script><p>模型的一些修正细节：</p>
 <li>masked_lm_labels：被MASK的token的原本的值</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tokens: [CLS] for more than a [MASK] up [MASK] great main street , [MASK] [MASK] [MASK] centre of the city , at right angles , [MASK] one equally magnificent , at each end ##ミ which , miles away , appeared , dim and distant over the heads of the living stream of passengers , the yellow [MASK] - hills of [MASK] [MASK] ; while at the end of the vista in front [MASK] them gleamed the blue harbour , through a network [SEP] possibly this may have been the reason why early rise ##rs in [MASK] locality , during the rainy season , adopted [MASK] [MASK] [MASK] of body , and seldom lifted [MASK] eyes [MASK] the rift [MASK] or india - ink washed skies above them . [SEP]</span><br><span class="line">segment_ids: 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</span><br><span class="line">is_random_next: True</span><br><span class="line">masked_lm_positions: 5 7 12 13 14 24 32 55 59 60 71 94 103 104 105 109 112 114 117</span><br><span class="line">masked_lm_labels: mile the crossed in the by of sand the desert of that a thoughtful habit and their to ##ed</span><br></pre></td></tr></table></figure>
-<h3 id="pre-training-1"><a href="#pre-training-1" class="headerlink" title="pre-training"></a>pre-training</h3><p><strong>Masked Language Model</strong></p>
+<h3 id="pre-training-1">pre-training</h3>
+<p><strong>Masked Language Model</strong></p>
 <p>标准的语言模型，是单向的，只能根据之前的所有词来预测当前词。在BERT中，使用的是双向的transformer的encoder，这样不就让单词能够看到未来的内容了吗？BERT的处理方式就是使用MLM。MLM的核心思想是：<strong>随机mask掉句子的一部分内容，然后使用上下文来预测被mask的词。</strong>在论文中，具体的是mask掉句子的15%的token。但是这样做存在一个问题：在fine-tune中，模型可能会从来没见过mask掉的词，这样就会导致与fine-tune的输入分布不一样，为了减小这个问题。论文中提出，在每次选定一个单词进行mask的时候：</p>
 <ul>
 <li>有80%的概率，使用MASK替换；</li>
@@ -410,13 +357,15 @@ maximize \ L_3=L_2+\lambda L_1</script><p>模型的一些修正细节：</p>
 <p>所以，我们可以看到，模型每次只预测15%的token，所以收敛的速度会非常慢，这也是BERT的缺陷之一，也是后来XLNet提出的原因之一。</p>
 <p><strong>Next Sentence Prediction</strong></p>
 <p>之所以设计这个任务，主要是为了解决需要确定句子对之间的关系的任务而设计的，譬如QA、文本蕴含、NLI等等。因为作者认为LM里面学不到这样的知识。这个任务要做的是：预测后面一个句子是不是前面一个句子的下一句。具体的做法是：<strong>以50%的概率选择一个句子是前面一个句子的下一句，label是：isNext；以50%的概率选择不是前面一个句子的下一句的句子，label是：NotNext。</strong>(然而，实验证明，NSP任务并没有什么用，所以，后来ALBERT改进了NSP任务，产生了很好的效果。)</p>
-<h3 id="fine-tuning"><a href="#fine-tuning" class="headerlink" title="fine-tuning"></a>fine-tuning</h3><p>fine-tuning与GPT没什么大的不痛，都是根据下游任务更改很少的顶层参数。对于分类任务，只加了一层分类层。</p>
+<h3 id="fine-tuning">fine-tuning</h3>
+<p>fine-tuning与GPT没什么大的不痛，都是根据下游任务更改很少的顶层参数。对于分类任务，只加了一层分类层。</p>
 <p><strong>总结，BERT模型的优势：</strong></p>
 <ul>
 <li>使用了transformer的encoder部分，特征抽取能力比lstm要强；</li>
 <li>使用了MLM，是真正的双向语言模型，能够使用上下文的信息来预测被MASK掉的单词。</li>
 </ul>
-<h2 id="XLNet模型介绍"><a href="#XLNet模型介绍" class="headerlink" title="XLNet模型介绍"></a>XLNet模型介绍</h2><p>XLNet模型是对BERT模型收敛太慢的改进，当然，XLNet模型并不只是这些。在了解XLNet模型之前，需要去了解transformer-xl这个模型，因为，XLNet模型就是基于transformer-xl而得来的。这里，我就不具体讲transformer-xl，简单提一下transformer-xl相较于transformer的改进的地方吧，有兴趣的筒子们可以自己去看transformer-xl的原始论文～（<strong>注意，目前基本没有延续XLNet的研究，所以这块大家如果不感兴趣的话，可以不去细看；当然也可以仔细研究，说不定在这上面就能搞出新点子也说不定哈哈～</strong>）</p>
+<h2 id="xlnet模型介绍">XLNet模型介绍</h2>
+<p>XLNet模型是对BERT模型收敛太慢的改进，当然，XLNet模型并不只是这些。在了解XLNet模型之前，需要去了解transformer-xl这个模型，因为，XLNet模型就是基于transformer-xl而得来的。这里，我就不具体讲transformer-xl，简单提一下transformer-xl相较于transformer的改进的地方吧，有兴趣的筒子们可以自己去看transformer-xl的原始论文～（<strong>注意，目前基本没有延续XLNet的研究，所以这块大家如果不感兴趣的话，可以不去细看；当然也可以仔细研究，说不定在这上面就能搞出新点子也说不定哈哈～</strong>）</p>
 <ul>
 <li>transformer-xl是基于vanilla transformer的得来的。vanilla transformer的训练方式是：将训练文本进行分段，在每一段中分别去训练LM。在预测的时候，我们使用limited context来预测下一个单词，没预测完一个单词，就讲window向右移动一个字符。这样做的缺点在于：<strong>1.单词的上下文的长度受限，在原始论文中，只能处理512长度的输入文本；2. 推理速度非常慢，每次预测一个单词，都要重新计算；3.段与段之间没有上下文依赖性，影响模型性能。</strong>transformer-xl在此基础上引入了两个两个机制：<strong>循环机制与相对位置编码。</strong></li>
 <li><strong>循环机制。</strong>循环机制的引入是为了解决段与段之间没有上下文依赖性。它能够让当前段在进行LM建模的时候，能够利用之前段的信息，从而实现长期依赖性。在预测的时候，就可以前进一整段，并且可以利用之前段的信息来预测当前的输出。</li>
@@ -428,48 +377,54 @@ maximize \ L_3=L_2+\lambda L_1</script><p>模型的一些修正细节：</p>
 <p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/20.jpg" style="zoom:67%;"></p>
 <p><strong>模型架构：基于目标感知表征的双流自注意力</strong></p>
 <p>这个还没具体细看，大致意思是：在teansformer里面，使用了token embedding+position embedding。但是如果我要预测第3个位置的单词的内容，那么，我不能提前获取到第3个位置的内容向量(token embedding)，只能只其位置向量(position embedding)，但是这在输入的时候，两个向量就已经混在一起了。所以在XLNet中，就计算了两套注意力，一个只包含它的位置信息，一个要包含它的位置信息与内容信息，以便使用。具体的，等我那天有时间了在具体写吧。。。</p>
-<h2 id="ERNIE模型介绍"><a href="#ERNIE模型介绍" class="headerlink" title="ERNIE模型介绍"></a>ERNIE模型介绍</h2><p>ERNIE是THU与华为诺亚一起提出来的针对于中文的预训练模型。(这里不得不佩服一波隔壁，NLP做的是真不错，小北要跟上啊！🧐)（发现百度也提出了ERNIE，重名了，而且似乎是百度先提出来的，好吧，那就再看一篇吧😭，似乎百度这篇读的比较顺畅！）</p>
+<h2 id="ernie模型介绍">ERNIE模型介绍</h2>
+<p>ERNIE是THU与华为诺亚一起提出来的针对于中文的预训练模型。(这里不得不佩服一波隔壁，NLP做的是真不错，小北要跟上啊！🧐)（发现百度也提出了ERNIE，重名了，而且似乎是百度先提出来的，好吧，那就再看一篇吧😭，似乎百度这篇读的比较顺畅！）</p>
 <p>ERNIE模型提出的原因：<strong>BERT等模型只是针对字或者word粒度来学习，没有充分利用文本中的词法结构、语法结构以及语义信息去建模。</strong>譬如：<code>我要买苹果手机</code>这句话，我们MASK一个词，变成：<code>我要买[MASK]果手机</code>，如果使用BERT模型，我们当然可以预测MASK掉的字是<code>苹</code>。但是BERT模型没有学到<code>苹果手机</code>是一个名词这一信息，那么，如果在未知的文本中，出现了<code>香蕉手机</code>这样的词语，那么，BERT等模型是无法对其进行很好的向量表示的。所以ERNIE模型就诞生了。ERNIE模型的核心思想是：<strong>将外部知识整合到预训练模型中，让模型能够学习到词法、语法与语义信息。</strong></p>
 <p>在ERNIE1.0中，除了BERT中的基础的masking策略，还提出了基于phrase的masking策略与基于entity的masking策略。在ERNIE中，将多个字组成的phrase与entity当一个单元，统一被mask。这样的话，模型就能够潜在的学会知识的依赖与语义依赖。</p>
 <p>在ERNIE2.0中，提出一个很重要的概念：连续学习。也就是，模型顺序训练多个任务，以便在下个任务中记住前一个任务得到的结果，从而可以不断的积累新知识。具体的可以参看论文，这是大致的思想。</p>
-<h2 id="ALBERT模型介绍"><a href="#ALBERT模型介绍" class="headerlink" title="ALBERT模型介绍"></a>ALBERT模型介绍</h2><p>ALBERT模型是对BERT模型的改进。怎么说呢，感觉ALBERT是一个调参调出来的模型🤪。它的目标是：<strong>在不损害模型性能的前提下，尽量减少BERT模型的参数。</strong>在ALBERT中，首先分析了BERT中模型的参数来源。在BERT中，参数主要分为两部分：<strong>token embedding的参数与attention、FFN层的参数</strong>。（以下所用到的图片来源于ALBERT第一作者lanzhenzhong博士的讲解。）</p>
-<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/6.jpg" alt></p>
-<h3 id="Method1-factorized-embedding-parametrization"><a href="#Method1-factorized-embedding-parametrization" class="headerlink" title="Method1:factorized embedding parametrization"></a>Method1:factorized embedding parametrization</h3><p>token embedding占参数的20%，attention于FFN层的参数占80%。那么，我们就从这两方面入手。对于token embedding方面，我们可以先将其映射到一个地位i空间，再映射为高维空间。那么为什么可以这么做呢？有两点：<strong>1. token embedding一般都是与上下文无关的，而attention层的输出一半都是与上下文有关系的，也就是说，输出层应该包含了更多的信息，所以，输出层的维度应该比token embedding的维度要高才比较合理；2. 如果让E与H相等的话，那么，整个词表的维度是V*H，那么这个词表是相当大的，梯度更新的时候，也会比较稀疏。</strong></p>
-<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/7方法一.jpg" alt></p>
+<h2 id="albert模型介绍">ALBERT模型介绍</h2>
+<p>ALBERT模型是对BERT模型的改进。怎么说呢，感觉ALBERT是一个调参调出来的模型🤪。它的目标是：<strong>在不损害模型性能的前提下，尽量减少BERT模型的参数。</strong>在ALBERT中，首先分析了BERT中模型的参数来源。在BERT中，参数主要分为两部分：<strong>token embedding的参数与attention、FFN层的参数</strong>。（以下所用到的图片来源于ALBERT第一作者lanzhenzhong博士的讲解。）</p>
+<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/6.jpg"></p>
+<h3 id="method1factorized-embedding-parametrization">Method1:factorized embedding parametrization</h3>
+<p>token embedding占参数的20%，attention于FFN层的参数占80%。那么，我们就从这两方面入手。对于token embedding方面，我们可以先将其映射到一个地位i空间，再映射为高维空间。那么为什么可以这么做呢？有两点：**1. token embedding一般都是与上下文无关的，而attention层的输出一半都是与上下文有关系的，也就是说，输出层应该包含了更多的信息，所以，输出层的维度应该比token embedding的维度要高才比较合理；2. 如果让E与H相等的话，那么，整个词表的维度是V*H，那么这个词表是相当大的，梯度更新的时候，也会比较稀疏。**</p>
+<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/7方法一.jpg"></p>
 <p>当然，这样做会损失信息，但是结果表明，损失的性能并不多，而减少的参数却高达80%以上。</p>
-<h3 id="Method2-cross-layer-parameter-sharing"><a href="#Method2-cross-layer-parameter-sharing" class="headerlink" title="Method2: cross-layer parameter sharing"></a>Method2: cross-layer parameter sharing</h3><p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/10.jpg" alt></p>
+<h3 id="method2-cross-layer-parameter-sharing">Method2: cross-layer parameter sharing</h3>
+<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/10.jpg"></p>
 <p>跨层的参数恭喜那个有两种方案：attention模块的参数共享以及FFN层的参数共享。在实验中，作者发现共享FFN的参数是导致参数下降的最主要的原因。</p>
-<h3 id="SOP—Sentence-Order-Prediction"><a href="#SOP—Sentence-Order-Prediction" class="headerlink" title="SOP—Sentence Order Prediction"></a>SOP—Sentence Order Prediction</h3><p>在BERT中，除了MLM之外，还使用了另一种任务——NSP来学习句子之间的关系，但是实现证明：NSP任务对于结果的影响并不大，原因在于：<strong>NSP任务实际上是预测两句话是采样于同一个文档中的两个连续的句子（正样本），还是采样于两个不同的文档中的句子（负样本）。</strong>所以在ALBERT中，对NSP任务进行了改造，叫做SOP任务。它的思想是：<strong>正样本的构建与BERT一样，负样本的构建则是将证样本的句子顺序调换一下。</strong>这样的话，就能够专心学习到句子之间的关系，而不会去学习topic。</p>
-<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/12.jpg" alt></p>
+<h3 id="sop--sentence-order-prediction">SOP--Sentence Order Prediction</h3>
+<p>在BERT中，除了MLM之外，还使用了另一种任务——NSP来学习句子之间的关系，但是实现证明：NSP任务对于结果的影响并不大，原因在于：<strong>NSP任务实际上是预测两句话是采样于同一个文档中的两个连续的句子（正样本），还是采样于两个不同的文档中的句子（负样本）。</strong>所以在ALBERT中，对NSP任务进行了改造，叫做SOP任务。它的思想是：<strong>正样本的构建与BERT一样，负样本的构建则是将证样本的句子顺序调换一下。</strong>这样的话，就能够专心学习到句子之间的关系，而不会去学习topic。</p>
+<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/12.jpg"></p>
 <p>结果证明，SOP任务比NSP任务表现更加良好。</p>
-<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/13.jpg" alt></p>
-<h3 id="去掉Dropout"><a href="#去掉Dropout" class="headerlink" title="去掉Dropout"></a>去掉Dropout</h3><p>dropout在防止过拟合上有显著效果，但是实际上MLM很难过拟合，去掉dropout，由于可以腾出很多临时变量占用的内存而使得内存上有所提升。</p>
+<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/13.jpg"></p>
+<h3 id="去掉dropout">去掉Dropout</h3>
+<p>dropout在防止过拟合上有显著效果，但是实际上MLM很难过拟合，去掉dropout，由于可以腾出很多临时变量占用的内存而使得内存上有所提升。</p>
 <p><strong>总结，ALBERT模型的优势如下：</strong></p>
 <ul>
 <li>ALBERT模型通过两种技术，降低了参数的数量；</li>
 <li>通过重新设计NSP任务，得到了SOP任务，最终改善了模型性能；</li>
 <li>减少参数，同时也就提高了模型的capacity，即可以通过将网络变深变宽，提升模型。</li>
 </ul>
-<h2 id="预训练模型总结"><a href="#预训练模型总结" class="headerlink" title="预训练模型总结"></a>预训练模型总结</h2><ul>
-<li><p>整个预训练模型可分为两类：feature based approach与fine-tuning approach。前者的代表性模型就是ELMo，后者的代表性模型就是GPT与BERT。</p>
-</li>
-<li><p>整个语言模型有两种：AR与AE。AR语言模型指的是使用上下文单词来预测下一个单词的模型。上下文单词被限制了方向：前向或者后向。代表性模型有：ELMo、GPT、GPT2、XLNet。AE模型就是从损坏的数据中重建原始数据。也就是，我们使用MASK标记来替换原单词，然后使用上下文来预测MASK掉的单词。代表性模型有：BERT、ALBERT。</p>
-</li>
-<li>另外，说说我的看法吧，feature-based的预训练模型基本上大势已去，从word2vec、fasttext、ELMo等等；现在，pre-train+fine-tune两段式的预训练模型越来越受到欢迎，从GPT、BERT、XLNet、ALBERT、T5等等。未来NLP真有可能像cv那样，一个模型统一天下。我们只需要去改进模型所使用的特征抽取器就可以了。从RNN、CNN到transformer，特征抽取的能力越来越强，未来，我们只要不断改进transformer或者提出比transformer更好的模型，就能够大大提升模型在各项NLP任务上的表现。对于我们NLPer来说，是一件好事吧，因为不需要再去学很多千奇百怪的trick，只要去提升基础模型的能力，就可以得到很大的提高。</li>
+<h2 id="预训练模型总结">预训练模型总结</h2>
+<ul>
+<li><p>整个预训练模型可分为两类：feature based approach与fine-tuning approach。前者的代表性模型就是ELMo，后者的代表性模型就是GPT与BERT。</p></li>
+<li><p>整个语言模型有两种：AR与AE。AR语言模型指的是使用上下文单词来预测下一个单词的模型。上下文单词被限制了方向：前向或者后向。代表性模型有：ELMo、GPT、GPT2、XLNet。AE模型就是从损坏的数据中重建原始数据。也就是，我们使用MASK标记来替换原单词，然后使用上下文来预测MASK掉的单词。代表性模型有：BERT、ALBERT。</p></li>
+<li><p>另外，说说我的看法吧，feature-based的预训练模型基本上大势已去，从word2vec、fasttext、ELMo等等；现在，pre-train+fine-tune两段式的预训练模型越来越受到欢迎，从GPT、BERT、XLNet、ALBERT、T5等等。未来NLP真有可能像cv那样，一个模型统一天下。我们只需要去改进模型所使用的特征抽取器就可以了。从RNN、CNN到transformer，特征抽取的能力越来越强，未来，我们只要不断改进transformer或者提出比transformer更好的模型，就能够大大提升模型在各项NLP任务上的表现。对于我们NLPer来说，是一件好事吧，因为不需要再去学很多千奇百怪的trick，只要去提升基础模型的能力，就可以得到很大的提高。</p></li>
 </ul>
-<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><ol>
+<h2 id="参考文献">参考文献</h2>
+<ol type="1">
 <li>《Deep contextualized word representations》(ELMo)</li>
-<li><a href="https://blog.csdn.net/Magical_Bubble/article/details/89160032" target="_blank" rel="noopener">https://blog.csdn.net/Magical_Bubble/article/details/89160032</a> (ELMo)</li>
+<li>https://blog.csdn.net/Magical_Bubble/article/details/89160032 (ELMo)</li>
 <li>《Improving Language Understanding by Generative Pre-Training》(GPT)</li>
-<li><a href="https://blog.csdn.net/Magical_Bubble/article/details/89497002" target="_blank" rel="noopener">https://blog.csdn.net/Magical_Bubble/article/details/89497002</a> (GPT)</li>
+<li>https://blog.csdn.net/Magical_Bubble/article/details/89497002 (GPT)</li>
 <li>《BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding》</li>
-<li><a href="https://blog.csdn.net/Magical_Bubble/article/details/89514057" target="_blank" rel="noopener">https://blog.csdn.net/Magical_Bubble/article/details/89514057</a>. (BERT)</li>
+<li>https://blog.csdn.net/Magical_Bubble/article/details/89514057. (BERT)</li>
 <li>《XLNet: Generalized Autoregressive Pretraining for Language Understanding》</li>
-<li><a href="https://blog.csdn.net/weixin_37947156/article/details/93035607" target="_blank" rel="noopener">https://blog.csdn.net/weixin_37947156/article/details/93035607</a> (XLNet)</li>
-<li><a href="https://blog.csdn.net/u012526436/article/details/93196139" target="_blank" rel="noopener">https://blog.csdn.net/u012526436/article/details/93196139</a> (XLNet)</li>
-<li>《ALBERT: A LITE BERT FOR SELF—SUPERVISED LEARNING OF LANGUAGE REPRESENTATIONS》</li>
+<li>https://blog.csdn.net/weixin_37947156/article/details/93035607 (XLNet)</li>
+<li>https://blog.csdn.net/u012526436/article/details/93196139 (XLNet)</li>
+<li>《ALBERT: A LITE BERT FOR SELF--SUPERVISED LEARNING OF LANGUAGE REPRESENTATIONS》</li>
 <li>《ERNIE: Enhanced Representation through Knowledge Integration》</li>
-<li><a href="https://blog.csdn.net/PaddlePaddle/article/details/102713947" target="_blank" rel="noopener">https://blog.csdn.net/PaddlePaddle/article/details/102713947</a> (ERNIE)</li>
+<li>https://blog.csdn.net/PaddlePaddle/article/details/102713947 (ERNIE)</li>
 </ol>
 
     </div>
@@ -477,26 +432,6 @@ maximize \ L_3=L_2+\lambda L_1</script><p>模型的一些修正细节：</p>
     
     
     
-        <div class="reward-container">
-  <div>Would you like to buy me a cup of coffee☕️～</div>
-  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
-    Donate
-  </button>
-  <div id="qr" style="display: none;">
-      
-      <div style="display: inline-block;">
-        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
-        <p>WeChat Pay</p>
-      </div>
-      
-      <div style="display: inline-block;">
-        <img src="/images/alipay.jpg" alt="zichao Alipay">
-        <p>Alipay</p>
-      </div>
-
-  </div>
-</div>
-
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -532,11 +467,32 @@ maximize \ L_3=L_2+\lambda L_1</script><p>模型的一些修正细节：</p>
   
   
 
-  </div>
 
 
           </div>
           
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
 
         </div>
           
@@ -561,14 +517,12 @@ maximize \ L_3=L_2+\lambda L_1</script><p>模型的一些修正细节：</p>
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ELMo模型介绍"><span class="nav-number">1.</span> <span class="nav-text">ELMo模型介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ELMo模型的大体结结构"><span class="nav-number">1.1.</span> <span class="nav-text">ELMo模型的大体结结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Char-Encoder-Layer"><span class="nav-number">1.2.</span> <span class="nav-text">Char Encoder Layer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#biLSTM-layers"><span class="nav-number">1.3.</span> <span class="nav-text">biLSTM layers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Scalar-Mixer"><span class="nav-number">1.4.</span> <span class="nav-text">Scalar Mixer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GPT模型介绍"><span class="nav-number">2.</span> <span class="nav-text">GPT模型介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pre-training"><span class="nav-number">2.1.</span> <span class="nav-text">pre-training</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fine-tune"><span class="nav-number">2.2.</span> <span class="nav-text">fine-tune</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#BERT模型介绍"><span class="nav-number">3.</span> <span class="nav-text">BERT模型介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#输入是什么？"><span class="nav-number">3.1.</span> <span class="nav-text">输入是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pre-training-1"><span class="nav-number">3.2.</span> <span class="nav-text">pre-training</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fine-tuning"><span class="nav-number">3.3.</span> <span class="nav-text">fine-tuning</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XLNet模型介绍"><span class="nav-number">4.</span> <span class="nav-text">XLNet模型介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ERNIE模型介绍"><span class="nav-number">5.</span> <span class="nav-text">ERNIE模型介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ALBERT模型介绍"><span class="nav-number">6.</span> <span class="nav-text">ALBERT模型介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Method1-factorized-embedding-parametrization"><span class="nav-number">6.1.</span> <span class="nav-text">Method1:factorized embedding parametrization</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Method2-cross-layer-parameter-sharing"><span class="nav-number">6.2.</span> <span class="nav-text">Method2: cross-layer parameter sharing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SOP—Sentence-Order-Prediction"><span class="nav-number">6.3.</span> <span class="nav-text">SOP—Sentence Order Prediction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#去掉Dropout"><span class="nav-number">6.4.</span> <span class="nav-text">去掉Dropout</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预训练模型总结"><span class="nav-number">7.</span> <span class="nav-text">预训练模型总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">8.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#elmo模型介绍"><span class="nav-number">1.</span> <span class="nav-text">ELMo模型介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#elmo模型的大体结结构"><span class="nav-number">1.1.</span> <span class="nav-text">ELMo模型的大体结结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#char-encoder-layer"><span class="nav-number">1.2.</span> <span class="nav-text">Char Encoder Layer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bilstm-layers"><span class="nav-number">1.3.</span> <span class="nav-text">biLSTM layers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#scalar-mixer"><span class="nav-number">1.4.</span> <span class="nav-text">Scalar Mixer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gpt模型介绍"><span class="nav-number">2.</span> <span class="nav-text">GPT模型介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pre-training"><span class="nav-number">2.1.</span> <span class="nav-text">pre-training</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fine-tune"><span class="nav-number">2.2.</span> <span class="nav-text">fine-tune</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bert模型介绍"><span class="nav-number">3.</span> <span class="nav-text">BERT模型介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#输入是什么"><span class="nav-number">3.1.</span> <span class="nav-text">输入是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pre-training-1"><span class="nav-number">3.2.</span> <span class="nav-text">pre-training</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fine-tuning"><span class="nav-number">3.3.</span> <span class="nav-text">fine-tuning</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#xlnet模型介绍"><span class="nav-number">4.</span> <span class="nav-text">XLNet模型介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ernie模型介绍"><span class="nav-number">5.</span> <span class="nav-text">ERNIE模型介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#albert模型介绍"><span class="nav-number">6.</span> <span class="nav-text">ALBERT模型介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#method1factorized-embedding-parametrization"><span class="nav-number">6.1.</span> <span class="nav-text">Method1:factorized embedding parametrization</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#method2-cross-layer-parameter-sharing"><span class="nav-number">6.2.</span> <span class="nav-text">Method2: cross-layer parameter sharing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sop--sentence-order-prediction"><span class="nav-number">6.3.</span> <span class="nav-text">SOP--Sentence Order Prediction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#去掉dropout"><span class="nav-number">6.4.</span> <span class="nav-text">去掉Dropout</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预训练模型总结"><span class="nav-number">7.</span> <span class="nav-text">预训练模型总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">8.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="zichao"
-      src="/images/photo.jpg">
   <p class="site-author-name" itemprop="name">zichao</p>
   <div class="site-description" itemprop="description">Just learning</div>
 </div>
@@ -595,17 +549,6 @@ maximize \ L_3=L_2+\lambda L_1</script><p>模型的一些修正细节：</p>
       </div>
   </nav>
 </div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
-      </span>
-  </div>
 
 
 
@@ -623,42 +566,21 @@ maximize \ L_3=L_2+\lambda L_1</script><p>模型的一些修正细节：</p>
       <div class="footer-inner">
         
 
+        
+
 <div class="copyright">
   
   &copy; 
   <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
-    <i class="fa fa-heart"></i>
+    <i class="fa fa-user"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">zichao</span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a>
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
 
         
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-user"></i>
-      </span>
-      <span class="site-uv" title="Total Visitors">
-        <span id="busuanzi_value_site_uv"></span>
-      </span>
-    </span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-eye"></i>
-      </span>
-      <span class="site-pv" title="Total Views">
-        <span id="busuanzi_value_site_pv"></span>
-      </span>
-    </span>
-</div>
 
 
 
@@ -667,7 +589,6 @@ maximize \ L_3=L_2+\lambda L_1</script><p>模型的一些修正细节：</p>
 
 
 
-        
       </div>
     </footer>
   </div>
@@ -695,92 +616,18 @@ maximize \ L_3=L_2+\lambda L_1</script><p>模型的一些修正细节：</p>
 
 
 
-  
-<script src="/js/local-search.js"></script>
 
 
 
 
 
 
-
-
-
-<script>
-if (document.querySelectorAll('div.pdf').length) {
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
-    document.querySelectorAll('div.pdf').forEach(element => {
-      PDFObject.embed(element.getAttribute('target'), element, {
-        pdfOpenParams: {
-          navpanes: 0,
-          toolbar: 0,
-          statusbar: 0,
-          pagemode: 'thumbs',
-          view: 'FitH'
-        },
-        PDFJS_URL: '/lib/pdf/web/viewer.html',
-        height: element.getAttribute('height') || '500px'
-      });
-    });
-  }, window.PDFObject);
-}
-</script>
 
 
 
 
 
   
-
-  
-      
-<script type="text/x-mathjax-config">
-
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      equationNumbers: {
-        autoNumber: 'AMS'
-      }
-    }
-  });
-
-  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
-    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
-      if (data.display) {
-        var next = data.script.nextSibling;
-        while (next && next.nodeName.toLowerCase() === '#text') {
-          next = next.nextSibling;
-        }
-        if (next && next.nodeName.toLowerCase() === 'br') {
-          next.parentNode.removeChild(next);
-        }
-      }
-    });
-  });
-
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i = 0; i < all.length; i += 1) {
-      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
-      if (element.nodeName.toLowerCase() == 'li') {
-        element = element.parentNode;
-      }
-      element.classList.add('has-jax');
-    }
-  });
-</script>
-<script>
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
-    MathJax.Hub.Typeset();
-  }, window.MathJax);
-</script>
-
-    
 
   
 

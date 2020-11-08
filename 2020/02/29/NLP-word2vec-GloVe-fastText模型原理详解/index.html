@@ -15,35 +15,10 @@
 
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
 
-
 <script id="hexo-configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    hostname: new URL('http://codewithzichao.github.io').hostname,
-    root: '/',
-    scheme: 'Muse',
-    version: '7.6.0',
-    exturl: false,
-    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},
-    copycode: {"enable":true,"show_result":true,"style":null},
-    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
-    bookmark: {"enable":false,"color":"#222","save":"auto"},
-    fancybox: false,
-    mediumzoom: false,
-    lazyload: false,
-    pangu: false,
-    algolia: {
-      appID: '',
-      apiKey: '',
-      indexName: '',
-      hits: "",
-      labels: ""
-    },
-    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},
-    path: 'search.xml',
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
-  };
-</script>
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
 
   <meta name="description" content="词向量是NLP中最为重要的概念。词向量的好坏直接影响到下游任务的效果。然而，即便在ELMo、BERT、ALBERT等预训练模型大行其道的当今，word2vec、GloVe、fastText仍然是目前最为流行的词向量训练方式。因此，本篇博客将具体讲解这三种词向量训练的原理，并使用gensim来展示如何使用这些词向量模型，以便得到我们想要的词向量。">
 <meta property="og:type" content="article">
@@ -76,10 +51,9 @@
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome: false,
-    isPost: true,
-    isPage: false,
-    isArchive: false
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
   };
 </script>
 
@@ -122,18 +96,6 @@
 
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
-  <div class="site-meta">
-
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">codewithzichao</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">Confident，Modest，Patient</p>
-  </div>
-
   <div class="site-nav-toggle">
     <div class="toggle" aria-label="Toggle navigation bar">
       <span class="toggle-line toggle-line-first"></span>
@@ -141,11 +103,27 @@
       <span class="toggle-line toggle-line-last"></span>
     </div>
   </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">codewithzichao</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Confident，Modest，Patient</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
 </div>
 
 
+
+
 <nav class="site-nav">
-  
   <ul id="menu" class="menu">
         <li class="menu-item menu-item-home">
 
@@ -172,39 +150,12 @@
     <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
 
   </li>
-        <li class="menu-item menu-item-friends">
-
-    <a href="/Friends/" rel="section"><i class="fa fa-fw fa-address-book"></i>Friends</a>
-
-  </li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
-        </a>
-      </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="popup search-popup">
-    <div class="search-header">
-  <span class="search-icon">
-    <i class="fa fa-search"></i>
-  </span>
-  <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="none"
-           placeholder="Searching..." spellcheck="false"
-           type="text" id="search-input">
-  </div>
-  <span class="popup-btn-close">
-    <i class="fa fa-times-circle"></i>
-  </span>
-</div>
-<div id="search-result"></div>
 
-</div>
-<div class="search-pop-overlay"></div>
 
-  </div>
+
+
 </div>
     </header>
 
@@ -214,26 +165,23 @@
     <span>0%</span>
   </div>
 
-  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
-
 
     <main class="main">
       <div class="main-inner">
         <div class="content-wrap">
           
 
-          <div class="content">
+          <div class="content post posts-expand">
             
 
-  <div class="posts-expand">
-      
+    
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/02/29/NLP-word2vec-GloVe-fastText%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="zichao">
       <meta itemprop="description" content="Just learning">
     </span>
@@ -248,9 +196,6 @@
 
         <div class="post-meta">
             <span class="post-meta-item">
-
-            
-
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
@@ -271,20 +216,11 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/" itemprop="url" rel="index">
-                    <span itemprop="name">NLP</span>
-                  </a>
+                  <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
                 </span>
             </span>
 
           
-            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">Views: </span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span>
 
         </div>
       </header>
@@ -300,10 +236,12 @@
 <blockquote>
 <p>注意：本篇博客尽可能讲解清楚三种词向量训练模型的原理，但是很多细节的部分，需要大家自行去了解，比如huffman树的原理、softmax的原理等等。如若不尽意，可参考我在参考文献中例举的原始论文～</p>
 </blockquote>
-<h2 id="word2vec模型介绍"><a href="#word2vec模型介绍" class="headerlink" title="word2vec模型介绍"></a>word2vec模型介绍</h2><p>word2vec模型其中有两种训练方式：skip-gram与CBOW，此外，还有两种加速训练的trick：hierarchical sofmtmax与negative sampling。所以，word2vec其实有4种方法。细节见<a href="https://zhuanlan.zhihu.com/p/42080556" target="_blank" rel="noopener">细节</a>、<a href="https://zhuanlan.zhihu.com/p/27234078" target="_blank" rel="noopener">skip-gram详细介绍</a></p>
-<h3 id="skip-gram模型"><a href="#skip-gram模型" class="headerlink" title="skip-gram模型"></a>skip-gram模型</h3><p>skip-gram模型是给定目标词，来预测其上下文。由于skip-gram模型是一个简单的神经网络模型。我们知道使用神经网络来训练的过程分为：</p>
+<h2 id="word2vec模型介绍">word2vec模型介绍</h2>
+<p>word2vec模型其中有两种训练方式：skip-gram与CBOW，此外，还有两种加速训练的trick：hierarchical sofmtmax与negative sampling。所以，word2vec其实有4种方法。细节见<a href="https://zhuanlan.zhihu.com/p/42080556" target="_blank" rel="noopener">细节</a>、<a href="https://zhuanlan.zhihu.com/p/27234078" target="_blank" rel="noopener">skip-gram详细介绍</a></p>
+<h3 id="skip-gram模型">skip-gram模型</h3>
+<p>skip-gram模型是给定目标词，来预测其上下文。由于skip-gram模型是一个简单的神经网络模型。我们知道使用神经网络来训练的过程分为：</p>
 <ul>
-<li>确定训练数据$(X,Y)$</li>
+<li>确定训练数据<span class="math inline">\((X,Y)\)</span></li>
 <li>确定网络架构</li>
 <li>确定损失函数</li>
 <li>确定优化器、迭代次数</li>
@@ -312,79 +250,84 @@
 <p><strong>确定训练数据</strong></p>
 <p>假设语料库只有一句话：<font face="Times New Roman"><em>The quick brown fox jumps over the lazy dog</em></font>。所以总共只有8个词。在skip-gram中，训练数据的形式其实非常简单，其实就是<strong>使用n-gram的方法生成词对。</strong>譬如</p>
 <p><img src="/2020/02/29/NLP-word2vec-GloVe-fastText%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3/0.png" style="zoom:80%;"></p>
-<p>上图的窗口大小是2，左右各取2个词。实际上窗口大小为5时比较好的，这里只是为了展示。在得到训练数据后，我们将其用one-hot编码后，就可以输入网络了。譬如：(the, quick)单词对就表示$[(1,0,0,0,0,0,0,0),(0,1,0,0,0,0,0,0)]$，输入网络。当然，<strong>对target单词也是需要进行抽样的。</strong>链接：<a href="https://www.yuque.com/liwenju/kadtqt/gqkk0e" target="_blank" rel="noopener">对target抽样</a></p>
+<p>上图的窗口大小是2，左右各取2个词。实际上窗口大小为5时比较好的，这里只是为了展示。在得到训练数据后，我们将其用one-hot编码后，就可以输入网络了。譬如：(the, quick)单词对就表示<span class="math inline">\([(1,0,0,0,0,0,0,0),(0,1,0,0,0,0,0,0)]\)</span>，输入网络。当然，<strong>对target单词也是需要进行抽样的。</strong>链接：<a href="https://www.yuque.com/liwenju/kadtqt/gqkk0e" target="_blank" rel="noopener">对target抽样</a></p>
 <p><strong>确定网络架构</strong></p>
 <p><img src="/2020/02/29/NLP-word2vec-GloVe-fastText%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3/1.jpg" style="zoom: 67%;"></p>
 <p>上面就是skip-gram模型的架构，输入是一个单词的vector，输出是softmax后的概率分布，<strong>每一个概率值对应词汇表中的一个单词，表示词汇表中的单词出现在输入单词的上下文的概率。</strong>中间只有一个线性的hidden layer。还是紧接着我们的例子，词汇表有8个单词，所以，输入时8维的vector，输出也应该是一个8维的vector。而hidden layer的维度则是我们想要得到的词向量的维度，比如说我们使用3个hidden units，那么，权重矩阵就是8*3维的矩阵。(实际上google推荐使用300维。)注意：<strong>在网络中，其实有两个权重矩阵，我们只需要选择其中一个就可以了，因为它们互为转置。</strong>我们最后需要的额就是权重矩阵，并不需要输出层的结果。</p>
 <p><strong>确定损失函数</strong></p>
-<p>由于在输出层使用softmax函数，那么很自然地，损失函数就是交叉熵函数。即：</p>
-<script type="math/tex; mode=display">
+<p>由于在输出层使用softmax函数，那么很自然地，损失函数就是交叉熵函数。即： <span class="math display">\[
 L=\sum_{i=1}^{V}y_ilog(\hat y_i),\\
 \hat y_i=\frac {e^{(w^Th_i)}}{\sum_{i=1}^{V}e^{(w^Th_i)}},\\
-其中，V表示词汇表的数目</script><p>我们可以发现，使用sotfmax，需要计算词汇表中所有词汇的和，而一般的词汇表数目在几十万到几百万不止，那么，这个计算代价是非常昂贵的，所以，我们需要使用一些技巧来加速训练。</p>
-<h3 id="Negative-sampling"><a href="#Negative-sampling" class="headerlink" title="Negative sampling"></a>Negative sampling</h3><p>Negative sampling主要就是解决网络难以训练的问题。在skip-gram模型中，我们使用SGD来训练网络，这需要计算词汇表中所有单词的和，当词汇表很大的时候，这是非常难的。那么negative sampling，就是在在输出层中，我们抽取几个应该为0的维度，再加上为1的维度，来进行训练。这样就能大大加快训练速度。</p>
+其中，V表示词汇表的数目
+\]</span> 我们可以发现，使用sotfmax，需要计算词汇表中所有词汇的和，而一般的词汇表数目在几十万到几百万不止，那么，这个计算代价是非常昂贵的，所以，我们需要使用一些技巧来加速训练。</p>
+<h3 id="negative-sampling">Negative sampling</h3>
+<p>Negative sampling主要就是解决网络难以训练的问题。在skip-gram模型中，我们使用SGD来训练网络，这需要计算词汇表中所有单词的和，当词汇表很大的时候，这是非常难的。那么negative sampling，就是在在输出层中，我们抽取几个应该为0的维度，再加上为1的维度，来进行训练。这样就能大大加快训练速度。</p>
 <p>譬如说，我们的词汇表为10000，hidden layer的维度300，我们nagative sampling的维度个数为5个，那么我们需要更新的维度就是6个，所以我们需要更新的权重系数为300*6=1800，这是输出层系数的0.06%。注意：<strong>在隐藏层的权重10000*300=3000000是必须需要训练的。</strong>这样一来，<strong>我们就将softmax问题转换为V个logistic二分类问题，并且我们每次只更新其中K个负样本与一个正样本的参数，从而大大降低了计算成本。</strong></p>
-<p>但是问题来了：<strong>我们应该怎么抽取这5个应该为0的维度呢？</strong>具体做法是：根据单词在语料库中出现的次数来决定。出现次数越多，那么约有可能被抽中。公司如下：</p>
-<script type="math/tex; mode=display">
-P(w_i)=\frac{f(w_i)^{\frac 34}}{\sum_{i=0}^{V}f(w_i)^{\frac34}}</script><p>其中，$P(w_i)$表示单词$w_i$被抽中的概率；$f(w_i)$表示单词$w_i$在语料库中出现的次数。</p>
-<h3 id="hierarchical-softmax"><a href="#hierarchical-softmax" class="headerlink" title="hierarchical softmax"></a>hierarchical softmax</h3><p>所谓的hierarchical softmax，实际上就是采用Huffman树。huffman树的叶子结点就是词汇表中的单词，从根节点到叶子结点的路径就表示单词的概率。这样一样，我们就不需要对所有单词的得分进行求和，就大大降低了计算成本。注意：<strong>在构造huffman树的时候，常用的词的深度会更小一些，即更靠近根节点；而不常用的词会更深一点。</strong></p>
-<h2 id="CBOW模型"><a href="#CBOW模型" class="headerlink" title="CBOW模型"></a>CBOW模型</h2><p>CBOW模型与skip-gram的训练方式相反。它是给定目标词上下文，然后来预测目标词。</p>
+<p>但是问题来了：<strong>我们应该怎么抽取这5个应该为0的维度呢？</strong>具体做法是：根据单词在语料库中出现的次数来决定。出现次数越多，那么约有可能被抽中。公司如下： <span class="math display">\[
+P(w_i)=\frac{f(w_i)^{\frac 34}}{\sum_{i=0}^{V}f(w_i)^{\frac34}}
+\]</span> 其中，<span class="math inline">\(P(w_i)\)</span>表示单词<span class="math inline">\(w_i\)</span>被抽中的概率；<span class="math inline">\(f(w_i)\)</span>表示单词<span class="math inline">\(w_i\)</span>在语料库中出现的次数。</p>
+<h3 id="hierarchical-softmax">hierarchical softmax</h3>
+<p>所谓的hierarchical softmax，实际上就是采用Huffman树。huffman树的叶子结点就是词汇表中的单词，从根节点到叶子结点的路径就表示单词的概率。这样一样，我们就不需要对所有单词的得分进行求和，就大大降低了计算成本。注意：<strong>在构造huffman树的时候，常用的词的深度会更小一些，即更靠近根节点；而不常用的词会更深一点。</strong></p>
+<h2 id="cbow模型">CBOW模型</h2>
+<p>CBOW模型与skip-gram的训练方式相反。它是给定目标词上下文，然后来预测目标词。</p>
 <p><img src="/2020/02/29/NLP-word2vec-GloVe-fastText%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3/2.jpg" style="zoom: 67%;"></p>
-<p>其中网络架构与skip-gram模型非常的类似。但是需要注意输入。CBOW模型的输入是多个单词的one-hot vector的和，而隐藏层需要对其求平均。如下：</p>
-<script type="math/tex; mode=display">
-h=\frac 1CW^T(x_1+x_2+...+x_C)</script><p>其中，$x_1,x_2,..,x_C$是输入的vector，$h$是隐藏层的输出，$C$是输入的单词的数目。</p>
+<p>其中网络架构与skip-gram模型非常的类似。但是需要注意输入。CBOW模型的输入是多个单词的one-hot vector的和，而隐藏层需要对其求平均。如下： <span class="math display">\[
+h=\frac 1CW^T(x_1+x_2+...+x_C)
+\]</span> 其中，<span class="math inline">\(x_1,x_2,..,x_C\)</span>是输入的vector，<span class="math inline">\(h\)</span>是隐藏层的输出，<span class="math inline">\(C\)</span>是输入的单词的数目。</p>
 <p>其余与skip-gram模型一样，输出层也是使用了softmax。此外，negative sampling与hierarchical softmax这两种trick也都可以用在CBOW模型中。</p>
-<h2 id="GloVe模型"><a href="#GloVe模型" class="headerlink" title="GloVe模型"></a>GloVe模型</h2><p>GloVe模型出自于另一篇论文《Global Vectors for Word Representation》。<strong>强力推荐大家去读一读，这是一篇非常好懂的论文！🤩</strong></p>
+<h2 id="glove模型">GloVe模型</h2>
+<p>GloVe模型出自于另一篇论文《Global Vectors for Word Representation》。<strong>强力推荐大家去读一读，这是一篇非常好懂的论文！🤩</strong></p>
 <p>GloVe模型的目标是：<strong>得到单词的词向量，让其尽可能的包含语义与语法信息</strong>。输入是语料库(没错，不需要去构建训练集)，输出是词向量。GloVe模型的思路是：<strong>从语料库中统计共现矩阵，然后根据共现矩阵与GloVe模型来学习词向量。</strong></p>
 <p><strong>统计共现矩阵</strong></p>
-<p>我们记共现矩阵为：$X=[X_{ij}]_{N\times N}$。其中，$X_{ij}$表示单词$j$在单词$i$的上下文中出现的次数，$N$表示词汇表中的单词数目。至于如何构建的，其实就是根据统计窗口，遍历整个语料库，来进行统计。接下来，我们再引入一些符号：</p>
-<script type="math/tex; mode=display">
+<p>我们记共现矩阵为：<span class="math inline">\(X=[X_{ij}]_{N\times N}\)</span>。其中，<span class="math inline">\(X_{ij}\)</span>表示单词<span class="math inline">\(j\)</span>在单词<span class="math inline">\(i\)</span>的上下文中出现的次数，<span class="math inline">\(N\)</span>表示词汇表中的单词数目。至于如何构建的，其实就是根据统计窗口，遍历整个语料库，来进行统计。接下来，我们再引入一些符号： <span class="math display">\[
 X_i=\sum_{j=1}^{N}X_{ij},\\
 P_{ij}=\frac {X_{ij}}{X_i},\\
-ratio_{i,j,k}=\frac{P_{ik}}{P_{jk}}</script><p>其中，$P_{ij}$表示单词$j$在单词$i$的上下文出现的概率，$ratio_{i,j,k}$表示单词$i$与单词$k$的相关度，以及单词$j$与单词$k$的相关度的比值。为什么要有这个东西？因为，如果我们直接看$P_{ij}$来表示单词$i$与单词$j$的之间的相关度的话，其实是不够的，因为这很有可能受语料库的影响。所以，需要需要它们之间的比值。我们可以发现$ratio_{i,j,k}$有如下性质：</p>
+ratio_{i,j,k}=\frac{P_{ik}}{P_{jk}}
+\]</span> 其中，<span class="math inline">\(P_{ij}\)</span>表示单词<span class="math inline">\(j\)</span>在单词<span class="math inline">\(i\)</span>的上下文出现的概率，<span class="math inline">\(ratio_{i,j,k}\)</span>表示单词<span class="math inline">\(i\)</span>与单词<span class="math inline">\(k\)</span>的相关度，以及单词<span class="math inline">\(j\)</span>与单词<span class="math inline">\(k\)</span>的相关度的比值。为什么要有这个东西？因为，如果我们直接看<span class="math inline">\(P_{ij}\)</span>来表示单词<span class="math inline">\(i\)</span>与单词<span class="math inline">\(j\)</span>的之间的相关度的话，其实是不够的，因为这很有可能受语料库的影响。所以，需要需要它们之间的比值。我们可以发现<span class="math inline">\(ratio_{i,j,k}\)</span>有如下性质：</p>
 <ul>
-<li>当$i$与$k$相关，$j$与$k$不相关的时候，那么$ratio_{i,j,k}$的值会非常的大；</li>
-<li>当$i$与$k$相关，$j$与$k$相关的时候，那么$ratio_{i,j,k}$的值会趋于1；</li>
-<li>当$i$与$k$不相关，$j$与$k$相关的时候，那么$ratio_{i,j,k}$的值会非常的小；</li>
-<li>当$i$与$k$不相关，$j$与$k$不相关的时候，那么$ratio_{i.j.k}$的值会趋于1。</li>
+<li>当<span class="math inline">\(i\)</span>与<span class="math inline">\(k\)</span>相关，<span class="math inline">\(j\)</span>与<span class="math inline">\(k\)</span>不相关的时候，那么<span class="math inline">\(ratio_{i,j,k}\)</span>的值会非常的大；</li>
+<li>当<span class="math inline">\(i\)</span>与<span class="math inline">\(k\)</span>相关，<span class="math inline">\(j\)</span>与<span class="math inline">\(k\)</span>相关的时候，那么<span class="math inline">\(ratio_{i,j,k}\)</span>的值会趋于1；</li>
+<li>当<span class="math inline">\(i\)</span>与<span class="math inline">\(k\)</span>不相关，<span class="math inline">\(j\)</span>与<span class="math inline">\(k\)</span>相关的时候，那么<span class="math inline">\(ratio_{i,j,k}\)</span>的值会非常的小；</li>
+<li>当<span class="math inline">\(i\)</span>与<span class="math inline">\(k\)</span>不相关，<span class="math inline">\(j\)</span>与<span class="math inline">\(k\)</span>不相关的时候，那么<span class="math inline">\(ratio_{i.j.k}\)</span>的值会趋于1。</li>
 </ul>
-<p>那么，GloVe模型的想法是：假设我们现在以及得到了单词的词向量$v_i,v_j,v_k$，那么，如果说我们通过某个函数，能够求得$ratio_{i,j,k}$的话，那么就说我们的词向量与共现矩阵是一致的，也就是说我们的的词向量包含了共现矩阵中的信息。</p>
+<p>那么，GloVe模型的想法是：假设我们现在以及得到了单词的词向量<span class="math inline">\(v_i,v_j,v_k\)</span>，那么，如果说我们通过某个函数，能够求得<span class="math inline">\(ratio_{i,j,k}\)</span>的话，那么就说我们的词向量与共现矩阵是一致的，也就是说我们的的词向量包含了共现矩阵中的信息。</p>
 <p><strong>学习词向量</strong></p>
-<p>假设我们的函数为：$g(v_i,v_j,v_k)$，那么，我们的目标就是：$g(v_i,v_j,v_k)=\frac {P_{ik}}{P_{jk}}$。所以，很自然地，我们可以想到：</p>
-<script type="math/tex; mode=display">
-min\sum_{i,j,k}(g(v_i,v_j,v_k)-\frac {P_{ik}}{P_{jk}})^2</script><p>只要让这个式子最小，我们就能求出所有的词向量。但是，这个式子存在一个问题：那就是这个计算复杂度太高了，为：$O(N\times N\times N)$。所以，我们必须想办法减小复杂度。</p>
-<p>由于我们想衡量$v_i$与$v_j$的相似度，那么，我们引进$v_i-v_j$这个是很自然的；此外，由于$ratio_{i,j,k}$是一个标量，那么我们引入内积也是很自然的，$(v_i-v_j)^Tv_k$，最后我们在外面加一层$exp$，从而能够简化运算。所以我们的函数可以变为如下式子：</p>
-<script type="math/tex; mode=display">
-g(v_i,v_j,v_k)=exp((v_i-v_j)^Tv_k)</script><p>由于我们的目标是：$g(v_i,v_j,v_k)=\frac {P_{ik}}{P_{jk}}$，将g函数带入，得到：</p>
-<script type="math/tex; mode=display">
-\frac {P_{ik}}{P_{jk}}=\frac{exp(v_i^Tv_k)}{exp(v_j^Tv_k)}</script><p>所以，我们只要令：$P_{ik}=exp(v_i^Tv_k)，P_{jk}=exp(v_j^Tv_k)$，即可。我们再将这两个式子统一一下，如下：</p>
-<script type="math/tex; mode=display">
+<p>假设我们的函数为：<span class="math inline">\(g(v_i,v_j,v_k)\)</span>，那么，我们的目标就是：<span class="math inline">\(g(v_i,v_j,v_k)=\frac {P_{ik}}{P_{jk}}\)</span>。所以，很自然地，我们可以想到： <span class="math display">\[
+min\sum_{i,j,k}(g(v_i,v_j,v_k)-\frac {P_{ik}}{P_{jk}})^2
+\]</span> 只要让这个式子最小，我们就能求出所有的词向量。但是，这个式子存在一个问题：那就是这个计算复杂度太高了，为：<span class="math inline">\(O(N\times N\times N)\)</span>。所以，我们必须想办法减小复杂度。</p>
+<p>由于我们想衡量<span class="math inline">\(v_i\)</span>与<span class="math inline">\(v_j\)</span>的相似度，那么，我们引进<span class="math inline">\(v_i-v_j\)</span>这个是很自然的；此外，由于<span class="math inline">\(ratio_{i,j,k}\)</span>是一个标量，那么我们引入内积也是很自然的，<span class="math inline">\((v_i-v_j)^Tv_k\)</span>，最后我们在外面加一层<span class="math inline">\(exp\)</span>，从而能够简化运算。所以我们的函数可以变为如下式子： <span class="math display">\[
+g(v_i,v_j,v_k)=exp((v_i-v_j)^Tv_k)
+\]</span> 由于我们的目标是：<span class="math inline">\(g(v_i,v_j,v_k)=\frac {P_{ik}}{P_{jk}}\)</span>，将g函数带入，得到： <span class="math display">\[
+\frac {P_{ik}}{P_{jk}}=\frac{exp(v_i^Tv_k)}{exp(v_j^Tv_k)}
+\]</span> 所以，我们只要令：<span class="math inline">\(P_{ik}=exp(v_i^Tv_k)，P_{jk}=exp(v_j^Tv_k)\)</span>，即可。我们再将这两个式子统一一下，如下： <span class="math display">\[
 P_{ij}=exp(v_i^Tv_j),\\
 化简，\frac {X_{ij}}{X_i}=exp(v_i^Tv_j),\\
-再化简，logX_{ij}-logX_i=v_i^Tv_j</script><p>我们可以看看最后的化简的式子，右边是对称的：$v_i^Tv_j=v_j^Tv_i$；而左边是不对称的。所以，我们需要再化简一下：</p>
-<script type="math/tex; mode=display">
-logX_{ij}=v_i^Tv_j+b_i+b_j</script><p>所以，我们的最优化式子可以化简如下：</p>
-<script type="math/tex; mode=display">
-min\sum_{i,j}(v_i^Tv_j+b_i+b_j-logX_{ij})^2</script><p>此外，我们还想让出现频率高的词对有更高的权重，所以，我们需要再加一个权重项，最终如下：</p>
-<script type="math/tex; mode=display">
-min\sum_{i,j}f(X_{ij})(v_i^Tv_j+b_i+b_j-logX_{ij})^2</script><p>其中，权重项函数为：</p>
-<script type="math/tex; mode=display">
+再化简，logX_{ij}-logX_i=v_i^Tv_j
+\]</span> 我们可以看看最后的化简的式子，右边是对称的：<span class="math inline">\(v_i^Tv_j=v_j^Tv_i\)</span>；而左边是不对称的。所以，我们需要再化简一下： <span class="math display">\[
+logX_{ij}=v_i^Tv_j+b_i+b_j
+\]</span> 所以，我们的最优化式子可以化简如下： <span class="math display">\[
+min\sum_{i,j}(v_i^Tv_j+b_i+b_j-logX_{ij})^2
+\]</span> 此外，我们还想让出现频率高的词对有更高的权重，所以，我们需要再加一个权重项，最终如下： <span class="math display">\[
+min\sum_{i,j}f(X_{ij})(v_i^Tv_j+b_i+b_j-logX_{ij})^2
+\]</span> 其中，权重项函数为： <span class="math display">\[
 f(x)=\begin{cases}
-(\frac{x}{x_{max}})^{0.75}& x<x_{max}\\
-1& x>=x_{max}
-\end{cases}</script><p>以上就是GloVe模型的全部内容～</p>
+(\frac{x}{x_{max}})^{0.75}&amp; x&lt;x_{max}\\
+1&amp; x&gt;=x_{max}
+\end{cases}
+\]</span> 以上就是GloVe模型的全部内容～</p>
 <p><strong>GloVe模型与word2vec的对比：</strong></p>
 <ul>
 <li>GloVe模型最大的优点是利用了全局的信息，而word2vec中，尤其是skip-gram，只利用了目标词周边的一小部分上下文。尤其当引入negative sampling训练的时候，丧失了词与词之间的关系信息。</li>
 <li>GloVe模型能够加快模型训练速度，并且能够控制词的相对权重。</li>
 </ul>
-<h2 id="fastText模型"><a href="#fastText模型" class="headerlink" title="fastText模型"></a>fastText模型</h2><p>fastText是Facebook在2016年所提出的方法。其实，整个模型架构并没有特别创新的地方，和CBOW模型非常地像。其创新的地方在于：<strong>子词嵌入的引入。</strong>（论文写的太简洁了，导致看了很久😫）</p>
+<h2 id="fasttext模型">fastText模型</h2>
+<p>fastText是Facebook在2016年所提出的方法。其实，整个模型架构并没有特别创新的地方，和CBOW模型非常地像。其创新的地方在于：<strong>子词嵌入的引入。</strong>（论文写的太简洁了，导致看了很久😫）</p>
 <p><strong>模型架构</strong></p>
 <p><img src="/2020/02/29/NLP-word2vec-GloVe-fastText%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3/3.jpg" style="zoom: 67%;"></p>
 <p>整个模型架构与CBOW模型非常的类似。输入是一段序列，输出是这段序列的标签类别。中间层仍然是线性的。输出层仍然是softmax。并且在训练的时候，使用hierarchical softmax来加速训练。</p>
 <p><strong>子词嵌入</strong></p>
-<p>这个才是fasttext模型真正创新的地方。在word2vec或者其他的模型中，相似形态的单词由不同的向量来表示。譬如，<code>老师们，老师</code>。但是，<code>老师们、老师</code>这两个单词，意思其实非常的相近，不应该被编码成不同的向量。所以，在fasttext中，引入了<strong>子词嵌入</strong>。具体做法是：我们将Apples，使用trigram，得到：<code>&lt;ap,app,ppl,ple,les,es&gt;</code>，在训练过程中，每一个n-gram都会由一个向量来表示，我们可以用这6个trigram的叠加来表示<code>Apples</code>这个单词。<strong>序列中所有单词的向量以及n-gram向量同时相加平均，作为训练的输入。</strong>譬如：一段序列中3个词，$w_1,w_2,w_3$表示3个词的向量，$w_{12},w_{23}$表示bigram特征的向量。那么hidden layer的输出是：$h=\frac 15W^T(w_1+w_2+w_3+w_{12}+w_{23})$。</p>
-<p><img src="/2020/02/29/NLP-word2vec-GloVe-fastText%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3/4.jpg" alt></p>
+<p>这个才是fasttext模型真正创新的地方。在word2vec或者其他的模型中，相似形态的单词由不同的向量来表示。譬如，<code>老师们，老师</code>。但是，<code>老师们、老师</code>这两个单词，意思其实非常的相近，不应该被编码成不同的向量。所以，在fasttext中，引入了<strong>子词嵌入</strong>。具体做法是：我们将Apples，使用trigram，得到：<code>&lt;ap,app,ppl,ple,les,es&gt;</code>，在训练过程中，每一个n-gram都会由一个向量来表示，我们可以用这6个trigram的叠加来表示<code>Apples</code>这个单词。<strong>序列中所有单词的向量以及n-gram向量同时相加平均，作为训练的输入。</strong>譬如：一段序列中3个词，<span class="math inline">\(w_1,w_2,w_3\)</span>表示3个词的向量，<span class="math inline">\(w_{12},w_{23}\)</span>表示bigram特征的向量。那么hidden layer的输出是：<span class="math inline">\(h=\frac 15W^T(w_1+w_2+w_3+w_{12}+w_{23})\)</span>。</p>
+<p><img src="/2020/02/29/NLP-word2vec-GloVe-fastText%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3/4.jpg"></p>
 <p>这里有一个问题需要注意：<strong>在实际中，我们往往会使用多种n-gram，所以得到的n-gram结果比单词数目多得多。</strong>所以来存储这么多的n-gram是不太现实的。所以，我们的做法是：将所有的n-gram映射到一张hash桶中，这样的话，就能够实现n-gram的vector共享。</p>
 <p><strong>子词嵌入的好处：对低频词汇的词向量训练效果会更好，因为它可以和其他词共享n-gram；此外，对于UNK，我们仍然可以构建它们的字符级n-gram向量。</strong></p>
 <p>理论部分就到这里，我们再回顾一下：fastText到底快在哪里？</p>
@@ -393,40 +336,22 @@ f(x)=\begin{cases}
 <li>在hierarchical softmax中，使用Huffman树来构建，对于文本分类而言，其分类树远远小于skip-gram模型中的词表数目，所以，相比于skip-gram模型，更加快速；</li>
 <li>一些trick，譬如使用提前算好exp的值。（在使用logisitic进行二分类的时候使用。）</li>
 </ul>
-<h2 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h2><p>在实战部分，我主要是使用gensim。当然，如果有兴趣的小伙伴们，可以去看它们的源码，这个在github上都能够搜的到。</p>
+<h2 id="实战">实战</h2>
+<p>在实战部分，我主要是使用gensim。当然，如果有兴趣的小伙伴们，可以去看它们的源码，这个在github上都能够搜的到。</p>
 <p><strong>fasttext</strong></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> gensim.models <span class="keyword">import</span> FastText</span><br><span class="line">sentences=[[<span class="string">"你"</span>, <span class="string">"是"</span>, <span class="string">"谁"</span>], [<span class="string">"我"</span>, <span class="string">"是"</span>, <span class="string">"中国人"</span>]]</span><br><span class="line"><span class="comment">#训练主函数</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#sentences表示str类型的list的集合</span></span><br><span class="line"><span class="comment">#size表示词向量的维度</span></span><br><span class="line"><span class="comment">#window表示当前词与预测词之间的距离</span></span><br><span class="line"><span class="comment">#min_count表示低于这个数字的单词的频数，那么将被删除掉</span></span><br><span class="line"><span class="comment">#iter表示epoch</span></span><br><span class="line"><span class="comment">#min_n表示字符级的n-gram的最小的n</span></span><br><span class="line"><span class="comment">#max_n表示字符级的n-gram的最大的n</span></span><br><span class="line"><span class="comment">#word_gram：当为1的时候，会用到字符级的n-gram；为0，则不会用到字符级的n-gram，等同于word2vec。</span></span><br><span class="line">model = FastText(sentences,  size=<span class="number">4</span>, window=<span class="number">3</span>, min_count=<span class="number">1</span>, </span><br><span class="line">                 iter=<span class="number">10</span>,min_n = <span class="number">3</span> , max_n = <span class="number">6</span>,word_ngrams =<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#获得词向量</span></span><br><span class="line">model.wv[<span class="string">"你"</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">#模型的保存与加载</span></span><br><span class="line">model.save(<span class="string">"fname"</span>)</span><br><span class="line">model=FastText.load(<span class="string">"fname"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#注意，这个只能单向保存为word2vec，无法通过load加载</span></span><br><span class="line">model.wv.save_word2vec_format(<span class="string">'test_fasttext.txt'</span>, binary=<span class="literal">False</span>)</span><br><span class="line">model.wv.save_word2vec_format(<span class="string">'test_fasttext.bin'</span>, binary=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#在线更新语料库</span></span><br><span class="line"><span class="comment"># 在线更新训练 fasttext</span></span><br><span class="line"><span class="keyword">from</span> gensim.models <span class="keyword">import</span> FastText</span><br><span class="line">sentences_1 = [[<span class="string">"cat"</span>, <span class="string">"say"</span>, <span class="string">"meow"</span>], [<span class="string">"dog"</span>, <span class="string">"say"</span>, <span class="string">"woof"</span>],[<span class="string">"dude"</span>, <span class="string">"say"</span>, <span class="string">"wazzup!"</span>]]</span><br><span class="line">sentences_2 = []</span><br><span class="line"></span><br><span class="line">model = FastText(min_count=<span class="number">1</span>)</span><br><span class="line"><span class="comment">#build.vocab表示建立字典，其中需要corpus作为参数,当update参数为true的时候，那么就更新字典</span></span><br><span class="line">model.build_vocab(sentences_1)</span><br><span class="line"><span class="comment">#train表示训练fasttext模型</span></span><br><span class="line"><span class="comment">#参数：</span></span><br><span class="line"><span class="comment">#total_examples表示字典中的使用的corpus中的句子数目一致</span></span><br><span class="line"><span class="comment">#epochs表示迭代次数</span></span><br><span class="line"><span class="comment">#total_examples=model.corpus_count, epochs=model.epochs是标准写法</span></span><br><span class="line">model.train(sentences_1, total_examples=model.corpus_count, epochs=model.epochs)</span><br><span class="line"></span><br><span class="line"><span class="comment">#model.build_vocab(sentences_2,update=True)</span></span><br><span class="line"><span class="comment">#model.train(sentences_2, total_examples=model.corpus_count, epochs=model.iter)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#获取词向量字典，两种方式</span></span><br><span class="line">model.wv.vocab</span><br><span class="line">model.wv.index2word</span><br><span class="line"></span><br><span class="line"><span class="comment">#获取与目标词相似的词</span></span><br><span class="line">model.wv.most_similar(positive=[<span class="string">'你'</span>, <span class="string">'是'</span>], negative=[<span class="string">'中国人'</span>])</span><br><span class="line"><span class="comment">#model.wv.most_similar_cosmul(positive=['你', '是'], negative=['中国人'])</span></span><br></pre></td></tr></table></figure>
-<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>1 《word2vec Parameter Learning Explained》，Xin Rong（强推， 比原始论文详细的多！）</p>
+<h2 id="参考文献">参考文献</h2>
+<p>1 《word2vec Parameter Learning Explained》，Xin Rong（强推， 比原始论文详细的多！）</p>
 <p>2 《GloVe: Global Vectors for Word Representation》</p>
 <p>3 《Bag of Tricks for Efﬁcient Text Classiﬁcation》</p>
-<p>4 <a href="https://www.yuque.com/liwenju/kadtqt/ensofi" target="_blank" rel="noopener">https://www.yuque.com/liwenju/kadtqt/ensofi</a></p>
-<p>5 <a href="http://albertxiebnu.github.io/fasttext/" target="_blank" rel="noopener">http://albertxiebnu.github.io/fasttext/</a></p>
+<p>4 https://www.yuque.com/liwenju/kadtqt/ensofi</p>
+<p>5 http://albertxiebnu.github.io/fasttext/</p>
 
     </div>
 
     
     
     
-        <div class="reward-container">
-  <div>Would you like to buy me a cup of coffee☕️～</div>
-  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
-    Donate
-  </button>
-  <div id="qr" style="display: none;">
-      
-      <div style="display: inline-block;">
-        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
-        <p>WeChat Pay</p>
-      </div>
-      
-      <div style="display: inline-block;">
-        <img src="/images/alipay.jpg" alt="zichao Alipay">
-        <p>Alipay</p>
-      </div>
-
-  </div>
-</div>
-
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -459,11 +384,32 @@ f(x)=\begin{cases}
   
   
 
-  </div>
 
 
           </div>
           
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
 
         </div>
           
@@ -488,14 +434,12 @@ f(x)=\begin{cases}
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#word2vec模型介绍"><span class="nav-number">1.</span> <span class="nav-text">word2vec模型介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#skip-gram模型"><span class="nav-number">1.1.</span> <span class="nav-text">skip-gram模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Negative-sampling"><span class="nav-number">1.2.</span> <span class="nav-text">Negative sampling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hierarchical-softmax"><span class="nav-number">1.3.</span> <span class="nav-text">hierarchical softmax</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CBOW模型"><span class="nav-number">2.</span> <span class="nav-text">CBOW模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GloVe模型"><span class="nav-number">3.</span> <span class="nav-text">GloVe模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fastText模型"><span class="nav-number">4.</span> <span class="nav-text">fastText模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实战"><span class="nav-number">5.</span> <span class="nav-text">实战</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">6.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#word2vec模型介绍"><span class="nav-number">1.</span> <span class="nav-text">word2vec模型介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#skip-gram模型"><span class="nav-number">1.1.</span> <span class="nav-text">skip-gram模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#negative-sampling"><span class="nav-number">1.2.</span> <span class="nav-text">Negative sampling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hierarchical-softmax"><span class="nav-number">1.3.</span> <span class="nav-text">hierarchical softmax</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cbow模型"><span class="nav-number">2.</span> <span class="nav-text">CBOW模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#glove模型"><span class="nav-number">3.</span> <span class="nav-text">GloVe模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fasttext模型"><span class="nav-number">4.</span> <span class="nav-text">fastText模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实战"><span class="nav-number">5.</span> <span class="nav-text">实战</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">6.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="zichao"
-      src="/images/photo.jpg">
   <p class="site-author-name" itemprop="name">zichao</p>
   <div class="site-description" itemprop="description">Just learning</div>
 </div>
@@ -522,17 +466,6 @@ f(x)=\begin{cases}
       </div>
   </nav>
 </div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
-      </span>
-  </div>
 
 
 
@@ -550,42 +483,21 @@ f(x)=\begin{cases}
       <div class="footer-inner">
         
 
+        
+
 <div class="copyright">
   
   &copy; 
   <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
-    <i class="fa fa-heart"></i>
+    <i class="fa fa-user"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">zichao</span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a>
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
 
         
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-user"></i>
-      </span>
-      <span class="site-uv" title="Total Visitors">
-        <span id="busuanzi_value_site_uv"></span>
-      </span>
-    </span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-eye"></i>
-      </span>
-      <span class="site-pv" title="Total Views">
-        <span id="busuanzi_value_site_pv"></span>
-      </span>
-    </span>
-</div>
 
 
 
@@ -594,7 +506,6 @@ f(x)=\begin{cases}
 
 
 
-        
       </div>
     </footer>
   </div>
@@ -622,92 +533,18 @@ f(x)=\begin{cases}
 
 
 
-  
-<script src="/js/local-search.js"></script>
 
 
 
 
 
 
-
-
-
-<script>
-if (document.querySelectorAll('div.pdf').length) {
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
-    document.querySelectorAll('div.pdf').forEach(element => {
-      PDFObject.embed(element.getAttribute('target'), element, {
-        pdfOpenParams: {
-          navpanes: 0,
-          toolbar: 0,
-          statusbar: 0,
-          pagemode: 'thumbs',
-          view: 'FitH'
-        },
-        PDFJS_URL: '/lib/pdf/web/viewer.html',
-        height: element.getAttribute('height') || '500px'
-      });
-    });
-  }, window.PDFObject);
-}
-</script>
 
 
 
 
 
   
-
-  
-      
-<script type="text/x-mathjax-config">
-
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      equationNumbers: {
-        autoNumber: 'AMS'
-      }
-    }
-  });
-
-  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
-    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
-      if (data.display) {
-        var next = data.script.nextSibling;
-        while (next && next.nodeName.toLowerCase() === '#text') {
-          next = next.nextSibling;
-        }
-        if (next && next.nodeName.toLowerCase() === 'br') {
-          next.parentNode.removeChild(next);
-        }
-      }
-    });
-  });
-
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i = 0; i < all.length; i += 1) {
-      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
-      if (element.nodeName.toLowerCase() == 'li') {
-        element = element.parentNode;
-      }
-      element.classList.add('has-jax');
-    }
-  });
-</script>
-<script>
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
-    MathJax.Hub.Typeset();
-  }, window.MathJax);
-</script>
-
-    
 
   
 

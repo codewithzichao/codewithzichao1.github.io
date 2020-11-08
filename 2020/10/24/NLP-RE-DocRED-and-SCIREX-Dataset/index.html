@@ -15,35 +15,10 @@
 
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
 
-
 <script id="hexo-configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    hostname: new URL('http://codewithzichao.github.io').hostname,
-    root: '/',
-    scheme: 'Muse',
-    version: '7.6.0',
-    exturl: false,
-    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},
-    copycode: {"enable":true,"show_result":true,"style":null},
-    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
-    bookmark: {"enable":false,"color":"#222","save":"auto"},
-    fancybox: false,
-    mediumzoom: false,
-    lazyload: false,
-    pangu: false,
-    algolia: {
-      appID: '',
-      apiKey: '',
-      indexName: '',
-      hits: "",
-      labels: ""
-    },
-    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},
-    path: 'search.xml',
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
-  };
-</script>
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
 
   <meta name="description" content="这篇博客主要讲解一下Document-level 关系抽取上的最新的两个数据集：DocRED以及SCIREX，paper名称：《DocRED: A Large-Scale Document-Level Relation Extraction Dataset》、《SCIREX: A Challenge Dataset for Document-Level Information Extraction">
 <meta property="og:type" content="article">
@@ -74,10 +49,9 @@
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome: false,
-    isPost: true,
-    isPage: false,
-    isArchive: false
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
   };
 </script>
 
@@ -120,18 +94,6 @@
 
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
-  <div class="site-meta">
-
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">codewithzichao</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">Confident，Modest，Patient</p>
-  </div>
-
   <div class="site-nav-toggle">
     <div class="toggle" aria-label="Toggle navigation bar">
       <span class="toggle-line toggle-line-first"></span>
@@ -139,11 +101,27 @@
       <span class="toggle-line toggle-line-last"></span>
     </div>
   </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">codewithzichao</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Confident，Modest，Patient</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
 </div>
 
 
+
+
 <nav class="site-nav">
-  
   <ul id="menu" class="menu">
         <li class="menu-item menu-item-home">
 
@@ -170,39 +148,12 @@
     <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
 
   </li>
-        <li class="menu-item menu-item-friends">
-
-    <a href="/Friends/" rel="section"><i class="fa fa-fw fa-address-book"></i>Friends</a>
-
-  </li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
-        </a>
-      </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="popup search-popup">
-    <div class="search-header">
-  <span class="search-icon">
-    <i class="fa fa-search"></i>
-  </span>
-  <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="none"
-           placeholder="Searching..." spellcheck="false"
-           type="text" id="search-input">
-  </div>
-  <span class="popup-btn-close">
-    <i class="fa fa-times-circle"></i>
-  </span>
-</div>
-<div id="search-result"></div>
 
-</div>
-<div class="search-pop-overlay"></div>
 
-  </div>
+
+
 </div>
     </header>
 
@@ -212,26 +163,23 @@
     <span>0%</span>
   </div>
 
-  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
-
 
     <main class="main">
       <div class="main-inner">
         <div class="content-wrap">
           
 
-          <div class="content">
+          <div class="content post posts-expand">
             
 
-  <div class="posts-expand">
-      
+    
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="zichao">
       <meta itemprop="description" content="Just learning">
     </span>
@@ -246,9 +194,6 @@
 
         <div class="post-meta">
             <span class="post-meta-item">
-
-            
-
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
@@ -269,26 +214,15 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/" itemprop="url" rel="index">
-                    <span itemprop="name">NLP</span>
-                  </a>
+                  <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96/" itemprop="url" rel="index">
-                    <span itemprop="name">关系抽取</span>
-                  </a>
+                  <a href="/categories/NLP/%E5%85%B3%E7%B3%BB%E6%8A%BD%E5%8F%96/" itemprop="url" rel="index"><span itemprop="name">关系抽取</span></a>
                 </span>
             </span>
 
           
-            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">Views: </span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span>
 
         </div>
       </header>
@@ -301,27 +235,29 @@
       
         <p>这篇博客主要讲解一下Document-level 关系抽取上的最新的两个数据集：DocRED以及SCIREX，paper名称：《DocRED: A Large-Scale Document-Level Relation Extraction Dataset》、《SCIREX: A Challenge Dataset for Document-Level Information Extraction》。</p>
 <a id="more"></a>
-<h2 id="DocRED-dataset"><a href="#DocRED-dataset" class="headerlink" title="DocRED dataset"></a>DocRED dataset</h2><h3 id="Background"><a href="#Background" class="headerlink" title="Background"></a>Background</h3><p>DocRED数据集是发表在ACL2019上的《DocRED: A Large-Scale Document-Level Relation Extraction Dataset》。关系抽取是NLP中一个非常基础且重要的任务，主要是：辨别text中实体之间的relation facts。但是在目前的relation extraction中，主要都是集中在sentence-level上，也就是提取句子内的实体，并识别实体之间的关系。但是在实际的问题当中，很多实体之间的关系需要通过多个句子来获得，所以将sentence-level的raltion extraction扩展到document-level 的relation extraction是非常有必要的。而目前已有的document-level的数据集，要么数据量不够大，要么有很多的噪音，要么构造的数据集只适用于某一个领域，这对于构建general domain下的document-level relation extraction model是不利的，在这种情况下，就有了DocRED。</p>
-<h3 id="Statistics-of-DocRED"><a href="#Statistics-of-DocRED" class="headerlink" title="Statistics of DocRED"></a>Statistics of DocRED</h3><p>DocRED是根据wikipedia和wikidata构建而来，最后DocRED的各项数值如下：</p>
-<p><img src="/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/statistic_docred.jpg" alt></p>
+<h2 id="docred-dataset">DocRED dataset</h2>
+<h3 id="background">Background</h3>
+<p>DocRED数据集是发表在ACL2019上的《DocRED: A Large-Scale Document-Level Relation Extraction Dataset》。关系抽取是NLP中一个非常基础且重要的任务，主要是：辨别text中实体之间的relation facts。但是在目前的relation extraction中，主要都是集中在sentence-level上，也就是提取句子内的实体，并识别实体之间的关系。但是在实际的问题当中，很多实体之间的关系需要通过多个句子来获得，所以将sentence-level的raltion extraction扩展到document-level 的relation extraction是非常有必要的。而目前已有的document-level的数据集，要么数据量不够大，要么有很多的噪音，要么构造的数据集只适用于某一个领域，这对于构建general domain下的document-level relation extraction model是不利的，在这种情况下，就有了DocRED。</p>
+<h3 id="statistics-of-docred">Statistics of DocRED</h3>
+<p>DocRED是根据wikipedia和wikidata构建而来，最后DocRED的各项数值如下：</p>
+<p><img src="/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/statistic_docred.jpg"></p>
 <p>从图中可以看到，在DocRED中，平均每一个document的word大概在198.2～209.7之间，说实话，这个程度其实只能算是paragraph，离document还差的比较远，这一点SCIREX数据集弥补了(平均有5000左右)。</p>
-<h3 id="Baseline"><a href="#Baseline" class="headerlink" title="Baseline"></a>Baseline</h3><p>paper中实验了当时SOTA的三种模型。大致的过程是：首先对于一篇doucment表示为：$\cal D=\{w_i\}_{i=1}^{n}$，其中$w_i$表示第$i$个word，我们将其输入到CNN/LSTM/BILSTM当中，得到encoder后的$\{h_i\}_{i=1}^{n}$，然后我们可以得到entities的representation，最后预测每一个entity pair的relation type。下面讲解一些details：</p>
+<h3 id="baseline">Baseline</h3>
+<p>paper中实验了当时SOTA的三种模型。大致的过程是：首先对于一篇doucment表示为：<span class="math inline">\(\cal D=\{w_i\}_{i=1}^{n}\)</span>，其中<span class="math inline">\(w_i\)</span>表示第<span class="math inline">\(i\)</span>个word，我们将其输入到CNN/LSTM/BILSTM当中，得到encoder后的<span class="math inline">\(\{h_i\}_{i=1}^{n}\)</span>，然后我们可以得到entities的representation，最后预测每一个entity pair的relation type。下面讲解一些details：</p>
 <ul>
-<li><p><strong>word features：</strong>对于sentence中的每一个word，它的feature=[GloVe_word_embedding; entity_type_embedding; coreferance_embedding]​。</p>
-</li>
-<li><p><strong>named entity mention representation：</strong>这里需要明确named entity mention与entity的区别。named entity mention指的是与entity相关的word的集合，包括指代、缩写、nickname等等。举个例子：<code>北京大学</code>是一个entity，它的named entity mention可以有：<code>北大</code>、<code>p大</code>、<code>贵校</code>、<code>你北</code> 、<code>隔壁</code>等等。那么在relation extraction中，我们要做的recognize named entity mentions。当我们identity named entity mentions后，我们怎么表示entity呢？entity $e_i$如下：</p>
-<script type="math/tex; mode=display">
+<li><p><strong>word features：</strong>对于sentence中的每一个word，它的feature=[GloVe_word_embedding; entity_type_embedding; coreferance_embedding]​。</p></li>
+<li><p><strong>named entity mention representation：</strong>这里需要明确named entity mention与entity的区别。named entity mention指的是与entity相关的word的集合，包括指代、缩写、nickname等等。举个例子：<code>北京大学</code>是一个entity，它的named entity mention可以有：<code>北大</code>、<code>p大</code>、<code>贵校</code>、<code>你北</code> 、<code>隔壁</code>等等。那么在relation extraction中，我们要做的recognize named entity mentions。当我们identity named entity mentions后，我们怎么表示entity呢？entity <span class="math inline">\(e_i\)</span>如下： <span class="math display">\[
 e_i=\frac {1}{K}\sum_{i=1}^{K}m_k \\
-m_k=\frac{1}{t-s+1}\sum_{j=t}^{s}h_j</script><p>其中，$K$表示entity $e_i$所有的mentions的数量，$m_k$表示第$k$个mention，t与s是第$K$个mention的开头与结尾的index。</p>
-</li>
-<li><p><strong>prediction：</strong>对于relation extraction，我们是将其视为一个多标签分类的问题，所以采用的是sigmoid函数，对于每一个entity pair $(e_i,e_j)$，具体如下：</p>
-<script type="math/tex; mode=display">
+m_k=\frac{1}{t-s+1}\sum_{j=t}^{s}h_j
+\]</span> 其中，<span class="math inline">\(K\)</span>表示entity <span class="math inline">\(e_i\)</span>所有的mentions的数量，<span class="math inline">\(m_k\)</span>表示第<span class="math inline">\(k\)</span>个mention，t与s是第<span class="math inline">\(K\)</span>个mention的开头与结尾的index。</p></li>
+<li><p><strong>prediction：</strong>对于relation extraction，我们是将其视为一个多标签分类的问题，所以采用的是sigmoid函数，对于每一个entity pair <span class="math inline">\((e_i,e_j)\)</span>，具体如下： <span class="math display">\[
 \tilde e_i=[e_i;E(d_{ij})], \ \tilde e_j=[e_j;E(d_{ji})] \\
-P(r|e_i,e_j)=sigmoid(\tilde e_i^TW_r\tilde e_j+b_r)</script><p>其中，$d_{ij}$与$d_{ji}$表示的是两个entity在document中第一个mention之间的相对距离，$E$是一个embedding matrix。</p>
-</li>
+P(r|e_i,e_j)=sigmoid(\tilde e_i^TW_r\tilde e_j+b_r)
+\]</span> 其中，<span class="math inline">\(d_{ij}\)</span>与<span class="math inline">\(d_{ji}\)</span>表示的是两个entity在document中第一个mention之间的相对距离，<span class="math inline">\(E\)</span>是一个embedding matrix。</p></li>
 </ul>
-<h3 id="experiment"><a href="#experiment" class="headerlink" title="experiment"></a>experiment</h3><p>先放结果～</p>
-<p><img src="/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/result_docred.jpg" alt></p>
+<h3 id="experiment">experiment</h3>
+<p>先放结果～</p>
+<p><img src="/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/result_docred.jpg"></p>
 <p><img src="/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/human_perfance_docred.jpg" style="zoom:50%;"></p>
 <ul>
 <li>对于DocRED，评价指标采用的是F1和AUC，但是为了避免训练集与验证集/测试集上relation facts的overlap，所以又提出了Ign F1和Ign AUC指标，以获得更好的效果。</li>
@@ -329,76 +265,57 @@ P(r|e_i,e_j)=sigmoid(\tilde e_i^TW_r\tilde e_j+b_r)</script><p>其中，$d_{ij}$
 <li>在DocRED中，除了关系分类任务，还提出了另一个子任务——identity 关系实例(relation instances)和支持证据(supporting envidences)，用于进一步提高性能。</li>
 <li>总的来看，DocRED是一个general domain document-level relation extraction datasets，目前已有的方法的效果与human performance相去甚远，有很大的提升空间，是一个可以做的方向。</li>
 </ul>
-<h3 id="Data-format"><a href="#Data-format" class="headerlink" title="Data format"></a>Data format</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &#39;title&#39;,</span><br><span class="line">  &#39;sents&#39;:     [</span><br><span class="line">                  [word in sent 0],</span><br><span class="line">                  [word in sent 1]</span><br><span class="line">               ]</span><br><span class="line">  &#39;vertexSet&#39;: [</span><br><span class="line">                  [</span><br><span class="line">                    &#123; &#39;name&#39;: mention_name, </span><br><span class="line">                      &#39;sent_id&#39;: mention in which sentence, </span><br><span class="line">                      &#39;pos&#39;: postion of mention in a sentence, </span><br><span class="line">                      &#39;type&#39;: NER_type&#125;</span><br><span class="line">                    &#123;anthor mention&#125;</span><br><span class="line">                  ], </span><br><span class="line">                  [anthoer entity]</span><br><span class="line">                ]</span><br><span class="line">  &#39;labels&#39;:   [</span><br><span class="line">                &#123;</span><br><span class="line">                  &#39;h&#39;: idx of head entity in vertexSet,</span><br><span class="line">                  &#39;t&#39;: idx of tail entity in vertexSet,</span><br><span class="line">                  &#39;r&#39;: relation,</span><br><span class="line">                  &#39;evidence&#39;: evidence sentences&#39; id</span><br><span class="line">                &#125;</span><br><span class="line">              ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="SCIREX-dataset"><a href="#SCIREX-dataset" class="headerlink" title="SCIREX dataset"></a>SCIREX dataset</h2><h3 id="Background-1"><a href="#Background-1" class="headerlink" title="Background"></a>Background</h3><p>SCIREX数据集是发表在ACL2020上的《SCIREX: A Challenge Dataset for Document-Level Information Extraction》。它提出的主要背景与DocRED类似，目前主要的relation extraction主要都是围绕着sentence-level进行的，但是实际问题中，entity之间的relation往往要通过多个sentence 推理得到，而针对sentence-level的model无法处理这种问题，所以有必要将sentence-level扩展到document-level relation extraction/information extraction。而目前已有的document-level information extraction datasets，远远不能满足document-level IE/RE的要求，最接近的是DocRED数据集，但是这个数据集是从wikipiedia paragraph中构建的，所以它的长度远远不能达到document的要求(DocRED大约在200 word/doc)，所以就有了SICREX。</p>
-<h3 id="Statistics-of-SCIREX"><a href="#Statistics-of-SCIREX" class="headerlink" title="Statistics of SCIREX"></a>Statistics of SCIREX</h3><p>SCIREX是根据scientific articles构建而来，具体数据如下：</p>
+<h3 id="data-format">Data format</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &#39;title&#39;,</span><br><span class="line">  &#39;sents&#39;:     [</span><br><span class="line">                  [word in sent 0],</span><br><span class="line">                  [word in sent 1]</span><br><span class="line">               ]</span><br><span class="line">  &#39;vertexSet&#39;: [</span><br><span class="line">                  [</span><br><span class="line">                    &#123; &#39;name&#39;: mention_name, </span><br><span class="line">                      &#39;sent_id&#39;: mention in which sentence, </span><br><span class="line">                      &#39;pos&#39;: postion of mention in a sentence, </span><br><span class="line">                      &#39;type&#39;: NER_type&#125;</span><br><span class="line">                    &#123;anthor mention&#125;</span><br><span class="line">                  ], </span><br><span class="line">                  [anthoer entity]</span><br><span class="line">                ]</span><br><span class="line">  &#39;labels&#39;:   [</span><br><span class="line">                &#123;</span><br><span class="line">                  &#39;h&#39;: idx of head entity in vertexSet,</span><br><span class="line">                  &#39;t&#39;: idx of tail entity in vertexSet,</span><br><span class="line">                  &#39;r&#39;: relation,</span><br><span class="line">                  &#39;evidence&#39;: evidence sentences&#39; id</span><br><span class="line">                &#125;</span><br><span class="line">              ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="scirex-dataset">SCIREX dataset</h2>
+<h3 id="background-1">Background</h3>
+<p>SCIREX数据集是发表在ACL2020上的《SCIREX: A Challenge Dataset for Document-Level Information Extraction》。它提出的主要背景与DocRED类似，目前主要的relation extraction主要都是围绕着sentence-level进行的，但是实际问题中，entity之间的relation往往要通过多个sentence 推理得到，而针对sentence-level的model无法处理这种问题，所以有必要将sentence-level扩展到document-level relation extraction/information extraction。而目前已有的document-level information extraction datasets，远远不能满足document-level IE/RE的要求，最接近的是DocRED数据集，但是这个数据集是从wikipiedia paragraph中构建的，所以它的长度远远不能达到document的要求(DocRED大约在200 word/doc)，所以就有了SICREX。</p>
+<h3 id="statistics-of-scirex">Statistics of SCIREX</h3>
+<p>SCIREX是根据scientific articles构建而来，具体数据如下：</p>
 <p><img src="/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/scirex.jpg" style="zoom:50%;"></p>
 <p>从上图中可以知道，SCIREX数据集每一篇document有5737个word，比DocRED中的document长的多，可以说是真的document了；此外，SCIREX共有438篇document，虽然相对较少，但是从总的word来说，SCIREX的word数目是DocRED的2倍(human-annotated version)。</p>
-<h3 id="Tasks-in-SICREX"><a href="#Tasks-in-SICREX" class="headerlink" title="Tasks in SICREX"></a>Tasks in SICREX</h3><p>在SCIREX数据集中，作者定义了四种任务：<strong>entity recognition、salient entity recognition、coreference、relation extraction。</strong></p>
+<h3 id="tasks-in-sicrex">Tasks in SICREX</h3>
+<p>在SCIREX数据集中，作者定义了四种任务：<strong>entity recognition、salient entity recognition、coreference、relation extraction。</strong></p>
 <ul>
 <li><strong>entity recognition：</strong>这个其实和DocRED中的named entity mention recognition是一样的，不过又有点不太一样。在SCIREX中，共有四种entity：Method、Task、Metric、Dataset，各自的mentions是这四种entity的各种mention(好像和没说一样🤣，这个在DocRED的介绍里有的，这里不再赘述)。总之这个任务是：识别各种entity mentions并分类到各自的entity type中。</li>
 <li><strong>salient entity recognition：</strong>由于出现在document中的每一个entity mentions的重要性程度是不一样的。就比如relation work中提到的task相比于文章主体的task，重要性要小的多，所以就有必要进行salient entity recognition。</li>
 <li><strong>coreference：</strong>这个任务是identity在单篇document中指向同一个entity的mentions的集合(cluster)。</li>
 <li><strong>relation extraction：</strong>RE是指在单篇document中提取entities之间N元关系的任务。在SCIREX中，有2元关系、三元关系以及四元关系。但是需要注意的是，在SCIREX中，N-元关系不能被切分为多个二元关系，因为一个Datasets可能会有多个Task，一个任务可能会有多种Metric，所以metric不能仅仅根据Dataset或者Task来决定。</li>
 </ul>
-<h3 id="Baseline-1"><a href="#Baseline-1" class="headerlink" title="Baseline"></a>Baseline</h3><p>SCIREX中给出了一个非常强的Baseline，但是我个人觉得比较遗憾的是，这篇paper没有给出human performance，不知道up bound是怎么样的。baseline具体如下：</p>
-<p><img src="/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/scirex-model.jpg" alt></p>
+<h3 id="baseline-1">Baseline</h3>
+<p>SCIREX中给出了一个非常强的Baseline，但是我个人觉得比较遗憾的是，这篇paper没有给出human performance，不知道up bound是怎么样的。baseline具体如下：</p>
+<p><img src="/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/scirex-model.jpg"></p>
 <ul>
-<li><p><strong>Document representation：</strong>我们假设一个输入的文档$\cal D$表示为：$[s_1,…,s_{|S|}]$，其中$s_i$表示第i个section(section可以理解为paragraph)，共有$|S|$个section。document encoding分为两步：section-level and document-level。每一个section的tokens embedding通过SCIBERT来得到，每一个section-level token embedding的维度是：[tokens_nums,embedding_dim]，得到之后，我们对所有的section-level token embedding进行concat，维度是：[|S|*tokens_nums,embedding_dim]，然后输入到一个BILSTM当中，得到结果$e_i，i\in\{1,..,|S|\}$。注意如果是batch输入的话，经过BILSTM的得到的维度是：[batch_size,|S|*token_nums,embedding_dim]。</p>
-</li>
-<li><p><strong>Mention identification and classification：</strong>在得到token embedding之后，经过BILSTM+CRF，去对mentions进行identification与classification。</p>
-</li>
-<li><p><strong>Mention representation：</strong>得到mentions之后，我们就要执行之后的<strong>salient mention classification</strong>与<strong>relation extraction</strong>任务，但是要执行这两个任务，需要先得到mention embedding。那么对于一个mention $m_j$，它的representation是怎么样的呢？具体如下：</p>
-<p>对于一个mention $m_j$,他所包含的words表示为：$\{w_{j_1},w_{j_2},…,w_{j_N}\}$，$m_j$的mention embedding是：</p>
-<script type="math/tex; mode=display">
-me_j=[e_{j_1};e_{j_N};\sum_{k=1}^{N}\alpha_{j_k}e_{j_k}]</script><p>$e_{j_1}$与$e_{j_n}$分别表示该mention的first word与last word的token embedding。除此之外，还会将span在文档中的相对位置信息加入到其中，以获得更多的信息。</p>
-</li>
-<li><p><strong>Salient mention classification：</strong>这个任务就是去看每一个mention是不是salient，是一个二分类的任务。</p>
-</li>
-<li><p><strong>Pairwise coreference resolution：</strong>这个任务就是计算每一对mention pair$(m_i,m_j)$的coreference score $c_{ij}$。</p>
-</li>
-<li><p><strong>Mention clustering：</strong>给定mention pair的集合，以及他们对应的coreference score，我们需要对它进行层次聚类，每一个cluster都表示一个entity。</p>
-</li>
-<li><p><strong>Salient entity cluster classification：</strong>这一步在上一步的mention clustering的基础上，过滤掉那些不够salient的cluster，只留下salient的cluster，从而用于最后的relation extraction task。具体怎么做呢？paper里面采用了一个比较简单的方法，就是只要这个cluster里面出现了一个salient mention，我们就认为这个cluster是salient，就保留该cluster。这一步最终的输出cluster的集合：$C=\{C_1,..,C_L\}$，其中$C_i$是同一个type的mention的集合。</p>
-</li>
+<li><p><strong>Document representation：</strong>我们假设一个输入的文档<span class="math inline">\(\cal D\)</span>表示为：<span class="math inline">\([s_1,...,s_{|S|}]\)</span>，其中<span class="math inline">\(s_i\)</span>表示第i个section(section可以理解为paragraph)，共有<span class="math inline">\(|S|\)</span>个section。document encoding分为两步：section-level and document-level。每一个section的tokens embedding通过SCIBERT来得到，每一个section-level token embedding的维度是：[tokens_nums,embedding_dim]，得到之后，我们对所有的section-level token embedding进行concat，维度是：[|S|*tokens_nums,embedding_dim]，然后输入到一个BILSTM当中，得到结果<span class="math inline">\(e_i，i\in\{1,..,|S|\}\)</span>。注意如果是batch输入的话，经过BILSTM的得到的维度是：[batch_size,|S|*token_nums,embedding_dim]。</p></li>
+<li><p><strong>Mention identification and classification：</strong>在得到token embedding之后，经过BILSTM+CRF，去对mentions进行identification与classification。</p></li>
+<li><p><strong>Mention representation：</strong>得到mentions之后，我们就要执行之后的<strong>salient mention classification</strong>与<strong>relation extraction</strong>任务，但是要执行这两个任务，需要先得到mention embedding。那么对于一个mention <span class="math inline">\(m_j\)</span>，它的representation是怎么样的呢？具体如下：</p>
+<p>对于一个mention <span class="math inline">\(m_j\)</span>,他所包含的words表示为：<span class="math inline">\(\{w_{j_1},w_{j_2},...,w_{j_N}\}\)</span>，<span class="math inline">\(m_j\)</span>的mention embedding是： <span class="math display">\[
+me_j=[e_{j_1};e_{j_N};\sum_{k=1}^{N}\alpha_{j_k}e_{j_k}]
+\]</span> <span class="math inline">\(e_{j_1}\)</span>与<span class="math inline">\(e_{j_n}\)</span>分别表示该mention的first word与last word的token embedding。除此之外，还会将span在文档中的相对位置信息加入到其中，以获得更多的信息。</p></li>
+<li><p><strong>Salient mention classification：</strong>这个任务就是去看每一个mention是不是salient，是一个二分类的任务。</p></li>
+<li><p><strong>Pairwise coreference resolution：</strong>这个任务就是计算每一对mention pair<span class="math inline">\((m_i,m_j)\)</span>的coreference score <span class="math inline">\(c_{ij}\)</span>。</p></li>
+<li><p><strong>Mention clustering：</strong>给定mention pair的集合，以及他们对应的coreference score，我们需要对它进行层次聚类，每一个cluster都表示一个entity。</p></li>
+<li><p><strong>Salient entity cluster classification：</strong>这一步在上一步的mention clustering的基础上，过滤掉那些不够salient的cluster，只留下salient的cluster，从而用于最后的relation extraction task。具体怎么做呢？paper里面采用了一个比较简单的方法，就是只要这个cluster里面出现了一个salient mention，我们就认为这个cluster是salient，就保留该cluster。这一步最终的输出cluster的集合：<span class="math inline">\(C=\{C_1,..,C_L\}\)</span>，其中<span class="math inline">\(C_i\)</span>是同一个type的mention的集合。</p></li>
 <li><p><strong>Relation extraction：</strong>这是最终的任务，我们需要通过上述的salient cluster，构建所有cluster的二元组和四元组，然后我们要判断这些二元组与四元组是否在document中expressed or not expressed。怎么做呢？这里以四元组为例：</p>
-<p>假设对于一个四元组：$R=(C_1,C_2,C_3,C_4)$，其中$C_i$表示一个cluster，我们通过一个two-step的precedure来获得 R的vector：首先构建一个section embedding，然后aggregate 所有的section embedding，从而得到document embedding。对于$\forall C_i \in R$，我们可以通过max-pooling 出现在section $s$ 中的$C_i$中的mentions的span embedding，从而得到$C_i$在section $s$的section embedding $E^s_i$。relation $R$在section $s$的section embedding是：$E^s_R=FFN([E^s_1,E^s_2,E^s_3,E^s_4])$；然后relation $R$的document embedding是：$E_R=\frac{1}{|S|}\sum_{s=1}^{|S|}E^s_R$。最终的分类是将$E_R$输入到另一个FFN层，然后进行分类。loss为binary CE。</p>
-</li>
+<p>假设对于一个四元组：<span class="math inline">\(R=(C_1,C_2,C_3,C_4)\)</span>，其中<span class="math inline">\(C_i\)</span>表示一个cluster，我们通过一个two-step的precedure来获得 R的vector：首先构建一个section embedding，然后aggregate 所有的section embedding，从而得到document embedding。对于<span class="math inline">\(\forall C_i \in R\)</span>，我们可以通过max-pooling 出现在section <span class="math inline">\(s\)</span> 中的<span class="math inline">\(C_i\)</span>中的mentions的span embedding，从而得到<span class="math inline">\(C_i\)</span>在section <span class="math inline">\(s\)</span>的section embedding <span class="math inline">\(E^s_i\)</span>。relation <span class="math inline">\(R\)</span>在section <span class="math inline">\(s\)</span>的section embedding是：<span class="math inline">\(E^s_R=FFN([E^s_1,E^s_2,E^s_3,E^s_4])\)</span>；然后relation <span class="math inline">\(R\)</span>的document embedding是：<span class="math inline">\(E_R=\frac{1}{|S|}\sum_{s=1}^{|S|}E^s_R\)</span>。最终的分类是将<span class="math inline">\(E_R\)</span>输入到另一个FFN层，然后进行分类。loss为binary CE。</p></li>
 </ul>
-<h3 id="experiment-1"><a href="#experiment-1" class="headerlink" title="experiment"></a>experiment</h3><p><img src="/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/scirex_result_1.jpg" alt></p>
+<h3 id="experiment-1">experiment</h3>
+<p><img src="/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/scirex_result_1.jpg"></p>
 <p>左图是本文提出的模型与DYGIE++模型在各个子任务上进行对比，右图是本文提出的模型的各个子任务上的结果，可以看到，采用端到端的烦事，最终的relation extraction的结果非常低，而采用glod input的结果，要高得多，所以可以看到<strong>salient entity cluster classification</strong>是整个端到端系统的影响最大的一步。感觉还是有很大提升空间的。</p>
-<h3 id="Data-format-1"><a href="#Data-format-1" class="headerlink" title="Data format"></a>Data format</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;doc_id&quot; : str &#x3D; Document Id as used by Semantic Scholar,</span><br><span class="line">    &quot;words&quot; : List[str] &#x3D; List of words in the document,</span><br><span class="line">    &quot;sentences&quot; : List[Span] &#x3D; Spans indexing into words array that indicate sentences,</span><br><span class="line">    &quot;sections&quot; : List[Span] &#x3D; Spans indexing into words array that indicate sections,</span><br><span class="line">    &quot;ner&quot; : List[TypedMention] &#x3D; Typed Spans indexing into words indicating mentions ,</span><br><span class="line">    &quot;coref&quot; : Dict[EntityName, List[Span]] &#x3D; Salient Entities in the document and mentions belonging to it,</span><br><span class="line">    &quot;n_ary_relations&quot; : List[Dict[EntityType, EntityName]] &#x3D; List of Relations where each Relation is a dictionary with 5 keys (Method, Metric, Task, Material, Score),</span><br><span class="line">    &quot;method_subrelations&quot; : Dict[EntityName, List[Tuple[Span, SubEntityName]]] &#x3D; Each Methods may be subdivided into simpler submethods and Submenthods in coref array. For example, DLDL+VGG-Face is broken into two methods DLDL , VGG-Face.</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Span &#x3D; Tuple[int, int] # Inclusive start and Exclusive end index</span><br><span class="line">TypedMention &#x3D; Tuple[int, int, EntityType]</span><br><span class="line">EntityType &#x3D; Union[&quot;Method&quot;, &quot;Metric&quot;, &quot;Task&quot;, &quot;Material&quot;]</span><br><span class="line">EntityName &#x3D; str</span><br></pre></td></tr></table></figure>
-<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>《DocRED: A Large-Scale Document-Level Relation Extraction Dataset》</p>
-<p>code：<a href="https://github.com/thunlp/DocRED" target="_blank" rel="noopener">https://github.com/thunlp/DocRED</a></p>
+<h3 id="data-format-1">Data format</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;doc_id&quot; : str &#x3D; Document Id as used by Semantic Scholar,</span><br><span class="line">    &quot;words&quot; : List[str] &#x3D; List of words in the document,</span><br><span class="line">    &quot;sentences&quot; : List[Span] &#x3D; Spans indexing into words array that indicate sentences,</span><br><span class="line">    &quot;sections&quot; : List[Span] &#x3D; Spans indexing into words array that indicate sections,</span><br><span class="line">    &quot;ner&quot; : List[TypedMention] &#x3D; Typed Spans indexing into words indicating mentions ,</span><br><span class="line">    &quot;coref&quot; : Dict[EntityName, List[Span]] &#x3D; Salient Entities in the document and mentions belonging to it,</span><br><span class="line">    &quot;n_ary_relations&quot; : List[Dict[EntityType, EntityName]] &#x3D; List of Relations where each Relation is a dictionary with 5 keys (Method, Metric, Task, Material, Score),</span><br><span class="line">    &quot;method_subrelations&quot; : Dict[EntityName, List[Tuple[Span, SubEntityName]]] &#x3D; Each Methods may be subdivided into simpler submethods and Submenthods in coref array. For example, DLDL+VGG-Face is broken into two methods DLDL , VGG-Face.</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Span &#x3D; Tuple[int, int] # Inclusive start and Exclusive end index</span><br><span class="line">TypedMention &#x3D; Tuple[int, int, EntityType]</span><br><span class="line">EntityType &#x3D; Union[&quot;Method&quot;, &quot;Metric&quot;, &quot;Task&quot;, &quot;Material&quot;]</span><br><span class="line">EntityName &#x3D; str</span><br></pre></td></tr></table></figure>
+<h2 id="references">References</h2>
+<p>《DocRED: A Large-Scale Document-Level Relation Extraction Dataset》</p>
+<p>code：https://github.com/thunlp/DocRED</p>
 <p>《SCIREX: A Challenge Dataset for Document-Level Information Extraction》</p>
-<p>code：<a href="https://github.com/allenai/SciREX" target="_blank" rel="noopener">https://github.com/allenai/SciREX</a></p>
-<p><a href="https://blog.csdn.net/qq_38556984/article/details/108835600" target="_blank" rel="noopener">https://blog.csdn.net/qq_38556984/article/details/108835600</a></p>
+<p>code：https://github.com/allenai/SciREX</p>
+<p>https://blog.csdn.net/qq_38556984/article/details/108835600</p>
 
     </div>
 
     
     
     
-        <div class="reward-container">
-  <div>Would you like to buy me a cup of coffee☕️～</div>
-  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
-    Donate
-  </button>
-  <div id="qr" style="display: none;">
-      
-      <div style="display: inline-block;">
-        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
-        <p>WeChat Pay</p>
-      </div>
-      
-      <div style="display: inline-block;">
-        <img src="/images/alipay.jpg" alt="zichao Alipay">
-        <p>Alipay</p>
-      </div>
-
-  </div>
-</div>
-
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -428,11 +345,32 @@ me_j=[e_{j_1};e_{j_N};\sum_{k=1}^{N}\alpha_{j_k}e_{j_k}]</script><p>$e_{j_1}$与
   
   
 
-  </div>
 
 
           </div>
           
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
 
         </div>
           
@@ -457,14 +395,12 @@ me_j=[e_{j_1};e_{j_N};\sum_{k=1}^{N}\alpha_{j_k}e_{j_k}]</script><p>$e_{j_1}$与
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#DocRED-dataset"><span class="nav-number">1.</span> <span class="nav-text">DocRED dataset</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Background"><span class="nav-number">1.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Statistics-of-DocRED"><span class="nav-number">1.2.</span> <span class="nav-text">Statistics of DocRED</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Baseline"><span class="nav-number">1.3.</span> <span class="nav-text">Baseline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment"><span class="nav-number">1.4.</span> <span class="nav-text">experiment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Data-format"><span class="nav-number">1.5.</span> <span class="nav-text">Data format</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SCIREX-dataset"><span class="nav-number">2.</span> <span class="nav-text">SCIREX dataset</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Background-1"><span class="nav-number">2.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Statistics-of-SCIREX"><span class="nav-number">2.2.</span> <span class="nav-text">Statistics of SCIREX</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tasks-in-SICREX"><span class="nav-number">2.3.</span> <span class="nav-text">Tasks in SICREX</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Baseline-1"><span class="nav-number">2.4.</span> <span class="nav-text">Baseline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment-1"><span class="nav-number">2.5.</span> <span class="nav-text">experiment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Data-format-1"><span class="nav-number">2.6.</span> <span class="nav-text">Data format</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">3.</span> <span class="nav-text">References</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#docred-dataset"><span class="nav-number">1.</span> <span class="nav-text">DocRED dataset</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#background"><span class="nav-number">1.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#statistics-of-docred"><span class="nav-number">1.2.</span> <span class="nav-text">Statistics of DocRED</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#baseline"><span class="nav-number">1.3.</span> <span class="nav-text">Baseline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment"><span class="nav-number">1.4.</span> <span class="nav-text">experiment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#data-format"><span class="nav-number">1.5.</span> <span class="nav-text">Data format</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#scirex-dataset"><span class="nav-number">2.</span> <span class="nav-text">SCIREX dataset</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#background-1"><span class="nav-number">2.1.</span> <span class="nav-text">Background</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#statistics-of-scirex"><span class="nav-number">2.2.</span> <span class="nav-text">Statistics of SCIREX</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tasks-in-sicrex"><span class="nav-number">2.3.</span> <span class="nav-text">Tasks in SICREX</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#baseline-1"><span class="nav-number">2.4.</span> <span class="nav-text">Baseline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#experiment-1"><span class="nav-number">2.5.</span> <span class="nav-text">experiment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#data-format-1"><span class="nav-number">2.6.</span> <span class="nav-text">Data format</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#references"><span class="nav-number">3.</span> <span class="nav-text">References</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="zichao"
-      src="/images/photo.jpg">
   <p class="site-author-name" itemprop="name">zichao</p>
   <div class="site-description" itemprop="description">Just learning</div>
 </div>
@@ -491,17 +427,6 @@ me_j=[e_{j_1};e_{j_N};\sum_{k=1}^{N}\alpha_{j_k}e_{j_k}]</script><p>$e_{j_1}$与
       </div>
   </nav>
 </div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
-      </span>
-  </div>
 
 
 
@@ -519,42 +444,21 @@ me_j=[e_{j_1};e_{j_N};\sum_{k=1}^{N}\alpha_{j_k}e_{j_k}]</script><p>$e_{j_1}$与
       <div class="footer-inner">
         
 
+        
+
 <div class="copyright">
   
   &copy; 
   <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
-    <i class="fa fa-heart"></i>
+    <i class="fa fa-user"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">zichao</span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a>
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
 
         
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-user"></i>
-      </span>
-      <span class="site-uv" title="Total Visitors">
-        <span id="busuanzi_value_site_uv"></span>
-      </span>
-    </span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-eye"></i>
-      </span>
-      <span class="site-pv" title="Total Views">
-        <span id="busuanzi_value_site_pv"></span>
-      </span>
-    </span>
-</div>
 
 
 
@@ -563,7 +467,6 @@ me_j=[e_{j_1};e_{j_N};\sum_{k=1}^{N}\alpha_{j_k}e_{j_k}]</script><p>$e_{j_1}$与
 
 
 
-        
       </div>
     </footer>
   </div>
@@ -591,92 +494,18 @@ me_j=[e_{j_1};e_{j_N};\sum_{k=1}^{N}\alpha_{j_k}e_{j_k}]</script><p>$e_{j_1}$与
 
 
 
-  
-<script src="/js/local-search.js"></script>
 
 
 
 
 
 
-
-
-
-<script>
-if (document.querySelectorAll('div.pdf').length) {
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
-    document.querySelectorAll('div.pdf').forEach(element => {
-      PDFObject.embed(element.getAttribute('target'), element, {
-        pdfOpenParams: {
-          navpanes: 0,
-          toolbar: 0,
-          statusbar: 0,
-          pagemode: 'thumbs',
-          view: 'FitH'
-        },
-        PDFJS_URL: '/lib/pdf/web/viewer.html',
-        height: element.getAttribute('height') || '500px'
-      });
-    });
-  }, window.PDFObject);
-}
-</script>
 
 
 
 
 
   
-
-  
-      
-<script type="text/x-mathjax-config">
-
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      equationNumbers: {
-        autoNumber: 'AMS'
-      }
-    }
-  });
-
-  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
-    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
-      if (data.display) {
-        var next = data.script.nextSibling;
-        while (next && next.nodeName.toLowerCase() === '#text') {
-          next = next.nextSibling;
-        }
-        if (next && next.nodeName.toLowerCase() === 'br') {
-          next.parentNode.removeChild(next);
-        }
-      }
-    });
-  });
-
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i = 0; i < all.length; i += 1) {
-      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
-      if (element.nodeName.toLowerCase() == 'li') {
-        element = element.parentNode;
-      }
-      element.classList.add('has-jax');
-    }
-  });
-</script>
-<script>
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
-    MathJax.Hub.Typeset();
-  }, window.MathJax);
-</script>
-
-    
 
   
 

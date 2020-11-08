@@ -15,35 +15,10 @@
 
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
 
-
 <script id="hexo-configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    hostname: new URL('http://codewithzichao.github.io').hostname,
-    root: '/',
-    scheme: 'Muse',
-    version: '7.6.0',
-    exturl: false,
-    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},
-    copycode: {"enable":true,"show_result":true,"style":null},
-    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
-    bookmark: {"enable":false,"color":"#222","save":"auto"},
-    fancybox: false,
-    mediumzoom: false,
-    lazyload: false,
-    pangu: false,
-    algolia: {
-      appID: '',
-      apiKey: '',
-      indexName: '',
-      hits: "",
-      labels: ""
-    },
-    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},
-    path: 'search.xml',
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
-  };
-</script>
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
 
   <meta name="description" content="这篇文章主要是记录一下SBERT模型，其实这个模型思路很简单，基本上就是将InferSent中的BILSTM换成了BERT。但是呢，这篇文章对sentence embedding做了较为详细的介绍，读完之后，对sentence embedding有了较为详细的了解，所以，记录一下～">
 <meta property="og:type" content="article">
@@ -73,10 +48,9 @@
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome: false,
-    isPost: true,
-    isPage: false,
-    isArchive: false
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
   };
 </script>
 
@@ -119,18 +93,6 @@
 
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
-  <div class="site-meta">
-
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">codewithzichao</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">Confident，Modest，Patient</p>
-  </div>
-
   <div class="site-nav-toggle">
     <div class="toggle" aria-label="Toggle navigation bar">
       <span class="toggle-line toggle-line-first"></span>
@@ -138,11 +100,27 @@
       <span class="toggle-line toggle-line-last"></span>
     </div>
   </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">codewithzichao</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Confident，Modest，Patient</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
 </div>
 
 
+
+
 <nav class="site-nav">
-  
   <ul id="menu" class="menu">
         <li class="menu-item menu-item-home">
 
@@ -169,39 +147,12 @@
     <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
 
   </li>
-        <li class="menu-item menu-item-friends">
-
-    <a href="/Friends/" rel="section"><i class="fa fa-fw fa-address-book"></i>Friends</a>
-
-  </li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
-        </a>
-      </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="popup search-popup">
-    <div class="search-header">
-  <span class="search-icon">
-    <i class="fa fa-search"></i>
-  </span>
-  <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="none"
-           placeholder="Searching..." spellcheck="false"
-           type="text" id="search-input">
-  </div>
-  <span class="popup-btn-close">
-    <i class="fa fa-times-circle"></i>
-  </span>
-</div>
-<div id="search-result"></div>
 
-</div>
-<div class="search-pop-overlay"></div>
 
-  </div>
+
+
 </div>
     </header>
 
@@ -211,26 +162,23 @@
     <span>0%</span>
   </div>
 
-  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
-
 
     <main class="main">
       <div class="main-inner">
         <div class="content-wrap">
           
 
-          <div class="content">
+          <div class="content post posts-expand">
             
 
-  <div class="posts-expand">
-      
+    
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/08/04/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B-SentenceBERT/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="zichao">
       <meta itemprop="description" content="Just learning">
     </span>
@@ -245,9 +193,6 @@
 
         <div class="post-meta">
             <span class="post-meta-item">
-
-            
-
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
@@ -262,26 +207,15 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/" itemprop="url" rel="index">
-                    <span itemprop="name">NLP</span>
-                  </a>
+                  <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index">
-                    <span itemprop="name">预训练模型</span>
-                  </a>
+                  <a href="/categories/NLP/%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index"><span itemprop="name">预训练模型</span></a>
                 </span>
             </span>
 
           
-            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">Views: </span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span>
 
         </div>
       </header>
@@ -294,57 +228,43 @@
       
         <p>这篇文章主要是记录一下SBERT模型，其实这个模型思路很简单，基本上就是将InferSent中的BILSTM换成了BERT。但是呢，这篇文章对sentence embedding做了较为详细的介绍，读完之后，对sentence embedding有了较为详细的了解，所以，记录一下～</p>
 <a id="more"></a>
-<h2 id="Sentence-BERT模型"><a href="#Sentence-BERT模型" class="headerlink" title="Sentence-BERT模型"></a>Sentence-BERT模型</h2><p>BERT模型在各种NLU任务中基本上是都远超传统的深度学习模型，但是仍然有不足。譬如在文本匹配(or文本相似度计算)任务中，BERT的做法是：将两个句子用[SEP]token连接起来作为一个句子，再输入到BERT中。但是这么做的缺点是：当我们的数据量特别大的时候，论文说的是从10000个句子中找到与目标句子最为相似的句子，花费的时间为65小时，这显然是非常低效的。另外，也有研究人员将单个句子输入到BERT当中，对最后一个transformer layer进行平均或者只使用[CLS]token的张量，但是效果还不如GloVe embedding。于是，为了降低文本匹配的计算量与时间，并得到好的sentence embedding，就有了Sentence-BERT模型。</p>
-<h3 id="Sentence-BERT模型架构"><a href="#Sentence-BERT模型架构" class="headerlink" title="Sentence-BERT模型架构"></a>Sentence-BERT模型架构</h3><p>根据不同的数据组织形式，SBERT有着不同的结构。在论文当中，提出了三种情况下的模型结构，如下：</p>
+<h2 id="sentence-bert模型">Sentence-BERT模型</h2>
+<p>BERT模型在各种NLU任务中基本上是都远超传统的深度学习模型，但是仍然有不足。譬如在文本匹配(or文本相似度计算)任务中，BERT的做法是：将两个句子用[SEP]token连接起来作为一个句子，再输入到BERT中。但是这么做的缺点是：当我们的数据量特别大的时候，论文说的是从10000个句子中找到与目标句子最为相似的句子，花费的时间为65小时，这显然是非常低效的。另外，也有研究人员将单个句子输入到BERT当中，对最后一个transformer layer进行平均或者只使用[CLS]token的张量，但是效果还不如GloVe embedding。于是，为了降低文本匹配的计算量与时间，并得到好的sentence embedding，就有了Sentence-BERT模型。</p>
+<h3 id="sentence-bert模型架构">Sentence-BERT模型架构</h3>
+<p>根据不同的数据组织形式，SBERT有着不同的结构。在论文当中，提出了三种情况下的模型结构，如下：</p>
 <ul>
 <li>当输入数据是[sentence1,sentence2,label]，label是离散的，(对应的任务有NLI/RTE)，具体结构如下：</li>
 </ul>
-<p><img src="/2020/08/04/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B-SentenceBERT/lisan.jpg" alt></p>
-<p>这个结构完全借鉴于InferSent模型，只不过是将BILSTM部分用BERT来进行替换，注意：两个句子使用的BERT部分共享权重。对于BERT部分输出的结果，论文中探究了不同的pooling策略：只使用[CLS]token对应的张量、使用Global max pooling、使用Global avg pooling。(最终是avg pooling策略或者只使用[CLS]token对应的张量最好，这与InferSent中所得出的结论是不一样的，InferSent中使用max pooling最好)。得到$u$ 和$v$这两个句向量之后，然后再进行拼接，在这里，去掉了$u*v$这一部分，因为实验表明，加了这一部分，效果反而下降了。最后将拼接后的结果输入到softmax中进行分类即可。loss function采用交叉熵。数据采用SNLI和MultiNLI进行fine-tune，pre-train直接采用使用wikipedia预训练得到的权重即可。</p>
+<p><img src="/2020/08/04/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B-SentenceBERT/lisan.jpg"></p>
+<p>这个结构完全借鉴于InferSent模型，只不过是将BILSTM部分用BERT来进行替换，注意：两个句子使用的BERT部分共享权重。对于BERT部分输出的结果，论文中探究了不同的pooling策略：只使用[CLS]token对应的张量、使用Global max pooling、使用Global avg pooling。(最终是avg pooling策略或者只使用[CLS]token对应的张量最好，这与InferSent中所得出的结论是不一样的，InferSent中使用max pooling最好)。得到<span class="math inline">\(u\)</span> 和<span class="math inline">\(v\)</span>这两个句向量之后，然后再进行拼接，在这里，去掉了<span class="math inline">\(u*v\)</span>这一部分，因为实验表明，加了这一部分，效果反而下降了。最后将拼接后的结果输入到softmax中进行分类即可。loss function采用交叉熵。数据采用SNLI和MultiNLI进行fine-tune，pre-train直接采用使用wikipedia预训练得到的权重即可。</p>
 <blockquote>
 <p>优化器采用Adam，16 batch size，warm up 16%，pooling策略是avg。</p>
 </blockquote>
 <ul>
 <li>当输入数据是[sentence1,sentence2,label]，label是连续的，(对应的任务有STS(语义相似度计算))，具体结构如下：</li>
 </ul>
-<p><img src="/2020/08/04/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B-SentenceBERT/lianxu.jpg" alt></p>
+<p><img src="/2020/08/04/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B-SentenceBERT/lianxu.jpg"></p>
 <p>整体结构与第一种相同，不同的地方是：在得到各自的句向量之后，我们使用余弦相似度来进行度量，当然也可以使用其他的譬如皮尔森相关系数。loss function采用MSE。注意：论文里说没有任何与STS相关的数据进行训练，也就是说，在使用第一种架构进行fine-tune之后，我们将拼接与softmax给拿掉，换成cosine similarity就可以了。</p>
 <ul>
 <li>当输入数据是[query，positive_answer，negative_answer],（对应的任务有问答匹配)，具体结构与第一种结构相同，但是采用的loss function为triplet loss，公式如下：</li>
 </ul>
-<script type="math/tex; mode=display">
-loss=max(||s_a-s_p||-||s_a,s_n||+\epsilon,0)</script><p>也就是说，我们希望query与positive answer的距离比query与negative answer的距离要小至少$\epsilon$。这样的话，譬如在问答匹配里面，我们最后就会更加倾向于召回正确的回答，而不是错误的回答。在论文中，衡量query句向量与答案句向量之间的距离采用的是欧几里得距离，$\epsilon=1$。</p>
-<h3 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h3><p><img src="/2020/08/04/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B-SentenceBERT/result1.jpg" alt></p>
+<p><span class="math display">\[
+loss=max(||s_a-s_p||-||s_a,s_n||+\epsilon,0)
+\]</span></p>
+<p>也就是说，我们希望query与positive answer的距离比query与negative answer的距离要小至少<span class="math inline">\(\epsilon\)</span>。这样的话，譬如在问答匹配里面，我们最后就会更加倾向于召回正确的回答，而不是错误的回答。在论文中，衡量query句向量与答案句向量之间的距离采用的是欧几里得距离，<span class="math inline">\(\epsilon=1\)</span>。</p>
+<h3 id="实验结果">实验结果</h3>
+<p><img src="/2020/08/04/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B-SentenceBERT/result1.jpg"></p>
 <p><img src="/2020/08/04/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B-SentenceBERT/result2.jpg" style="zoom:50%;"></p>
 <p><img src="/2020/08/04/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B-SentenceBERT/result3.jpg" style="zoom:50%;"></p>
 <p>从结果来看，确实要比普通的InferSent或者USE要好。另外，我觉得这篇论文更大的意义在于实际应用吧，整体没有太大的创新。</p>
-<h2 id="Universal-Sentence-Encoder模型"><a href="#Universal-Sentence-Encoder模型" class="headerlink" title="Universal Sentence Encoder模型"></a>Universal Sentence Encoder模型</h2><p>打算再来看一下sentence embedding的部分吧，因为之前被问到了，我却只答上了InferSent以及一些普通的方案。。。惭愧啊。其实除了InferSent之外，USE也是非常著名的一个模型，下面具体讲解一下～大致来说，就是USE有两个encoder：一个是transformer，一个是DAN，前者准确率高但是计算代价大，后者准确率略有下降但是计算代价小，两者都在多个数据上进行迁移学习。</p>
+<h2 id="universal-sentence-encoder模型">Universal Sentence Encoder模型</h2>
+<p>打算再来看一下sentence embedding的部分吧，因为之前被问到了，我却只答上了InferSent以及一些普通的方案。。。惭愧啊。其实除了InferSent之外，USE也是非常著名的一个模型，下面具体讲解一下～大致来说，就是USE有两个encoder：一个是transformer，一个是DAN，前者准确率高但是计算代价大，后者准确率略有下降但是计算代价小，两者都在多个数据上进行迁移学习。</p>
 
     </div>
 
     
     
     
-        <div class="reward-container">
-  <div>Would you like to buy me a cup of coffee☕️～</div>
-  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
-    Donate
-  </button>
-  <div id="qr" style="display: none;">
-      
-      <div style="display: inline-block;">
-        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
-        <p>WeChat Pay</p>
-      </div>
-      
-      <div style="display: inline-block;">
-        <img src="/images/alipay.jpg" alt="zichao Alipay">
-        <p>Alipay</p>
-      </div>
-
-  </div>
-</div>
-
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -374,11 +294,32 @@ loss=max(||s_a-s_p||-||s_a,s_n||+\epsilon,0)</script><p>也就是说，我们希
   
   
 
-  </div>
 
 
           </div>
           
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
 
         </div>
           
@@ -403,14 +344,12 @@ loss=max(||s_a-s_p||-||s_a,s_n||+\epsilon,0)</script><p>也就是说，我们希
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Sentence-BERT模型"><span class="nav-number">1.</span> <span class="nav-text">Sentence-BERT模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Sentence-BERT模型架构"><span class="nav-number">1.1.</span> <span class="nav-text">Sentence-BERT模型架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验结果"><span class="nav-number">1.2.</span> <span class="nav-text">实验结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Universal-Sentence-Encoder模型"><span class="nav-number">2.</span> <span class="nav-text">Universal Sentence Encoder模型</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#sentence-bert模型"><span class="nav-number">1.</span> <span class="nav-text">Sentence-BERT模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#sentence-bert模型架构"><span class="nav-number">1.1.</span> <span class="nav-text">Sentence-BERT模型架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验结果"><span class="nav-number">1.2.</span> <span class="nav-text">实验结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#universal-sentence-encoder模型"><span class="nav-number">2.</span> <span class="nav-text">Universal Sentence Encoder模型</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="zichao"
-      src="/images/photo.jpg">
   <p class="site-author-name" itemprop="name">zichao</p>
   <div class="site-description" itemprop="description">Just learning</div>
 </div>
@@ -437,17 +376,6 @@ loss=max(||s_a-s_p||-||s_a,s_n||+\epsilon,0)</script><p>也就是说，我们希
       </div>
   </nav>
 </div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
-      </span>
-  </div>
 
 
 
@@ -465,42 +393,21 @@ loss=max(||s_a-s_p||-||s_a,s_n||+\epsilon,0)</script><p>也就是说，我们希
       <div class="footer-inner">
         
 
+        
+
 <div class="copyright">
   
   &copy; 
   <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
-    <i class="fa fa-heart"></i>
+    <i class="fa fa-user"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">zichao</span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a>
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
 
         
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-user"></i>
-      </span>
-      <span class="site-uv" title="Total Visitors">
-        <span id="busuanzi_value_site_uv"></span>
-      </span>
-    </span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-eye"></i>
-      </span>
-      <span class="site-pv" title="Total Views">
-        <span id="busuanzi_value_site_pv"></span>
-      </span>
-    </span>
-</div>
 
 
 
@@ -509,7 +416,6 @@ loss=max(||s_a-s_p||-||s_a,s_n||+\epsilon,0)</script><p>也就是说，我们希
 
 
 
-        
       </div>
     </footer>
   </div>
@@ -537,92 +443,18 @@ loss=max(||s_a-s_p||-||s_a,s_n||+\epsilon,0)</script><p>也就是说，我们希
 
 
 
-  
-<script src="/js/local-search.js"></script>
 
 
 
 
 
 
-
-
-
-<script>
-if (document.querySelectorAll('div.pdf').length) {
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
-    document.querySelectorAll('div.pdf').forEach(element => {
-      PDFObject.embed(element.getAttribute('target'), element, {
-        pdfOpenParams: {
-          navpanes: 0,
-          toolbar: 0,
-          statusbar: 0,
-          pagemode: 'thumbs',
-          view: 'FitH'
-        },
-        PDFJS_URL: '/lib/pdf/web/viewer.html',
-        height: element.getAttribute('height') || '500px'
-      });
-    });
-  }, window.PDFObject);
-}
-</script>
 
 
 
 
 
   
-
-  
-      
-<script type="text/x-mathjax-config">
-
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      equationNumbers: {
-        autoNumber: 'AMS'
-      }
-    }
-  });
-
-  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
-    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
-      if (data.display) {
-        var next = data.script.nextSibling;
-        while (next && next.nodeName.toLowerCase() === '#text') {
-          next = next.nextSibling;
-        }
-        if (next && next.nodeName.toLowerCase() === 'br') {
-          next.parentNode.removeChild(next);
-        }
-      }
-    });
-  });
-
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i = 0; i < all.length; i += 1) {
-      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
-      if (element.nodeName.toLowerCase() == 'li') {
-        element = element.parentNode;
-      }
-      element.classList.add('has-jax');
-    }
-  });
-</script>
-<script>
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
-    MathJax.Hub.Typeset();
-  }, window.MathJax);
-</script>
-
-    
 
   
 

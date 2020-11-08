@@ -15,35 +15,10 @@
 
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
 
-
 <script id="hexo-configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    hostname: new URL('http://codewithzichao.github.io').hostname,
-    root: '/',
-    scheme: 'Muse',
-    version: '7.6.0',
-    exturl: false,
-    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},
-    copycode: {"enable":true,"show_result":true,"style":null},
-    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
-    bookmark: {"enable":false,"color":"#222","save":"auto"},
-    fancybox: false,
-    mediumzoom: false,
-    lazyload: false,
-    pangu: false,
-    algolia: {
-      appID: '',
-      apiKey: '',
-      indexName: '',
-      hits: "",
-      labels: ""
-    },
-    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},
-    path: 'search.xml',
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
-  };
-</script>
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
 
   <meta name="description" content="最近在看GAN相关的内容的时候，看到一篇关于预训练模型的新作：ELECTRA，核心是将GAN的思想引入到NLP中，非常地新颖。所以这篇文章将具体地讲解一下关于ELECTRA的内容，我个人是很喜欢这样精巧且优雅的文章的～🤩">
 <meta property="og:type" content="article">
@@ -76,10 +51,9 @@
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome: false,
-    isPost: true,
-    isPage: false,
-    isArchive: false
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
   };
 </script>
 
@@ -122,18 +96,6 @@
 
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
-  <div class="site-meta">
-
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">codewithzichao</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">Confident，Modest，Patient</p>
-  </div>
-
   <div class="site-nav-toggle">
     <div class="toggle" aria-label="Toggle navigation bar">
       <span class="toggle-line toggle-line-first"></span>
@@ -141,11 +103,27 @@
       <span class="toggle-line toggle-line-last"></span>
     </div>
   </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">codewithzichao</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Confident，Modest，Patient</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
 </div>
 
 
+
+
 <nav class="site-nav">
-  
   <ul id="menu" class="menu">
         <li class="menu-item menu-item-home">
 
@@ -172,39 +150,12 @@
     <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
 
   </li>
-        <li class="menu-item menu-item-friends">
-
-    <a href="/Friends/" rel="section"><i class="fa fa-fw fa-address-book"></i>Friends</a>
-
-  </li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
-        </a>
-      </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="popup search-popup">
-    <div class="search-header">
-  <span class="search-icon">
-    <i class="fa fa-search"></i>
-  </span>
-  <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="none"
-           placeholder="Searching..." spellcheck="false"
-           type="text" id="search-input">
-  </div>
-  <span class="popup-btn-close">
-    <i class="fa fa-times-circle"></i>
-  </span>
-</div>
-<div id="search-result"></div>
 
-</div>
-<div class="search-pop-overlay"></div>
 
-  </div>
+
+
 </div>
     </header>
 
@@ -214,26 +165,23 @@
     <span>0%</span>
   </div>
 
-  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
-
 
     <main class="main">
       <div class="main-inner">
         <div class="content-wrap">
           
 
-          <div class="content">
+          <div class="content post posts-expand">
             
 
-  <div class="posts-expand">
-      
+    
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/07/02/NLP-ELECTRA%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="zichao">
       <meta itemprop="description" content="Just learning">
     </span>
@@ -248,9 +196,6 @@
 
         <div class="post-meta">
             <span class="post-meta-item">
-
-            
-
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
@@ -271,26 +216,15 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/" itemprop="url" rel="index">
-                    <span itemprop="name">NLP</span>
-                  </a>
+                  <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index">
-                    <span itemprop="name">预训练模型</span>
-                  </a>
+                  <a href="/categories/NLP/%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index"><span itemprop="name">预训练模型</span></a>
                 </span>
             </span>
 
           
-            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">Views: </span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span>
 
         </div>
       </header>
@@ -304,67 +238,55 @@
         <p>最近在看GAN相关的内容的时候，看到一篇关于预训练模型的新作：ELECTRA，核心是将GAN的思想引入到NLP中，非常地新颖。所以这篇文章将具体地讲解一下关于ELECTRA的内容，我个人是很喜欢这样精巧且优雅的文章的～🤩</p>
 <a id="more"></a>
 <p>ELECTRA模型是今年google在ICLR上放出的一篇论文。它的核心思想是：将GAN引入到NLP中，但是它所使用的Generator与Discriminator与GAN中的会稍微不同，通过设计新的预训练任务，从而大幅提升BERT的训练效率，节省算力。下面详细介绍一下～</p>
-<h2 id="ELECTRA要解决的问题"><a href="#ELECTRA要解决的问题" class="headerlink" title="ELECTRA要解决的问题"></a>ELECTRA要解决的问题</h2><p>BERT已经被证明效果在多个自然语言处理任务中表现良好，但是BERT也存在非常大的问题：需要大量的训练数据与算力。导致这一问题的原因在于：MLM任务。在MLM任务中，我们是去MASK掉15%的tokens，再利用上下文来预测被MASK掉的tokens，这样的话，只有15%的tokens被用来训练，导致了BERT的训练非常的慢，并且也需要大量的训练数据才能将BERT训练的非常好。此外，MASK标签，也会使得也正是这个原因，从BERT到T5，再到GPT3，随着预训练模型效果越来越好的同时，模型也越来越大。而作者希望能够在不降低模型效果的情况下，去减小模型的大小以及所需的算力。于是，便提出来了ELECTRA模型。</p>
-<h2 id="ELECTRA模型架构"><a href="#ELECTRA模型架构" class="headerlink" title="ELECTRA模型架构"></a>ELECTRA模型架构</h2><p>在ELECTRA模型中，针对上述问题的解决办法是：使用<strong><em>replaced token detection(RTD)预训练任务</em></strong>。具体来说，RTD预训练任务是去训练一个用来判别输入的token是原始文本的token还是被替换的token的Discriminator。不同于MLM任务，RTD不使用MASKING，而是用从一个给定的distribution中采样得到的一些tokens来替换掉原始的一些tokens，这个给定的distribution通常是一个小的MLM模型的输出(可以看作是Generator的输出)。这样的话，MLM只使用了被MASK掉tokens，而RTD则使用全部的tokens，做一个序列标注任务，所以RTD任务需要的算力就会小很多。最终我们预训练好之后，抛弃Generator，只使用Discriminator来进行fine-tune。RTD的架构如下：</p>
-<p><img src="/2020/07/02/NLP-ELECTRA%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/RTD.jpg" alt></p>
+<h2 id="electra要解决的问题">ELECTRA要解决的问题</h2>
+<p>BERT已经被证明效果在多个自然语言处理任务中表现良好，但是BERT也存在非常大的问题：需要大量的训练数据与算力。导致这一问题的原因在于：MLM任务。在MLM任务中，我们是去MASK掉15%的tokens，再利用上下文来预测被MASK掉的tokens，这样的话，只有15%的tokens被用来训练，导致了BERT的训练非常的慢，并且也需要大量的训练数据才能将BERT训练的非常好。此外，MASK标签，也会使得也正是这个原因，从BERT到T5，再到GPT3，随着预训练模型效果越来越好的同时，模型也越来越大。而作者希望能够在不降低模型效果的情况下，去减小模型的大小以及所需的算力。于是，便提出来了ELECTRA模型。</p>
+<h2 id="electra模型架构">ELECTRA模型架构</h2>
+<p>在ELECTRA模型中，针对上述问题的解决办法是：使用<strong><em>replaced token detection(RTD)预训练任务</em></strong>。具体来说，RTD预训练任务是去训练一个用来判别输入的token是原始文本的token还是被替换的token的Discriminator。不同于MLM任务，RTD不使用MASKING，而是用从一个给定的distribution中采样得到的一些tokens来替换掉原始的一些tokens，这个给定的distribution通常是一个小的MLM模型的输出(可以看作是Generator的输出)。这样的话，MLM只使用了被MASK掉tokens，而RTD则使用全部的tokens，做一个序列标注任务，所以RTD任务需要的算力就会小很多。最终我们预训练好之后，抛弃Generator，只使用Discriminator来进行fine-tune。RTD的架构如下：</p>
+<p><img src="/2020/07/02/NLP-ELECTRA%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/RTD.jpg"></p>
 <p>从上图中，我们可以看到，RTD的整个架构与GAN非常的类似，但是又存在不同的地方。具体细节如下：</p>
 <ul>
 <li><strong>For Generator：</strong>在ELECTRA中，Generator一般是一个小型的MLM模型，其输入是tokens，其输出是替换过一些token之后的token。如果对GAN熟悉的话，我们就知道，input是满足某种的distribution的样本，通过generator之后，我们得到是另一种distribution的sample，尽管这种distribution我们不知道它的formulation，但是输出的tokens一定是满足这种distribution的。得到输出之后，我们并不将输出通过输入到DIscriminator中，来训练Generator。由于文本是离散的，GAN对于离散的数据是不好训练的，因为Discriminator的梯度无法反向传播到Generator中(其实也是有办法的，就是使用RL中的policy gradient来做，但是非常麻烦，并且后面的实验也表明，其结果并不如MLE)。那怎么训练Generator呢？在ELECTRA中，使用极大似然估计，来得到被MASK掉的token的概率，具体公式如下：</li>
 </ul>
-<p>对于输入序列：$x=[x_1,x_2,…,x_n]$，通过Generator之后，得到$h_G(x)=[h_1,h_2,…,h_n]$，对于被MASK的位置$t$，Generator最后通过softmax来产生一个$x_t$的概率是：<br><img src="/2020/07/02/NLP-ELECTRA%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/MLM.jpg" alt></p>
-<p>其中，$e(x_t)$表示token embedding。</p>
+<p>对于输入序列：<span class="math inline">\(x=[x_1,x_2,...,x_n]\)</span>，通过Generator之后，得到<span class="math inline">\(h_G(x)=[h_1,h_2,...,h_n]\)</span>，对于被MASK的位置<span class="math inline">\(t\)</span>，Generator最后通过softmax来产生一个<span class="math inline">\(x_t\)</span>的概率是： <img src="/2020/07/02/NLP-ELECTRA%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/MLM.jpg"></p>
+<p>其中，<span class="math inline">\(e(x_t)\)</span>表示token embedding。</p>
 <ul>
-<li><strong>For Discriminator：</strong>在ELECTRA中，对于位置$t$，Discriminator来判别token是原始的token还是来自于Generator产生的distribution的token。formulation如下：</li>
+<li><strong>For Discriminator：</strong>在ELECTRA中，对于位置<span class="math inline">\(t\)</span>，Discriminator来判别token是原始的token还是来自于Generator产生的distribution的token。formulation如下：</li>
 </ul>
-<p><img src="/2020/07/02/NLP-ELECTRA%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/RTD formulation.jpg" alt></p>
+<p><img src="/2020/07/02/NLP-ELECTRA%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/RTD%20formulation.jpg"></p>
 <p>最终整个Generator与Discriminator用公式来表达其输入与loss的话，如下：</p>
-<p><img src="/2020/07/02/NLP-ELECTRA%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/loss.jpg" alt></p>
+<p><img src="/2020/07/02/NLP-ELECTRA%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/loss.jpg"></p>
 <p>loss function应该不难理解，我们最终需要minimize如下formulation：</p>
-<p><img src="/2020/07/02/NLP-ELECTRA%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/final loss.jpg" alt></p>
+<p><img src="/2020/07/02/NLP-ELECTRA%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/final%20loss.jpg"></p>
 <p>训练好之后，抛弃Generator，使用Discriminator来进行下游任务的微调即可。</p>
-<h2 id="ELECTRA模型优化与改进"><a href="#ELECTRA模型优化与改进" class="headerlink" title="ELECTRA模型优化与改进"></a>ELECTRA模型优化与改进</h2><h3 id="weight-sharing"><a href="#weight-sharing" class="headerlink" title="weight sharing"></a>weight sharing</h3><p>作者想知道将Generator与Discriminator的参数共享是否会提升效果。作者设置了相同大小的Generator与Discriminator，在布宫喜那个参数的情况下，GLUE结果为83.6，只共享token embedding的结果为84.3，共享所有参数的结果是84.4。可以看到共享token embedding的效果很明显。这也说明Generator对于embedding有更好的学习能力。因为在MLM中，最后通过softmax，会去更新所有的vocab 的embedding；而在Discriminator中，只会更新输入的token的embedding。所以，最终作者选择了共享token embedding。</p>
-<h3 id="smaller-Generator"><a href="#smaller-Generator" class="headerlink" title="smaller Generator"></a>smaller Generator</h3><p>作者探索了Generator的大小是否会对结果有提升。结果如下：</p>
-<p><img src="/2020/07/02/NLP-ELECTRA%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/generator size.jpg" alt></p>
+<h2 id="electra模型优化与改进">ELECTRA模型优化与改进</h2>
+<h3 id="weight-sharing">weight sharing</h3>
+<p>作者想知道将Generator与Discriminator的参数共享是否会提升效果。作者设置了相同大小的Generator与Discriminator，在布宫喜那个参数的情况下，GLUE结果为83.6，只共享token embedding的结果为84.3，共享所有参数的结果是84.4。可以看到共享token embedding的效果很明显。这也说明Generator对于embedding有更好的学习能力。因为在MLM中，最后通过softmax，会去更新所有的vocab 的embedding；而在Discriminator中，只会更新输入的token的embedding。所以，最终作者选择了共享token embedding。</p>
+<h3 id="smaller-generator">smaller Generator</h3>
+<p>作者探索了Generator的大小是否会对结果有提升。结果如下：</p>
+<p><img src="/2020/07/02/NLP-ELECTRA%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/generator%20size.jpg"></p>
 <p>从结果上可以看到，Generator的大小在Discriminator大小的1/4-1/2之间效果比较好。原因在于：Generator如果太强了，会导致Discriminator的效果下降。</p>
-<h2 id="training-algorithms"><a href="#training-algorithms" class="headerlink" title="training algorithms"></a>training algorithms</h2><p>除了上述提及的训练策略，作者还试了其他两种策略，如下：</p>
+<h2 id="training-algorithms">training algorithms</h2>
+<p>除了上述提及的训练策略，作者还试了其他两种策略，如下：</p>
 <ul>
 <li>Adversarial Contrastive Estimation：这实际上就是按照GAN的思路来做，即：将Generator的loss从MLM loss改为最大化被替换的token在Discriminator上的RTD loss，和GAN是一样的。但是一个很严重的问题是：Discriminator的梯度无法反向传播到Generator中，怎么解决呢？作者使用了RL中的policy gradient，使得梯度可以进行传导。最后的效果只有54%的准确率，而MLE的训练策略下，可以达到65%的准确率。</li>
 <li>Two-stage training：也就是我们先只去训练Generator，然后freeze掉Generator，将Discriminator的参数使用Generator的参数来进行初始化，之后对Discriminator训练与Generator同样的步数。</li>
 </ul>
 <p>三种预训练策略结果对比如下：</p>
-<p><img src="/2020/07/02/NLP-ELECTRA%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/triple strategies.jpg" alt></p>
+<p><img src="/2020/07/02/NLP-ELECTRA%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/triple%20strategies.jpg"></p>
 <p>从结果可以看到，MLE的方式结果最好。</p>
-<h2 id="ELECTRA模型结果"><a href="#ELECTRA模型结果" class="headerlink" title="ELECTRA模型结果"></a>ELECTRA模型结果</h2><p>在这里，作者疯狂地将ELECTRA与各种预训练模型进行对比，结果如下：</p>
-<p><img src="/2020/07/02/NLP-ELECTRA%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/small result.jpg" alt></p>
-<p><img src="/2020/07/02/NLP-ELECTRA%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/large result.jpg" alt></p>
+<h2 id="electra模型结果">ELECTRA模型结果</h2>
+<p>在这里，作者疯狂地将ELECTRA与各种预训练模型进行对比，结果如下：</p>
+<p><img src="/2020/07/02/NLP-ELECTRA%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/small%20result.jpg"></p>
+<p><img src="/2020/07/02/NLP-ELECTRA%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B/large%20result.jpg"></p>
 <p>可以看到效果可以说是非常优秀了～</p>
-<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>《ELECTRA: P RE - TRAINING T EXT E NCODERS AS D ISCRIMINATORS R ATHER T HAN G ENERATORS》</p>
+<h2 id="参考文献">参考文献</h2>
+<p>《ELECTRA: P RE - TRAINING T EXT E NCODERS AS D ISCRIMINATORS R ATHER T HAN G ENERATORS》</p>
 
     </div>
 
     
     
     
-        <div class="reward-container">
-  <div>Would you like to buy me a cup of coffee☕️～</div>
-  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
-    Donate
-  </button>
-  <div id="qr" style="display: none;">
-      
-      <div style="display: inline-block;">
-        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
-        <p>WeChat Pay</p>
-      </div>
-      
-      <div style="display: inline-block;">
-        <img src="/images/alipay.jpg" alt="zichao Alipay">
-        <p>Alipay</p>
-      </div>
-
-  </div>
-</div>
-
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -393,11 +315,32 @@
   
   
 
-  </div>
 
 
           </div>
           
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
 
         </div>
           
@@ -422,14 +365,12 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ELECTRA要解决的问题"><span class="nav-number">1.</span> <span class="nav-text">ELECTRA要解决的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ELECTRA模型架构"><span class="nav-number">2.</span> <span class="nav-text">ELECTRA模型架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ELECTRA模型优化与改进"><span class="nav-number">3.</span> <span class="nav-text">ELECTRA模型优化与改进</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#weight-sharing"><span class="nav-number">3.1.</span> <span class="nav-text">weight sharing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#smaller-Generator"><span class="nav-number">3.2.</span> <span class="nav-text">smaller Generator</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#training-algorithms"><span class="nav-number">4.</span> <span class="nav-text">training algorithms</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ELECTRA模型结果"><span class="nav-number">5.</span> <span class="nav-text">ELECTRA模型结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">6.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#electra要解决的问题"><span class="nav-number">1.</span> <span class="nav-text">ELECTRA要解决的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#electra模型架构"><span class="nav-number">2.</span> <span class="nav-text">ELECTRA模型架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#electra模型优化与改进"><span class="nav-number">3.</span> <span class="nav-text">ELECTRA模型优化与改进</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#weight-sharing"><span class="nav-number">3.1.</span> <span class="nav-text">weight sharing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#smaller-generator"><span class="nav-number">3.2.</span> <span class="nav-text">smaller Generator</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#training-algorithms"><span class="nav-number">4.</span> <span class="nav-text">training algorithms</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#electra模型结果"><span class="nav-number">5.</span> <span class="nav-text">ELECTRA模型结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">6.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="zichao"
-      src="/images/photo.jpg">
   <p class="site-author-name" itemprop="name">zichao</p>
   <div class="site-description" itemprop="description">Just learning</div>
 </div>
@@ -456,17 +397,6 @@
       </div>
   </nav>
 </div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
-      </span>
-  </div>
 
 
 
@@ -484,42 +414,21 @@
       <div class="footer-inner">
         
 
+        
+
 <div class="copyright">
   
   &copy; 
   <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
-    <i class="fa fa-heart"></i>
+    <i class="fa fa-user"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">zichao</span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a>
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
 
         
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-user"></i>
-      </span>
-      <span class="site-uv" title="Total Visitors">
-        <span id="busuanzi_value_site_uv"></span>
-      </span>
-    </span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-eye"></i>
-      </span>
-      <span class="site-pv" title="Total Views">
-        <span id="busuanzi_value_site_pv"></span>
-      </span>
-    </span>
-</div>
 
 
 
@@ -528,7 +437,6 @@
 
 
 
-        
       </div>
     </footer>
   </div>
@@ -556,92 +464,18 @@
 
 
 
-  
-<script src="/js/local-search.js"></script>
 
 
 
 
 
 
-
-
-
-<script>
-if (document.querySelectorAll('div.pdf').length) {
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
-    document.querySelectorAll('div.pdf').forEach(element => {
-      PDFObject.embed(element.getAttribute('target'), element, {
-        pdfOpenParams: {
-          navpanes: 0,
-          toolbar: 0,
-          statusbar: 0,
-          pagemode: 'thumbs',
-          view: 'FitH'
-        },
-        PDFJS_URL: '/lib/pdf/web/viewer.html',
-        height: element.getAttribute('height') || '500px'
-      });
-    });
-  }, window.PDFObject);
-}
-</script>
 
 
 
 
 
   
-
-  
-      
-<script type="text/x-mathjax-config">
-
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      equationNumbers: {
-        autoNumber: 'AMS'
-      }
-    }
-  });
-
-  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
-    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
-      if (data.display) {
-        var next = data.script.nextSibling;
-        while (next && next.nodeName.toLowerCase() === '#text') {
-          next = next.nextSibling;
-        }
-        if (next && next.nodeName.toLowerCase() === 'br') {
-          next.parentNode.removeChild(next);
-        }
-      }
-    });
-  });
-
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i = 0; i < all.length; i += 1) {
-      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
-      if (element.nodeName.toLowerCase() == 'li') {
-        element = element.parentNode;
-      }
-      element.classList.add('has-jax');
-    }
-  });
-</script>
-<script>
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
-    MathJax.Hub.Typeset();
-  }, window.MathJax);
-</script>
-
-    
 
   
 

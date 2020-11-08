@@ -15,35 +15,10 @@
 
 <link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
 
-
 <script id="hexo-configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    hostname: new URL('http://codewithzichao.github.io').hostname,
-    root: '/',
-    scheme: 'Muse',
-    version: '7.6.0',
-    exturl: false,
-    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},
-    copycode: {"enable":true,"show_result":true,"style":null},
-    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
-    bookmark: {"enable":false,"color":"#222","save":"auto"},
-    fancybox: false,
-    mediumzoom: false,
-    lazyload: false,
-    pangu: false,
-    algolia: {
-      appID: '',
-      apiKey: '',
-      indexName: '',
-      hits: "",
-      labels: ""
-    },
-    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},
-    path: 'search.xml',
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
-  };
-</script>
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
 
   <meta name="description" content="正式开始看文本匹配的东西啦！文本匹配对NLPer来说是很重要的，不管是最后是做对话、推荐、搜索，文本匹配都是必不可少的。当然啦，BERT系列的模型出来之后，其实传统的深度学习模型效果是远远比不上的。不过这些预训练模型效果好是好，但是训练代价昂贵，当然啦，有人会说，现在已经有剪枝、量化、蒸馏这样的方法来减小预训练模型的大小，从而降低训练所需的代价(所以说模型压缩、加速这个方向还是很有前景的🤩咦，好">
 <meta property="og:type" content="article">
@@ -78,10 +53,9 @@
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome: false,
-    isPost: true,
-    isPage: false,
-    isArchive: false
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
   };
 </script>
 
@@ -124,18 +98,6 @@
 
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
-  <div class="site-meta">
-
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">codewithzichao</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">Confident，Modest，Patient</p>
-  </div>
-
   <div class="site-nav-toggle">
     <div class="toggle" aria-label="Toggle navigation bar">
       <span class="toggle-line toggle-line-first"></span>
@@ -143,11 +105,27 @@
       <span class="toggle-line toggle-line-last"></span>
     </div>
   </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">codewithzichao</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Confident，Modest，Patient</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
 </div>
 
 
+
+
 <nav class="site-nav">
-  
   <ul id="menu" class="menu">
         <li class="menu-item menu-item-home">
 
@@ -174,39 +152,12 @@
     <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
 
   </li>
-        <li class="menu-item menu-item-friends">
-
-    <a href="/Friends/" rel="section"><i class="fa fa-fw fa-address-book"></i>Friends</a>
-
-  </li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
-        </a>
-      </li>
   </ul>
-
 </nav>
-  <div class="site-search">
-    <div class="popup search-popup">
-    <div class="search-header">
-  <span class="search-icon">
-    <i class="fa fa-search"></i>
-  </span>
-  <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="none"
-           placeholder="Searching..." spellcheck="false"
-           type="text" id="search-input">
-  </div>
-  <span class="popup-btn-close">
-    <i class="fa fa-times-circle"></i>
-  </span>
-</div>
-<div id="search-result"></div>
 
-</div>
-<div class="search-pop-overlay"></div>
 
-  </div>
+
+
 </div>
     </header>
 
@@ -216,26 +167,23 @@
     <span>0%</span>
   </div>
 
-  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
-
 
     <main class="main">
       <div class="main-inner">
         <div class="content-wrap">
           
 
-          <div class="content">
+          <div class="content post posts-expand">
             
 
-  <div class="posts-expand">
-      
+    
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/04/29/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-CompAgg/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="zichao">
       <meta itemprop="description" content="Just learning">
     </span>
@@ -250,9 +198,6 @@
 
         <div class="post-meta">
             <span class="post-meta-item">
-
-            
-
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-o"></i>
               </span>
@@ -273,26 +218,15 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/" itemprop="url" rel="index">
-                    <span itemprop="name">NLP</span>
-                  </a>
+                  <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index">
-                    <span itemprop="name">文本匹配模型</span>
-                  </a>
+                  <a href="/categories/NLP/%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B/" itemprop="url" rel="index"><span itemprop="name">文本匹配模型</span></a>
                 </span>
             </span>
 
           
-            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">Views: </span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span>
 
         </div>
       </header>
@@ -305,17 +239,22 @@
       
         <p>正式开始看文本匹配的东西啦！文本匹配对NLPer来说是很重要的，不管是最后是做对话、推荐、搜索，文本匹配都是必不可少的。当然啦，BERT系列的模型出来之后，其实传统的深度学习模型效果是远远比不上的。不过这些预训练模型效果好是好，但是训练代价昂贵，当然啦，有人会说，现在已经有剪枝、量化、蒸馏这样的方法来减小预训练模型的大小，从而降低训练所需的代价(所以说模型压缩、加速这个方向还是很有前景的🤩咦，好像跑偏了，anyway)，但是这仍然远远不够，所以熟悉传统的文本匹配模型是非常有必要的。本篇博客讲解经典的CompAgg模型，并采用tensorflow2实现。</p>
 <a id="more"></a>
-<h2 id="CompAgg模型介绍"><a href="#CompAgg模型介绍" class="headerlink" title="CompAgg模型介绍"></a>CompAgg模型介绍</h2><p>CompAgg模型来源于《A COMPARE-AGGREGATE MODEL FOR  MATCHING TEXT SEQUENCES》论文，于2016年提出。CompAgg模型并不是非常新的模型，它是对之前的模型进行了一个总结，提出了Compare-Aggregate模型框架，并对compare function进行了探索。与DecAtt模型类似。总而言之，CompAgg模型提出的原因在于：<strong>1.之前的模型只在一两个task上测试，泛化性不强。(换个数据集可能表现就比较差) 2.没有关注于comparison function。</strong></p>
+<h2 id="compagg模型介绍">CompAgg模型介绍</h2>
+<p>CompAgg模型来源于《A COMPARE-AGGREGATE MODEL FOR MATCHING TEXT SEQUENCES》论文，于2016年提出。CompAgg模型并不是非常新的模型，它是对之前的模型进行了一个总结，提出了Compare-Aggregate模型框架，并对compare function进行了探索。与DecAtt模型类似。总而言之，CompAgg模型提出的原因在于：<strong>1.之前的模型只在一两个task上测试，泛化性不强。(换个数据集可能表现就比较差) 2.没有关注于comparison function。</strong></p>
 <p>首先直接上模型架构图吧～</p>
 <p><img src="/2020/04/29/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-CompAgg/CompAgg模型架构.jpg" style="zoom: 50%;"></p>
-<h3 id="CompAgg模型架构"><a href="#CompAgg模型架构" class="headerlink" title="CompAgg模型架构"></a>CompAgg模型架构</h3><p>首先，定义一下训练集$\{Q,A,y\}_{1}^{N}$，（pointwise）其中，$Q、A$分别表示两个句子的向量化表示，并且：$Q\in R^{d\times Q},A\in R^{d\times A}$，其中，$d$表示每一个token的维度，也就是说，每一列表示一个token的embedding。CompAgg模型共分为：<strong>Preprocessing、Attention、Comparison、Aggregation</strong>这四个部分，下面详细的讲一下。</p>
-<h4 id="Preprocessing"><a href="#Preprocessing" class="headerlink" title="Preprocessing"></a>Preprocessing</h4><p>这一步是对原始的$Q$与$A$进行一些处理，从而使得每一个词能够获取上下文的信息，从而让每一个token的embedding能够表示更加丰富的语义信息。(直接放图片吧，公式太难敲了😩)</p>
+<h3 id="compagg模型架构">CompAgg模型架构</h3>
+<p>首先，定义一下训练集<span class="math inline">\(\{Q,A,y\}_{1}^{N}\)</span>，（pointwise）其中，<span class="math inline">\(Q、A\)</span>分别表示两个句子的向量化表示，并且：<span class="math inline">\(Q\in R^{d\times Q},A\in R^{d\times A}\)</span>，其中，<span class="math inline">\(d\)</span>表示每一个token的维度，也就是说，每一列表示一个token的embedding。CompAgg模型共分为：<strong>Preprocessing、Attention、Comparison、Aggregation</strong>这四个部分，下面详细的讲一下。</p>
+<h4 id="preprocessing">Preprocessing</h4>
+<p>这一步是对原始的<span class="math inline">\(Q\)</span>与<span class="math inline">\(A\)</span>进行一些处理，从而使得每一个词能够获取上下文的信息，从而让每一个token的embedding能够表示更加丰富的语义信息。(直接放图片吧，公式太难敲了😩)</p>
 <p><img src="/2020/04/29/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-CompAgg/preprocessing.jpg" style="zoom: 67%;"></p>
-<p>注意，得到的$\hat Q$与$\hat A$的维度分别是：$R^{l\times Q}、R^{l\times A}$。</p>
-<h4 id="Attention"><a href="#Attention" class="headerlink" title="Attention"></a>Attention</h4><p>这里就是传统的Attention机制。用Q对A进行attention，然后得到加权后的Q，即H。公式如下：</p>
+<p>注意，得到的<span class="math inline">\(\hat Q\)</span>与<span class="math inline">\(\hat A\)</span>的维度分别是：<span class="math inline">\(R^{l\times Q}、R^{l\times A}\)</span>。</p>
+<h4 id="attention">Attention</h4>
+<p>这里就是传统的Attention机制。用Q对A进行attention，然后得到加权后的Q，即H。公式如下：</p>
 <p><img src="/2020/04/29/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-CompAgg/attention.jpg" style="zoom:67%;"></p>
-<p>注意，G与H的维度分别是：$R^{Q\times A}、R^{l\times A}$。</p>
-<h4 id="Comparison"><a href="#Comparison" class="headerlink" title="Comparison"></a>Comparison</h4><p>这一步主要是matc上一步得到的$\hat A$与$H$。在这一步，作者实验了6中compare function：NN、NTN、EucCos、SUB、MULT、SUBMULT+NN。</p>
+<p>注意，G与H的维度分别是：<span class="math inline">\(R^{Q\times A}、R^{l\times A}\)</span>。</p>
+<h4 id="comparison">Comparison</h4>
+<p>这一步主要是matc上一步得到的<span class="math inline">\(\hat A\)</span>与<span class="math inline">\(H\)</span>。在这一步，作者实验了6中compare function：NN、NTN、EucCos、SUB、MULT、SUBMULT+NN。</p>
 <ul>
 <li>NN：实际上就是将两个向量concat，然后经过一层神经网络。</li>
 </ul>
@@ -337,39 +276,23 @@
 </ul>
 <p><img src="/2020/04/29/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-CompAgg/SUBMULT+NN.jpg" style="zoom:50%;"></p>
 <p>注意，上面的方法，都是两个句子对应位置单词之间的compare，所以compare之后，得到的向量的长度食欲A一样的。</p>
-<h4 id="Aggregation"><a href="#Aggregation" class="headerlink" title="Aggregation"></a>Aggregation</h4><p>这一步就是将comparison得到的结果，经过一层CNN，得到最后的结果。</p>
+<h4 id="aggregation">Aggregation</h4>
+<p>这一步就是将comparison得到的结果，经过一层CNN，得到最后的结果。</p>
 <p><img src="/2020/04/29/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-CompAgg/CNN.jpg" style="zoom:50%;"></p>
-<p>其中，$r$的维度是：$R^{nl}$，$n$表示filter的数量。注意：$[t_1,t_2,t_3,…,t_A]$的维度是：$R^{l\times A}$。</p>
-<h4 id="final-classification"><a href="#final-classification" class="headerlink" title="final classification"></a>final classification</h4><p>对于NLI问题，实际上就是一个三分类问题，接一个softmax层就可以啦！对于问答匹配问题来说，假设有K个candidate answer，我们要从中选择出一个answer，我们可以先计算出$[r_1,r_2,r_3,…,r_k]$,然后使用下属公式来预测：</p>
+<p>其中，<span class="math inline">\(r\)</span>的维度是：<span class="math inline">\(R^{nl}\)</span>，<span class="math inline">\(n\)</span>表示filter的数量。注意：<span class="math inline">\([t_1,t_2,t_3,...,t_A]\)</span>的维度是：<span class="math inline">\(R^{l\times A}\)</span>。</p>
+<h4 id="final-classification">final classification</h4>
+<p>对于NLI问题，实际上就是一个三分类问题，接一个softmax层就可以啦！对于问答匹配问题来说，假设有K个candidate answer，我们要从中选择出一个answer，我们可以先计算出<span class="math inline">\([r_1,r_2,r_3,...,r_k]\)</span>,然后使用下属公式来预测：</p>
 <p><img src="/2020/04/29/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-CompAgg/as.jpg" style="zoom:50%;"></p>
 <p>以上就是CompAgg模型的内容，还是蛮好理解的。最后作者进行了实验，发现结果比Siamese NN要好一些，说明基于交互的SiameseNN在分别encode两个句子的过程中，丢失了一些信息，没有充分利用，整个论文还是值得一读的！</p>
-<h2 id="CompAgg模型实现"><a href="#CompAgg模型实现" class="headerlink" title="CompAgg模型实现"></a>CompAgg模型实现</h2><h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>A COMPARE-AGGREGATE MODEL FOR  MATCHING TEXT SEQUENCES</p>
+<h2 id="compagg模型实现">CompAgg模型实现</h2>
+<h2 id="参考文献">参考文献</h2>
+<p>A COMPARE-AGGREGATE MODEL FOR MATCHING TEXT SEQUENCES</p>
 
     </div>
 
     
     
     
-        <div class="reward-container">
-  <div>Would you like to buy me a cup of coffee☕️～</div>
-  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
-    Donate
-  </button>
-  <div id="qr" style="display: none;">
-      
-      <div style="display: inline-block;">
-        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
-        <p>WeChat Pay</p>
-      </div>
-      
-      <div style="display: inline-block;">
-        <img src="/images/alipay.jpg" alt="zichao Alipay">
-        <p>Alipay</p>
-      </div>
-
-  </div>
-</div>
-
 
       <footer class="post-footer">
           <div class="post-tags">
@@ -399,11 +322,32 @@
   
   
 
-  </div>
 
 
           </div>
           
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
 
         </div>
           
@@ -428,14 +372,12 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#CompAgg模型介绍"><span class="nav-number">1.</span> <span class="nav-text">CompAgg模型介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CompAgg模型架构"><span class="nav-number">1.1.</span> <span class="nav-text">CompAgg模型架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Preprocessing"><span class="nav-number">1.1.1.</span> <span class="nav-text">Preprocessing</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Attention"><span class="nav-number">1.1.2.</span> <span class="nav-text">Attention</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Comparison"><span class="nav-number">1.1.3.</span> <span class="nav-text">Comparison</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Aggregation"><span class="nav-number">1.1.4.</span> <span class="nav-text">Aggregation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#final-classification"><span class="nav-number">1.1.5.</span> <span class="nav-text">final classification</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CompAgg模型实现"><span class="nav-number">2.</span> <span class="nav-text">CompAgg模型实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#compagg模型介绍"><span class="nav-number">1.</span> <span class="nav-text">CompAgg模型介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#compagg模型架构"><span class="nav-number">1.1.</span> <span class="nav-text">CompAgg模型架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#preprocessing"><span class="nav-number">1.1.1.</span> <span class="nav-text">Preprocessing</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#attention"><span class="nav-number">1.1.2.</span> <span class="nav-text">Attention</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#comparison"><span class="nav-number">1.1.3.</span> <span class="nav-text">Comparison</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#aggregation"><span class="nav-number">1.1.4.</span> <span class="nav-text">Aggregation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#final-classification"><span class="nav-number">1.1.5.</span> <span class="nav-text">final classification</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#compagg模型实现"><span class="nav-number">2.</span> <span class="nav-text">CompAgg模型实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="zichao"
-      src="/images/photo.jpg">
   <p class="site-author-name" itemprop="name">zichao</p>
   <div class="site-description" itemprop="description">Just learning</div>
 </div>
@@ -462,17 +404,6 @@
       </div>
   </nav>
 </div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
-      </span>
-      <span class="links-of-author-item">
-        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
-      </span>
-  </div>
 
 
 
@@ -490,42 +421,21 @@
       <div class="footer-inner">
         
 
+        
+
 <div class="copyright">
   
   &copy; 
   <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
-    <i class="fa fa-heart"></i>
+    <i class="fa fa-user"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">zichao</span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a>
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
 
         
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-user"></i>
-      </span>
-      <span class="site-uv" title="Total Visitors">
-        <span id="busuanzi_value_site_uv"></span>
-      </span>
-    </span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-eye"></i>
-      </span>
-      <span class="site-pv" title="Total Views">
-        <span id="busuanzi_value_site_pv"></span>
-      </span>
-    </span>
-</div>
 
 
 
@@ -534,7 +444,6 @@
 
 
 
-        
       </div>
     </footer>
   </div>
@@ -562,92 +471,18 @@
 
 
 
-  
-<script src="/js/local-search.js"></script>
 
 
 
 
 
 
-
-
-
-<script>
-if (document.querySelectorAll('div.pdf').length) {
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
-    document.querySelectorAll('div.pdf').forEach(element => {
-      PDFObject.embed(element.getAttribute('target'), element, {
-        pdfOpenParams: {
-          navpanes: 0,
-          toolbar: 0,
-          statusbar: 0,
-          pagemode: 'thumbs',
-          view: 'FitH'
-        },
-        PDFJS_URL: '/lib/pdf/web/viewer.html',
-        height: element.getAttribute('height') || '500px'
-      });
-    });
-  }, window.PDFObject);
-}
-</script>
 
 
 
 
 
   
-
-  
-      
-<script type="text/x-mathjax-config">
-
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      equationNumbers: {
-        autoNumber: 'AMS'
-      }
-    }
-  });
-
-  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
-    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
-      if (data.display) {
-        var next = data.script.nextSibling;
-        while (next && next.nodeName.toLowerCase() === '#text') {
-          next = next.nextSibling;
-        }
-        if (next && next.nodeName.toLowerCase() === 'br') {
-          next.parentNode.removeChild(next);
-        }
-      }
-    });
-  });
-
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i = 0; i < all.length; i += 1) {
-      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
-      if (element.nodeName.toLowerCase() == 'li') {
-        element = element.parentNode;
-      }
-      element.classList.add('has-jax');
-    }
-  });
-</script>
-<script>
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
-    MathJax.Hub.Typeset();
-  }, window.MathJax);
-</script>
-
-    
 
   
 
