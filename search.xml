@@ -3439,8 +3439,8 @@ v=\sum_{l=1}^{L}\alpha_ih_i
 <p><img src="/2020/03/10/C-%E5%8D%81%E5%A4%A7%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95C-%E5%AE%9E%E7%8E%B0/0.jpg"></p>
 ]]></content>
       <tags>
-        <tag>C++</tag>
         <tag>排序</tag>
+        <tag>C++</tag>
       </tags>
   </entry>
   <entry>
@@ -4134,9 +4134,9 @@ L^{*(t)}=-\frac{1}{2}\mathop{\sum}\limits_{j=1}^{T}\frac{G_j^2}{H_j+\lambda}+\ga
       </categories>
       <tags>
         <tag>机器学习</tag>
+        <tag>python</tag>
         <tag>集成学习</tag>
         <tag>XGBoost</tag>
-        <tag>python</tag>
         <tag>GBDT</tag>
       </tags>
   </entry>
