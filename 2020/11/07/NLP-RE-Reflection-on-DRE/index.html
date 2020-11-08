@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 5.2.0">
+
+
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -13,37 +15,14 @@
 <link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
 
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.1/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
 
-<script id="hexo-configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    hostname: new URL('http://codewithzichao.github.io').hostname,
-    root: '/',
-    scheme: 'Muse',
-    version: '7.6.0',
-    exturl: false,
-    sidebar: {"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},
-    copycode: {"enable":true,"show_result":true,"style":null},
-    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
-    bookmark: {"enable":false,"color":"#222","save":"auto"},
-    fancybox: false,
-    mediumzoom: false,
-    lazyload: false,
-    pangu: false,
-    algolia: {
-      appID: '',
-      apiKey: '',
-      indexName: '',
-      hits: "",
-      labels: ""
-    },
-    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},
-    path: 'search.xml',
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
-  };
-</script>
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","images":"/images","scheme":"Muse","version":"8.0.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
 
   <meta name="description" content="Here&#39;s something encrypted, password is required to continue reading. If you wanna see the specific content, please contact the author. Best luck for you.🥳">
 <meta property="og:type" content="article">
@@ -58,17 +37,17 @@
 <meta property="article:tag" content="ReflectionofPaper">
 <meta name="twitter:card" content="summary">
 
+
 <link rel="canonical" href="http://codewithzichao.github.io/2020/11/07/NLP-RE-Reflection-on-DRE/">
 
 
-<script id="page-configurations">
+<script class="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome: false,
-    isPost: true,
-    isPage: false,
-    isArchive: false
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
   };
 </script>
 
@@ -82,88 +61,104 @@
 
   <noscript>
   <style>
-  .use-motion .brand,
+  body { margin-top: 2rem; }
+
   .use-motion .menu-item,
-  .sidebar-inner,
+  .use-motion .sidebar,
   .use-motion .post-block,
   .use-motion .pagination,
   .use-motion .comments,
   .use-motion .post-header,
   .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
 
   .use-motion .site-title,
-  .use-motion .site-subtitle {
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
     opacity: initial;
     top: initial;
   }
 
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
   </style>
 </noscript>
 
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
-    <div class="headband"></div>
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
 
+  <main class="main">
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
-  <div class="site-meta">
-
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">codewithzichao</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-        <p class="site-subtitle">Confident，Modest，Patient</p>
-  </div>
-
   <div class="site-nav-toggle">
     <div class="toggle" aria-label="Toggle navigation bar">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">codewithzichao</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Confident，Modest，Patient</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
 
 
+
 <nav class="site-nav">
-  
-  <ul id="menu" class="menu">
+  <ul class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>Categories</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
 
   </li>
-        <li class="menu-item menu-item-friends">
+        <li class="menu-item menu-item-schedule">
 
-    <a href="/Friends/" rel="section"><i class="fa fa-fw fa-address-book"></i>Friends</a>
+    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>Schedule</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -171,171 +166,47 @@
         </a>
       </li>
   </ul>
-
 </nav>
-  <div class="site-search">
+
+
+
+  <div class="search-pop-overlay">
     <div class="popup search-popup">
-    <div class="search-header">
+        <div class="search-header">
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
   <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
            placeholder="Searching..." spellcheck="false"
-           type="text" id="search-input">
+           type="search" class="search-input">
   </div>
   <span class="popup-btn-close">
     <i class="fa fa-times-circle"></i>
   </span>
 </div>
-<div id="search-result"></div>
-
-</div>
-<div class="search-pop-overlay"></div>
-
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
   </div>
 </div>
-    </header>
 
-    
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
-
-  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
-
-
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
-
-          <div class="content">
-            
-
-  <div class="posts-expand">
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
-    <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/11/07/NLP-RE-Reflection-on-DRE/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/photo.jpg">
-      <meta itemprop="name" content="zichao">
-      <meta itemprop="description" content="Just learning">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="codewithzichao">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          REFLECTION ON DRE
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-
-            
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2020-11-07 21:21:24 / Modified: 21:50:01" itemprop="dateCreated datePublished" datetime="2020-11-07T21:21:24+08:00">2020-11-07</time>
-            </span>
-
-          
-            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">Views: </span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-        <div id="hexo-blog-encrypt" data-wpm="Oh, this is an invalid password. Check and try again, please." data-whm="Oh, these decrypted content cannot be verified, but you can still have a look."><div class="hbe-input-container"><input type="password" id="hbePass" placeholder="Hey, password is required here." /><label>Hey, password is required here.</label><div class="bottom-line"></div></div><script id="hbeData" type="hbeData" data-hmacdigest="d84ca00ffe484527369c0de3d58c4fe4bef7f13574270161773060a99b73a58f">00845897eac032b4b2ac9a51a929204da9853d6dad92368266c82e14195cb3a080a0fc879a1a445ed296699866288130729254e52e693b94f0f71f18e7d594d2c30f434a38df06e80f62abce4e2eede68d29fd4b8f728acf653aad209a77ab016b9ebbea33af749b270a85cf6e85b9287c5d64175b84b167ea7f58c8526d95fb92dc9c589a989fb2be98cb17dcf415948714b4fc3e11546acfedfcd4f05e1825fd3110120d09aba7ed556f23ae5e9f1d4c538c461f6a847c219a4bc46a80977f51655c3046b1ebd93201bce96e29691b41347d1475771a036a348ca439d2a3436887f00421cd9b7fead5c532ae964b8ef50bdb1fdd0622c756e060d4866e7933c42e50d9414b7b591fe1201e28bf42dfb6da120ccec2889f40ee762bd172beff71745d932aaf846e6047e09a58f7f6dda29fbf28c754ee7503b31471efcaf808b06e340a747b3907f8ce98c1e6ce2dd4ae0a5aa0f669bd6df778276423410fa27d36a6fabc5dbaa20f7edd36074d612575af8e05b4b89f066f29ac15c9c2270ed1e146e19ee33f40d171861e815ab32ab769b97f735e69f346c47cc384aa6e4918092dadbd8a03da6ca1fc70bd21bf2a5278bb339893f79b7d0de4751e83cfea13fe912a1554c6c26fe451e6182c9bc35bdebbffef0a962f74e0543c19ad89f4099dcd905e8f1c8d6af3e312b0b8f85290fc375961c0121a9897d4b82241a7ad69ddc5426ff07bb539d09f77cc061d5b26243439613a45248a5449fdfc36dc549c53b780acf9a9d81ab2549972796af9e08aa28c55d56460996be278c75367a508e80890cfd39868da43a133298f07976d08a6a45b55b61b67173e64c375c4d249fe4f2f009acbb0dfa7c5bf0f52d6a112ec1ef3d92b2f4039b5acb8177e318fb86fecab84e964bd4b1531727ed88c188bb0fce23363879bd49fc5b7362f87191ded50a5fa2a7d98649bdb347c46a2952aee712f5302772501aee0f37ebd58d6b0fffbc76d223cfb8f241e966ddc5b266ac306f316be35635d48fd4030596e93d3bc6ff28e0ab4745b63b95621b495705072cba0ff3057c5ff740eab1fdda1394332ff53736eafe9b2d562176cc9357e6b03eb001e5d185b7da7acb75d48831249c60636503afc63ee9465c6e52ea8b0b0a11df3ab10e65682159f7c92f8aaaef7ccf945fb148bf1acd1a38605286d220c792b76aeb2296361af10370cbaa948d7b5adf3888686262f8f043f2fd0b0ca5a091f6423bc2ef8e2fa8ffaf865c3182bb2cb7f50ff7e843e5af79884705de9494e3283168027ce15fc420efb70b94c9ea6d5f23cdcc39a5b94c96202902c4cb777fef6488285a9ece3ed2b630f826ae46467dd219723c8ae3f504e9a4477853e975069036d7612557bbf2296fe3d866ca8e3f65fff5bee35e16bd1f7229ac75a9fe1210d19af86801ffc66429d56385b8f35e1b84a1f3906448c12322cf57aeb992f9363506cdcb47f24af8b3ec80df82e3c4cdc5ae052f8ef613957f97cb6d162a74603eab33871102bb0ffc3c247caf3ed0485e4aad66bb504f077ad4cc44785d0c56166ffe22075c791e6eed0702ca20266e5b2b2aab95bf3e2e04ff2bdc77b1f5a947808a2558dfad0a323535f02edbe2a1edf74668b847f4dcc41e0839e504281010092de56378df699d1d8234074b6e830fca541c1100ba44de1b667372c1d6bfbd69c619484290b40a5370200385970d470a49bdb1db37c094d8fe710d4da316e0fde7cd1a511aa851ac8f7b9f05272743bfee07367cff666516838b96b1814a91ca425b2ffff28e82ee1381c2c370f8cce3f48acc6dbac4b6bf6095985a61fffd3ddd50aead15954af1144e8e1e47a70dea53b9b5006c5943fcc1974cc2945fc83c3aa467d04096e7ad1775e9d47905bc0a482328a1d1df0e8fe3d66603b4d25b31ffbd1af7e4a767b94fd00e6b247df5958f63ea7228bf08c7992ed3355e2ae870c801ab7cd199cbf328be8ffc9f6386307f0fe3c60cd636a0e216d2808b25731d5d8ce32049bef4d03e8dfe16cdce4b469d33e4c620a3f3d28abdea29b20fda044708ee0d529a4a56cfdd05e831031643d3a073a8f9607f9cc4375680801bbd9ca4a94b47210a111ab8b70a1cd7ecd252bfa7ea812c17e245407982f2bf8bc970049559d738fea7c343a1194737179ec6aa066cec9b55d83e77bbb3a1b10e9abfd09a15a19797357d05178539e9992b92bef157a3e9665b862e847a0012a8dc61100216297e94644472e0e73ff9b1cfd9e56ebaa2b10701d76a196fb2ee083ca562cd88f955a8817a8c8847e0c2297037f2155ef7dfbb7990e96d0374c7c87e9066c3295d2f2345b9b3777f84f2472de1a1b981f56f5aab0db1dd37ff50349f469168521fdc1b9d94300515a2b8951e01bc5e987dc43be7b56a43aae0863f84e2eff98b03a2c2220ff08749720c5b4f425f70697dd8f5190b9108c417395044d3943503ea46e949131ad377e4204f46c1de380be4581a4939c22c15bd0427537c90140b6adacb72f0ddf116e19f05eba3bd40a41739e536917eba5532991f78813def4df71c3cd02851d0617a289a9111fe3320d1be13af601699604b1e83fb0c63b3dca22b50cc3dde44561428362f8c9304c439682e8c60d41af12724814f40e2fb1c73a88059e82a45f723bbf7cfbfcd03e6ce960e9914ed3b2da42ff6c7c553d2d955bae72c05129c7f1cab5a713908e969795ec126e090e589ca5865ebf1f17b3d42c1621729d2f67d20b51d804dde7e63909dd9a5daf09cf200bd8cb5c25fdc09b73a53ec8178ac5384a91fa8747531956d5e94141120b1faced36b660fa95f2aeb9224266d49db88889c90d9e94e5404035b20c5834fcb1664fa5421e54a871ee850db1ca850554088209b9d6072feb4fe8a09903c61f4cecee18d2b420abe77ad44a4cf0c3bb41e2ca5640bf8b5abc36583b9019965099d64f8db621f1b1725af6eb1704620da81e5722528ea124983023c92e6d136588942ee5e9696890a531a86e38c507c9212033d78a27a088101525dd79b7302cf5cfbcddeab7b0036484179df1f5588a8c32aaeee2f1e8a7f43e4ca7135c72238c578a93ce84f54f67c2a1944e63307dc34943b0e820505f8a0c31bc57c7ba7ae79ad9520561117f6740e612003a1c26e108fa6a8da72f582f6f52c769de80d071e569484611b7b238c64a187ee3abdc240a80808435aa629bfde7897f6c57bdb817c48cae1fcbf4decae58add05b9a7b8a8eab05bcadc1751742e5a1b291fa8d3bdac477b10945dab4c5cc3901ad9b40594e6b99378b95451b61a2b7929ce8b6ac07740dd5491b11648b0ddf920d78e6f206b76d2f0ea99af5f820ef2b53f607c5ef123f8afecda3083cf6d7e72b83d96dfcd138000c00069a9bc0901c942f3322adcdfb137ac6fe6a2c186c7b198a4e36e7f91beb1d2594b5d0150c9c6f778f5498f9ab3b0b5547a2401c0541e136060b265e9b50122d33c2408a964a84e424f091c5edce42a67a8cf2eca382879ac1b9670fbc54723c678ed74e26a06c727f5874b9838febdb96d980ab3468317931aafdd20d444b0c755d28e040e863fc2e8222b46df8ec75a41ead25b9ada4614f6ca7df66d6ff5315b9813a601084f51e8b28324c529da38735aa5322eefcc849c6990f7821eef1238c06414588968be0d328d794c28a334250c62eed0aa0616b10337d19728ffad4f2e26361def36b2da6dfe377937840cd96f7f7a39bc785fd6d0508407eda91243ba6f52bb602c0bfaa838d3127805e9b78478869ae9a94f431939edff02f3301d4552b87f180e424a0c0f0081125ab64d59b0fb0a95e9ca805408300aa13bee5e97c35ed91ddec0c4a07ed0aa1d464bc58bc22f61e0c43a4e4de0da1d85768f5ce289222735c82b92c8e0d2da5586ad6e4ac76e49b736dd06b9709bb67c939dc604aa6c7e0fecd8dc555bad1929907af4f12076800d337f2e4f3246a5c3721fe46c19965787063302c00c39f058597dcd473a4eaa2d15b4986ed7e2165b42cac090966beebd6aa89ce8f9cdff3762355454432de015723892ac09366691ab0bf68ea76fd5f0a9b53ad414b48bc19ad6e622feeff83015a63c72787049edd703af3435329929b7b4be944cdcc1a5a32c895eb1fae7764ff99709b9eb1f395e4689b099e8684bb0497e5c301f24390acadb9e7fd91ec4532122e507e8c06895f8dfee213fb719947f5e42b4669a2876a7ad1cbeaac7f1865d474d36ae9d1294d77e97ca0fc15624441ab1badcc3e29f6315cd15129c28d8718eff4251f97be6287c26a74c99ac7e65e2e368b454362931f608e560800f2e69cfdcfa9bfd315b1f8e7a47c5f650ffe64da0f56a805683c9faf929ff448150b02cf71cdc4eb19207344cb772ef7fcb7876203525679f9d070ed5ef72d6d330da11c1cdb14163a9e4a41da876fad3c594dc96cb8b1092b106825cae5ed7334a0cda57d93a0888827b6c78b821e836dc01e6f634b0e40d37087480b4bb89089c46b1c00eb1904495a3289747bd5c9cf5213eea546c069ee8cf98b8cf1eff9b3f16984c4532352d7528a3049801a95357adac2ca7b3e4d9de9bc98cbf4e96257a308bc5e313020d9416fb8542009b7e40486008f624285761855c239456626287fe</script></div><script src="/lib/blog-encrypt.js"></script><link href="/css/blog-encrypt.css" rel="stylesheet" type="text/css">
     </div>
-
-    
-    
-    
-        <div class="reward-container">
-  <div>Would you like to buy me a cup of coffee☕️～</div>
-  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
-    Donate
-  </button>
-  <div id="qr" style="display: none;">
-      
-      <div style="display: inline-block;">
-        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
-        <p>WeChat Pay</p>
-      </div>
-      
-      <div style="display: inline-block;">
-        <img src="/images/alipay.jpg" alt="zichao Alipay">
-        <p>Alipay</p>
-      </div>
-
   </div>
+
 </div>
-
-
-      <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/ReflectionofPaper/" rel="tag"># ReflectionofPaper</a>
-          </div>
-
         
-
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/2020/11/03/SOMETHING-RIGHT-IN-MY-HEART/" rel="prev" title="SOMETHING RIGHT IN MY HEART">
-      <i class="fa fa-chevron-left"></i> SOMETHING RIGHT IN MY HEART
-    </a></div>
-      <div class="post-nav-item"></div>
-    </div>
-      </footer>
-    
-  </article>
-  
-  
-  
-
-  </div>
-
-
-          </div>
-          
-
-        </div>
-          
   
   <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
   </div>
 
   <aside class="sidebar">
-    <div class="sidebar-inner">
 
-      <ul class="sidebar-nav motion-element">
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
         </li>
@@ -344,19 +215,20 @@
         </li>
       </ul>
 
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-      </div>
-      <!--/noindex-->
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <section class="post-toc-wrap sidebar-panel">
+        </section>
+        <!--/noindex-->
 
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <section class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="zichao"
       src="/images/photo.jpg">
   <p class="site-author-name" itemprop="name">zichao</p>
   <div class="site-description" itemprop="description">Just learning</div>
 </div>
-<div class="site-state-wrap motion-element">
+<div class="site-state-wrap site-overview-item animated">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
@@ -379,33 +251,182 @@
       </div>
   </nav>
 </div>
-  <div class="links-of-author motion-element">
+  <div class="links-of-author site-overview-item animated">
       <span class="links-of-author-item">
-        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+        <a href="https://github.com/codewithzichao" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
       </span>
       <span class="links-of-author-item">
-        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+        <a href="mailto:lizichao@pku.edu.cn" title="E-Mail → mailto:lizichao@pku.edu.cn" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
       </span>
       <span class="links-of-author-item">
-        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+        <a href="https://weibo.com/codewithzichao" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;codewithzichao" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
       </span>
   </div>
 
 
 
+        </section>
       </div>
-
     </div>
   </aside>
-  <div id="sidebar-dimmer"></div>
+  <div class="sidebar-dimmer"></div>
 
 
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/codewithzichao" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://codewithzichao.github.io/2020/11/07/NLP-RE-Reflection-on-DRE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="name" content="zichao">
+      <meta itemprop="description" content="Just learning">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="codewithzichao">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          REFLECTION ON DRE
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2020-11-07 21:21:24 / Modified: 21:50:01" itemprop="dateCreated datePublished" datetime="2020-11-07T21:21:24+08:00">2020-11-07</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <div id="hexo-blog-encrypt" data-wpm="Oh, this is an invalid password. Check and try again, please." data-whm="Oh, these decrypted content cannot be verified, but you can still have a look."><div class="hbe-input-container"><input type="password" id="hbePass" placeholder="Hey, password is required here." /><label>Hey, password is required here.</label><div class="bottom-line"></div></div><script id="hbeData" type="hbeData" data-hmacdigest="d84ca00ffe484527369c0de3d58c4fe4bef7f13574270161773060a99b73a58f">00845897eac032b4b2ac9a51a929204da9853d6dad92368266c82e14195cb3a080a0fc879a1a445ed296699866288130729254e52e693b94f0f71f18e7d594d2c30f434a38df06e80f62abce4e2eede68d29fd4b8f728acf653aad209a77ab016b9ebbea33af749b270a85cf6e85b9287c5d64175b84b167ea7f58c8526d95fb92dc9c589a989fb2be98cb17dcf415948714b4fc3e11546acfedfcd4f05e1825fd3110120d09aba7ed556f23ae5e9f1d4c538c461f6a847c219a4bc46a80977f51655c3046b1ebd93201bce96e29691b41347d1475771a036a348ca439d2a3436887f00421cd9b7fead5c532ae964b8ef50bdb1fdd0622c756e060d4866e7933c42e50d9414b7b591fe1201e28bf42dfb6da120ccec2889f40ee762bd172beff71745d932aaf846e6047e09a58f7f6dda29fbf28c754ee7503b31471efcaf808b06e340a747b3907f8ce98c1e6ce2dd4ae0a5aa0f669bd6df778276423410fa27d36a6fabc5dbaa20f7edd36074d612575af8e05b4b89f066f29ac15c9c2270ed1e146e19ee33f40d171861e815ab32ab769b97f735e69f346c47cc384aa6e4918092dadbd8a03da6ca1fc70bd21bf2a5278bb339893f79b7d0de4751e83cfea13fe912a1554c6c26fe451e6182c9bc35bdebbffef0a962f74e0543c19ad89f4099dcd905e8f1c8d6af3e312b0b8f85290fc375961c0121a9897d4b82241a7ad69ddc5426ff07bb539d09f77cc061d5b26243439613a45248a5449fdfc36dc549c53b780acf9a9d81ab2549972796af9e08aa28c55d56460996be278c75367a508e80890cfd39868da43a133298f07976d08a6a45b55b61b67173e64c375c4d249fe4f2f009acbb0dfa7c5bf0f52d6a112ec1ef3d92b2f4039b5acb8177e318fb86fecab84e964bd4b1531727ed88c188bb0fce23363879bd49fc5b7362f87191ded50a5fa2a7d98649bdb347c46a2952aee712f5302772501aee0f37ebd58d6b0fffbc76d223cfb8f241e966ddc5b266ac306f316be35635d48fd4030596e93d3bc6ff28e0ab4745b63b95621b495705072cba0ff3057c5ff740eab1fdda1394332ff53736eafe9b2d562176cc9357e6b03eb001e5d185b7da7acb75d48831249c60636503afc63ee9465c6e52ea8b0b0a11df3ab10e65682159f7c92f8aaaef7ccf945fb148bf1acd1a38605286d220c792b76aeb2296361af10370cbaa948d7b5adf3888686262f8f043f2fd0b0ca5a091f6423bc2ef8e2fa8ffaf865c3182bb2cb7f50ff7e843e5af79884705de9494e3283168027ce15fc420efb70b94c9ea6d5f23cdcc39a5b94c96202902c4cb777fef6488285a9ece3ed2b630f826ae46467dd219723c8ae3f504e9a4477853e975069036d7612557bbf2296fe3d866ca8e3f65fff5bee35e16bd1f7229ac75a9fe1210d19af86801ffc66429d56385b8f35e1b84a1f3906448c12322cf57aeb992f9363506cdcb47f24af8b3ec80df82e3c4cdc5ae052f8ef613957f97cb6d162a74603eab33871102bb0ffc3c247caf3ed0485e4aad66bb504f077ad4cc44785d0c56166ffe22075c791e6eed0702ca20266e5b2b2aab95bf3e2e04ff2bdc77b1f5a947808a2558dfad0a323535f02edbe2a1edf74668b847f4dcc41e0839e504281010092de56378df699d1d8234074b6e830fca541c1100ba44de1b667372c1d6bfbd69c619484290b40a5370200385970d470a49bdb1db37c094d8fe710d4da316e0fde7cd1a511aa851ac8f7b9f05272743bfee07367cff666516838b96b1814a91ca425b2ffff28e82ee1381c2c370f8cce3f48acc6dbac4b6bf6095985a61fffd3ddd50aead15954af1144e8e1e47a70dea53b9b5006c5943fcc1974cc2945fc83c3aa467d04096e7ad1775e9d47905bc0a482328a1d1df0e8fe3d66603b4d25b31ffbd1af7e4a767b94fd00e6b247df5958f63ea7228bf08c7992ed3355e2ae870c801ab7cd199cbf328be8ffc9f6386307f0fe3c60cd636a0e216d2808b25731d5d8ce32049bef4d03e8dfe16cdce4b469d33e4c620a3f3d28abdea29b20fda044708ee0d529a4a56cfdd05e831031643d3a073a8f9607f9cc4375680801bbd9ca4a94b47210a111ab8b70a1cd7ecd252bfa7ea812c17e245407982f2bf8bc970049559d738fea7c343a1194737179ec6aa066cec9b55d83e77bbb3a1b10e9abfd09a15a19797357d05178539e9992b92bef157a3e9665b862e847a0012a8dc61100216297e94644472e0e73ff9b1cfd9e56ebaa2b10701d76a196fb2ee083ca562cd88f955a8817a8c8847e0c2297037f2155ef7dfbb7990e96d0374c7c87e9066c3295d2f2345b9b3777f84f2472de1a1b981f56f5aab0db1dd37ff50349f469168521fdc1b9d94300515a2b8951e01bc5e987dc43be7b56a43aae0863f84e2eff98b03a2c2220ff08749720c5b4f425f70697dd8f5190b9108c417395044d3943503ea46e949131ad377e4204f46c1de380be4581a4939c22c15bd0427537c90140b6adacb72f0ddf116e19f05eba3bd40a41739e536917eba5532991f78813def4df71c3cd02851d0617a289a9111fe3320d1be13af601699604b1e83fb0c63b3dca22b50cc3dde44561428362f8c9304c439682e8c60d41af12724814f40e2fb1c73a88059e82a45f723bbf7cfbfcd03e6ce960e9914ed3b2da42ff6c7c553d2d955bae72c05129c7f1cab5a713908e969795ec126e090e589ca5865ebf1f17b3d42c1621729d2f67d20b51d804dde7e63909dd9a5daf09cf200bd8cb5c25fdc09b73a53ec8178ac5384a91fa8747531956d5e94141120b1faced36b660fa95f2aeb9224266d49db88889c90d9e94e5404035b20c5834fcb1664fa5421e54a871ee850db1ca850554088209b9d6072feb4fe8a09903c61f4cecee18d2b420abe77ad44a4cf0c3bb41e2ca5640bf8b5abc36583b9019965099d64f8db621f1b1725af6eb1704620da81e5722528ea124983023c92e6d136588942ee5e9696890a531a86e38c507c9212033d78a27a088101525dd79b7302cf5cfbcddeab7b0036484179df1f5588a8c32aaeee2f1e8a7f43e4ca7135c72238c578a93ce84f54f67c2a1944e63307dc34943b0e820505f8a0c31bc57c7ba7ae79ad9520561117f6740e612003a1c26e108fa6a8da72f582f6f52c769de80d071e569484611b7b238c64a187ee3abdc240a80808435aa629bfde7897f6c57bdb817c48cae1fcbf4decae58add05b9a7b8a8eab05bcadc1751742e5a1b291fa8d3bdac477b10945dab4c5cc3901ad9b40594e6b99378b95451b61a2b7929ce8b6ac07740dd5491b11648b0ddf920d78e6f206b76d2f0ea99af5f820ef2b53f607c5ef123f8afecda3083cf6d7e72b83d96dfcd138000c00069a9bc0901c942f3322adcdfb137ac6fe6a2c186c7b198a4e36e7f91beb1d2594b5d0150c9c6f778f5498f9ab3b0b5547a2401c0541e136060b265e9b50122d33c2408a964a84e424f091c5edce42a67a8cf2eca382879ac1b9670fbc54723c678ed74e26a06c727f5874b9838febdb96d980ab3468317931aafdd20d444b0c755d28e040e863fc2e8222b46df8ec75a41ead25b9ada4614f6ca7df66d6ff5315b9813a601084f51e8b28324c529da38735aa5322eefcc849c6990f7821eef1238c06414588968be0d328d794c28a334250c62eed0aa0616b10337d19728ffad4f2e26361def36b2da6dfe377937840cd96f7f7a39bc785fd6d0508407eda91243ba6f52bb602c0bfaa838d3127805e9b78478869ae9a94f431939edff02f3301d4552b87f180e424a0c0f0081125ab64d59b0fb0a95e9ca805408300aa13bee5e97c35ed91ddec0c4a07ed0aa1d464bc58bc22f61e0c43a4e4de0da1d85768f5ce289222735c82b92c8e0d2da5586ad6e4ac76e49b736dd06b9709bb67c939dc604aa6c7e0fecd8dc555bad1929907af4f12076800d337f2e4f3246a5c3721fe46c19965787063302c00c39f058597dcd473a4eaa2d15b4986ed7e2165b42cac090966beebd6aa89ce8f9cdff3762355454432de015723892ac09366691ab0bf68ea76fd5f0a9b53ad414b48bc19ad6e622feeff83015a63c72787049edd703af3435329929b7b4be944cdcc1a5a32c895eb1fae7764ff99709b9eb1f395e4689b099e8684bb0497e5c301f24390acadb9e7fd91ec4532122e507e8c06895f8dfee213fb719947f5e42b4669a2876a7ad1cbeaac7f1865d474d36ae9d1294d77e97ca0fc15624441ab1badcc3e29f6315cd15129c28d8718eff4251f97be6287c26a74c99ac7e65e2e368b454362931f608e560800f2e69cfdcfa9bfd315b1f8e7a47c5f650ffe64da0f56a805683c9faf929ff448150b02cf71cdc4eb19207344cb772ef7fcb7876203525679f9d070ed5ef72d6d330da11c1cdb14163a9e4a41da876fad3c594dc96cb8b1092b106825cae5ed7334a0cda57d93a0888827b6c78b821e836dc01e6f634b0e40d37087480b4bb89089c46b1c00eb1904495a3289747bd5c9cf5213eea546c069ee8cf98b8cf1eff9b3f16984c4532352d7528a3049801a95357adac2ca7b3e4d9de9bc98cbf4e96257a308bc5e313020d9416fb8542009b7e40486008f624285761855c239456626287fe</script></div><script src="/lib/blog-encrypt.js"></script><link href="/css/blog-encrypt.css" rel="stylesheet" type="text/css">
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>Would you like to buy me a cup of coffee☕️～</div>
+  <button onclick="document.querySelector('.post-reward').classList.toggle('active');">
+    Donate
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/images/wechatpay.jpg" alt="zichao WeChat Pay">
+        <span>WeChat Pay</span>
       </div>
-    </main>
+      <div>
+        <img src="/images/alipay.jpg" alt="zichao Alipay">
+        <span>Alipay</span>
+      </div>
 
-    <footer class="footer">
-      <div class="footer-inner">
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/ReflectionofPaper/" rel="tag"># ReflectionofPaper</a>
+          </div>
+
         
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/11/03/SOMETHING-RIGHT-IN-MY-HEART/" rel="prev" title="SOMETHING RIGHT IN MY HEART">
+                  <i class="fa fa-chevron-left"></i> SOMETHING RIGHT IN MY HEART
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
 
 <div class="copyright">
   
@@ -416,15 +437,7 @@
   </span>
   <span class="author" itemprop="copyrightHolder">zichao</span>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a>
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">Theme – <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
-  </div>
-
-        
 <div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
       <span class="post-meta-item-icon">
         <i class="fa fa-user"></i>
@@ -433,7 +446,6 @@
         <span id="busuanzi_value_site_uv"></span>
       </span>
     </span>
-    <span class="post-meta-divider">|</span>
     <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
       <span class="post-meta-item-icon">
         <i class="fa fa-eye"></i>
@@ -443,72 +455,42 @@
       </span>
     </span>
 </div>
-
-
-
-
-
-
-
-
-        
-      </div>
-    </footer>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
 
+    </div>
+  </footer>
+
   
-  <script src="/lib/anime.min.js"></script>
-  <script src="/lib/velocity/velocity.min.js"></script>
-  <script src="/lib/velocity/velocity.ui.min.js"></script>
-
-<script src="/js/utils.js"></script>
-
-<script src="/js/motion.js"></script>
-
-
-<script src="/js/schemes/muse.js"></script>
-
-
-<script src="/js/next-boot.js"></script>
-
-
-
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
 
   
 
 
 
 
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   
-<script src="/js/local-search.js"></script>
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 
 
-
-
-
-
-
-
-<script>
-if (document.querySelectorAll('div.pdf').length) {
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/pdfobject@2/pdfobject.min.js', () => {
-    document.querySelectorAll('div.pdf').forEach(element => {
-      PDFObject.embed(element.getAttribute('target'), element, {
-        pdfOpenParams: {
-          navpanes: 0,
-          toolbar: 0,
-          statusbar: 0,
-          pagemode: 'thumbs',
-          view: 'FitH'
-        },
-        PDFJS_URL: '/lib/pdf/web/viewer.html',
-        height: element.getAttribute('height') || '500px'
-      });
-    });
-  }, window.PDFObject);
-}
-</script>
 
 
 
@@ -517,51 +499,47 @@ if (document.querySelectorAll('div.pdf').length) {
   
 
   
-      
-<script type="text/x-mathjax-config">
-
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      equationNumbers: {
-        autoNumber: 'AMS'
-      }
-    }
-  });
-
-  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
-    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
-      if (data.display) {
-        var next = data.script.nextSibling;
-        while (next && next.nodeName.toLowerCase() === '#text') {
-          next = next.nextSibling;
-        }
-        if (next && next.nodeName.toLowerCase() === 'br') {
-          next.parentNode.removeChild(next);
+      <script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              const target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
         }
       }
-    });
-  });
-
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i = 0; i < all.length; i += 1) {
-      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
-      if (element.nodeName.toLowerCase() == 'li') {
-        element = element.parentNode;
-      }
-      element.classList.add('has-jax');
-    }
-  });
-</script>
-<script>
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
-    MathJax.Hub.Typeset();
-  }, window.MathJax);
+    };
+    const script = document.createElement('script');
+    script.src = '//cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js';
+    script.defer = true;
+    document.head.appendChild(script);
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.typesetClear();
+    MathJax.texReset();
+    MathJax.typeset();
+  }
 </script>
 
     
