@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 5.2.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="各类指标 首先记录一下符号：TP(true positive)、FP(false positive)、FN(false nergative)、TN(true negative)。表格如下：    pred True False     True TP FP   False FN TN    accuracy与error rate \[ accuracy&#x3D;\frac {TP+TN}{N} \\ e">
@@ -27,16 +27,16 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="各类指标 首先记录一下符号：TP(true positive)、FP(false positive)、FN(false nergative)、TN(true negative)。表格如下：    pred True False     True TP FP   False FN TN    accuracy与error rate \[ accuracy&#x3D;\frac {TP+TN}{N} \\ e">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/%E5%AE%8F%E5%B9%B3%E5%9D%87%E4%B8%8E%E5%BE%AE%E5%B9%B3%E5%9D%87%E5%AF%B9%E6%AF%94.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/宏平均与微平均对比.jpg">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/MRR.jpg">
-<meta property="og:image" content="https://www.zhihu.com/equation?tex=AP+%253D+%EF%BC%881%252F1%252B2%252F3%252B3%252F6%252B4%252F9%252B5%252F10%EF%BC%89%252F5%253D0.62">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=AP+%3D+%EF%BC%881%2F1%2B2%2F3%2B3%2F6%2B4%2F9%2B5%2F10%EF%BC%89%2F5%3D0.62">
 <meta property="og:image" content="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/MAP.jpg">
 <meta property="article:published_time" content="2020-05-12T12:40:55.000Z">
 <meta property="article:modified_time" content="2020-11-07T15:10:02.798Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/%E5%AE%8F%E5%B9%B3%E5%9D%87%E4%B8%8E%E5%BE%AE%E5%B9%B3%E5%9D%87%E5%AF%B9%E6%AF%94.jpg">
+<meta name="twitter:image" content="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/宏平均与微平均对比.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/">
 
@@ -110,6 +110,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -144,11 +145,38 @@
     <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
 
   </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
     </header>
@@ -266,7 +294,7 @@ F1-score=\frac {2}{\frac{1}{P}+\frac {1}{R}}
 <p>注意：precison、recall、F1score仅使用于二分类问题。对于多分类问题，使用的是micro-P、micro-R、micro-F1以及macro-P、macro-R、macro-F1。</p>
 <p>micro： "Micro"是通过先计算总体的TP, FP和FN的数量，然后计算PRF。</p>
 <p>macro：“Macro”是分别计算每个类别的PRF，然后分别求平均得到PRF。</p>
-<p>链接：<a href="https://www.cnblogs.com/nana-zhang/p/11496496.html" target="_blank" rel="noopener">micro与macro</a></p>
+<p>链接：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/nana-zhang/p/11496496.html">micro与macro</a></p>
 <p><img src="/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/宏平均与微平均对比.jpg"> 如何每个class的样本数量相差不大，那么宏平均和微平均差异也不大 如果每个class的相差较大并且你想： 更注重样本量多的class：使用微平均 更注重样本量少的class：使用宏平均 如果微平均远低于宏平均，则应该去检查样本量多的class 如果宏平均远低于微平均，则应该去检查样本量少的class</p>
 </blockquote>
 <h3 id="em">EM</h3>
@@ -280,10 +308,10 @@ MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}
 <h3 id="map">MAP</h3>
 <p>mAP，顾名思义，即AP的平均值，那么就需要先计算AP，然后再对其进行平均。</p>
 <p>在信息检索中，AP指的是不同召回率上的正确率的平均值，而现在的有些检索系统为了能够快速返回结果，在计算AP时就不再考虑召回率。换句话说，如果数据库中和查询信息相关的5条信息，分别出现在查询结果中的第1、3、6、9、10位，那么这次查询的AP就是： <img src="https://www.zhihu.com/equation?tex=AP+%3D+%EF%BC%881%2F1%2B2%2F3%2B3%2F6%2B4%2F9%2B5%2F10%EF%BC%89%2F5%3D0.62" alt="[公式]"></p>
-<p>得到多条查询的AP值，对其进行平均，就得到了mAP。<a href="https://zhuanlan.zhihu.com/p/35983818" target="_blank" rel="noopener">来源</a></p>
+<p>得到多条查询的AP值，对其进行平均，就得到了mAP。<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/35983818">来源</a></p>
 <p><img src="/2020/05/12/NLP-%E5%88%86%E7%B1%BB%E4%B8%8E%E5%8C%B9%E9%85%8D%E7%9A%84%E5%90%84%E7%B1%BB%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/MAP.jpg"></p>
 <h3 id="ndcg">NDCG</h3>
-<p><a href="https://zhuanlan.zhihu.com/p/38850753" target="_blank" rel="noopener">链接</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/38850753">链接</a></p>
 <h2 id="指标在文本匹配中的应用">指标在文本匹配中的应用</h2>
 <p><strong>相似度计算与复述识别</strong></p>
 <p>这个任务是给出两句话，判断两者是不是表达了同样的含义，或者两句话的相似度有多高，一般都是当成分类问题来对待。常用的公开数据集有：STS、QQP、MSRP，当然啦，还有PPDB，但是数量太大，我没有跑过这个数据集，前面三个数据集就已经很好啦。由于是分类问题(pointwise)，所以评价指标一般使用Accuracy或者F1 score。</p>
@@ -381,7 +409,7 @@ MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#各类指标"><span class="nav-number">1.</span> <span class="nav-text">各类指标</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#accuracy与error-rate"><span class="nav-number">1.1.</span> <span class="nav-text">accuracy与error rate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#precisionrecallf1-score"><span class="nav-number">1.2.</span> <span class="nav-text">precision&#x2F;recall&#x2F;F1 score</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#em"><span class="nav-number">1.3.</span> <span class="nav-text">EM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mrr"><span class="nav-number">1.4.</span> <span class="nav-text">MRR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#map"><span class="nav-number">1.5.</span> <span class="nav-text">MAP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ndcg"><span class="nav-number">1.6.</span> <span class="nav-text">NDCG</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指标在文本匹配中的应用"><span class="nav-number">2.</span> <span class="nav-text">指标在文本匹配中的应用</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%84%E7%B1%BB%E6%8C%87%E6%A0%87"><span class="nav-number">1.</span> <span class="nav-text">各类指标</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#accuracy%E4%B8%8Eerror-rate"><span class="nav-number">1.1.</span> <span class="nav-text">accuracy与error rate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#precisionrecallf1-score"><span class="nav-number">1.2.</span> <span class="nav-text">precision&#x2F;recall&#x2F;F1 score</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#em"><span class="nav-number">1.3.</span> <span class="nav-text">EM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mrr"><span class="nav-number">1.4.</span> <span class="nav-text">MRR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#map"><span class="nav-number">1.5.</span> <span class="nav-text">MAP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ndcg"><span class="nav-number">1.6.</span> <span class="nav-text">NDCG</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E6%A0%87%E5%9C%A8%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">指标在文本匹配中的应用</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -478,6 +506,10 @@ MRR=\frac {1}{Q} \sum_{i=1}^{Q}\frac {1}{rank_i}
   
 
 
+
+
+  
+<script src="/js/local-search.js"></script>
 
 
 

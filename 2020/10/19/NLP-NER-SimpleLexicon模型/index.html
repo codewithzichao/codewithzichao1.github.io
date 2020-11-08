@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 5.2.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解中文NER的Adaptive Embedding paradigm。所谓的Adaptive Embedding paradigm，指的是只在embedding部分进行改进，从而让我们不需要设计非常的复杂的结构，能够迁移到不同的模型结构上(RNN&#x2F;CNN&#x2F;transformer e">
@@ -118,6 +118,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -152,11 +153,38 @@
     <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
 
   </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
     </header>
@@ -268,7 +296,7 @@
 <p>embeding 部分主要是根据GGNN来进行构建。怎么构建图呢？首先明确模型的输入：sentence以及实体词典(gazetteer)，那么node set就是：sentence中每一个chatacter作为node+<strong>每一种词典的每一类</strong>对应一对节点(起始与结束)，上方有四种词典，因此有四对节点。在模型图中，raw space中五颜六色的箭头就是edge。构建好图后，就可以使用GGNN来进行aggregate，从而产生更好的node representation。下面介绍一下什么是GGNN，以及为什么要选择GGNN而不是其他的GNN。</p>
 <p><strong>GGNN</strong>：全称是Gated graph sequence neural networks，是一种spatial GNN，其aggregate的方式优点类似于GRU，如下：</p>
 <p><img src="/2020/10/19/NLP-NER-SimpleLexicon%E6%A8%A1%E5%9E%8B/ggnn.jpg"></p>
-<p>其中，<span class="math inline">\(h_v^{(1)}\)</span>表示的是初始的embedding，具体的可见<a href="https://zhuanlan.zhihu.com/p/83410937" target="_blank" rel="noopener">link</a>。从aggregate更新的方式来看，就是知道GGNN相比于GCN等GNN来说，最大的优势是比较适用于序列，能够更好地提取文本信息。不过说实话，这里使用GNN有点强行上的意思，没看出来为什么一定要用GGNN。🧐</p>
+<p>其中，<span class="math inline">\(h_v^{(1)}\)</span>表示的是初始的embedding，具体的可见<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/83410937">link</a>。从aggregate更新的方式来看，就是知道GGNN相比于GCN等GNN来说，最大的优势是比较适用于序列，能够更好地提取文本信息。不过说实话，这里使用GNN有点强行上的意思，没看出来为什么一定要用GGNN。🧐</p>
 <h3 id="实验结果-1">实验结果</h3>
 <ol type="1">
 <li><p>数据集：OntoNotes、MSRA、Weibo、E-commerce(released by this paper)</p></li>
@@ -400,7 +428,7 @@ e^s(B,M,E,S)=[v^s(B),v^s(M),v^s(E),v^s(S)]
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#wc-lstm模型"><span class="nav-number">1.</span> <span class="nav-text">WC-LSTM模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#提出的背景"><span class="nav-number">1.1.</span> <span class="nav-text">提出的背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#wc-lstm模型介绍"><span class="nav-number">1.2.</span> <span class="nav-text">WC-LSTM模型介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验结果"><span class="nav-number">1.3.</span> <span class="nav-text">实验结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#multi-digraph模型"><span class="nav-number">2.</span> <span class="nav-text">Multi-digraph模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#提出的背景-1"><span class="nav-number">2.1.</span> <span class="nav-text">提出的背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#multi-digraph模型介绍"><span class="nav-number">2.2.</span> <span class="nav-text">Multi-digraph模型介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验结果-1"><span class="nav-number">2.3.</span> <span class="nav-text">实验结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#softlexicon模型"><span class="nav-number">3.</span> <span class="nav-text">SoftLexicon模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#提出的背景-2"><span class="nav-number">3.1.</span> <span class="nav-text">提出的背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#softlexicon模型介绍"><span class="nav-number">3.2.</span> <span class="nav-text">SoftLexicon模型介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验结果-2"><span class="nav-number">3.3.</span> <span class="nav-text">实验结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#wc-lstm%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">WC-LSTM模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%90%E5%87%BA%E7%9A%84%E8%83%8C%E6%99%AF"><span class="nav-number">1.1.</span> <span class="nav-text">提出的背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#wc-lstm%E6%A8%A1%E5%9E%8B%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.2.</span> <span class="nav-text">WC-LSTM模型介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="nav-number">1.3.</span> <span class="nav-text">实验结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#multi-digraph%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">Multi-digraph模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%90%E5%87%BA%E7%9A%84%E8%83%8C%E6%99%AF-1"><span class="nav-number">2.1.</span> <span class="nav-text">提出的背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#multi-digraph%E6%A8%A1%E5%9E%8B%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.2.</span> <span class="nav-text">Multi-digraph模型介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C-1"><span class="nav-number">2.3.</span> <span class="nav-text">实验结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#softlexicon%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.</span> <span class="nav-text">SoftLexicon模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%90%E5%87%BA%E7%9A%84%E8%83%8C%E6%99%AF-2"><span class="nav-number">3.1.</span> <span class="nav-text">提出的背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#softlexicon%E6%A8%A1%E5%9E%8B%E4%BB%8B%E7%BB%8D"><span class="nav-number">3.2.</span> <span class="nav-text">SoftLexicon模型介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C-2"><span class="nav-number">3.3.</span> <span class="nav-text">实验结果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -497,6 +525,10 @@ e^s(B,M,E,S)=[v^s(B),v^s(M),v^s(E),v^s(S)]
   
 
 
+
+
+  
+<script src="/js/local-search.js"></script>
 
 
 

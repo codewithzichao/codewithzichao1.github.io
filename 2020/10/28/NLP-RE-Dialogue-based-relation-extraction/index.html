@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 5.2.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="这篇博客主要讲解两篇论文：《Dialogue-Based Relation Extraction》与《Dialogue Relation Extraction with Document-level Heterogeneous Graph Attention Networks》。">
@@ -116,6 +116,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -150,11 +151,38 @@
     <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
 
   </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
     </header>
@@ -296,7 +324,7 @@ h^i_j=[\overleftarrow {h^i_j};\overrightarrow {h^i_j}]
 <blockquote>
 <p>ps：我个人觉得这种需要用已有的语法分析工具来得到feature的方法不是很优雅，一方面这些语法分析工具得到的feature并不是很准确，另一方面一体化不好，个人拙见是一个好的模型应该是其本身与数据无关的、与第三方工具无关的、针对问题本身进行建模的。</p>
 </blockquote></li>
-<li><p>message propagation：构建好graph之后，我们就需要进行aggregate。由于我们构建的是一个异质图，所以paper中采用的是GAT与metapath(HGNN中经常使用的一种方法)。GAT很简单就不提了，不懂可见<a href="https://zhuanlan.zhihu.com/p/81350196?utm_source=wechat_session" target="_blank" rel="noopener">link</a>，主要讲一下metapath的设计，这对于HGNN的效果是最重要的。</p>
+<li><p>message propagation：构建好graph之后，我们就需要进行aggregate。由于我们构建的是一个异质图，所以paper中采用的是GAT与metapath(HGNN中经常使用的一种方法)。GAT很简单就不提了，不懂可见<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/81350196?utm_source=wechat_session">link</a>，主要讲一下metapath的设计，这对于HGNN的效果是最重要的。</p>
 <p>Metapath：第一，使用utterance node来update word node、speaker node与argument node；第二，更新好的word node来update entity-type node；第三，更新好的entity-type node来update word node、argument node、entity-type node；第四，我们使用word node、speaker node、argument node来update utterance node；最后，utterance node再一次update word node、speaker node、argument node。即： <span class="math display">\[
 V_u\rightarrow V_b\rightarrow V_t\rightarrow V_b\rightarrow V_u\rightarrow V_b
 \]</span> 然后借鉴了ACL2020邱锡鹏老师那篇使用HGNN来做文本摘要的paper，对一个node的更新，都使用了残差链接，即：<span class="math inline">\(\hat h_i=\tilde h_i+h^{\prime}_i\)</span>，其中<span class="math inline">\(h^{\prime}_i\)</span>是GAT layer输入，<span class="math inline">\(\tilde h_i\)</span>是GAT layer的输出，然后我们使用FFN，增加非线性，即：<span class="math inline">\(h^{new}_i=FFN(\hat h_i)\)</span>。OK，在HGAT模型中，更新次数为三次，其整体而言公式如下： <span class="math display">\[
@@ -513,6 +541,10 @@ P(r|e_x,e_y)=sigmoid(W_ee^{\prime}+b_e)_r
   
 
 
+
+
+  
+<script src="/js/local-search.js"></script>
 
 
 

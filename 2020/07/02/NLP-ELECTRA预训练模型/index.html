@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 5.2.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="最近在看GAN相关的内容的时候，看到一篇关于预训练模型的新作：ELECTRA，核心是将GAN的思想引入到NLP中，非常地新颖。所以这篇文章将具体地讲解一下关于ELECTRA的内容，我个人是很喜欢这样精巧且优雅的文章的～🤩">
@@ -116,6 +116,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -150,11 +151,38 @@
     <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
 
   </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
     </header>
@@ -365,7 +393,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#electra要解决的问题"><span class="nav-number">1.</span> <span class="nav-text">ELECTRA要解决的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#electra模型架构"><span class="nav-number">2.</span> <span class="nav-text">ELECTRA模型架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#electra模型优化与改进"><span class="nav-number">3.</span> <span class="nav-text">ELECTRA模型优化与改进</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#weight-sharing"><span class="nav-number">3.1.</span> <span class="nav-text">weight sharing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#smaller-generator"><span class="nav-number">3.2.</span> <span class="nav-text">smaller Generator</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#training-algorithms"><span class="nav-number">4.</span> <span class="nav-text">training algorithms</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#electra模型结果"><span class="nav-number">5.</span> <span class="nav-text">ELECTRA模型结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">6.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#electra%E8%A6%81%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">ELECTRA要解决的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#electra%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">ELECTRA模型架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#electra%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96%E4%B8%8E%E6%94%B9%E8%BF%9B"><span class="nav-number">3.</span> <span class="nav-text">ELECTRA模型优化与改进</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#weight-sharing"><span class="nav-number">3.1.</span> <span class="nav-text">weight sharing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#smaller-generator"><span class="nav-number">3.2.</span> <span class="nav-text">smaller Generator</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#training-algorithms"><span class="nav-number">4.</span> <span class="nav-text">training algorithms</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#electra%E6%A8%A1%E5%9E%8B%E7%BB%93%E6%9E%9C"><span class="nav-number">5.</span> <span class="nav-text">ELECTRA模型结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">6.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -462,6 +490,10 @@
   
 
 
+
+
+  
+<script src="/js/local-search.js"></script>
 
 
 

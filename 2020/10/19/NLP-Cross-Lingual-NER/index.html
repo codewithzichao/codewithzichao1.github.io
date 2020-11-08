@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 5.2.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解一下cross-lingual NER，解读今年MSRA发表的三篇论文：《Enhanced Meta-Learning for Cross-lingual Named Entity Recognition with Minimal Resources》、《Single-&#x2F;Mult">
@@ -115,6 +115,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -149,11 +150,38 @@
     <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
 
   </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
     </header>
@@ -250,7 +278,7 @@
 <li><p><strong>问题定义</strong></p>
 <p>我们把labeled source language data记做： <span class="math inline">\(D^S_{train}=\{x^{(i)}\}_{i=1}^{N}\)</span> ，unlabeled target language data记做：<span class="math inline">\(D^T_{test}=\{x^{(j)}\}_{j=1}^{M}\)</span>。我们的目标是：希望使用<span class="math inline">\(D^S_{train}\)</span>来训练一个模型，从而让模型能够在<span class="math inline">\(D^S_{test}\)</span>有着很好的效果。</p></li>
 <li><p><strong>Base model：</strong>使用预训练的mBERT，同时添加一个softmax用于token解码，损失函数采用CE。</p></li>
-<li><p><strong>enhanced meta learning approach：</strong>在这篇paper里，使用MAML算法来进行meta learning。不了解的MAML算法请看这个<a href="https://zhuanlan.zhihu.com/p/57864886" target="_blank" rel="noopener">link</a>。整个算法其实分为三部分：task的构建、meta-training(在MAML中就是预训练阶段)与adaptation(在MAML中就是微调阶段)。</p>
+<li><p><strong>enhanced meta learning approach：</strong>在这篇paper里，使用MAML算法来进行meta learning。不了解的MAML算法请看这个<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/57864886">link</a>。整个算法其实分为三部分：task的构建、meta-training(在MAML中就是预训练阶段)与adaptation(在MAML中就是微调阶段)。</p>
 <ol type="1">
 <li><p><strong>task的构建</strong></p>
 <p>在执行MAML算法之前，我们需要构建task，因为在MAML中，一个task就相当于一个样本。对于<span class="math inline">\(D^S_{train}\)</span>中每一个样本<span class="math inline">\(x^{(i)}\)</span>，我们将其本身当作meta task <span class="math inline">\(\tau_i\)</span>的测试集<span class="math inline">\(D^{\tau_i}_{test}\)</span>(其实就是query set)，从source language data召回的与<span class="math inline">\(x^{(i)}\)</span>最相似的样本的集合作为meta task <span class="math inline">\(\tau_i\)</span>的训练集<span class="math inline">\(D^{\tau_i}_{train}\)</span>(其实就是support set)，所以每一个meta task <span class="math inline">\(\tau_i\)</span>可以表示为： <span class="math display">\[
@@ -321,7 +349,7 @@
 <p><strong>base model：</strong>在这篇paper中，就是一个mBERT+softmax，loss就是entity-level的ce loss。</p>
 <p><strong>word-to-word translation：</strong>这一部分借鉴的是《Word translation without parallel data》paper中的做法。具体做法是：假设我们已经得到source language与target language的word embedding：<span class="math inline">\(S，T\in R^{d\times D}\)</span>，并且得到了D对word的词典，我们希望能够找到一个变化，使得两个语言的word可以相互转换。公式是： <span class="math display">\[
 P=argmin_{P^{&#39;}}||P^{&#39;}S-T||_F
-\]</span> 得到<span class="math inline">\(P\)</span>之后，对于任何一个source language word，我们可以通过最近邻的方法来找到对应的翻译。但是关键是怎么找到最近邻呢？方法是定义CSLS方法来衡量不同语言的word之间的相似度。具体可以参看<a href="https://zhuanlan.zhihu.com/p/30218451" target="_blank" rel="noopener">link</a>。</p>
+\]</span> 得到<span class="math inline">\(P\)</span>之后，对于任何一个source language word，我们可以通过最近邻的方法来找到对应的翻译。但是关键是怎么找到最近邻呢？方法是定义CSLS方法来衡量不同语言的word之间的相似度。具体可以参看<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/30218451">link</a>。</p>
 <p><strong>knowleage distillation：</strong>得到三个模型(<span class="math inline">\(\theta_{src}、\theta_{teach}、\theta_{trans}\)</span>)之后，我们需要将这些模型的知识蒸馏给student。具体做法是如下：</p>
 <ol type="1">
 <li>首先，我们将unlabeled target language data输入到<span class="math inline">\(\theta_{teach}\)</span>与<span class="math inline">\(\theta_{stu}\)</span>中，来让<span class="math inline">\(\theta_{stu}\)</span>模型去拟合<span class="math inline">\(\theta_{teach}\)</span>的输出的分布，loss使用MSE；这样做，不仅可以将<span class="math inline">\(\theta_{teach}\)</span>的知识蒸馏给<span class="math inline">\(\theta_{stu}\)</span>，同时还能让<span class="math inline">\(\theta_{stu}\)</span>学习到unlabeled language data中的信息；</li>
@@ -555,6 +583,10 @@ p_i=tanh(r_i)
   
 
 
+
+
+  
+<script src="/js/local-search.js"></script>
 
 
 

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 5.2.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解一下《FLAT: Chinese NER Using Flat-Lattice Transformer》论文，即：FLAT模型，这是今年ACL2020上NER任务的SOTA，个人觉得模型设计上非常优雅，非常值得一读，预测以后会成为比赛的标配🧐。">
@@ -113,6 +113,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -147,11 +148,38 @@
     <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
 
   </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
     </header>
@@ -253,7 +281,7 @@ p_d^{2k}=sin(\frac {d}{10000^{2k/d_{model}}}) \\
 p_d^{2k+1}=cos(\frac {d}{10000^{2k/d_{model}}}) \\
 d\in \{d_{ij}^{hh},d_{ij}^{ht},d_{ij}^{th},d_{ij}^{tt}\}
 \]</span> 融合后的<span class="math inline">\(R\)</span>的维度是：<span class="math inline">\([batch\_size,hidden\_size,seq\_len,seq\_len]\)</span>。当然了，既然使用了相对位置编码，那么vanilla transformer中的self attention的方式就不能用了(适用于绝对位置编码)，所以在FLAT中，采用的是transformer-xl中的variant self attention，公式如下： $$ A_{i,j}^{*}=W_{q}^{T} E_{x_i}^TE_{x_j}W_{k,E}+ W_q<sup>⊤E_{x_i}</sup>⊤R_{ij}W_{k,R}</p>
-<p>+u^⊤E_{x_j}W_{k,E} + v^⊤R_{ij}W_{k,R} $$ 关于这个是怎么来的，可以参考transformer-xl原始论文或者<a href="https://zhuanlan.zhihu.com/p/84159401" target="_blank" rel="noopener">link</a>。</p></li>
+<p>+u^⊤E_{x_j}W_{k,E} + v^⊤R_{ij}W_{k,R} $$ 关于这个是怎么来的，可以参考transformer-xl原始论文或者<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/84159401">link</a>。</p></li>
 </ol>
 <h2 id="实验结果">实验结果</h2>
 <ol type="1">
@@ -266,7 +294,7 @@ d\in \{d_{ij}^{hh},d_{ij}^{ht},d_{ij}^{th},d_{ij}^{tt}\}
 <p><img src="/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/result.jpg"></p>
 <p>我们看一下加上了BERT之后的结果，如下图所示。NB!以后比赛可以搞起来了就不一定是BERT+BILSTM+CRF了，也可以是是BERT+FLAT+CRF，不过词汇表在其中还是占了大部分作用，以后要用的好的话，就得制作词汇表了。🧐</p>
 <p><img src="/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/bert.jpg" style="zoom:80%;"></p>
-<p>我们再来看一下推理速度，如下图所示。在batch的情况下，inferance的速度比其他模型快上好几倍，FLAT nb！这个实验另外让我非常惊奇的是，原始的LatticeLSTM的code是不能batch训练的，但是这篇paper的作者自己手撸了一个batch的LatticeLSTM，向大佬低头，有空去看看具体是怎么做到的。<a href="https://github.com/LeeSureman/Batch_Parallel_LatticeLSTM" target="_blank" rel="noopener">code</a></p>
+<p>我们再来看一下推理速度，如下图所示。在batch的情况下，inferance的速度比其他模型快上好几倍，FLAT nb！这个实验另外让我非常惊奇的是，原始的LatticeLSTM的code是不能batch训练的，但是这篇paper的作者自己手撸了一个batch的LatticeLSTM，向大佬低头，有空去看看具体是怎么做到的。<a target="_blank" rel="noopener" href="https://github.com/LeeSureman/Batch_Parallel_LatticeLSTM">code</a></p>
 <p><img src="/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/speed.jpg"></p></li>
 </ol>
 <h2 id="参考文献">参考文献</h2>
@@ -357,7 +385,7 @@ d\in \{d_{ij}^{hh},d_{ij}^{ht},d_{ij}^{th},d_{ij}^{tt}\}
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#flat模型提出的背景"><span class="nav-number">1.</span> <span class="nav-text">FLAT模型提出的背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#flat模型介绍"><span class="nav-number">2.</span> <span class="nav-text">FLAT模型介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验结果"><span class="nav-number">3.</span> <span class="nav-text">实验结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#flat%E6%A8%A1%E5%9E%8B%E6%8F%90%E5%87%BA%E7%9A%84%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">FLAT模型提出的背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#flat%E6%A8%A1%E5%9E%8B%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.</span> <span class="nav-text">FLAT模型介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="nav-number">3.</span> <span class="nav-text">实验结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -454,6 +482,10 @@ d\in \{d_{ij}^{hh},d_{ij}^{ht},d_{ij}^{th},d_{ij}^{tt}\}
   
 
 
+
+
+  
+<script src="/js/local-search.js"></script>
 
 
 

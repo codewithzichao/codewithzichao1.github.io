@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 5.2.0">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"codewithzichao.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="最近在学pytorch，虽然与TF2很类似了，但是感觉很多地方还是不太一样，这篇文章主要就是记录一下学习pytorch中遇到的api。">
@@ -105,6 +105,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -139,11 +140,38 @@
     <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
 
   </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
 
 </div>
     </header>
@@ -230,10 +258,10 @@
 <p>num_layers表示叠加的LSTM的数目，默认为1</p>
 <p>batch_first=True表示batch_size放在第0维，那么输入的维度是：(batch_size,seq_length,input_size)；默认为false，即输入的维度是：(seq_length,batch_size,input_size)</p>
 <p>bidirectional=True表示是BILSTM；默认为false。</p>
-<p><strong>pytorch中的各种loss function<a href="https://www.jianshu.com/p/579a0f4cbf24" target="_blank" rel="noopener">链接</a></strong></p>
+<p><strong>pytorch中的各种loss function<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/579a0f4cbf24">链接</a></strong></p>
 <p>nn.NLLLoss()表示负对数似然函数，适用于多分类，在使用这个之前，需要使用nn.LogSoftmax;</p>
 <p>nn.CrossEntropyLoss表示交叉熵损失函数，适用于多分类，在使用这个之前，不需要使用softmax，只需要得到logits就可以了，结果与nn.NLLLoss结果一样；</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim</span><br><span class="line"><span class="keyword">import</span> torch.functional <span class="keyword">as</span> F</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">x_input=torch.randn(<span class="number">3</span>,<span class="number">3</span>)<span class="comment">#随机生成输入 </span></span><br><span class="line">print(<span class="string">'x_input:\n'</span>,x_input) </span><br><span class="line">y_target=torch.tensor([<span class="number">1</span>,<span class="number">2</span>,<span class="number">0</span>])<span class="comment">#设置输出具体值 print('y_target\n',y_target)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#计算输入softmax，此时可以看到每一行加到一起结果都是1</span></span><br><span class="line">softmax_func=nn.Softmax(dim=<span class="number">1</span>)</span><br><span class="line">soft_output=softmax_func(x_input)</span><br><span class="line">print(<span class="string">'soft_output:\n'</span>,soft_output)</span><br><span class="line"></span><br><span class="line"><span class="comment">#在softmax的基础上取log</span></span><br><span class="line">log_output=torch.log(soft_output)</span><br><span class="line">print(<span class="string">'log_output:\n'</span>,log_output)</span><br><span class="line"></span><br><span class="line"><span class="comment">#对比softmax与log的结合与nn.LogSoftmaxloss(负对数似然损失)的输出结果，发现两者是一致的。</span></span><br><span class="line">logsoftmax_func=nn.LogSoftmax(dim=<span class="number">1</span>)</span><br><span class="line">logsoftmax_output=logsoftmax_func(x_input)</span><br><span class="line">print(<span class="string">'logsoftmax_output:\n'</span>,logsoftmax_output)</span><br><span class="line"></span><br><span class="line"><span class="comment">#pytorch中关于NLLLoss的默认参数配置为：reducetion=True、size_average=True</span></span><br><span class="line">nllloss_func=nn.NLLLoss()</span><br><span class="line">nlloss_output=nllloss_func(logsoftmax_output,y_target)</span><br><span class="line">print(<span class="string">'nlloss_output:\n'</span>,nlloss_output)</span><br><span class="line"></span><br><span class="line"><span class="comment">#直接使用pytorch中的loss_func=nn.CrossEntropyLoss()看与经过NLLLoss的计算是不是一样</span></span><br><span class="line">crossentropyloss=nn.CrossEntropyLoss()</span><br><span class="line">crossentropyloss_output=crossentropyloss(x_input,y_target)</span><br><span class="line">print(<span class="string">'crossentropyloss_output:\n'</span>,crossentropyloss_output)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim</span><br><span class="line"><span class="keyword">import</span> torch.functional <span class="keyword">as</span> F</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">x_input=torch.randn(<span class="number">3</span>,<span class="number">3</span>)<span class="comment">#随机生成输入 </span></span><br><span class="line">print(<span class="string">&#x27;x_input:\n&#x27;</span>,x_input) </span><br><span class="line">y_target=torch.tensor([<span class="number">1</span>,<span class="number">2</span>,<span class="number">0</span>])<span class="comment">#设置输出具体值 print(&#x27;y_target\n&#x27;,y_target)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#计算输入softmax，此时可以看到每一行加到一起结果都是1</span></span><br><span class="line">softmax_func=nn.Softmax(dim=<span class="number">1</span>)</span><br><span class="line">soft_output=softmax_func(x_input)</span><br><span class="line">print(<span class="string">&#x27;soft_output:\n&#x27;</span>,soft_output)</span><br><span class="line"></span><br><span class="line"><span class="comment">#在softmax的基础上取log</span></span><br><span class="line">log_output=torch.log(soft_output)</span><br><span class="line">print(<span class="string">&#x27;log_output:\n&#x27;</span>,log_output)</span><br><span class="line"></span><br><span class="line"><span class="comment">#对比softmax与log的结合与nn.LogSoftmaxloss(负对数似然损失)的输出结果，发现两者是一致的。</span></span><br><span class="line">logsoftmax_func=nn.LogSoftmax(dim=<span class="number">1</span>)</span><br><span class="line">logsoftmax_output=logsoftmax_func(x_input)</span><br><span class="line">print(<span class="string">&#x27;logsoftmax_output:\n&#x27;</span>,logsoftmax_output)</span><br><span class="line"></span><br><span class="line"><span class="comment">#pytorch中关于NLLLoss的默认参数配置为：reducetion=True、size_average=True</span></span><br><span class="line">nllloss_func=nn.NLLLoss()</span><br><span class="line">nlloss_output=nllloss_func(logsoftmax_output,y_target)</span><br><span class="line">print(<span class="string">&#x27;nlloss_output:\n&#x27;</span>,nlloss_output)</span><br><span class="line"></span><br><span class="line"><span class="comment">#直接使用pytorch中的loss_func=nn.CrossEntropyLoss()看与经过NLLLoss的计算是不是一样</span></span><br><span class="line">crossentropyloss=nn.CrossEntropyLoss()</span><br><span class="line">crossentropyloss_output=crossentropyloss(x_input,y_target)</span><br><span class="line">print(<span class="string">&#x27;crossentropyloss_output:\n&#x27;</span>,crossentropyloss_output)</span><br></pre></td></tr></table></figure>
 <p><strong>np.random中的各种api</strong></p>
 <ul>
 <li>np.random.normal(size=(3,4,5))</li>
@@ -244,7 +272,7 @@
 </ul>
 <p><strong>permute</strong></p>
 <p>一般我们都是使用permute来交换维度，一般不用transpose，注意在使用permute的时候，我们是:x.permute(1,2,3)。</p>
-<p><strong>view与reshape</strong><a href="https://www.jianshu.com/p/035d174eb5a6" target="_blank" rel="noopener">讲解</a></p>
+<p><strong>view与reshape</strong><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/035d174eb5a6">讲解</a></p>
 <p>如果我们在使用view之前，使用了transpose与permute等操作，我们一般要紧跟着contiguous()，然后再调用view，要不然会报错；</p>
 <p>如果我们不想使用contiguous+view这样的操作，我们也可以使用reshape，但是我们会创建新的tensor。</p>
 
@@ -426,6 +454,10 @@
   
 
 
+
+
+  
+<script src="/js/local-search.js"></script>
 
 
 
