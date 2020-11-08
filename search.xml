@@ -2185,8 +2185,8 @@ G^*=arg min \ Div(P_g,P_{data})=argmin \ max \ V(G,D)
       </categories>
       <tags>
         <tag>NLP</tag>
-        <tag>MRFN</tag>
         <tag>tensorflow2</tag>
+        <tag>MRFN</tag>
       </tags>
   </entry>
   <entry>
@@ -2303,8 +2303,8 @@ R^{l}=attentiveModule(R^{l},U_{i}^{l},U_{i}^{l})
       </categories>
       <tags>
         <tag>NLP</tag>
-        <tag>tensorflow2</tag>
         <tag>DAM</tag>
+        <tag>tensorflow2</tag>
       </tags>
   </entry>
   <entry>
