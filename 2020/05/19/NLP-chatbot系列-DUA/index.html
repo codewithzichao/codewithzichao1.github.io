@@ -52,20 +52,20 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="正式入对话的坑啦🤣对话是目前NLP技术重要的落地场景之一，但是相比于其他的方向，对话目前的应用还不算成熟，也远远没有产生它应有的巨大商业价值，但是随着物联网与5G等的发展，对话的应用前景是非常光明的。此外，既然对话的坑还有很多，这也意味着总需要人去填满这些坑，对NLPer来说，是挑战也是机会。其他的不多说，本篇着重讲讲检索式对话的经典模型DUA。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DUA/DUA模型架构.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DUA/卷积.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DUA/flatten.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DUA/attention.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DUA/结果1.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DUA/结果二.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//DUA模型架构.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//卷积.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//flatten.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//attention.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//结果1.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//结果二.jpg">
 <meta property="article:published_time" content="2020-05-19T15:04:28.000Z">
 <meta property="article:modified_time" content="2020-06-13T09:19:45.915Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
-<meta property="article:tag" content="DUA">
 <meta property="article:tag" content="tensorflow2">
+<meta property="article:tag" content="DUA">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DUA/DUA模型架构.jpg">
+<meta name="twitter:image" content="http://codewithzichao.github.io/.io//DUA模型架构.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DUA/">
 
@@ -308,7 +308,7 @@
 </blockquote>
 <h3 id="dua模型架构">DUA模型架构</h3>
 <p>首先给出一些定义：训练集的一个sample表示为：[C,R,Y]，其中$ C={U_1,U_2,...,U_t}<span class="math inline">\(， 另外\)</span>U_k$表示第k个utterance，R表示一个response，Y表示label(合理回复/不合理回复)。目标是：衡量context于response的匹配度。先给出模型图吧～</p>
-<p><img src="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DUA/DUA模型架构.jpg"></p>
+<p><img src="/.io//DUA模型架构.jpg"></p>
 <p>模型架构和SMN挺像的，但是更复杂了，有些细节还是挺难懂的，下面依次讲解～</p>
 <h4 id="utterance-representation">utterance representation</h4>
 <ul>
@@ -336,13 +336,13 @@ c_t=\sum_{i=1}^{n}a_{i}^{t}f_i
 e_{1,i,j}=u_i^Tr_j \\
 e_{2,i,j}=P_{u_i}^TAP_{r_j}
 \]</span> 其中，<span class="math inline">\(P_{u_i},P_{r_j}\)</span>是matching attention flow的关于utterance与response的输出，并且，<span class="math inline">\(P_{u_i},P_{r_j}\in R^c\)</span>。对于<span class="math inline">\(M_1\)</span>与<span class="math inline">\(M_2\)</span>，分别输入到卷积层中，做二维卷积(是不是二维卷积还值得商榷)得到<span class="math inline">\(M_{1c}\)</span>与<span class="math inline">\(M_{2c}\)</span>。具体计算如下：</p>
-<p><img src="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DUA/卷积.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//卷积.jpg" style="zoom:50%;"></p>
 <p>紧接着，接上一个池化，并对其进行flatten与concat。具体如下：</p>
-<p><img src="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DUA/flatten.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//flatten.jpg" style="zoom:50%;"></p>
 <p>其中，<span class="math inline">\(m_p\)</span>表示第p个utterance的表示。</p>
 <h4 id="attentive-turns-aggregation">attentive turns aggregation</h4>
 <p>这一层对所有的信息进行聚合，从而得到最终的结果。上一层的输出表示为：<span class="math inline">\(M=[m_1,m_2,...,m_t]\)</span>(这里我认为原始论文写错了，通过CNN之后，得到的<span class="math inline">\(m_p\)</span>表示的是第p个utterance in context的向量化表示，所以t个utterance，<span class="math inline">\(M\)</span>中应该有t个元素)，将其输入到GRU中，得到<span class="math inline">\(H_m=[h_{m_1},h_{m_2},...,h_{m_t}]\)</span>，然后采用attention机制，得到attention值：<span class="math inline">\(v_f=L(H_m)\)</span>。如下：</p>
-<p><img src="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DUA/attention.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//attention.jpg" style="zoom:50%;"></p>
 <blockquote>
 <p>稍稍吐槽一下，这里符号定义得真是乱七八糟，和其他小节的符号冲突了，也不说明，关键是根本不对🤷‍♂️有点失望。而且每一步输出的维度也不讲清楚，虽然不用每一步都写，但是至少关键的地方，向量的维度要讲清楚，这样也方便读者阅读啊。我以后写论文，一定要把向量的维度说清楚。🧐</p>
 </blockquote>
@@ -363,8 +363,8 @@ e_{2,i,j}=P_{u_i}^TAP_{r_j}
 <li><p>训练5个epcoh收敛</p></li>
 </ul>
 <h3 id="结果">结果</h3>
-<p><img src="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DUA/结果1.jpg"></p>
-<p><img src="/2020/05/19/NLP-chatbot%E7%B3%BB%E5%88%97-DUA/结果二.jpg"></p>
+<p><img src="/.io//结果1.jpg"></p>
+<p><img src="/.io//结果二.jpg"></p>
 <blockquote>
 <p>第二张图片是在ECD数据集上的结果。</p>
 </blockquote>
@@ -402,8 +402,8 @@ e_{2,i,j}=P_{u_i}^TAP_{r_j}
       <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/NLP/" rel="tag"># NLP</a>
-              <a href="/tags/DUA/" rel="tag"># DUA</a>
               <a href="/tags/tensorflow2/" rel="tag"># tensorflow2</a>
+              <a href="/tags/DUA/" rel="tag"># DUA</a>
           </div>
 
         

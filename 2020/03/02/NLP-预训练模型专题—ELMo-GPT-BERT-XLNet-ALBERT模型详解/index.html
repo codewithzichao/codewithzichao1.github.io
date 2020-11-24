@@ -52,33 +52,33 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="在如今的NLP领域中，预训练模型占据着愈发重要的地位。而BERT的出世，更是几乎横扫了NLP中所有的任务记录。本篇博客将详解几大预训练模型：ELMo、GPT、BERT、XLNet、ERNIE、ALBERT。(下图是可爱的bert😋注意，这真不是芝麻街啊喂！)">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/0.bert.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/0.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/1.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/2.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/3.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/4.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/5.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/20.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/6.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/7方法一.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/10.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/12.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/13.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//0.bert.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//0.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//1.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//2.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//3.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//4.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//5.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//20.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//6.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//7方法一.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//10.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//12.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//13.jpg">
 <meta property="article:published_time" content="2020-03-02T08:56:59.000Z">
 <meta property="article:modified_time" content="2020-10-20T07:01:56.901Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="python">
+<meta property="article:tag" content="self-attention">
 <meta property="article:tag" content="BERT">
 <meta property="article:tag" content="ELMo">
 <meta property="article:tag" content="GPT">
 <meta property="article:tag" content="ALBERT">
 <meta property="article:tag" content="XLNET">
 <meta property="article:tag" content="ERNIE">
-<meta property="article:tag" content="self-attention">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/0.bert.jpg">
+<meta name="twitter:image" content="http://codewithzichao.github.io/.io//0.bert.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/">
 
@@ -313,7 +313,7 @@
 
       
         <p>在如今的NLP领域中，预训练模型占据着愈发重要的地位。而BERT的出世，更是几乎横扫了NLP中所有的任务记录。本篇博客将详解几大预训练模型：ELMo、GPT、BERT、XLNet、ERNIE、ALBERT。(下图是可爱的bert😋注意，这真不是芝麻街啊喂！)</p>
-<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/0.bert.jpg"></p>
+<p><img src="/.io//0.bert.jpg"></p>
 <a id="more"></a>
 <blockquote>
 <p>本篇文章致力于讲解清楚各个预训练语言模型的原理，但是细节部分不会展开讨论，譬如transformer架构的原理、self-attention的原理、highway network的原理等等，这些基础的东西请自行查找资料进行补充～</p>
@@ -322,7 +322,7 @@
 <p>ELMo模型，全称：Embedding from Language Models。这个模型所要解决的问题是：<strong>1.词向量要更好地表达语法与语义等信息；2.单词在不同的上下文会有不同的意思，而传统的word2vec等word embedding模型，每一个单词的词向量都是固定的，也就是与上下文无关，这对于处理单词的多义性非常地不友好。</strong>所以，ELMo模型就是利用深度的双向LSTM模型来解决这些问题。</p>
 <h3 id="elmo模型的大体结结构">ELMo模型的大体结结构</h3>
 <p>ELMo模型的大体结构是：多层的biLSTM语言模型。结果如下：</p>
-<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/0.png" style="zoom: 67%;"></p>
+<p><img src="/.io//0.png" style="zoom: 67%;"></p>
 <ul>
 <li>首先是输入<code>Input Sentence</code>。它的shape是<code>(B,W,C)</code>。其中，<code>B</code>表示batch_size，<code>W</code>表示一个句子的token的数目， <code>C</code>表示一个token的最大字符数，在论文里是固定的数目：50。在这里，需要明确的是：<strong>ELMo模型是以字符为单位进行编码的。</strong></li>
 <li>接着，进入 char encoder layer。在ELMo模型，会对每一个字符进行编码，也就是给每个字符进行embedding。然后，经过一些一维卷积操作，以及highway操作，最后的输出维度为：<code>(B,W,D)</code>。</li>
@@ -331,7 +331,7 @@
 </ul>
 <p>下面来具体介绍一下每一层的结构。</p>
 <h3 id="char-encoder-layer">Char Encoder Layer</h3>
-<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/1.png" style="zoom:80%;"></p>
+<p><img src="/.io//1.png" style="zoom:80%;"></p>
 <ul>
 <li>char encoder layer的输入维度是<code>(B,W,C)</code>，然后需要被reshape为<code>(B*W,C)</code>。之后针对每一个token的每一个字符进行编码。字符表总共有262个，其中，0-255是unicode编码，其余的是：<code>&lt;bos&gt;,&lt;eos&gt;,&lt;bow&gt;,&lt;eow&gt;,&lt;pow&gt;,&lt;pos&gt;</code>。其中每一个字符的embeddng的维度是d。所以，整个词表的维度是：<code>262*d</code>。经过char embedding之后，输出为：<code>(B*W,C,d)</code>。</li>
 <li>紧接着，我们需要使用一维卷积。这里需要注意的是：<strong>并不是在纵向上叠加很多卷积层，而是在横向上使用若干个一维卷积层</strong>。在ELMo中，使用了m个一维卷积。以第一个为例：卷积核为k1，个数为d1，那么一维卷积后得到的维度是：<code>(B*W,C1,d1)</code>；接着，再使用maxpooling(之所以要使用maxpooling，是因为经过卷积之后，各个向量维度可能不一致，无法合并，所以才需要进行pooling操作)，从中选择出最大的单词，其维度变为：<code>(B*W,d1)</code>，最后再经过激活函数，就完成了一个操作。</li>
@@ -340,7 +340,7 @@
 <li>最后，需要进行一个线性变换，将维度从<code>(B*W,(d1+d2+d3+...+dm))</code>变为<code>(B,W,D)</code>。这里的<code>D</code>是最后我们得到的ELMo词向量维度的一半。</li>
 </ul>
 <h3 id="bilstm-layers">biLSTM layers</h3>
-<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/2.png" style="zoom:80%;"></p>
+<p><img src="/.io//2.png" style="zoom:80%;"></p>
 <ul>
 <li>biLSTM layers是接在 char encoder layer之后的，它的输入维度是：<code>(B,W,D)</code>。biLSTM相信大家都很熟悉了，在这里，假设LSTM的 hidden state的维度是h，那么LSTM的输出是<code>(B,W,h)</code>。当然，我们需要进行一个线性变换，将维度从<code>(B,W,h)</code>变成<code>(B,W,D)</code>。由于是双向的，所以，我们concat之后，得到的一层的输出是：<code>(B,W,2D)</code>。</li>
 <li><strong>注意，在biLSTM层，每一层的LSTM的输出作为下一层LSTM的输入。假设有L层biLSTM，那么，我们最后得到的输出向量个数为L+1个，因为最初的char encoder layer的输出也要算进去。</strong>所以biLSTM layers最终的输出维度是：<code>(L+1,B,W,2D)</code>。</li>
@@ -373,7 +373,7 @@ ELMo_k=\gamma\sum_{j=0}^{L}s_jh_{k,j}^{LM}
 <p>GPT模型，采用的是Transformer的 decoder部分作为language model，但是稍微有点不同：其去掉了encoder-decoder attention layer。它的目标函数是： <span class="math display">\[
 maximize \ L_1= \sum_{i}logP(u_i|u_{i-k},u_{i-k+1},...,u_{i-1};\theta)
 \]</span> 这就是一般的LM的目标函数。其中，<span class="math inline">\(k\)</span>表示的是context window。(使用了markov假设？) <span class="math inline">\(\theta\)</span>表示网络的参数；我们使用SGD来进行训练。</p>
-<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/3.jpg"></p>
+<p><img src="/.io//3.jpg"></p>
 <p>上图就是GPT的模型。左边就是使用transformer的去掉了encoder-decoder attention layer的decoder。注意，<strong>既然使用了decoder部分，那么网络在预测当前词的时候，就不能看到未来的信息，并且也无法并行化操作。</strong>如果使用公式来表示的话，则有： <span class="math display">\[
 h_0=UW_e+W_p \\
 h_l=transformer_block(h_{l-1}),l\in[1,L]       \\
@@ -388,7 +388,7 @@ maximize \ L_2=\sum_{x,y}logP(y|x_1,x_2,...,x_m)
 \]</span> 那么，我们将LM作为一个辅助的目标函数，这样做的好处有两个：1. 提高模型的泛化能力；2. 加速收敛。如下： <span class="math display">\[
 maximize \ L_3=L_2+\lambda L_1
 \]</span> 模型的一些修正细节：</p>
-<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/4.jpg"></p>
+<p><img src="/.io//4.jpg"></p>
 <p><strong>总结，GPT模型的优势如下：</strong></p>
 <ul>
 <li>使用了transformer而不是biLSTM，这样大大增强了模型的捕捉依赖关系的能力；</li>
@@ -399,7 +399,7 @@ maximize \ L_3=L_2+\lambda L_1
 <p>BERT模型，全称叫做：Bidirectional Encoder Representations from Transformers。从名字看就很直观，BERT是双向transformer的encoder部分。它所要解决的问题是：不管ELMo还是GPT，语言模型都是单向的，而BERT的作者发现，单向语言模型限制了fine-tuning的表达能力。所以，<strong>BERT所采取的方式是：使用双向的Transformer的encoder部分进行预训练，并采用MLM与NSP两种任务对BERT进行pre-training，之后在对接下游任务的时候，fine-tuning。</strong></p>
 <h3 id="输入是什么">输入是什么？</h3>
 <p>BERT的输入，可以是单个句子，也可以是句子对。<strong>但是在预训练的时候，实际上都是输入的句子对。</strong>在BERT中，使用的是BPE vocabulary，size为30000，最长的输入长度为512。之所以是512，是为了减少padding的计算浪费。这个在源码中可以看到。</p>
-<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/5.jpg"></p>
+<p><img src="/.io//5.jpg"></p>
 <p>这是BERT的输入，有三部分：<strong>token embedding</strong>，就是每一个token的embedding，这个可以使用 word2vec的结果，也可以随机初始化；<strong>segment embedding</strong>，就是就来区别两个句子；<strong>position embedding</strong>，就是用来表示每一个token的位置信息，和transformer一样。<strong>这里需要注意的是：句子的第一个token一定是CLS，这是为了给后面做分类准备的，实际上是NSP任务来训练CLS token的。</strong></p>
 <p>BERT中给的例子如下：</p>
 <figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">This text is included to make sure Unicode is handled properly: 力加勝北区ᴵᴺᵀᵃছজটডণত</span><br><span class="line">Text should be one-sentence-per-line, with empty lines between documents.</span><br><span class="line">This sample text is public domain and was randomly selected from Project Guttenberg.</span><br><span class="line"></span><br><span class="line">The rain had only ceased with the gray streaks of morning at Blazing Star, and the settlement awoke to a moral sense of cleanliness, and the finding of forgotten knives, tin cups, and smaller camp utensils, where the heavy showers had washed away the debris and dust heaps before the cabin doors.</span><br><span class="line">Indeed, it was recorded in Blazing Star that a fortunate early riser had once picked up on the highway a solid chunk of gold quartz which the rain had freed from its incumbering soil, and washed into immediate and glittering popularity.</span><br><span class="line">Possibly this may have been the reason why early risers in that locality, during the rainy season, adopted a thoughtful habit of body, and seldom lifted their eyes to the rifted or india-ink washed skies above them.</span><br><span class="line">&quot;Cass&quot; Beard had risen early that morning, but not with a view to discovery.</span><br><span class="line">A leak in his cabin roof,--quite consistent with his careless, improvident habits,--had roused him at 4 A. M., with a flooded &quot;bunk&quot; and wet blankets.</span><br><span class="line">The chips from his wood pile refused to kindle a fire to dry his bed-clothes, and he had recourse to a more provident neighbor&#x27;s to supply the deficiency.</span><br><span class="line">This was nearly opposite.</span><br><span class="line">Mr. Cassius crossed the highway, and stopped suddenly.</span><br><span class="line">Something glittered in the nearest red pool before him.</span><br><span class="line">Gold, surely!</span><br><span class="line">But, wonderful to relate, not an irregular, shapeless fragment of crude ore, fresh from Nature&#x27;s crucible, but a bit of jeweler&#x27;s handicraft in the form of a plain gold ring.</span><br><span class="line">Looking at it more attentively, he saw that it bore the inscription, &quot;May to Cass.&quot;</span><br><span class="line">Like most of his fellow gold-seekers, Cass was superstitious.</span><br><span class="line"></span><br><span class="line">The fountain of classic wisdom, Hypatia herself.</span><br><span class="line">As the ancient sage--the name is unimportant to a monk--pumped water nightly that he might study by day, so I, the guardian of cloaks and parasols, at the sacred doors of her lecture-room, imbibe celestial knowledge.</span><br><span class="line">From my youth I felt in me a soul above the matter-entangled herd.</span><br><span class="line">She revealed to me the glorious fact, that I am a spark of Divinity itself.</span><br><span class="line">A fallen star, I am, sir!&#x27; continued he, pensively, stroking his lean stomach--&#x27;a fallen star!--fallen, if the dignity of philosophy will allow of the simile, among the hogs of the lower world--indeed, even into the hog-bucket itself. Well, after all, I will show you the way to the Archbishop&#x27;s.</span><br><span class="line">There is a philosophic pleasure in opening one&#x27;s treasures to the modest young.</span><br><span class="line">Perhaps you will assist me by carrying this basket of fruit?&#x27; And the little man jumped up, put his basket on Philammon&#x27;s head, and trotted off up a neighbouring street.</span><br><span class="line">Philammon followed, half contemptuous, half wondering at what this philosophy might be, which could feed the self-conceit of anything so abject as his ragged little apish guide;</span><br><span class="line">but the novel roar and whirl of the street, the perpetual stream of busy faces, the line of curricles, palanquins, laden asses, camels, elephants, which met and passed him, and squeezed him up steps and into doorways, as they threaded their way through the great Moon-gate into the ample street beyond, drove everything from his mind but wondering curiosity, and a vague, helpless dread of that great living wilderness, more terrible than any dead wilderness of sand which he had left behind.</span><br><span class="line">Already he longed for the repose, the silence of the Laura--for faces which knew him and smiled upon him; but it was too late to turn back now.</span><br><span class="line">His guide held on for more than a mile up the great main street, crossed in the centre of the city, at right angles, by one equally magnificent, at each end of which, miles away, appeared, dim and distant over the heads of the living stream of passengers, the yellow sand-hills of the desert;</span><br><span class="line">while at the end of the vista in front of them gleamed the blue harbour, through a network of countless masts.</span><br><span class="line">At last they reached the quay at the opposite end of the street;</span><br><span class="line">and there burst on Philammon&#x27;s astonished eyes a vast semicircle of blue sea, ringed with palaces and towers.</span><br><span class="line">He stopped involuntarily; and his little guide stopped also, and looked askance at the young monk, to watch the effect which that grand panorama should produce on him.</span><br></pre></td></tr></table></figure>
@@ -440,7 +440,7 @@ maximize \ L_3=L_2+\lambda L_1
 <p>以上就是transformer-xl的大致内容，还是那句话，想要了解全部内容，请读transformer-xl的原始论文，其实只要看懂了transformer的话，transformer-xl决定小菜一碟🤩～接下来正式讲XLNet模型的内容～</p>
 <p><strong>语言模型目标：排列语言建模</strong></p>
 <p>使用这个方法，不仅可以保留AR模型的优点，同时也允许模型捕获双向信息。从所有的排列中采样一种，然后根据这个排列来分解联合概率成条件概率的乘积，然后加起来。也就是说，只要分解的顺序不一样，我们计算的顺序也就不一样。</p>
-<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/20.jpg" style="zoom:67%;"></p>
+<p><img src="/.io//20.jpg" style="zoom:67%;"></p>
 <p><strong>模型架构：基于目标感知表征的双流自注意力</strong></p>
 <p>这个还没具体细看，大致意思是：在teansformer里面，使用了token embedding+position embedding。但是如果我要预测第3个位置的单词的内容，那么，我不能提前获取到第3个位置的内容向量(token embedding)，只能只其位置向量(position embedding)，但是这在输入的时候，两个向量就已经混在一起了。所以在XLNet中，就计算了两套注意力，一个只包含它的位置信息，一个要包含它的位置信息与内容信息，以便使用。具体的，等我那天有时间了在具体写吧。。。</p>
 <h2 id="ernie模型介绍">ERNIE模型介绍</h2>
@@ -450,19 +450,19 @@ maximize \ L_3=L_2+\lambda L_1
 <p>在ERNIE2.0中，提出一个很重要的概念：连续学习。也就是，模型顺序训练多个任务，以便在下个任务中记住前一个任务得到的结果，从而可以不断的积累新知识。具体的可以参看论文，这是大致的思想。</p>
 <h2 id="albert模型介绍">ALBERT模型介绍</h2>
 <p>ALBERT模型是对BERT模型的改进。怎么说呢，感觉ALBERT是一个调参调出来的模型🤪。它的目标是：<strong>在不损害模型性能的前提下，尽量减少BERT模型的参数。</strong>在ALBERT中，首先分析了BERT中模型的参数来源。在BERT中，参数主要分为两部分：<strong>token embedding的参数与attention、FFN层的参数</strong>。（以下所用到的图片来源于ALBERT第一作者lanzhenzhong博士的讲解。）</p>
-<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/6.jpg"></p>
+<p><img src="/.io//6.jpg"></p>
 <h3 id="method1factorized-embedding-parametrization">Method1:factorized embedding parametrization</h3>
 <p>token embedding占参数的20%，attention于FFN层的参数占80%。那么，我们就从这两方面入手。对于token embedding方面，我们可以先将其映射到一个地位i空间，再映射为高维空间。那么为什么可以这么做呢？有两点：**1. token embedding一般都是与上下文无关的，而attention层的输出一半都是与上下文有关系的，也就是说，输出层应该包含了更多的信息，所以，输出层的维度应该比token embedding的维度要高才比较合理；2. 如果让E与H相等的话，那么，整个词表的维度是V*H，那么这个词表是相当大的，梯度更新的时候，也会比较稀疏。**</p>
-<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/7方法一.jpg"></p>
+<p><img src="/.io//7方法一.jpg"></p>
 <p>当然，这样做会损失信息，但是结果表明，损失的性能并不多，而减少的参数却高达80%以上。</p>
 <h3 id="method2-cross-layer-parameter-sharing">Method2: cross-layer parameter sharing</h3>
-<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/10.jpg"></p>
+<p><img src="/.io//10.jpg"></p>
 <p>跨层的参数恭喜那个有两种方案：attention模块的参数共享以及FFN层的参数共享。在实验中，作者发现共享FFN的参数是导致参数下降的最主要的原因。</p>
 <h3 id="sop--sentence-order-prediction">SOP--Sentence Order Prediction</h3>
 <p>在BERT中，除了MLM之外，还使用了另一种任务——NSP来学习句子之间的关系，但是实现证明：NSP任务对于结果的影响并不大，原因在于：<strong>NSP任务实际上是预测两句话是采样于同一个文档中的两个连续的句子（正样本），还是采样于两个不同的文档中的句子（负样本）。</strong>所以在ALBERT中，对NSP任务进行了改造，叫做SOP任务。它的思想是：<strong>正样本的构建与BERT一样，负样本的构建则是将证样本的句子顺序调换一下。</strong>这样的话，就能够专心学习到句子之间的关系，而不会去学习topic。</p>
-<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/12.jpg"></p>
+<p><img src="/.io//12.jpg"></p>
 <p>结果证明，SOP任务比NSP任务表现更加良好。</p>
-<p><img src="/2020/03/02/NLP-%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E4%B8%93%E9%A2%98%E2%80%94ELMo-GPT-BERT-XLNet-ALBERT%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/13.jpg"></p>
+<p><img src="/.io//13.jpg"></p>
 <h3 id="去掉dropout">去掉Dropout</h3>
 <p>dropout在防止过拟合上有显著效果，但是实际上MLM很难过拟合，去掉dropout，由于可以腾出很多临时变量占用的内存而使得内存上有所提升。</p>
 <p><strong>总结，ALBERT模型的优势如下：</strong></p>
@@ -523,13 +523,13 @@ maximize \ L_3=L_2+\lambda L_1
           <div class="post-tags">
               <a href="/tags/NLP/" rel="tag"># NLP</a>
               <a href="/tags/python/" rel="tag"># python</a>
+              <a href="/tags/self-attention/" rel="tag"># self-attention</a>
               <a href="/tags/BERT/" rel="tag"># BERT</a>
               <a href="/tags/ELMo/" rel="tag"># ELMo</a>
               <a href="/tags/GPT/" rel="tag"># GPT</a>
               <a href="/tags/ALBERT/" rel="tag"># ALBERT</a>
               <a href="/tags/XLNET/" rel="tag"># XLNET</a>
               <a href="/tags/ERNIE/" rel="tag"># ERNIE</a>
-              <a href="/tags/self-attention/" rel="tag"># self-attention</a>
           </div>
 
         

@@ -52,11 +52,11 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="词向量是NLP中最为重要的概念。词向量的好坏直接影响到下游任务的效果。然而，即便在ELMo、BERT、ALBERT等预训练模型大行其道的当今，word2vec、GloVe、fastText仍然是目前最为流行的词向量训练方式。因此，本篇博客将具体讲解这三种词向量训练的原理，并使用gensim来展示如何使用这些词向量模型，以便得到我们想要的词向量。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/29/NLP-word2vec-GloVe-fastText%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3/0.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/29/NLP-word2vec-GloVe-fastText%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3/1.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/29/NLP-word2vec-GloVe-fastText%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3/2.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/29/NLP-word2vec-GloVe-fastText%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3/3.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/29/NLP-word2vec-GloVe-fastText%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3/4.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//0.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//1.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//2.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//3.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//4.jpg">
 <meta property="article:published_time" content="2020-02-29T06:08:29.000Z">
 <meta property="article:modified_time" content="2020-07-01T12:12:18.089Z">
 <meta property="article:author" content="zichao">
@@ -67,7 +67,7 @@
 <meta property="article:tag" content="GloVe">
 <meta property="article:tag" content="fastText">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/2020/02/29/NLP-word2vec-GloVe-fastText%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3/0.png">
+<meta name="twitter:image" content="http://codewithzichao.github.io/.io//0.png">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/02/29/NLP-word2vec-GloVe-fastText%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3/">
 
@@ -313,10 +313,10 @@
 </ul>
 <p><strong>确定训练数据</strong></p>
 <p>假设语料库只有一句话：<font face="Times New Roman"><em>The quick brown fox jumps over the lazy dog</em></font>。所以总共只有8个词。在skip-gram中，训练数据的形式其实非常简单，其实就是<strong>使用n-gram的方法生成词对。</strong>譬如</p>
-<p><img src="/2020/02/29/NLP-word2vec-GloVe-fastText%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3/0.png" style="zoom:80%;"></p>
+<p><img src="/.io//0.png" style="zoom:80%;"></p>
 <p>上图的窗口大小是2，左右各取2个词。实际上窗口大小为5时比较好的，这里只是为了展示。在得到训练数据后，我们将其用one-hot编码后，就可以输入网络了。譬如：(the, quick)单词对就表示<span class="math inline">\([(1,0,0,0,0,0,0,0),(0,1,0,0,0,0,0,0)]\)</span>，输入网络。当然，<strong>对target单词也是需要进行抽样的。</strong>链接：<a target="_blank" rel="noopener" href="https://www.yuque.com/liwenju/kadtqt/gqkk0e">对target抽样</a></p>
 <p><strong>确定网络架构</strong></p>
-<p><img src="/2020/02/29/NLP-word2vec-GloVe-fastText%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3/1.jpg" style="zoom: 67%;"></p>
+<p><img src="/.io//1.jpg" style="zoom: 67%;"></p>
 <p>上面就是skip-gram模型的架构，输入是一个单词的vector，输出是softmax后的概率分布，<strong>每一个概率值对应词汇表中的一个单词，表示词汇表中的单词出现在输入单词的上下文的概率。</strong>中间只有一个线性的hidden layer。还是紧接着我们的例子，词汇表有8个单词，所以，输入时8维的vector，输出也应该是一个8维的vector。而hidden layer的维度则是我们想要得到的词向量的维度，比如说我们使用3个hidden units，那么，权重矩阵就是8*3维的矩阵。(实际上google推荐使用300维。)注意：<strong>在网络中，其实有两个权重矩阵，我们只需要选择其中一个就可以了，因为它们互为转置。</strong>我们最后需要的额就是权重矩阵，并不需要输出层的结果。</p>
 <p><strong>确定损失函数</strong></p>
 <p>由于在输出层使用softmax函数，那么很自然地，损失函数就是交叉熵函数。即： <span class="math display">\[
@@ -334,7 +334,7 @@ P(w_i)=\frac{f(w_i)^{\frac 34}}{\sum_{i=0}^{V}f(w_i)^{\frac34}}
 <p>所谓的hierarchical softmax，实际上就是采用Huffman树。huffman树的叶子结点就是词汇表中的单词，从根节点到叶子结点的路径就表示单词的概率。这样一样，我们就不需要对所有单词的得分进行求和，就大大降低了计算成本。注意：<strong>在构造huffman树的时候，常用的词的深度会更小一些，即更靠近根节点；而不常用的词会更深一点。</strong></p>
 <h2 id="cbow模型">CBOW模型</h2>
 <p>CBOW模型与skip-gram的训练方式相反。它是给定目标词上下文，然后来预测目标词。</p>
-<p><img src="/2020/02/29/NLP-word2vec-GloVe-fastText%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3/2.jpg" style="zoom: 67%;"></p>
+<p><img src="/.io//2.jpg" style="zoom: 67%;"></p>
 <p>其中网络架构与skip-gram模型非常的类似。但是需要注意输入。CBOW模型的输入是多个单词的one-hot vector的和，而隐藏层需要对其求平均。如下： <span class="math display">\[
 h=\frac 1CW^T(x_1+x_2+...+x_C)
 \]</span> 其中，<span class="math inline">\(x_1,x_2,..,x_C\)</span>是输入的vector，<span class="math inline">\(h\)</span>是隐藏层的输出，<span class="math inline">\(C\)</span>是输入的单词的数目。</p>
@@ -387,11 +387,11 @@ f(x)=\begin{cases}
 <h2 id="fasttext模型">fastText模型</h2>
 <p>fastText是Facebook在2016年所提出的方法。其实，整个模型架构并没有特别创新的地方，和CBOW模型非常地像。其创新的地方在于：<strong>子词嵌入的引入。</strong>（论文写的太简洁了，导致看了很久😫）</p>
 <p><strong>模型架构</strong></p>
-<p><img src="/2020/02/29/NLP-word2vec-GloVe-fastText%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3/3.jpg" style="zoom: 67%;"></p>
+<p><img src="/.io//3.jpg" style="zoom: 67%;"></p>
 <p>整个模型架构与CBOW模型非常的类似。输入是一段序列，输出是这段序列的标签类别。中间层仍然是线性的。输出层仍然是softmax。并且在训练的时候，使用hierarchical softmax来加速训练。</p>
 <p><strong>子词嵌入</strong></p>
 <p>这个才是fasttext模型真正创新的地方。在word2vec或者其他的模型中，相似形态的单词由不同的向量来表示。譬如，<code>老师们，老师</code>。但是，<code>老师们、老师</code>这两个单词，意思其实非常的相近，不应该被编码成不同的向量。所以，在fasttext中，引入了<strong>子词嵌入</strong>。具体做法是：我们将Apples，使用trigram，得到：<code>&lt;ap,app,ppl,ple,les,es&gt;</code>，在训练过程中，每一个n-gram都会由一个向量来表示，我们可以用这6个trigram的叠加来表示<code>Apples</code>这个单词。<strong>序列中所有单词的向量以及n-gram向量同时相加平均，作为训练的输入。</strong>譬如：一段序列中3个词，<span class="math inline">\(w_1,w_2,w_3\)</span>表示3个词的向量，<span class="math inline">\(w_{12},w_{23}\)</span>表示bigram特征的向量。那么hidden layer的输出是：<span class="math inline">\(h=\frac 15W^T(w_1+w_2+w_3+w_{12}+w_{23})\)</span>。</p>
-<p><img src="/2020/02/29/NLP-word2vec-GloVe-fastText%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3/4.jpg"></p>
+<p><img src="/.io//4.jpg"></p>
 <p>这里有一个问题需要注意：<strong>在实际中，我们往往会使用多种n-gram，所以得到的n-gram结果比单词数目多得多。</strong>所以来存储这么多的n-gram是不太现实的。所以，我们的做法是：将所有的n-gram映射到一张hash桶中，这样的话，就能够实现n-gram的vector共享。</p>
 <p><strong>子词嵌入的好处：对低频词汇的词向量训练效果会更好，因为它可以和其他词共享n-gram；此外，对于UNK，我们仍然可以构建它们的字符级n-gram向量。</strong></p>
 <p>理论部分就到这里，我们再回顾一下：fastText到底快在哪里？</p>

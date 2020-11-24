@@ -52,16 +52,16 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="最近应该会产出大量的关于预训练模型的解读的内容🤩，主要是目前预训练模型确实在几乎各个任务上的表现都超越了传统的模型。将预训练模型应用于各个领域，这也是一个大的趋势。这篇文章主要是通过AdapterBERT与K-Adapter两篇paper，来谈谈预训练模型中的Adapter结构。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/Adapter-bert.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/结果.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/Ablation.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/LN.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/K-Adapter%20total.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/adapter.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/some%20embedding%20models.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/K-adapter-result.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/K-adapter-result2.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/K-adapter-result3.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//Adapter-bert.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//结果.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//Ablation.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//LN.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//K-Adapter%20total.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//adapter.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//some%20embedding%20models.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//K-adapter-result.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//K-adapter-result2.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//K-adapter-result3.jpg">
 <meta property="article:published_time" content="2020-07-02T15:05:07.000Z">
 <meta property="article:modified_time" content="2020-07-13T09:31:11.970Z">
 <meta property="article:author" content="zichao">
@@ -69,7 +69,7 @@
 <meta property="article:tag" content="AdapterBERT">
 <meta property="article:tag" content="K-Adapter">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/Adapter-bert.jpg">
+<meta name="twitter:image" content="http://codewithzichao.github.io/.io//Adapter-bert.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/">
 
@@ -311,7 +311,7 @@
 <p>首先讲讲为什么要有Adapter-Bert。在预训练模型中，可以分为两种：feature-based以及fine-tuning。feature-based指的是通过预训练提取出词向量，然后输入到下游任务当中，在训练过程中，词向量可以随之更新，也可以不更新，侧重的是offline的词向量的生成，典型代表是ELM；fine-tuning指的是首先预训练模型，然后接入下游任务，将预训练阶段的权重作为finetuning的初始化权重，之后将下游任务与预训练部分一起训练，侧重的是co-training，典型代表是BERT。一般来说，fine-tuning的效果要比feature-based要好一些，当然计算代价也要更高一些。但是，总体而言，finetuning的代价实在是太大了，因为我们每一次都要更新所有的参数，这对很多应用尤其是低资源以及multi-mask的应用场景非常不友好。所以，我们想要尽可能地减少fine-tuning的所需要更新的参数数目，同时还要保证尽可能地逼近fine-tuning时的结果，于是便有了Adapter-BERT。</p>
 <h3 id="adapter-bert模型架构">Adapter-BERT模型架构</h3>
 <p>Apdater-Bert的想法是将task-specific layer放在预训练模型中间，也就是加入Adapter结构，然后冻结住预训练模型参数，最后我们fientuning的时候，只更新Apdater、layerNorm以及与具体任务相关的layer的参数。具体结构图如下：</p>
-<p><img src="/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/Adapter-bert.jpg"></p>
+<p><img src="/.io//Adapter-bert.jpg"></p>
 <ul>
 <li><strong>左图</strong>是Adapter-BERT中的transformer layer，我们可以看到每一个transformer layer增加了两个Adapter layer，分别加在LayerNorm之前，当然了，在进行LayerNorm之前，我们需要进行讲Apdater layer的输出进行残差连接。</li>
 <li><strong>右图</strong>是Adapter layer的具体结构示意。这个其实让我想到了ALBERT中的低秩因式分解。假设输入input的维度是<span class="math inline">\(d\)</span>，我们首先通过一个FFN让其维度变为<span class="math inline">\(m\)</span>，且<span class="math inline">\(m&lt;&lt;d\)</span>；之后再通过一个FFN得到输出结果ouput，其其维度变为<span class="math inline">\(d\)</span>。最后，我们进行残差连接，即input+output作为Adapter layer的输出结果。另外，分析一下Apdater layer的参数，对于一个transformer layer来说，增加的参数是2*(2dm+d+m+2d+2d)，其中2d表示是LN的参数量，增加的参数量占总的参数量的3%。</li>
@@ -320,10 +320,10 @@
 <p>思考一下，这里为什么要用残差连接？主要是因为当初始化的时候，权重都很小，残差连接可以保证模型输出与预训练模型相同。</p>
 </blockquote>
 <h3 id="实验结果">实验结果</h3>
-<p><img src="/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/结果.jpg"></p>
+<p><img src="/.io//结果.jpg"></p>
 <p>从结果来看，还是不错的，基本上能接近fine-tuning的结果。接下来看一下Ablation。</p>
-<p><img src="/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/Ablation.jpg"></p>
-<p><img src="/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/LN.jpg"></p>
+<p><img src="/.io//Ablation.jpg"></p>
+<p><img src="/.io//LN.jpg"></p>
 <p>从结果中，我们可以得到如下结论：</p>
 <ul>
 <li>对于fine-tune来说，减小训练的层数会大幅降低准确率；而对于Adapter-based来说，几乎没有什么影响；</li>
@@ -342,8 +342,8 @@
 <p>K-Adapter模型来源于MSRA的《K-A DAPTER: Infusing Knowledge into Pre-Trained Models with Adapters》论文。它所要解决的问题是：在预训练模型中嵌入知识是非常重要的，因为当前的预训练模型无法学习到非常的知识信息；此外，在训练multi-task时，会出现灾难性遗忘问题，所谓的灾难性遗忘问题指的是：同一个模型，在学习完一个task之后，如果再学习新的任务，那么在原先的task上学习到的权重会被完全破坏掉，如果我们想要解决灾难性遗忘的问题，我们就需要用到持续学习。在这个背景下，K-Adapter预训练模型被提出来了。</p>
 <h3 id="k-adapter模型架构">K-Adapter模型架构</h3>
 <p>首先放一下K-Adapter预训练模型的架构图吧～</p>
-<p><img src="/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/K-Adapter%20total.jpg"></p>
-<p><img src="/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/adapter.jpg"></p>
+<p><img src="/.io//K-Adapter%20total.jpg"></p>
+<p><img src="/.io//adapter.jpg"></p>
 <p>第一张图中的a部分表示的是传统的multi-task learning，b部分表示的是使用了K-Adapter结构之后的整体模型；第二张图表示的是Adapter layer。下面着重讲讲Adapter layer的构成以及模型是如何运作的。由于这篇paper没有放出源代码(都0202年，居然还有paper不放源代码🤷‍♂️)，所以整体内容的理解只能从论文来获得。</p>
 <ul>
 <li><p>整篇paper是以RoBERTa预训练模型作为基准，来进行设计的；</p></li>
@@ -357,11 +357,11 @@
 </ul>
 <h3 id="实验结果-1">实验结果</h3>
 <p>首先它对比了多个知识嵌入的预训练模型，我觉得还挺好的，如果之后在知识嵌入做文章的话，这里可以看作是一个小结～</p>
-<p><img src="/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/some%20embedding%20models.jpg"></p>
+<p><img src="/.io//some%20embedding%20models.jpg"></p>
 <p>然后我们来看一下实验结果～</p>
-<p><img src="/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/K-adapter-result.jpg"></p>
-<p><img src="/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/K-adapter-result2.jpg"></p>
-<p><img src="/2020/07/02/NLP-%E8%B0%88%E8%B0%88BERT%E4%B8%AD%E7%9A%84Adapter%E7%BB%93%E6%9E%84/K-adapter-result3.jpg"></p>
+<p><img src="/.io//K-adapter-result.jpg"></p>
+<p><img src="/.io//K-adapter-result2.jpg"></p>
+<p><img src="/.io//K-adapter-result3.jpg"></p>
 <p>上面三张图分别是在：细粒度实体类型预测任务、常识QA与开放域QA任务、关系分类任务上的结果，总的来说，采用Adapter结构的预训练模型的效果确实有所提升～</p>
 <p>以上就是预训练Adapter结构的内容啦，之后可能会再关注一下知识嵌入的预训练模型吧，这是一个大的方向，感觉目前还是有搞头的，over☕️～</p>
 

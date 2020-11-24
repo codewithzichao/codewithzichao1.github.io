@@ -52,22 +52,22 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要解读一下目前多模态NER上质量比较好的论文：《Adaptive Co-Attention Network for Named Entity Recognition in Tweets》、《Visual Attention Model for Name Tagging in Multi">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/21/NLP-Multimodal-NER/ACN_model.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/21/NLP-Multimodal-NER/ACN_result.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/21/NLP-Multimodal-NER/VATT_model.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/21/NLP-Multimodal-NER/gvatt_result.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/21/NLP-Multimodal-NER/MNER_model.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/21/NLP-Multimodal-NER/MNER_result.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/21/NLP-Multimodal-NER/UMT_model.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/21/NLP-Multimodal-NER/UMT_result.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/21/NLP-Multimodal-NER/UMT_ablation.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//ACN_model.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//ACN_result.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//VATT_model.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//gvatt_result.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//MNER_model.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//MNER_result.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//UMT_model.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//UMT_result.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//UMT_ablation.jpg">
 <meta property="article:published_time" content="2020-10-21T12:23:45.000Z">
 <meta property="article:modified_time" content="2020-10-27T15:46:43.223Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="Multimodal NER">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/2020/10/21/NLP-Multimodal-NER/ACN_model.jpg">
+<meta name="twitter:image" content="http://codewithzichao.github.io/.io//ACN_model.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/10/21/NLP-Multimodal-NER/">
 
@@ -308,7 +308,7 @@
 <p>NER是NLP最基础且重要的任务之一，但是传统的NER都是只针对与textual content进行建模。在社交媒体上，<strong>很多的推文都是文字+图片的形式，并且社交媒体上的文字往往比较口语化、语法也比较informal、字数比较少、很多文字内容只有结合image才能理解，</strong>单纯对text进行建模，往往得不到很好的结果，而image对于NER提供了很好的辅助信息，所以如何利用image信息来进行NER，是一个非常重要的问题。这篇paper正是针对这样一个问题，构建了twitter数据集，并提出了ACN模型。</p>
 <h3 id="model">model</h3>
 <p>先放图～</p>
-<p><img src="/2020/10/21/NLP-Multimodal-NER/ACN_model.jpg"></p>
+<p><img src="/.io//ACN_model.jpg"></p>
 <p>ACN模型主要分为三部分：<strong>feature extractor、adaptive co-attention netowrk、CRF tagging</strong>。</p>
 <ul>
 <li><p><strong>feature extractor：</strong>这一部分分为两个小部分：image feature extraction与text feature extraction。</p>
@@ -348,7 +348,7 @@ u_t=s_t(tanh(W_{m_tm_t+b_{m_t}})) \\
 <ol type="1">
 <li><p>数据集：twitter数据集(released by this paper)</p></li>
 <li><p>结果</p>
-<p><img src="/2020/10/21/NLP-Multimodal-NER/ACN_result.jpg"></p>
+<p><img src="/.io//ACN_result.jpg"></p>
 <p>可以看到，这篇paper提出的model效果还是可以的，另外·，从ablation实验中可以看到，各个component设计的还是比较合理的，总之是一片很经典的论文，值得多读一读。</p></li>
 </ol>
 <h2 id="visual-attention-model-for-name-tagging-in-multimodal-social-mediaacl2018">Visual Attention Model for Name Tagging in Multimodal Social Media(ACL2018)</h2>
@@ -356,7 +356,7 @@ u_t=s_t(tanh(W_{m_tm_t+b_{m_t}})) \\
 <p>这篇paper同样是针对multimodal NER，针对的问题也是一样的：<strong>如何更好的利用image信息来复制NER任务？</strong>在这篇paper中，设计了一种的新的attention机制和gate机制，从而取得了SOTA的结果。</p>
 <h3 id="model-1">model</h3>
 <p>先放图～</p>
-<p><img src="/2020/10/21/NLP-Multimodal-NER/VATT_model.jpg"></p>
+<p><img src="/.io//VATT_model.jpg"></p>
 <p>GVAtt的整体结构分为部分：<strong>feature representation、Visual attention model、visual modulation module。</strong></p>
 <ul>
 <li><p><strong>feature representation：</strong>分为两部分：text representation与visual representation。对于前者，是word embedding与character-level word embedding的concat。所谓的character-level word embedding是指将character embedding输入到BILSTM当中(常规操作)。对于后者，采用的是ResNet，保留两部分：<span class="math inline">\(V_g\)</span>与<span class="math inline">\(V_r\)</span>，<span class="math inline">\(V_g\)</span>是指最后的全连接层的输出，维度是：<span class="math inline">\(V_g\in R^{1024}\)</span>，<span class="math inline">\(V_r\)</span>是输入到最后的全连接层之前的输出，其维度是：<span class="math inline">\(V_r\in R^{1024\times 49}\)</span>。这里之所以保留了两个，是因为后面做了实验比较，并不是整张image都与sentence相关，不相关的部分反而会引入噪音。</p></li>
@@ -379,7 +379,7 @@ w_m=\beta_wh_i+\beta_vm
 <ol type="1">
 <li><p>数据集：twitter、snap captions</p></li>
 <li><p>结果</p>
-<p><img src="/2020/10/21/NLP-Multimodal-NER/gvatt_result.jpg"></p>
+<p><img src="/.io//gvatt_result.jpg"></p>
 <p>从结果来看，很不错，虽然paper里面没有个ACN模型进行对比，但是从twitter数据集结果来看，F1值高了近10个百分点！nb！</p></li>
 </ol>
 <h2 id="multimodal-named-entity-recognition-for-short-social-media-postsnaacl2018">Multimodal Named Entity Recognition for Short Social Media Posts(NAACL2018)</h2>
@@ -387,7 +387,7 @@ w_m=\beta_wh_i+\beta_vm
 <p>这篇paper也是针对multimodal NER，解决的问题也是两个：1.social media上的tweets是非常不规范的、informal并且字数较少，所以一方面因为没有足够的信息会引起一词多义性问题，此外，由于不规范的使用，使得会产生很多未知的token，这个怎么解决？(其实现在来看就很好解决，上BERT啊)；2.怎么让image与text更好进行交互？为了解决这些问题，就有了MNER模型。</p>
 <h3 id="model-2">model</h3>
 <p>先放图～</p>
-<p><img src="/2020/10/21/NLP-Multimodal-NER/MNER_model.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//MNER_model.jpg" style="zoom:50%;"></p>
 <p>整体模型分为三部分：<strong>features、modality attention module、BILSTM+CRF</strong>。</p>
 <ul>
 <li><p><strong>task definition：</strong>输入的sentence表示为：<span class="math inline">\(x=\{x_t\}_{t=1}^{T}\)</span>，其对应的标签是:<span class="math inline">\(y=\{y_t\}_{t=1}^{T}\)</span>，每一个token由三种modality组成：<span class="math inline">\(x_t=\{x_t^{(w)},x_t^{(c)},x_t^{(v)}\}\)</span>，分别表示word embedding、character embedding、visual embedding。</p></li>
@@ -403,7 +403,7 @@ w_m=\beta_wh_i+\beta_vm
 <ol type="1">
 <li><p>数据集：snap caption</p></li>
 <li><p>结果</p>
-<p><img src="/2020/10/21/NLP-Multimodal-NER/MNER_result.jpg"></p>
+<p><img src="/.io//MNER_result.jpg"></p>
 <p>从结果来看，还行吧，没啥亮点。</p></li>
 </ol>
 <h2 id="improving-multimodal-named-entity-recognition-via-entity-span-detection-with-uniﬁed-multimodal-transformeracl2020">Improving Multimodal Named Entity Recognition via Entity Span Detection with Uniﬁed Multimodal Transformer(ACL2020)</h2>
@@ -411,7 +411,7 @@ w_m=\beta_wh_i+\beta_vm
 <p>这是最新的multimodal NER的paper，主要解决的问题有：1.text与image的交互不够，即便能够得到简单交互后的结果，但是text对image context并不敏感；2.之前的研究并没有考虑image带来的bias。针对于第一个问题，这篇paper提出了MMI module，针对于第二个问题，这篇paper设计了ESD辅助任务来解决。具体的下面小节将详细的介绍。</p>
 <h3 id="model-3">model</h3>
 <p>先放图～</p>
-<p><img src="/2020/10/21/NLP-Multimodal-NER/UMT_model.jpg"></p>
+<p><img src="/.io//UMT_model.jpg"></p>
 <p>整体模型分为三部分：<strong>unimodal input representation、multimodal transformer、unified multimodal transformer。</strong></p>
 <ul>
 <li><p><strong>unimodal input representation：</strong>主要分为两部分：word representation与visual representation。对于前者，paper中使用了BERT，一方面是能够得到更加强大的representation，另一方面也能够解决一词多义性问题。假设输入的句子为：<span class="math inline">\(S^{&#39;}=(s_0,s_1,...,s_{n+1})\)</span>，其中<span class="math inline">\(s_0、s_{n+1}\)</span>分别表示[CLS]与[SEP] token，通过三种embedding相加，得到的句子表示为：<span class="math inline">\(X=(x_0,x_1,...,x_{n+1})\)</span>，通过BERT之后，为：<span class="math inline">\(C=(c_0,c_1,...,c_{n+1})\)</span>，其中<span class="math inline">\(c_i\in R^d\)</span>；对于后者，采用ResNet来对image进行编码，我们保留ResNet的最后一个卷积层的输出作为该image的representation，为：<span class="math inline">\(U=(u_1,u_2,...,u_49)\)</span>，<span class="math inline">\(u_i\)</span>表示一个region，且其维度是：<span class="math inline">\(R^{2048}\)</span>，然后我们通过一个线性变换，让其维度与word representation的维度一样，为：<span class="math inline">\(V=(v_1,...,v_{49}),v_i\in R^d\)</span>。</p></li>
@@ -436,10 +436,10 @@ B=gQ
 <li><p>数据集：twitter2015、twitter2017</p></li>
 <li><p>details：训练过程中，resnet参数不更新，bert参数更新，seq_length为128，batch_size为16。</p></li>
 <li><p>结果</p>
-<p><img src="/2020/10/21/NLP-Multimodal-NER/UMT_result.jpg"></p>
+<p><img src="/.io//UMT_result.jpg"></p>
 <p>从结果来看，提升还是挺大的，个人觉得是得益于BERT的使用以及设计的ESD辅助任务，还是不错的。</p></li>
 <li><p>消融实验</p>
-<p><img src="/2020/10/21/NLP-Multimodal-NER/UMT_ablation.jpg"></p>
+<p><img src="/.io//UMT_ablation.jpg"></p>
 <p>这是paper当中消融实验的结果，可以看到，在UMT模型中，各个component都比较重要，去掉都会有影响，但是相比来说，ESD辅助任务发挥了更大的作用，之后可以搞一波。</p></li>
 <li><p>base case分析：在paper的base case分析中，主要的错误在于：当image与text完全不相关的时候，BERT-CRF预测会正确，而UMT预测错误，实际上就相当于image是噪音，在整个数据集中，大概有5%的比例。</p></li>
 </ol>

@@ -52,12 +52,12 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="这篇博客主要讲解一下Document-level 关系抽取上的最新的两个数据集：DocRED以及SCIREX，paper名称：《DocRED: A Large-Scale Document-Level Relation Extraction Dataset》、《SCIREX: A Challenge Dataset for Document-Level Information Extraction">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/statistic_docred.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/result_docred.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/human_perfance_docred.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/scirex.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/scirex-model.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/scirex_result_1.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//statistic_docred.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//result_docred.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//human_perfance_docred.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//scirex.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//scirex-model.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//scirex_result_1.jpg">
 <meta property="article:published_time" content="2020-10-24T13:57:54.000Z">
 <meta property="article:modified_time" content="2020-10-27T09:09:42.414Z">
 <meta property="article:author" content="zichao">
@@ -65,7 +65,7 @@
 <meta property="article:tag" content="DocRED">
 <meta property="article:tag" content="SCIREX">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/statistic_docred.jpg">
+<meta name="twitter:image" content="http://codewithzichao.github.io/.io//statistic_docred.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/">
 
@@ -306,7 +306,7 @@
 <p>DocRED数据集是发表在ACL2019上的《DocRED: A Large-Scale Document-Level Relation Extraction Dataset》。关系抽取是NLP中一个非常基础且重要的任务，主要是：辨别text中实体之间的relation facts。但是在目前的relation extraction中，主要都是集中在sentence-level上，也就是提取句子内的实体，并识别实体之间的关系。但是在实际的问题当中，很多实体之间的关系需要通过多个句子来获得，所以将sentence-level的raltion extraction扩展到document-level 的relation extraction是非常有必要的。而目前已有的document-level的数据集，要么数据量不够大，要么有很多的噪音，要么构造的数据集只适用于某一个领域，这对于构建general domain下的document-level relation extraction model是不利的，在这种情况下，就有了DocRED。</p>
 <h3 id="statistics-of-docred">Statistics of DocRED</h3>
 <p>DocRED是根据wikipedia和wikidata构建而来，最后DocRED的各项数值如下：</p>
-<p><img src="/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/statistic_docred.jpg"></p>
+<p><img src="/.io//statistic_docred.jpg"></p>
 <p>从图中可以看到，在DocRED中，平均每一个document的word大概在198.2～209.7之间，说实话，这个程度其实只能算是paragraph，离document还差的比较远，这一点SCIREX数据集弥补了(平均有5000左右)。</p>
 <h3 id="baseline">Baseline</h3>
 <p>paper中实验了当时SOTA的三种模型。大致的过程是：首先对于一篇doucment表示为：<span class="math inline">\(\cal D=\{w_i\}_{i=1}^{n}\)</span>，其中<span class="math inline">\(w_i\)</span>表示第<span class="math inline">\(i\)</span>个word，我们将其输入到CNN/LSTM/BILSTM当中，得到encoder后的<span class="math inline">\(\{h_i\}_{i=1}^{n}\)</span>，然后我们可以得到entities的representation，最后预测每一个entity pair的relation type。下面讲解一些details：</p>
@@ -323,8 +323,8 @@ P(r|e_i,e_j)=sigmoid(\tilde e_i^TW_r\tilde e_j+b_r)
 </ul>
 <h3 id="experiment">experiment</h3>
 <p>先放结果～</p>
-<p><img src="/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/result_docred.jpg"></p>
-<p><img src="/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/human_perfance_docred.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//result_docred.jpg"></p>
+<p><img src="/.io//human_perfance_docred.jpg" style="zoom:50%;"></p>
 <ul>
 <li>对于DocRED，评价指标采用的是F1和AUC，但是为了避免训练集与验证集/测试集上relation facts的overlap，所以又提出了Ign F1和Ign AUC指标，以获得更好的效果。</li>
 <li>从上面的表中可以看到，目前的baseline的效果与human的performance相去甚远，还有很大的可以提高的空间。</li>
@@ -338,7 +338,7 @@ P(r|e_i,e_j)=sigmoid(\tilde e_i^TW_r\tilde e_j+b_r)
 <p>SCIREX数据集是发表在ACL2020上的《SCIREX: A Challenge Dataset for Document-Level Information Extraction》。它提出的主要背景与DocRED类似，目前主要的relation extraction主要都是围绕着sentence-level进行的，但是实际问题中，entity之间的relation往往要通过多个sentence 推理得到，而针对sentence-level的model无法处理这种问题，所以有必要将sentence-level扩展到document-level relation extraction/information extraction。而目前已有的document-level information extraction datasets，远远不能满足document-level IE/RE的要求，最接近的是DocRED数据集，但是这个数据集是从wikipiedia paragraph中构建的，所以它的长度远远不能达到document的要求(DocRED大约在200 word/doc)，所以就有了SICREX。</p>
 <h3 id="statistics-of-scirex">Statistics of SCIREX</h3>
 <p>SCIREX是根据scientific articles构建而来，具体数据如下：</p>
-<p><img src="/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/scirex.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//scirex.jpg" style="zoom:50%;"></p>
 <p>从上图中可以知道，SCIREX数据集每一篇document有5737个word，比DocRED中的document长的多，可以说是真的document了；此外，SCIREX共有438篇document，虽然相对较少，但是从总的word来说，SCIREX的word数目是DocRED的2倍(human-annotated version)。</p>
 <h3 id="tasks-in-sicrex">Tasks in SICREX</h3>
 <p>在SCIREX数据集中，作者定义了四种任务：<strong>entity recognition、salient entity recognition、coreference、relation extraction。</strong></p>
@@ -350,7 +350,7 @@ P(r|e_i,e_j)=sigmoid(\tilde e_i^TW_r\tilde e_j+b_r)
 </ul>
 <h3 id="baseline-1">Baseline</h3>
 <p>SCIREX中给出了一个非常强的Baseline，但是我个人觉得比较遗憾的是，这篇paper没有给出human performance，不知道up bound是怎么样的。baseline具体如下：</p>
-<p><img src="/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/scirex-model.jpg"></p>
+<p><img src="/.io//scirex-model.jpg"></p>
 <ul>
 <li><p><strong>Document representation：</strong>我们假设一个输入的文档<span class="math inline">\(\cal D\)</span>表示为：<span class="math inline">\([s_1,...,s_{|S|}]\)</span>，其中<span class="math inline">\(s_i\)</span>表示第i个section(section可以理解为paragraph)，共有<span class="math inline">\(|S|\)</span>个section。document encoding分为两步：section-level and document-level。每一个section的tokens embedding通过SCIBERT来得到，每一个section-level token embedding的维度是：[tokens_nums,embedding_dim]，得到之后，我们对所有的section-level token embedding进行concat，维度是：[|S|*tokens_nums,embedding_dim]，然后输入到一个BILSTM当中，得到结果<span class="math inline">\(e_i，i\in\{1,..,|S|\}\)</span>。注意如果是batch输入的话，经过BILSTM的得到的维度是：[batch_size,|S|*token_nums,embedding_dim]。</p></li>
 <li><p><strong>Mention identification and classification：</strong>在得到token embedding之后，经过BILSTM+CRF，去对mentions进行identification与classification。</p></li>
@@ -366,7 +366,7 @@ me_j=[e_{j_1};e_{j_N};\sum_{k=1}^{N}\alpha_{j_k}e_{j_k}]
 <p>假设对于一个四元组：<span class="math inline">\(R=(C_1,C_2,C_3,C_4)\)</span>，其中<span class="math inline">\(C_i\)</span>表示一个cluster，我们通过一个two-step的precedure来获得 R的vector：首先构建一个section embedding，然后aggregate 所有的section embedding，从而得到document embedding。对于<span class="math inline">\(\forall C_i \in R\)</span>，我们可以通过max-pooling 出现在section <span class="math inline">\(s\)</span> 中的<span class="math inline">\(C_i\)</span>中的mentions的span embedding，从而得到<span class="math inline">\(C_i\)</span>在section <span class="math inline">\(s\)</span>的section embedding <span class="math inline">\(E^s_i\)</span>。relation <span class="math inline">\(R\)</span>在section <span class="math inline">\(s\)</span>的section embedding是：<span class="math inline">\(E^s_R=FFN([E^s_1,E^s_2,E^s_3,E^s_4])\)</span>；然后relation <span class="math inline">\(R\)</span>的document embedding是：<span class="math inline">\(E_R=\frac{1}{|S|}\sum_{s=1}^{|S|}E^s_R\)</span>。最终的分类是将<span class="math inline">\(E_R\)</span>输入到另一个FFN层，然后进行分类。loss为binary CE。</p></li>
 </ul>
 <h3 id="experiment-1">experiment</h3>
-<p><img src="/2020/10/24/NLP-RE-DocRED-and-SCIREX-Dataset/scirex_result_1.jpg"></p>
+<p><img src="/.io//scirex_result_1.jpg"></p>
 <p>左图是本文提出的模型与DYGIE++模型在各个子任务上进行对比，右图是本文提出的模型的各个子任务上的结果，可以看到，采用端到端的烦事，最终的relation extraction的结果非常低，而采用glod input的结果，要高得多，所以可以看到<strong>salient entity cluster classification</strong>是整个端到端系统的影响最大的一步。感觉还是有很大提升空间的。</p>
 <h3 id="data-format-1">Data format</h3>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;doc_id&quot; : str &#x3D; Document Id as used by Semantic Scholar,</span><br><span class="line">    &quot;words&quot; : List[str] &#x3D; List of words in the document,</span><br><span class="line">    &quot;sentences&quot; : List[Span] &#x3D; Spans indexing into words array that indicate sentences,</span><br><span class="line">    &quot;sections&quot; : List[Span] &#x3D; Spans indexing into words array that indicate sections,</span><br><span class="line">    &quot;ner&quot; : List[TypedMention] &#x3D; Typed Spans indexing into words indicating mentions ,</span><br><span class="line">    &quot;coref&quot; : Dict[EntityName, List[Span]] &#x3D; Salient Entities in the document and mentions belonging to it,</span><br><span class="line">    &quot;n_ary_relations&quot; : List[Dict[EntityType, EntityName]] &#x3D; List of Relations where each Relation is a dictionary with 5 keys (Method, Metric, Task, Material, Score),</span><br><span class="line">    &quot;method_subrelations&quot; : Dict[EntityName, List[Tuple[Span, SubEntityName]]] &#x3D; Each Methods may be subdivided into simpler submethods and Submenthods in coref array. For example, DLDL+VGG-Face is broken into two methods DLDL , VGG-Face.</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Span &#x3D; Tuple[int, int] # Inclusive start and Exclusive end index</span><br><span class="line">TypedMention &#x3D; Tuple[int, int, EntityType]</span><br><span class="line">EntityType &#x3D; Union[&quot;Method&quot;, &quot;Metric&quot;, &quot;Task&quot;, &quot;Material&quot;]</span><br><span class="line">EntityName &#x3D; str</span><br></pre></td></tr></table></figure>

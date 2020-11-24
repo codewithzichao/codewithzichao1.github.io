@@ -52,15 +52,15 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="到目前为止，已经学了很多东西，但是没有输出，总感觉似乎少了点什么。这篇博客将回顾经典的LSTM与GRU。LSTM与GRU是RNN中最为经典的unit，它的提出解决了RNN中梯度消失的问题，非常地具有开创性。本文将具体探究其原理细节。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/RNN.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/2.RNN内部结构.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/3.lstm内部结构.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/4.遗忘门.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/5.更新门.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/6.更新节点状态.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/7.输出门.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/8.GRU.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/8.peehole%20connection.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//RNN.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//2.RNN内部结构.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//3.lstm内部结构.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//4.遗忘门.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//5.更新门.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//6.更新节点状态.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//7.输出门.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//8.GRU.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//8.peehole%20connection.png">
 <meta property="article:published_time" content="2020-02-17T05:13:14.000Z">
 <meta property="article:modified_time" content="2020-02-27T12:28:04.172Z">
 <meta property="article:author" content="zichao">
@@ -69,7 +69,7 @@
 <meta property="article:tag" content="LSTM">
 <meta property="article:tag" content="GRU">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/RNN.jpg">
+<meta name="twitter:image" content="http://codewithzichao.github.io/.io//RNN.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/">
 
@@ -304,7 +304,7 @@
 </blockquote>
 <h2 id="为什么要有lstm">为什么要有LSTM？</h2>
 <p>首先我们来回顾一下基本的RNN网络架构：</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/RNN.jpg"></p>
+<p><img src="/.io//RNN.jpg"></p>
 <p><strong>前向传播过程：</strong></p>
 <p>t时刻的激活值与输出值的计算公式如下：</p>
 <p><span class="math display">\[a^{&lt;t&gt;}=tanh(W_a[a^{&lt;t-1&gt;},x^{&lt;t&gt;}]+b_a)\]</span></p>
@@ -325,24 +325,24 @@
 <p>LSTM，全称long-short term memory networks。LSTM的设计就是为了避免上节所说的长时期依赖问题，能够记住很长时间内地信息。</p>
 <h3 id="rnn与lstm内部结构">RNN与LSTM内部结构</h3>
 <p>RNN内部结构如下。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/2.RNN内部结构.png"></p>
+<p><img src="/.io//2.RNN内部结构.png"></p>
 <p>LSTM内部结构如下。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/3.lstm内部结构.png"></p>
+<p><img src="/.io//3.lstm内部结构.png"></p>
 <h3 id="lstm内部结构剖析">LSTM内部结构剖析</h3>
 <h4 id="遗忘门">遗忘门</h4>
 <p>遗忘门决定要保留哪些信息继续通过当前的cell。<span class="math inline">\(f_t\)</span>通过sigmoid函数实现，从而将<span class="math inline">\(f_t\)</span>限制在(0,1)之间。0表示不让任何信息通过，1表示让所有信息通过。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/4.遗忘门.png"></p>
+<p><img src="/.io//4.遗忘门.png"></p>
 <h4 id="输入门">输入门</h4>
 <p>输入门决定让多少新的信息加入到当前cell的状态中。这分成两步：首先通过sigmoid函数得到输入门<span class="math inline">\(i_t\)</span>，再通过tanh得到备选的要更新的内容。最后，联合这两部分，从而对当前cell的状态进行更新。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/5.更新门.png"></p>
-<p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/6.更新节点状态.png"></p>
+<p><img src="/.io//5.更新门.png"></p>
+<p><img src="/.io//6.更新节点状态.png"></p>
 <h4 id="输出门">输出门</h4>
 <p>输出门决定要输出哪些信息，传递给下一个cell。当前cell的输出是依赖于<span class="math inline">\(C_t\)</span>的值，但是不完全依赖于<span class="math inline">\(C_t\)</span>的值，而是使用tanh函数对其进行了过滤。而输出门<span class="math inline">\(o_t\)</span>通过sigmoid函数得到一个(0,1)的值，从而决定输出过滤后的<span class="math inline">\(C_t\)</span>值的哪些部分。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/7.输出门.png"></p>
+<p><img src="/.io//7.输出门.png"></p>
 <h2 id="lstm变种gru">LSTM变种—GRU</h2>
-<p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/8.GRU.png"></p>
+<p><img src="/.io//8.GRU.png"></p>
 <h2 id="lstm变种peehole-connection">LSTM变种—peehole connection</h2>
-<p><img src="/2020/02/17/NLP%EF%BD%9CLSTM%E4%B8%8EGRU/8.peehole%20connection.png"></p>
+<p><img src="/.io//8.peehole%20connection.png"></p>
 <p>##一些细节</p>
 <p>1.LSTM为什么能够解决梯度消失？</p>
 <p>答：秘诀就在这个公式: <span class="math display">\[C_t=i_t*\widehat{C}_t+f_t*C_{t}\]</span>。在RNN中，每个记忆单元h_t-1都会乘上一个W和激活函数的导数，这种连乘使得记忆衰减的很快，而LSTM是通过记忆和当前输入"相加"，使得之前的记忆会继续存在而不是受到乘法的影响而部分“消失”，因此不会衰减。因为LSTM对记忆的操作是相加的，线性的，使得不同时序的记忆对当前的影响相同，为了让不同时序的记忆对当前影响变得可控，LSTM引入了输入门和输出门，之后又有人对LSTM进行了扩展，引入了遗忘门。</p>

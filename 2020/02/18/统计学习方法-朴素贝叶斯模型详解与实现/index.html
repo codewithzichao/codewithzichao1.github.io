@@ -52,9 +52,9 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="朴素贝叶斯模型(naive bayes)属于分类模型，也是最为简单的概率图模型，对于之后理解HMM、CRF等模型，大有裨益。本篇博客将对朴素贝叶斯模型的原理进行详细的讲解，并采用纯python实现以及调用scikit-learn库实现，这两种方式对朴素贝叶斯模型进行实现。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/18/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/0.jpeg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/18/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/1.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/18/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/2.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//0.jpeg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//1.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//2.jpg">
 <meta property="article:published_time" content="2020-02-18T14:14:42.000Z">
 <meta property="article:modified_time" content="2020-03-12T07:37:10.377Z">
 <meta property="article:author" content="zichao">
@@ -63,7 +63,7 @@
 <meta property="article:tag" content="scikit-learn">
 <meta property="article:tag" content="naive bayes">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/2020/02/18/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/0.jpeg">
+<meta name="twitter:image" content="http://codewithzichao.github.io/.io//0.jpeg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/02/18/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/">
 
@@ -302,7 +302,7 @@ P(Y|X)=\frac {P(X|Y)P(Y)}{P(X)}.
 <p><strong>条件独立性假设</strong>。假设每个实例特征向量有<span class="math inline">\(n\)</span>维的话，第<span class="math inline">\(j\)</span>个特征有<span class="math inline">\(S_j\)</span>个取值。我们假设特征之间都是相互独立的，那么有 <span class="math display">\[
 P(X=x|Y=c_k)=\prod _{i=1}^{n}P(X^{(i)}=x^{(i)}|Y=c_k)
 \]</span> 条件独立性假设是非常强的假设，主要目的就是为了简化运算，实际上，特征之间应该是有关系的才更合理一些。而如果没有这个假设的话，那么上式的参数实际有:<span class="math inline">\(K\prod_{j=1}^{n}S_j\)</span>，当特征维度特别大的时候，这个参数量是非常大的。当采用了这个假设之后，参数量就变为：<span class="math inline">\(K\sum_{j=1}^{n}S_j\)</span>，这样就小很多。如果采用概率图来表示的话，如下图：</p>
-<p><img src="/2020/02/18/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/0.jpeg" style="zoom: 25%;"></p>
+<p><img src="/.io//0.jpeg" style="zoom: 25%;"></p>
 <p>我们可以简单理解为：给定<span class="math inline">\(Y=c_k\)</span>，两个特征之间，由于被<span class="math inline">\(Y\)</span>给阻断了，所以彼此独立。</p>
 <p>那么，根据上面两大前提条件，我们可以得到朴素贝叶斯模型。实际上我们就是要最大化后验概率，从而得到类别标签。如下： <span class="math display">\[
 P(Y=c_k|X=x)=\frac {P(X=x|Y=c_k)P(Y=c_k)}{P(X=x)}=\frac {P(Y=c_k)\prod_{j=1}^{n}P(X=x^{(i)}|Y=c_k)}{P(X=x)}
@@ -313,9 +313,9 @@ y=argmax_{c_k}P(Y=c_k){\prod_{j=1}^{n}P(X=x^{(i)}|Y=c_k)}
 <p>当得到了朴素贝叶斯的公式后，那么其中的<span class="math inline">\(P(Y=c_k)\)</span>与<span class="math inline">\(P(X=x|Y=c_k)\)</span>怎么求呢？在这里，我们需要分情况讨论：得看特征本身是离散的还是连续的。当特征是离散的时候，我们使用极大似然估计，叫做<strong>多项式模型</strong>；当特征是连续的时候，我们让其满足高斯分布，叫做<strong>高斯模型</strong>。下面就一一介绍。</p>
 <h3 id="多项式模型">多项式模型</h3>
 <p>当特征是离散的时候，我们使用极大似然估计去得到先验概率与条件概率。（公式太难敲了，我就直接贴图了😭图片来源：《统计学习方法》）</p>
-<p><img src="/2020/02/18/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/1.jpg" style="zoom: 50%;"></p>
+<p><img src="/.io//1.jpg" style="zoom: 50%;"></p>
 <p>但是，在计算先验概率与条件概率的时候，我们会做一些平滑处理，以防出现为0的情况，从而影响到后验概率的计算。这种操作叫做laplace平滑。（图片来源：《统计学习方法》）</p>
-<p><img src="/2020/02/18/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/2.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//2.jpg" style="zoom:50%;"></p>
 <h3 id="高斯模型">高斯模型</h3>
 <p>当特征为连续值的时候，我们就不能采取多项式模型来估计先验概率与条件概率了，因为会导致很多<span class="math inline">\(P(X=x_i|Y=c_k)\)</span>等于0。所以需要采用高斯模型。高斯模型的思想是：<strong>让特征的每一维都满足高斯分布(正态分布)，从而来处理连续特征</strong>。注意，先验概率的计算与多项式模型相同。公式如下： <span class="math display">\[
 P(X^{(j)}=a|Y=c_k)=\frac {1}{\sqrt {2\pi \sigma^{2}_{c_k,j}}}e^{-\frac {({a-\mu_{c_k,j}})^2}{2\sigma^{2}_{c_k,j}}}

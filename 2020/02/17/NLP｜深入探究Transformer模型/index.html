@@ -52,35 +52,35 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="目前为止，已经学了很多东西，但是没有输出，总感觉似乎少了点什么。这片博客将回顾经典的Transformer模型。Transformer模型是Google在2017年所提出的模型。该模型抛弃了传统的RNN与CNN，全部采用Attention机制，结果证明其在当时取得了SOTA的效果，得到了广泛的应用。Transformer也是后来大火的BERT中的核心组成部分，所以Transformer模型的提出是">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/0.0..png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/0.模型架构概览.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/1.encoder-decoder内部架构.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/2.scaled%20-dot-product%20.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/3.qkv的计算.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/4.QKscore.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/5.softmax.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/6.sum.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/7.矩阵计算.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/8.矩阵计算.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/9.multihead.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/10..png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/11.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/12.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/13.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/14.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/15.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/16.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/17.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//0.0..png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//0.模型架构概览.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//1.encoder-decoder内部架构.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//2.scaled%20-dot-product%20.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//3.qkv的计算.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//4.QKscore.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//5.softmax.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//6.sum.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//7.矩阵计算.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//8.矩阵计算.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//9.multihead.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//10..png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//11.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//12.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//13.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//14.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//15.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//16.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//17.png">
 <meta property="article:published_time" content="2020-02-17T05:14:34.000Z">
 <meta property="article:modified_time" content="2020-02-27T12:27:22.368Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="Attention">
 <meta property="article:tag" content="深度学习">
-<meta property="article:tag" content="self-attention">
 <meta property="article:tag" content="Transformer">
+<meta property="article:tag" content="self-attention">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/0.0..png">
+<meta name="twitter:image" content="http://codewithzichao.github.io/.io//0.0..png">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/">
 
@@ -317,9 +317,9 @@
 <h2 id="transformer模型分析">Transformer模型分析</h2>
 <h3 id="transformer模型概览">Transformer模型概览</h3>
 <p>首先，没错，Transformer模型还是encoder-decoder架构，输入序列<span class="math inline">\((x_1,x_2,x_3,...,x_{T_X})\)</span>经过encoder，输出<span class="math inline">\((h_1,h_2,h_3,...,h_{T_X})\)</span>作为decoder的输入，最后经过decoder得到最终的输出序列<span class="math inline">\((y_1,y_2,y_3,..,y_{T_Y})\)</span>。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/0.0..png"></p>
+<p><img src="/.io//0.0..png"></p>
 <p>那么再具体一点，在Transformer中，Encoder部分由多个encoder堆叠组成，Decoder部分也是由多个decoder堆叠而成。需要注意的是：<strong>Encoder部分的输出会与Decoder部分的每一个decoder相结合，这是不同的地方。</strong></p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/0.模型架构概览.png"></p>
+<p><img src="/.io//0.模型架构概览.png"></p>
 <p>宏观上的结构我们知道了，最后来看每一个encoder与decoder的内部结构。</p>
 <p><strong>encoder层：</strong>每一个encoder层由两个子层构成。</p>
 <p><strong>第一个子层(multi-head attention layer)：</strong>其输入是前一个encoder层的输出，输入首先进入multi-head attention机制，再接一个残差连接与层归一化；</p>
@@ -330,9 +330,9 @@
 <p><strong>第三个子层(FFN layer)：</strong>其输入是第二个子层的输出，将第二个子层的输出输入到一个全连接的前馈神经网络，再接一个残差连接与层归一化，之后需要再接一个线性转换层，最后通过softmax，得到该decoder层输出的单词。</p>
 <p><strong>这里需要明确的是：在decoder部分，并不是最后一次性把所有的序列全部decode出来，而是像RNN一样，一次只decode一个单词，因为下一个decoder层还需要用到前一个的输出作为输入。</strong></p>
 <p>下面将一一讲解每一个部分。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/1.encoder-decoder内部架构.jpg"></p>
+<p><img src="/.io//1.encoder-decoder内部架构.jpg"></p>
 <h3 id="核心scaled-dot-product-attention与multi-head-attention">核心—Scaled Dot-Product Attention与Multi-Head Attention</h3>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/2.scaled%20-dot-product%20.jpg"></p>
+<p><img src="/.io//2.scaled%20-dot-product%20.jpg"></p>
 <blockquote>
 <p>在这里，首先要理解，传统的attention机制的本质其实可以理解为：输入序列中的元素可以想象为&lt;key,value&gt;对，那么给定target中某个要预测的元素Q，通过计算Q与每个key的相关性，得到每一个key对应value的权重系数（attention weights），再对value进行加和平均，就是最终的attention值（context vector）。在NLP中，key和value常常看做一个值（hidden state）。参看：<a target="_blank" rel="noopener" href="https://blog.csdn.net/malefactor/article/details/78767781">attention机制本质</a></p>
 </blockquote>
@@ -352,44 +352,44 @@ V=xW^V.
 \]</span></p>
 <p>其中参数<span class="math inline">\(W^Q,W^K,W^V\)</span>通过网络的训练得出。以下图为例：</p>
 <p>输入：两个单词，Thinking, Machines. 通过嵌入变换会<span class="math inline">\(x_1,x_2\)</span>两个向量[1 x 4]。分别与 <span class="math inline">\(W^Q,W^K,W^V\)</span> 三个矩阵[4x3]做点乘得到，${q_1,q_2},{k_1,k_2},{v_2,v_2} $6个向量[1x3]。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/3.qkv的计算.png"></p>
+<p><img src="/.io//3.qkv的计算.png"></p>
 <ol start="2" type="1">
 <li>接着，计算self-attention的分数值。该分数表示当我们在encode一个词的时候，对句子其他词的关注程度。我们通过Q与K做点乘得到分数值。以下图为例：</li>
 </ol>
 <p>我们需要计算其他词相对于thinking这个词的分数。首先是thinking自己: <span class="math inline">\(q_1·k_1\)</span>；machines相对于thinking的分数：<span class="math inline">\(q_1·k_2\)</span>。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/4.QKscore.png"></p>
+<p><img src="/.io//4.QKscore.png"></p>
 <ol start="3" type="1">
 <li>对score进行缩放，即规范化，并对score使用softmax，得到分布。以下图为例：</li>
 </ol>
 <p>score之所以需要进行缩放是因为：要使梯度更加稳定。因为当<span class="math inline">\(d_k\)</span>非常大的时候，点乘结果会非常大，如果不做缩放，那么经过sofmax归一化之后，二者差距会非常大，从而使得在反向传播的时候，梯度会非常小，难以训练。譬如：如果不进行缩放，经过softmax的结果是：0.99999...，0.0000000...，这显然不利于之后的计算。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/5.softmax.png"></p>
+<p><img src="/.io//5.softmax.png"></p>
 <ol start="4" type="1">
 <li>将归一化的score与v相乘，得到attention值，并对加权向量值求和， 这将在此位置（对于第一个单词thinking）产生self-attention层的输出。以下图为例：</li>
 </ol>
 <p>最终的输出：<span class="math inline">\(z_1=0.88v_1+0.12v_2\)</span>.</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/6.sum.png"></p>
+<p><img src="/.io//6.sum.png"></p>
 <p>上述是计算的一个单词的attention值，在实际操作中，往往以矩阵形式操作。如下：</p>
 <p>输入是一个[2x4]的矩阵（单词嵌入），每个运算是[4x3]的矩阵，求得Q,K,V。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/7.矩阵计算.png"></p>
+<p><img src="/.io//7.矩阵计算.png"></p>
 <p>Q对K转制做点乘，除以dk的平方根。做一个softmax得到合为1的比例，对V做点乘得到输出Z。那么这个Z就是self-attention的输出，Z的第一行就是thinking的self-attention值，第二行就是machines的self-attention值。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/8.矩阵计算.png"></p>
+<p><img src="/.io//8.矩阵计算.png"></p>
 <p>Scaled Dot-Product Attention大致就讲完了，那么对于Multi-Head Attention，其实就很简单了，就是将上述过程重复H次，然后再concat，最后输出。主要是为了能够并行运算，加快计算效率，看图👇。</p>
 <p>在Multi-Head attention中，我们为每个head维护单独的Q / K / V权重矩阵，从而导致不同的Q / K / V矩阵。 在transformer原文中，使用了8个head，所以最后会得到8个矩阵。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/9.multihead.png"></p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/10..png"></p>
+<p><img src="/.io//9.multihead.png"></p>
+<p><img src="/.io//10..png"></p>
 <p>得到8个矩阵之后，再concat变成一个矩阵，与<span class="math inline">\(W^O\)</span>做点乘后，输入到FFN中。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/11.png"></p>
+<p><img src="/.io//11.png"></p>
 <p>Multi-Head Attention部分就讲完了。然而还有一些细节需要关注。我们再回顾一下self-attention的计算公式： <span class="math display">\[
 Attention(Q,K,V)=softmax(\frac {QK^{T}}{\sqrt{d_k}})V,
 \]</span> Q、K、V是由输入与W相乘得到的，输入的维度为：(m,512)，m是一个句子的单词数，512是word embedding的维度，那么Q、K、V的维度是：(m,64)，那么<span class="math inline">\(QK^T\)</span>的维度是：(m,m)。也就是一个attention map，比如说输入是一句话 "i have a dream" 总共4个单词， 这里就会形成一张4x4的注意力机制的图，每一个格子就对应一个权重，如下👇。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/12.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//12.jpg" style="zoom:50%;"></p>
 <p><strong>需要注意的是，在encoder中，叫做self-attention，在decoder中，叫做masked self-attention</strong>。所谓的mask，意思就是不给模型看到未来的信息。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/13.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//13.jpg" style="zoom:50%;"></p>
 <p>就比如说，i作为第一个单词，只能有和i自己的attention。have作为第二个单词，有和i, have 两个attention。 a 作为第三个单词，有和i,have,a 前面三个单词的attention。到了最后一个单词dream的时候，才有对整个句子4个单词的attention。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/14.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//14.jpg" style="zoom:50%;"></p>
 <p>这是做完softmax之后的结果。</p>
 <p>对与self-attention来说，就会出现一个问题，如果输入的句子特别长，那就为形成一个 NxN的attention map，这就会导致内存爆炸...所以要么减少batch size多gpu训练，要么剪断输入的长度，还有一个方法是用conv对K,V做卷积减少长度。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/15.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//15.jpg" style="zoom:50%;"></p>
 <p>对K,V做卷积和stride（stride的话(n,1)是对seq_len单边进行跳跃），会减少seq_len的长度而不会减少hid_dim的长度。所以最后的结果Z还是和原先一样（因为Q没有改变）。mask的话比较麻烦了，作者用的是local attention。</p>
 <p>Encoder和Decoder部分的区别如下： 1、 Encoder部分的self-attention计算的是两两单词之间attention。然后decoder部分计算的就是当前的单词和它前面单词的attention了。 2、 Decoder部分多了一层，Encoder-Decoder的attention，就是将decoder的self attention部分和Encoder部分output进行attention。然后再去Feed Forward。</p>
 <h3 id="positional-encoding">Positional Encoding</h3>
@@ -401,10 +401,10 @@ PE_{(pos,2i+1)}=cos(pos/10000^{2i/d_{model}}).
 \]</span></p>
 <p>其中pos是指当前词在句子中的位置，i是指向量中每个值的index，可以看出，在<strong>偶数位置，使用正弦编码，在奇数位置，使用余弦编码</strong>。</p>
 <p>最后把这个Positional Encoding与embedding的值相加，作为输入送到下一层。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/16.png"></p>
+<p><img src="/.io//16.png"></p>
 <h3 id="layer-normalization">Layer Normalization</h3>
 <p>在transformer中，每一个子层（self-attetion，ffnn）之后都会接一个残缺模块，并且有一个Layer normalization。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9C%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6Transformer%E6%A8%A1%E5%9E%8B/17.png"></p>
+<p><img src="/.io//17.png"></p>
 <p>残差连接很简单，在这里，主要讲解一下Layer normalization。其实所有的normalization都是为了解决covariate shfit问题。就是如果在训练集上已经建立好了x到y的映射，那么如果test set的分布与training set的分布不一样，那么模型效果不会很好。比较著名的就是Batch normalization。通过将输入数据转化为固定均值与方差的数据，从而能够加速训练。而Layer Normalization与BN最大的不同在于，LN是固定住每一层的均值和方差，从而降低covariate shift带来的影响。参看链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/zhangjunhit/article/details/53169308">Layer Normalization</a></p>
 <h3 id="position-wise-feed-forward-networks">Position-wise Feed-Forward Networks</h3>
 <p>在multi-head attention后，会接一个FFN层，计算公式如下： <span class="math display">\[
@@ -491,8 +491,8 @@ FFN(x)=max(0,xW_1+b_1)W_2+b_2.
               <a href="/tags/NLP/" rel="tag"># NLP</a>
               <a href="/tags/Attention/" rel="tag"># Attention</a>
               <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
-              <a href="/tags/self-attention/" rel="tag"># self-attention</a>
               <a href="/tags/Transformer/" rel="tag"># Transformer</a>
+              <a href="/tags/self-attention/" rel="tag"># self-attention</a>
           </div>
 
         

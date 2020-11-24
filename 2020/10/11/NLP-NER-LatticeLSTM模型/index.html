@@ -52,17 +52,17 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解一下《Chinese NER Using Lattice LSTM》论文，即：LatticeLSTM模型。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/LatticeLSTM.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/equation_lexicon%20embedding.svg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/equation_lexicon_embedding_2.svg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/softmax.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/softmax1.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/data.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/参数.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/ontonotes-result.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/msra-result.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/weibo.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/resume.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//LatticeLSTM.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//equation_lexicon%20embedding.svg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//equation_lexicon_embedding_2.svg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//softmax.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//softmax1.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//data.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//参数.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//ontonotes-result.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//msra-result.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//weibo.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//resume.jpg">
 <meta property="article:published_time" content="2020-10-11T15:09:39.000Z">
 <meta property="article:modified_time" content="2020-10-12T14:12:48.504Z">
 <meta property="article:author" content="zichao">
@@ -70,7 +70,7 @@
 <meta property="article:tag" content="命名实体识别">
 <meta property="article:tag" content="LatticeLSTM">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/LatticeLSTM.jpg">
+<meta name="twitter:image" content="http://codewithzichao.github.io/.io//LatticeLSTM.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/">
 
@@ -314,7 +314,7 @@
 </blockquote>
 <h2 id="latticelstm模型介绍">LatticeLSTM模型介绍</h2>
 <p>个人认为这篇文章数学符号较多，而且整体逻辑并不是很清晰，所以不是很好理解（虽然公式倒是挺简单的），先放模型图吧～</p>
-<p><img src="/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/LatticeLSTM.jpg"></p>
+<p><img src="/.io//LatticeLSTM.jpg"></p>
 <ul>
 <li><p><strong>模型输入：</strong>假设输入的序列为<span class="math inline">\(\{c_1,c_2,c_3,...,c_n\}\)</span>，其中<span class="math inline">\(c_i\)</span>表示第<span class="math inline">\(i\)</span>个字，那么整个模型的输入有两部分：<span class="math inline">\(\{c_1,c_2,c_3,...,c_n\}\)</span>以及与词典<span class="math inline">\(\cal D\)</span>相匹配的所有词语。</p></li>
 <li><p><strong>embedding+LSTM：</strong>这一部分就是将词汇信息融入到char level model中。有三大部分：字本身的char embedding及LSTM部分、以当前字为结尾的相关的词语的embedding信息以及LSTM部分、两者的融合。</p>
@@ -331,8 +331,8 @@ h^{c}_{j}=LSTM(x_{j}^{c})
 \]</span></p>
 <ul>
 <li><p>对于<strong>以当前字为结尾的相关的词语的embedding信息</strong>的计算，相对比较复杂一些，但是总体思想还是简单的。以<code>桥</code>为例，与它相关的词语信息有：<code>长江大桥</code>与<code>大桥</code>。具体计算公式如下：</p>
-<p><img src="/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/equation_lexicon%20embedding.svg"></p>
-<p><img src="/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/equation_lexicon_embedding_2.svg"></p>
+<p><img src="/.io//equation_lexicon%20embedding.svg"></p>
+<p><img src="/.io//equation_lexicon_embedding_2.svg"></p>
 <p>这个其实和普通的LSTM很像，只不过不更新输出。其中，<span class="math inline">\(x_{b,e}^{w}\)</span>表示是index从b到e的词语的embedding，公式是：<span class="math inline">\(x_{b,e}^{w}=e^w(w_{b,e}^{d})\)</span>，<span class="math inline">\(h_{b}^{c}\)</span>表示的是词语首个字的LSTM的输出的hidden state，<span class="math inline">\(c_{b}^{c}\)</span>表示的是词语首个字的LSTM的输出的cell state，通过这一步，得到的就是模型图中的红色部分的结果，也就是词汇的cell值：<span class="math inline">\(c_{b,e}^{w}\)</span>。</p></li>
 <li><p><strong>字本身的信息与词汇信息进行融合</strong>。以<code>桥</code>为例，有三部分的信息：<code>桥</code>、<code>长江大桥</code>、<code>大桥</code>。融合的方式其实就是softmax。具体如下：</p></li>
 </ul>
@@ -342,28 +342,28 @@ i_{b,e}^{c}=\sigma(W\left[\begin{matrix} x_{e}^{c} \\ c_{b,e}^{w} \end{matrix}\r
 i_{e}^{c}=\sigma(W\left[\begin{matrix} x_{e}^{c} \\ h_{j-1}^{c} \end{matrix}\right]+b)
 \\(i_{e}^{c}就是char 输入到LSTM当中，计算的输入门！)
 \]</span></p>
-<p><img src="/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/softmax.jpg" style="zoom:50%;"></p>
-<p><img src="/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/softmax1.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//softmax.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//softmax1.jpg" style="zoom:50%;"></p>
 <p>这一步我们最终得到的是<span class="math inline">\(c_{j}^{c}\)</span>，那么最终的输入到CRF中的是<span class="math inline">\(h_{j}^{c}\)</span>，其计算公式与LSTM是一样的，为：<span class="math inline">\(h_{j}^{c}=o_{j}^{c}*tanh(c_j^c)\)</span>。后面的就是CRF模型了，比较简单，不再赘述。需要注意的是，最后的loss，加了L2正则防止过拟合。</p></li>
 </ul>
 <h2 id="实验结果">实验结果</h2>
 <ul>
 <li>数据集：MSRA、OntoNotes、Weibo、resume(released by this paper)</li>
 </ul>
-<p><img src="/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/data.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//data.jpg" style="zoom:50%;"></p>
 <ul>
 <li><p>评价指标：P/R/F1(exact match)</p></li>
 <li><p>使用了pretrained word embedding，在大规模的无监督的语料中使用word2vec算法，得到字向量与词向量，并在训练过程中fine-tune。</p></li>
 <li><p>参数设置如下：</p></li>
 </ul>
-<p><img src="/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/参数.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//参数.jpg" style="zoom:50%;"></p>
 <ul>
 <li>结果：</li>
 </ul>
-<p><img src="/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/ontonotes-result.jpg" style="zoom:50%;"></p>
-<p><img src="/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/msra-result.jpg" style="zoom:50%;"></p>
-<p><img src="/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/weibo.jpg" style="zoom:50%;"></p>
-<p><img src="/2020/10/11/NLP-NER-LatticeLSTM%E6%A8%A1%E5%9E%8B/resume.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//ontonotes-result.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//msra-result.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//weibo.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//resume.jpg" style="zoom:50%;"></p>
 <p>从实验结果来看，LatticeLSTM在四个数据集上都达到了SOTA，并且相比于base（LSTM+CRF）来说，提升效果是非常显著的。</p>
 <ul>
 <li>有意思的结论</li>

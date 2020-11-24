@@ -52,21 +52,21 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="目前为止，已经学了很多东西，但是没有输出，总感觉似乎少了点什么。这片博客将回顾经典的Attention机制。Attention模型是深度学习领域最有影响力的工作之一，最初应用于图像领域(hard attention)，后来在NMT任务上取得巨大成功后，便开始风靡于整个深度学习社区，尤其是在NLP领域。随后提出的GPT、ELMo、transformer、BERT、GPT-2、XLNET等模型，均有A">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/0.encoder-decoder.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/1.Attention机制.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/3.图4.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/4.图5.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/5.图6.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/6.图7.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/7.global%20attention概览.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/8.gobal%201步.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/9.2步.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/10.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/10.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/11.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/12.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/dot.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/general.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//0.encoder-decoder.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//1.Attention机制.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//3.图4.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//4.图5.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//5.图6.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//6.图7.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//7.global%20attention概览.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//8.gobal%201步.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//9.2步.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//10.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//10.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//11.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//12.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//dot.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//general.jpg">
 <meta property="article:published_time" content="2020-02-17T05:13:57.000Z">
 <meta property="article:modified_time" content="2020-02-27T12:27:53.924Z">
 <meta property="article:author" content="zichao">
@@ -74,7 +74,7 @@
 <meta property="article:tag" content="Attention">
 <meta property="article:tag" content="深度学习">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/0.encoder-decoder.png">
+<meta name="twitter:image" content="http://codewithzichao.github.io/.io//0.encoder-decoder.png">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/">
 
@@ -306,12 +306,12 @@
 <a id="more"></a>
 <h2 id="为什么要有attention机制">为什么要有Attention机制？</h2>
 <p>真正的Attention机制源于神经机器翻译（NMT）。在NMT中，最常用的模型架构是：encoder-decoder。我们将输入序列输入到encoder部分，encoder最终输出一个固定长度的vector，从而作为decoder部分的输入，最终，decoder部分输出翻译后的结果。encoder-decoder架构如下图所示。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/0.encoder-decoder.png"></p>
+<p><img src="/.io//0.encoder-decoder.png"></p>
 <p>但是上述的encoder-decoder架构存在缺陷：<strong>输入序列不论长短，都会被编码成一个固定长度的vector，作为decoder的输入，而decoder的效果会受制于该vector</strong>。也就是说，上述架构要求当前状态记录到目前为止所有的信息，但是我们无法通过一个vector来保存所有序列的信息。这会限制整个模型的性能。尤其当源输入序列非常长的时候，模型的性能会下降地越迅速。在机器翻译任务上，就表现为：当输入序列非常长的时候，翻译的文本质量会非常差。这就引进了Attention模型。</p>
 <p>传统的Attention模型有两种。一个是Dzmitry Bahdanau等人在《Neural Machine Translation by Jointly Learning to Align and Translate》论文中提出的Attention模型，简称：Bahdanau Attention；另一个是Minh-Thang Luong等人在《Effective Approaches to Attention-based Neural Machine Translation》论文中提出的Attention模型，简称：Luong Attention。下面将分别详细地介绍两种Attention模型。</p>
 <h2 id="bahdanau-attention">Bahdanau Attention</h2>
 <p>首先给出Attention模型的架构图，如下所示。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/1.Attention机制.png"></p>
+<p><img src="/.io//1.Attention机制.png"></p>
 <p>整个模型的计算，可分为以下几步：</p>
 <ul>
 <li>encoding</li>
@@ -321,14 +321,14 @@
 </ul>
 <p>下面将详细地介绍每一个步骤。</p>
 <h3 id="encoding">Encoding</h3>
-<p><img src="/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/3.图4.png"></p>
+<p><img src="/.io//3.图4.png"></p>
 <ol type="1">
 <li>输入序列：<span class="math inline">\(X=\{x_1,x_2,x_3,...,x_{T_X}\}\)</span>，其中<span class="math inline">\(T_X\)</span>表示输入序列的长度。</li>
 <li>在encoder部分，使用BRNN。<span class="math display">\[\overrightarrow h_1,\overrightarrow h_2,\overrightarrow h_3,...,\overrightarrow h_{T_X}\]</span>，表示前向RNN的每一时间步的hidden state，亦可以叫做激活值；<span class="math display">\[\overleftarrow h_1,\overleftarrow h_2,\overleftarrow h_3,...,\overleftarrow h_{T_x}\]</span>，表示反向RNN的每一时间步的hidden state，亦可以叫做激活值。(不懂BRNN的话，建议直接看论文或者Andrew Ng的《Deep Learning》。)</li>
 <li>使用<span class="math inline">\(h_j=(\overrightarrow h_j,\overleftarrow h_j)\)</span>表示encoder部分中j时刻的hidden state。</li>
 </ol>
 <h3 id="计算attention-weights">计算attention weights</h3>
-<p><img src="/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/4.图5.png"></p>
+<p><img src="/.io//4.图5.png"></p>
 <ol type="1">
 <li>Attention weights <span class="math inline">\(\alpha_{t,j}\)</span>的含义是：在生成第t个输出的时候，应该在第j个encoder单元的注意力大小。Attention weights的计算公式如下：</li>
 </ol>
@@ -343,13 +343,13 @@ e_{t,j}=a(s_{t-1},h_j)
 <li>需要着重理解的是对齐模型(alignment model)。在这个公式中：<span class="math inline">\(e_{t,j}=a(s_{t-1},h_j)\)</span>，a是对齐模型，用来评估当前预测词与输入序列中每一个输入词的相关度。直观地理解就是：在decoder的时候，我们更加关注于那些与预测词相关的部分。在生成一个预测词的时候，我们会考虑输入序列中每一个输入词与当前预测词的对齐关系（相关程度），对齐越好的词，我们应该给予它更大的权重，因为它对当前预测词的影响越大。</li>
 </ol>
 <h3 id="计算context-vector">计算context vector</h3>
-<p><img src="/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/5.图6.png"></p>
+<p><img src="/.io//5.图6.png"></p>
 <p>Context vector的计算非常简单，就是所有encoder部分的hidden state的加权平均，计算公式如下： <span class="math display">\[
 c_t=\sum_{j=1}^{T_x}\alpha_{t,j}h_{j}
 \]</span> 其中，<span class="math inline">\(\alpha_{t,j}\)</span>就是Attention weights，<span class="math inline">\(h_j\)</span>就是在encoder部分，计算的每一个时刻的hidden state。从这个式子可以知道，<span class="math inline">\(\alpha_{t,j}\)</span> 决定了<span class="math inline">\(h_j\)</span>对<span class="math inline">\(c_t\)</span>的影响。当<span class="math inline">\(\alpha_{t,j}\)</span> 越大，那么<span class="math inline">\(h_j\)</span>对对<span class="math inline">\(c_t\)</span>的影响就越大。</p>
 <h3 id="decoding">Decoding</h3>
 <p>通过上述几步，我们现在已经拥有的东西有：<span class="math inline">\(h_j\)</span>、<span class="math inline">\(c_t\)</span>、<span class="math inline">\(s_{t-1}\)</span>、<span class="math inline">\(\hat y_{t-1}\)</span>。接下来，我们就来计算t时刻的hidden state，并得到输出<span class="math inline">\(\hat y_{t}\)</span>。计算公式如下：</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/6.图7.png"> <span class="math display">\[
+<p><img src="/.io//6.图7.png"> <span class="math display">\[
 s_{t}=g(s_{t-1},\hat y_{t-1},c_t)
 \]</span></p>
 <p><span class="math display">\[
@@ -361,7 +361,7 @@ p(\hat y_{t}|y_1,y_2,y_3,...,X)=f(\hat y_t,s_t,c_t)
 <h2 id="luong-attention">Luong Attention</h2>
 <p>Luong等人提出了新的更为简单和有效的Attention模型。整个模型又分为两个模型：global attention与local attention。global attention与local attention的本质区别在于：global attention使用整个输入序列的hidden state来计算context vector，而local attention只使用输入序列的hidden state的一个子集来计算context vector。下面将具体阐述这两种模型。</p>
 <h3 id="global-attention">Global Attention</h3>
-<p><img src="/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/7.global%20attention概览.jpg"></p>
+<p><img src="/.io//7.global%20attention概览.jpg"></p>
 <p>Global Attention实际上可以看作Bahdanau Attention的简化版本，但是又有些区别。具体步骤下面将一一介绍。</p>
 <p>具体步骤有：</p>
 <ul>
@@ -373,7 +373,7 @@ p(\hat y_{t}|y_1,y_2,y_3,...,X)=f(\hat y_t,s_t,c_t)
 <li>计算输出</li>
 </ul>
 <h4 id="encoding-1">Encoding</h4>
-<p><img src="/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/8.gobal%201步.jpg"></p>
+<p><img src="/.io//8.gobal%201步.jpg"></p>
 <ol type="1">
 <li>输入序列：<span class="math inline">\(X=\{x_1,x_2,x_3,...,x_{T_X}\}\)</span>，其中<span class="math inline">\(T_X\)</span>表示输入序列的长度。</li>
 <li>计算encoder每一个时刻的hidden state，计算公式如下：</li>
@@ -383,12 +383,12 @@ h_t=RNN_{enc}(h_{t-1},x_{t}).
 \]</span></p>
 <p>其中，<span class="math inline">\(h_{t-1}\)</span>表示上一个时刻的hidden state，<span class="math inline">\(x_t\)</span>表示t时刻的输入词的word embedding。</p>
 <h4 id="计算decoder的hidden-state">计算decoder的hidden state</h4>
-<p><img src="/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/9.2步.jpg"></p>
+<p><img src="/.io//9.2步.jpg"></p>
 <p>计算公式如下： <span class="math display">\[
 s_t=RNN_{dec}(s_{t-1},\hat y_{t-1})
 \]</span> 其中，<span class="math inline">\(s_t\)</span>表示decoder中t时刻的hidden state，<span class="math inline">\(s_{t-1}\)</span>表示decoder中t-1时刻的hidden state，<span class="math inline">\(\hat y_{t-1}\)</span>表示decoder中t-1时刻的输出词的word embedding。</p>
 <h4 id="计算对齐向量其实就是注意力权重">计算对齐向量，其实就是注意力权重</h4>
-<p><img src="/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/10.jpg"></p>
+<p><img src="/.io//10.jpg"></p>
 <p>计算公式如下： <span class="math display">\[
 \alpha_{t,j}=\frac{exp(e_{t,j})}{\sum_{k=1}^{T_X}exp(e_{t,k})},
 \]</span></p>
@@ -404,12 +404,12 @@ W_a[s_t,h_j],     &amp;      &amp; concat
 \end{array}\]</span>
 <p>. $$ 最后，我们会详细讲解score函数是如何工作的。</p>
 <p>####计算context vector</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/10.jpg"></p>
+<p><img src="/.io//10.jpg"></p>
 <p>context vector的计算公式如下： <span class="math display">\[
 c_t=\sum_{j=1}^{T_X}\alpha_{t,j}h_{j},
 \]</span> 其中，<span class="math inline">\(\alpha_{t,j}\)</span>表示对齐向量，也就是注意力权重，<span class="math inline">\(h_j\)</span>表示encoder中j时刻的hidden state。</p>
 <h4 id="计算decoder中每一个时刻最终的hidden-state">计算decoder中每一个时刻最终的hidden state</h4>
-<p><img src="/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/11.jpg"></p>
+<p><img src="/.io//11.jpg"></p>
 <p>将context vector 和 decoder的hidden states 串起来。计算公式如下： <span class="math display">\[
 \hat s_t=tanh(W_c[c_t,s_t])
 \]</span></p>
@@ -418,10 +418,10 @@ c_t=\sum_{j=1}^{T_X}\alpha_{t,j}h_{j},
 p(\hat y_{t}|\hat y_1,\hat y_2,...,\hat. y_{t-1},X)=softmax(W_s\hat s_t)
 \]</span></p>
 <p>在下一个时刻，将<span class="math inline">\(s_t\)</span>、<span class="math inline">\(\hat y_t\)</span>作为第二个节点的输入，循环上述过程。在论文中，还将<span class="math inline">\(\hat s_t\)</span>作为第二个节点的输入，用来辅助当前节点的对齐决策过程。过程如下图所示。</p>
-<p><img src="/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/12.jpg"></p>
+<p><img src="/.io//12.jpg"></p>
 <p>关于global attention，还有一个没有讲的知识点，就是score函数是如何工作的。下面以dot与general为例，进行说明。</p>
 <p><strong>dot</strong></p>
-<p><img src="/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/dot.jpg"></p>
+<p><img src="/.io//dot.jpg"></p>
 <p>过程：</p>
 <blockquote>
 <p>注意，下面描述部分可能与前面公式不符合，是因为前面的公式的表示是用加权平均和来表示，而下面描述是用矩阵相乘来描述的，所以是没有问题的！</p>
@@ -431,7 +431,7 @@ p(\hat y_{t}|\hat y_1,\hat y_2,...,\hat. y_{t-1},X)=softmax(W_s\hat s_t)
 <p>第二步：对分数进行softmax，得到和为1的<strong>权重（对齐向量）</strong>；</p>
 <p>第三步：将H与第二步得到的分数相乘，得到(dim1,1)的context vector。</p>
 <p><strong>general</strong></p>
-<p><img src="/2020/02/17/NLP%EF%BD%9CBahdanau-Attention%E4%B8%8ELuong-Attention/general.jpg"></p>
+<p><img src="/.io//general.jpg"></p>
 <p>过程：</p>
 <blockquote>
 <p>注意，下面描述部分可能与前面公式不符合，是因为前面的公式的表示是用加权平均和来表示，而下面描述是用矩阵相乘来描述的，所以是没有问题的！</p>

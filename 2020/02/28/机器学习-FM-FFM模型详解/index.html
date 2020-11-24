@@ -52,12 +52,12 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="FM(Factorization Machines)模型与FFM(Field-aware Factorization Machines)模型，是在推荐系统中常用的两个模型。其实我本不想去写这两个模型的，毕竟我并不是搞推荐系统的，而且NLP方面我还没看的论文太多了😭，但是最近突然发现在看有关LR模型的题的时候，讲到了这两个模型，所以记录一下。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-FM-FFM%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/0.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-FM-FFM%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/1.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-FM-FFM%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/2.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-FM-FFM%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/3.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-FM-FFM%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/4.png">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-FM-FFM%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/5.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//0.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//1.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//2.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//3.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//4.png">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//5.jpg">
 <meta property="article:published_time" content="2020-02-28T13:57:56.000Z">
 <meta property="article:modified_time" content="2020-04-30T04:21:14.701Z">
 <meta property="article:author" content="zichao">
@@ -67,7 +67,7 @@
 <meta property="article:tag" content="FFM模型">
 <meta property="article:tag" content="Logistic Regression">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-FM-FFM%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/0.png">
+<meta name="twitter:image" content="http://codewithzichao.github.io/.io//0.png">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-FM-FFM%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/">
 
@@ -299,9 +299,9 @@
 <a id="more"></a>
 <h2 id="fm模型介绍">FM模型介绍</h2>
 <p>FM模型要解决的是：<strong>稀疏数据的特征组合问题。</strong>在训练样本中，我们往往会碰到样本的特征中会有很多的categorical feature。譬如：国家，性别，名字等等。这些数据往往不能直接使用，我们需要将其转换为数值型数据才能使用。处理categorical feature的一般方法是：<strong>one-hot编码</strong>(当然还有其他的方式，比如说在catBoost中介绍了好几种方法)。具体来说如下：</p>
-<p><img src="/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-FM-FFM%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/0.png"></p>
+<p><img src="/.io//0.png"></p>
 <p>上图中，<code>Clicked?</code>是label，<code>Country、Day、Ad_type</code>这三个都是feature，并且这三个feature都是categorical feature。我们需要对其进行one-hot编码，结果如下：</p>
-<p><img src="/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-FM-FFM%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/1.png"></p>
+<p><img src="/.io//1.png"></p>
 <p>转换后，特征就能使用了。但是，如果我们仔细观察一下，就会发现：使用one-hot编码后，特征数量增多了，并且大部分的特征值都是0，这就是数据稀疏问题。数据稀疏是不好的，因为这会导致模型难以训练，梯度下降的特别慢。</p>
 <p>此外，对于线性模型或者在LR模型中，我们其实都是假设特征之间是相互独立的，但这是不对的。因为在具体的情况中，特征之间应该是有关系。譬如:<code>&lt;厨房，米饭&gt;</code>这样两个特征之间应该会有一定的相关性。所以我们对特征之间进行组合，对于模型的表达能力来说，是有好处的。</p>
 <p><strong>那么，如何对特征进行组合？</strong></p>
@@ -311,20 +311,20 @@ y(X)=w_0+\sum_{i=1}^{n}w_ix_i+\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}w_{ij}x_ix_j
 <p>但是如果直接训练的话，参数<span class="math inline">\(w_{ij}\)</span>是很难训练的。因为其参数规模为：<span class="math inline">\(O(n^2)\)</span>，当<span class="math inline">\(n\)</span>很大的时候，那么计算复杂度非常的大。而且，训练<span class="math inline">\(w_{ij}\)</span>需要大量的满足<span class="math inline">\(x_ix_j\)</span>非零的样本，而现实生活中样本往往都是稀疏的，所以满足要求的样本就很少，所以训练<span class="math inline">\(w_{ij}\)</span>是很难的。</p>
 <p><strong>那么，如何训练参数<span class="math inline">\(w_{ij}\)</span>呢？</strong></p>
 <p>在FM模型中，它的解决办法是：<strong>为每一个特征引入一个隐向量<span class="math inline">\(v_i=(v_{i1},v_{i2},v_{i3},...,v_{ik})^T\)</span>。 </strong>其中，<span class="math inline">\(k\)</span>是隐向量的维度，也是超参数，需要我们去调整。</p>
-<p><img src="/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-FM-FFM%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/2.jpg" style="zoom: 67%;"></p>
+<p><img src="/.io//2.jpg" style="zoom: 67%;"></p>
 <p>所以，我们化简之后发现，我们对于参数<span class="math inline">\(w_{ij}\)</span>的训练，只需要知道样本那些不为0的特征就可以了，计算复杂度为：<span class="math inline">\(O(kn)\)</span>。所以，这样一来，我们就可以在线性时间复杂度完成FM模型。所以总结一下：FM模型的优势有两点：<strong>1.能够用来解决数据稀疏的问题；2.具有线性的计算复杂度。</strong></p>
 <h2 id="ffm模型介绍">FFM模型介绍</h2>
 <p>FFM模型是FM模型的一个特例，它引入了filed这个概念。什么意思呢？如下：</p>
-<p><img src="/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-FM-FFM%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/3.png"></p>
+<p><img src="/.io//3.png"></p>
 <p>上面有4个特征，其中<span class="math inline">\(User、Movie、Genre\)</span>这三个特征是categorical feature。我们将其使用one-hot编码之后，可以得到5个特征，4个 field。如下：</p>
-<p><img src="/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-FM-FFM%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/4.png"></p>
+<p><img src="/.io//4.png"></p>
 <p>所以使用FFM模型之后，其组合特征就有10个。下面具体给出模型： <span class="math display">\[
 y=w_0+\sum_{i=1}^{n}w_ix_i+\sum_{i=1}^{n-1}\sum_{j=i+1}^{n}&lt;v_{i,f_j},v_{j,f_i}&gt;x_ix_j
 \]</span> 其中，<span class="math inline">\(f_j\)</span>表示第j个特征属于的filed。这个模型的二次项参数是<span class="math inline">\(nkf\)</span>。预测复杂度为<span class="math inline">\(O(nk^2)\)</span>。</p>
 <p>在FFM模型中，将问题定义为分类问题的时候，其损失函数是logsitic loss，但是与平常的logistic loss有所不同，如下： <span class="math display">\[
 min \ OBJ=\mathop{min}\limits_{w,b}\sum_{i=1}^{N}log(exp(-y_i(w^Tx_i+b))+\frac {\lambda}{2}w^Tw
 \]</span> 这样看是不是很奇怪？和咱们平时看到的LR模型的loss不太一样？其实这里我们都忽略了一个条件：平时我们孙推导的LR loss的标签是0与1，而这里的loss是-1与1。其实和平时我们推导的方式是一样的。推导过程如下：</p>
-<p><img src="/2020/02/28/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-FM-FFM%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/5.jpg"></p>
+<p><img src="/.io//5.jpg"></p>
 <p>之后，我们就可以使用SGD来进行优化，这就不介绍了，相信大家都很熟悉了。</p>
 <h2 id="fm模型lr模型svm模型的联系">FM模型、LR模型、SVM模型的联系</h2>
 <ul>

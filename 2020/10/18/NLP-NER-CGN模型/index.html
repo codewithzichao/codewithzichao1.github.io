@@ -52,21 +52,21 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解一下《Leverage Lexical Knowledge for Chinese Named Entity Recognition via Collaborative Graph Network》论文，即：CGN模型，个人认为这篇文章将GNN应用到NER任务中的方式非常的优雅，">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/18/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/CGN.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/18/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/C-graph.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/18/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/t-graph.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/18/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/l-graph.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/18/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/weibo.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/18/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/ontonotes.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/18/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/msra.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/18/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/speed.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//CGN.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//C-graph.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//t-graph.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//l-graph.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//weibo.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//ontonotes.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//msra.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//speed.jpg">
 <meta property="article:published_time" content="2020-10-18T05:28:20.000Z">
 <meta property="article:modified_time" content="2020-10-18T05:49:57.706Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="CGN">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/2020/10/18/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/CGN.jpg">
+<meta name="twitter:image" content="http://codewithzichao.github.io/.io//CGN.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/10/18/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/">
 
@@ -303,7 +303,7 @@
 </blockquote>
 <h2 id="cgn模型介绍">CGN模型介绍</h2>
 <p>还是先放模型图，再逐步介绍～</p>
-<p><img src="/2020/10/18/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/CGN.jpg"></p>
+<p><img src="/.io//CGN.jpg"></p>
 <p>整个模型分为四层：<strong>encoding layer、graph layer、fusion layer、decoding layer，</strong>下面详细介绍～</p>
 <ol type="1">
 <li><p><strong>encoding layer：</strong>模型的输入分为两部分：sentence以及与sentence相匹配的lexicon words，分别表示为：<span class="math inline">\(s=\{c_1,c_2,...,c_n\},l=\{l_1,l_2,...,l_m\}\)</span>，其中<span class="math inline">\(c_i\)</span>表示sentence的第i个character，<span class="math inline">\(l_i\)</span>表示与sentence相匹配的第i个lexicon word。通过使用pretrained char embedding table，我们可以得到每一个character的char embedding：<span class="math inline">\(x_i=e^c(c_i)\)</span>；得到char embeding，我们需要将输入到BILSTM进行编码，这一步主要是为了捕获句子的顺序关系，得到contextual representation；对于matched lexicon words，我们也是通过使用pretrained word embedding table，得到每一个word的embedding：<span class="math inline">\(wv_i=e^w(l_i)\)</span>。最终encoding layer的输出是对这两者进行concat的结果，表示为：<span class="math inline">\(Node_f=[h_1,h_2,...,h_n,wv_1,wv_2,...,wv_m]\)</span>，其维度是：<span class="math inline">\([batch\_size,n+m,hidden\_size]\)</span>，<strong>我认为这样融合lexicon word的方式是更加优雅的，因为这样不仅可以融合lexicon word information，同时还解决了latticeLSTM模型无法并行的问题。</strong></p></li>
@@ -312,11 +312,11 @@
 <li><p>图的构建</p>
 <ul>
 <li><p><strong>Containing graph(C-graph)：</strong>这一层是为了集成self-matched words到character中而设计的，主要就是建模character与self-matched words的关系。那么怎么构建呢？既然是graph，就要首先确定node set与edge set，C-graph中的node就是所有的character与matched lexicon words；C-graph中的edge是：我们首先根据所有的character与matched lexicon words来构造邻接矩阵(行代表word，列代表character)，如果word <span class="math inline">\(i\)</span>包含character <span class="math inline">\(j\)</span>的话，那么邻接矩阵中的<span class="math inline">\((i,j)\)</span>的值为1，否则为0，对应于C-graph的话，就是word与character有连接，如下图所示：</p>
-<p><img src="/2020/10/18/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/C-graph.jpg" style="zoom:50%;"></p></li>
+<p><img src="/.io//C-graph.jpg" style="zoom:50%;"></p></li>
 <li><p><strong>Transition graph(T-graph)：</strong>这一层是为了直接集成与当前character最接近的lexicon word信息(preceding or following)。怎么构建图呢？node set还是有C-graph一样，但是edge set不一样，edge是：我们仍然是更加node set来构建邻接矩阵(行：words+character，列：word+character)，如果word <span class="math inline">\(i\)</span>或者character <span class="math inline">\(m\)</span>是 character <span class="math inline">\(j\)</span>的最接近的信息，那么邻接矩阵中的<span class="math inline">\((i,j) or (m,j)\)</span>的值为1，同时为了捕获word与word之间的关系，如果word <span class="math inline">\(i\)</span>是word <span class="math inline">\(k\)</span> 的preceding或者following的信息，那么<span class="math inline">\((i,k)\)</span>的值为1。对应于T-graph的话，如下图所示：</p>
-<p><img src="/2020/10/18/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/t-graph.jpg" style="zoom:50%;"></p></li>
+<p><img src="/.io//t-graph.jpg" style="zoom:50%;"></p></li>
 <li><p><strong>Lattice-graph(L-graph)：</strong>对应于LatticeLSTM中的Lattice结构，主要是能够捕获到self-matched word的局部信息以及隐式的的集成最接近的lexicon word(个人认为加这个其实就是为了融合更多信息，也没有什么特别的作用，就算不加也是OK的，逻辑上没有什么错误或者不通，但是效果可能就不会这么好了)。怎么构建图呢？node set与前面的一样，edge set1不一样，edge是：我们根据node set来构建邻接矩阵(行：word+character，列：word+character)，如果character <span class="math inline">\(m\)</span>是character <span class="math inline">\(j\)</span>最接近的character，那么<span class="math inline">\((m,j)\)</span>的值为，那其实相对的，<span class="math inline">\((j,m)\)</span>的值也为1，另外，如果character <span class="math inline">\(j\)</span>是word <span class="math inline">\(i\)</span>的首位或者尾位，那么<span class="math inline">\((i,j)\)</span>的值为1。对应到L-graph上的话，如下图所示：</p>
-<p><img src="/2020/10/18/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/l-graph.jpg" style="zoom:50%;"></p></li>
+<p><img src="/.io//l-graph.jpg" style="zoom:50%;"></p></li>
 </ul></li>
 <li><p>aggeragte</p>
 <p>构建完图之后，我们对每一个graph，都使用GAT模型来进行encoding(不知道可不可以这么说，我理解的aggregate就是encoding🧐)。假设有对于一个graph，有M层。第<span class="math inline">\(j\)</span>层的输入是node feature：<span class="math inline">\(NF^{j-1}=\{f_1,f_2,..,f_N\}\)</span>以及邻接矩阵<span class="math inline">\(A\)</span>，其中<span class="math inline">\(f_i\in R^F，A\in R^{N\times N}\)</span>，第<span class="math inline">\(j\)</span>层的输出是新的node feature：<span class="math inline">\(NF^{j+1}=\{f_1^{&#39;},f_2^{&#39;},...,f_N^{&#39;}\}\)</span>。具体怎么计算呢，其实也比较简单，如下： <span class="math display">\[
@@ -342,11 +342,11 @@ R=W_1H+W_2Q_1+W_3Q_2+W_4Q_3
 <li><p>数据集：OntoNotes、MSRA、Weibo</p></li>
 <li><p>参数设置：batch size：64(MSRA)，20(OntoNotes)，10(Weibo);optimizer:Adam(MSRA)、GD(OntoNotes and Weibo)</p></li>
 <li><p>实验结果：</p>
-<p><img src="/2020/10/18/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/weibo.jpg"></p></li>
+<p><img src="/.io//weibo.jpg"></p></li>
 </ol>
-<p><img src="/2020/10/18/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/ontonotes.jpg" style="zoom:50%;"></p>
-<p><img src="/2020/10/18/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/msra.jpg" style="zoom:50%;"></p>
-<p><img src="/2020/10/18/NLP-NER-CGN%E6%A8%A1%E5%9E%8B/speed.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//ontonotes.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//msra.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//speed.jpg" style="zoom:50%;"></p>
 <p>从结果来看，CGN还是不错的，尤其是在Weibo数据集上，提升非常大。另外一篇使用GNN来做的LGN模型，从paper中发布的结果来看，ontonotes以及msra的结果要比CGN好上一点点，但是我个人认为CGN融合lexicon的方式要更加优雅一些，而且扩展性比较强。当然了，FLAT出来之后，几乎秒杀CGN和LGN，不过要是还是想用GNN来做NER的话，CGN是一个可以follow的工作，个人想法🧐。</p>
 <h2 id="参考文献">参考文献</h2>
 <p>《A Lexicon-Based Graph Neural Network for Chinese NER》</p>

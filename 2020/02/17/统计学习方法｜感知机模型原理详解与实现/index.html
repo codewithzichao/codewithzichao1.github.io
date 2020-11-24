@@ -52,7 +52,7 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="感知机模型(perceptron)可以说是机器学习中最为简单的模型之一，也是之后的神经网络的原型与基础。本篇博客将对感知机模型的原理进行详细的讲解，并采用纯python实现以及调用scikit-learn库实现，这两种方式对感知机模型进行实现。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/17/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%EF%BD%9C%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/0.分离超平面.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//0.分离超平面.jpg">
 <meta property="article:published_time" content="2020-02-17T05:15:03.000Z">
 <meta property="article:modified_time" content="2020-02-22T08:58:19.305Z">
 <meta property="article:author" content="zichao">
@@ -61,7 +61,7 @@
 <meta property="article:tag" content="scikit-learn">
 <meta property="article:tag" content="perceptron">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/2020/02/17/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%EF%BD%9C%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/0.分离超平面.jpg">
+<meta name="twitter:image" content="http://codewithzichao.github.io/.io//0.分离超平面.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/02/17/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%EF%BD%9C%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/">
 
@@ -305,7 +305,7 @@ sign(z)=
 \end{cases}
 \]</span></p>
 <p>其中，<span class="math inline">\(x\)</span>是模型输入，<span class="math inline">\(y\)</span>是模型输出，并且<span class="math inline">\(x\in R^n，y\in \{1,-1\}\)</span>；<span class="math inline">\(w，b\)</span>是模型参数，并且<span class="math inline">\(w\in R^n，b\in R\)</span>。那么该模型是什么意思呢？可以做如下解释：</p>
-<p><img src="/2020/02/17/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%EF%BD%9C%E6%84%9F%E7%9F%A5%E6%9C%BA%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/0.分离超平面.jpg"></p>
+<p><img src="/.io//0.分离超平面.jpg"></p>
 <p>感知机模型实际上是在找一个分离超平面：<span class="math inline">\(wx+b=0\)</span>，它将特征空间分成两部分。当实例类别是+1的时候，它在超平面的上方，即使得<span class="math inline">\(wx+b&gt;0\)</span>；当实例类别是-1的时候，它在超平面的下方，即使得<span class="math inline">\(wx+b&lt;0\)</span>。那么，知道了模型之后，我们发现感知机模型中有两个参数：<span class="math inline">\(w,b\)</span>。那么，我们就需要找到一种学习策略来求解这两个参数，从而得到真正的感知机模型。</p>
 <h2 id="感知机模型的学习策略">感知机模型的学习策略</h2>
 <p>首先，我们要知道，感知机的训练数据集是线性可分的，要不然的话，学习出来的感知机模型不会收敛。那什么是线性可分的数据集呢？如下：</p>

@@ -52,20 +52,20 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解一下《A Lexicon-Based Graph Neural Network for Chinese NER》论文，即：LGN模型，有意思的是，这篇论文与LRCNN是同一个作者。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/graph.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/node%20update.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/edge%20update.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/relay%20node%20update.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/msra_and_weibo.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/resume.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/ontonotes.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//graph.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//node%20update.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//edge%20update.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//relay%20node%20update.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//msra_and_weibo.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//resume.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//ontonotes.jpg">
 <meta property="article:published_time" content="2020-10-15T09:35:13.000Z">
 <meta property="article:modified_time" content="2020-10-16T14:05:38.304Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="LGN">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/graph.jpg">
+<meta name="twitter:image" content="http://codewithzichao.github.io/.io//graph.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/">
 
@@ -305,7 +305,7 @@
 <p>LGN着眼解决的问题与LRCNN模型是一样的（两个模型来自于同一作者），就是LatticeLSTM中存在着一个问题：lexicon conflicts。在LRCNN模型中，是通过rethinking mechanism来解决，而在LGN模型中，则是通过GNN来进行解决这个问题，那么为什么可以用GNN来解决呢？因为对于word conflicts问题，很重要的就是要利用句子的全局信息和高层特征来进行解决，而GNN对于全局信息的建模和聚合有着非常强大的能力。具体是怎么解决的将在下面几小节具体说明。</p>
 <h2 id="lgn模型介绍">LGN模型介绍</h2>
 <p>先放图～</p>
-<p><img src="/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/graph.jpg"></p>
+<p><img src="/.io//graph.jpg"></p>
 <ol type="1">
 <li><p><strong>图的构建及node与edge的初始化</strong>。既然使用了GNN来解决，那么首先需要解决的问题就是：<strong>如何构建图？</strong></p>
 <ol type="1">
@@ -333,13 +333,13 @@ g^t_e=MultiAtt(g^t,\{\forall e^t\in\cal E\}) \\
 c,e\rightarrow g:\tilde g^t=[g^t_c;g^t_e]
 \]</span> 其中，<span class="math inline">\(C^t_{1,n}\)</span>表示第t个step的整个句子的hidden state，<span class="math inline">\(g^t\)</span>表示的是第t个step整个图的全局信息。</p></li>
 <li><p><strong>Node update。</strong>在进行聚合之后，就要开始对node进行更新。具体公司如下：</p>
-<p><img src="/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/node update.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//node update.jpg" style="zoom:50%;"></p>
 <p>其中，<span class="math inline">\(\cal X^t_i\)</span>表示的是node i与全局中继节点<span class="math inline">\(\tilde g^{t-1}\)</span>的concat，<span class="math inline">\(\xi ^t_i\)</span>表示的是bigram的concat，这个实际上和LSTM有点像。</p></li>
 <li><p><strong>Edge update。</strong>这个与node update是一样的。具体公式如下：</p>
-<p><img src="/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/edge update.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//edge update.jpg" style="zoom:50%;"></p>
 <p>其中，<span class="math inline">\(\cal X^t_{b,e}\)</span>表示的是aggregation edge <span class="math inline">\(\tilde e^{t-1}_{b,e}\)</span>与全局中继节点<span class="math inline">\(\tilde g^{t-1}\)</span>的concat。</p></li>
 <li><p><strong>Global relay node update。</strong>与上述一样，不再赘述，具体公式如下：</p>
-<p><img src="/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/relay node update.jpg" style="zoom:50%;"></p></li>
+<p><img src="/.io//relay node update.jpg" style="zoom:50%;"></p></li>
 <li><p>重复2-6步骤若干次，之后接入CRF，这没什么可以说的。</p></li>
 </ol>
 <h2 id="实验结果">实验结果</h2>
@@ -347,9 +347,9 @@ c,e\rightarrow g:\tilde g^t=[g^t_c;g^t_e]
 <li><p>数据集：OntoNotes、MSRA、Weibo、Resume</p></li>
 <li><p>参数设置：Adam optimizer(learning rate=2e-5 on MSRA and OntoNotes, 2e-4 on Weibo and resume)；droput(0.5 on embedding ,0.2 on aggregation module)；embedding size and state size is 50；</p></li>
 <li><p>结果</p>
-<p><img src="/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/msra_and_weibo.jpg"></p>
-<p><img src="/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/resume.jpg" style="zoom:50%;"></p>
-<p><img src="/2020/10/15/NLP-NER-LGN%E6%A8%A1%E5%9E%8B/ontonotes.jpg" style="zoom:50%;"></p></li>
+<p><img src="/.io//msra_and_weibo.jpg"></p>
+<p><img src="/.io//resume.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//ontonotes.jpg" style="zoom:50%;"></p></li>
 </ol>
 <p>从结果来看，要比LatticeLSTM要好，但是有意思的是，这个结果要比这个作者提出的LRCNN要差一些，我查了一下，都是19年发的，一个在emnlp(this paper)，一个在ijcai，anyway，enjoy。</p>
 <h2 id="参考文献">参考文献</h2>

@@ -52,22 +52,22 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="这篇博客主要讲解两篇论文：《Dialogue-Based Relation Extraction》与《Dialogue Relation Extraction with Document-level Heterogeneous Graph Attention Networks》。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/statistics_DialogRE.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/DialogRE_otherRE.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/dialog_realtion_type.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/dialogRE_result2.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/dialog_result_1.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_model.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_hyperparameters.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_result.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_result_ablation.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//statistics_DialogRE.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//DialogRE_otherRE.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//dialog_realtion_type.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//dialogRE_result2.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//dialog_result_1.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//HGAT_model.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//HGAT_hyperparameters.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//HGAT_result.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//HGAT_result_ablation.jpg">
 <meta property="article:published_time" content="2020-10-27T16:56:48.000Z">
 <meta property="article:modified_time" content="2020-11-07T17:27:52.972Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="dialogue-based RE">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/statistics_DialogRE.jpg">
+<meta name="twitter:image" content="http://codewithzichao.github.io/.io//statistics_DialogRE.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/">
 
@@ -310,11 +310,11 @@
 <p>之前一直很喜欢《老友记》，有人能够根据《老友记》来构建数据集，真是有生之年啊！爱了爱了🤩</p>
 </blockquote>
 <h3 id="statistics-of-dialogre">Statistics of DialogRE</h3>
-<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/statistics_DialogRE.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//statistics_DialogRE.jpg" style="zoom:50%;"></p>
 <p>DialogRE数据集是根据美国电视情景喜剧《老友记》中共10季的台词构建而来，共有1788个dialogue，10168个triple, 其中train:dev:test=6:2:2，每一个样本的形式还是SPO，与其他的RE并无区别。但是DialogRE与其他的document-level RE dataset最大的不同是：1. argument pair的relation span sentences的比例(95.6%)要其他的数据集(40.7%)高得多高得多(95.6%)；2.以speaker为中心，77.3%的triple全是speaker name，90.0%的triple至少包含一个speaker name；3.信息密度低，只有0.21/per sen。DialogRE数据集与其他数据集的比较如下：</p>
-<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/DialogRE_otherRE.jpg"></p>
+<p><img src="/.io//DialogRE_otherRE.jpg"></p>
 <p>下面是dialogRE数据集中的relation type：</p>
-<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/dialog_realtion_type.jpg"></p>
+<p><img src="/.io//dialog_realtion_type.jpg"></p>
 <p>⚠️在dialogRE中，有一个概念叫做trigger，其实和DocRED中的evidence是差不多的，用来证明argument pair的relation的正确性。</p>
 <h3 id="task-formulation-and-evaluation">Task formulation and Evaluation</h3>
 <p>给定一个dialogue：<span class="math inline">\(D=s_1:t_1,...,s_m:t_m\)</span>以及argument pair: <span class="math inline">\((a_1,a_2)\)</span>，其中<span class="math inline">\(s_i,t_i\)</span>表示第<span class="math inline">\(i\)</span>轮的speaker id与text，我们的目标是得到<span class="math inline">\((a_1,a_2)\)</span>的relation。有两个评价方法：<span class="math inline">\(F1\)</span>与<span class="math inline">\(F1_c\)</span>。<span class="math inline">\(F1\)</span>其实就是我们寻常用的，而<span class="math inline">\(F1_c\)</span>是这篇paper作者专门设计的，下面具体讲讲～</p>
@@ -334,16 +334,16 @@ F1_c=\frac{2P_cR_c}{P_c+R_c}
 \]</span> 其中，<span class="math inline">\([S1],[S2]\)</span>表示两个新的特殊的token。</p>
 <h3 id="experiment">Experiment</h3>
 <p>放一下上述四种方法在DialogRE数据集上的结果:</p>
-<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/dialogRE_result2.jpg"></p>
+<p><img src="/.io//dialogRE_result2.jpg"></p>
 <p>下面是加了argument type之后的结果，发现结果是有提升的，说明argument type是有作用的。</p>
-<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/dialog_result_1.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//dialog_result_1.jpg" style="zoom:50%;"></p>
 <p>总的来说，DialogRE是一个新的工作，在这个上面还是可以做很多的工作的。</p>
 <h2 id="dialogue-relation-extraction-with-document-level-heterogeneous-graph-attention-networksarxiv2020">Dialogue Relation Extraction with Document-level Heterogeneous Graph Attention Networks(arxiv2020)</h2>
 <h3 id="background-1">Background</h3>
 <p>这篇paper研究的是dialogue relation extraction task。之前的关于DRE的方法都没有很好地利用好speaker的信息，所以就忽略了speaker之间的信息可能会带给argument pair的影响。怎么解决呢？在这篇paper当中，采用的是基于graph的方法，提出了HGAT模型。</p>
 <h3 id="model">Model</h3>
 <p>先放图～</p>
-<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_model.jpg"></p>
+<p><img src="/.io//HGAT_model.jpg"></p>
 <p>整个HGAT模型分为三部分：<strong>utterance encoder、graph construction、relation classification。</strong></p>
 <ul>
 <li><p><strong>task definition：</strong>给定含有<span class="math inline">\(N\)</span>个utterance的dialogue：<span class="math inline">\(D=\{u_1,...,u_N\}\)</span>以及argument pair：<span class="math inline">\({\cal A}={(x_1,y_1),...,(x_1,y_1)}\)</span>，其中<span class="math inline">\(x_i,y_i\)</span>是dialogue中的entity，我们的目标是：建立模型，预测argument pair的relation。</p></li>
@@ -384,12 +384,12 @@ P(r|e_x,e_y)=sigmoid(W_ee^{\prime}+b_e)_r
 <ol type="1">
 <li><p>数据集：DialogRE</p></li>
 <li><p>hyperparameters</p>
-<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_hyperparameters.jpg" style="zoom:50%;"></p></li>
+<p><img src="/.io//HGAT_hyperparameters.jpg" style="zoom:50%;"></p></li>
 <li><p>结果</p>
-<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_result.jpg"></p>
+<p><img src="/.io//HGAT_result.jpg"></p>
 <p>从结果来看，提升还是蛮大的。我们再来看看消融实验与case study。</p></li>
 <li><p>消融实验</p>
-<p><img src="/2020/10/28/NLP-RE-Dialogue-based-relation-extraction/HGAT_result_ablation.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//HGAT_result_ablation.jpg" style="zoom:50%;"></p>
 <p>从消融实验结果来看：1.去掉global BILSTM的结果与POSembedding的影响比较大，这说明如何得到一个好的sentence vector并对其进行编码是非常重要的，另外，POS embedding的结果也说明句子结构的建模也是很重要的，所以如果建模也是一个值得探讨的问题；2. 一个好的embedding初始化很重要；3. 默认update是3次，目前是最优。我觉得这个消融实验做的一般，我觉得应该对不同的node与edge的作用也要进行实验，不然怎么证明你的graph是比较好的呢？</p></li>
 <li><p>case study</p>
 <p>从case study中可以得出：95%的argument pair是span 2个sentence，所以长距离建模很重要；entity-type很重要，如果模型无法从训练数据中获取到足够的信息，那么就会判断出错。这个case study也做的一般。。。</p>

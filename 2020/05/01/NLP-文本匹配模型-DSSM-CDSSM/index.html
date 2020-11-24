@@ -52,14 +52,14 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="正式开始看文本匹配的东西啦！文本匹配对NLPer来说是很重要的，不管是最后是做对话、推荐、搜索，文本匹配都是必不可少的。当然啦，BERT系列的模型出来之后，其实传统的深度学习模型效果是远远比不上的。不过这些预训练模型效果好是好，但是训练代价昂贵，当然啦，有人会说，现在已经有剪枝、量化、蒸馏这样的方法来减小预训练模型的大小，从而降低训练所需的代价(所以说模型压缩、加速这个方向还是很有前景的🤩咦，好">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-DSSM-CDSSM/DSSM.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//DSSM.jpg">
 <meta property="og:image" content="https://www.zhihu.com/equation?tex=l_%7B1%7D%3DW_%7B1%7Dx+%5C%5C+l_%7Bi%7D%3Df%28W_%7Bi%7Dl_%7Bi-1%7D%2Bb_%7Bi%7D%29%2Ci%3D2%2C...%2CN-1+%5C%5C+y+%3D+f%28W_%7BN%7Dl_%7BN-1%7D%2Bb_%7BN%7D%29+%5C%5C+">
 <meta property="og:image" content="https://www.zhihu.com/equation?tex=R%28Q%2CD%29%3Dcosine%28y_%7BQ%7D%2Cy_%7BD%7D%29%3D%5Cfrac%7By_%7BQ%7D%5E%7BT%7Dy_%7BD%7D%7D%7B%5Cleft+%5C%7C+y_%7BQ%7D%5Cright%5C%7C+%5Cleft+%5C%7C+y_%7BD%7D%5Cright%5C%7C%7D+%5C%5C">
 <meta property="og:image" content="https://www.zhihu.com/equation?tex=P%28D%7CQ%29%3D%5Cfrac%7Bexp%28%5Cgamma+R%28Q%2CD%29%29%7D%7B%5Csum_%7BD%5E%5Cprime%5Cin+%5Cbold+D%7D%7Bexp%28%5Cgamma+R%28Q%2C+D%5E%5Cprime%29%29%7D%7D+%5C%5C">
 <meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbold+D">
 <meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cleft%5C%7BD_%7Bj%7D%5E%7B-%7D%3B+j%3D1%2C...%2C4%5Cright%5C%7D">
 <meta property="og:image" content="https://www.zhihu.com/equation?tex=L%28%5CLambda%29+%3D+-log%5Cprod_%7B%28Q%2CD%5E%7B%2B%7D%29%7D%5E%7B%7D+P%28D%5E%7B%2B%7D%7CQ%29+%5C%5C">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-DSSM-CDSSM/CDSSM.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//CDSSM.jpg">
 <meta property="article:published_time" content="2020-05-01T10:13:16.000Z">
 <meta property="article:modified_time" content="2020-05-13T14:31:47.125Z">
 <meta property="article:author" content="zichao">
@@ -68,7 +68,7 @@
 <meta property="article:tag" content="DSSM">
 <meta property="article:tag" content="CDSSM">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-DSSM-CDSSM/DSSM.jpg">
+<meta name="twitter:image" content="http://codewithzichao.github.io/.io//DSSM.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-DSSM-CDSSM/">
 
@@ -306,7 +306,7 @@
 <a id="more"></a>
 <h2 id="dssm模型介绍">DSSM模型介绍</h2>
 <p>DSSM模型来源于2013年《Learning Deep Structured Semantic Models for Web Search using Clickthrough Data》论文。由于是13年的论文，所以其实整体思想还是很简单的，直接放图吧～</p>
-<p><img src="/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-DSSM-CDSSM/DSSM.jpg"></p>
+<p><img src="/.io//DSSM.jpg"></p>
 <p><span class="math inline">\(x\)</span>表示term vector， 表示输出向量，<span class="math inline">\(l_i,i=1,...,N\)</span> 表示隐藏层， <span class="math inline">\(W_i\)</span> 表示第<span class="math inline">\(i\)</span>层的参数矩阵，<span class="math inline">\(b_i\)</span>表示 第<span class="math inline">\(i\)</span>个偏置项。</p>
 <figure>
 <img src="https://www.zhihu.com/equation?tex=l_%7B1%7D%3DW_%7B1%7Dx+%5C%5C+l_%7Bi%7D%3Df%28W_%7Bi%7Dl_%7Bi-1%7D%2Bb_%7Bi%7D%29%2Ci%3D2%2C...%2CN-1+%5C%5C+y+%3D+f%28W_%7BN%7Dl_%7BN-1%7D%2Bb_%7BN%7D%29+%5C%5C+" alt="[公式]"><figcaption aria-hidden="true">[公式]</figcaption>
@@ -329,7 +329,7 @@
 <p>DSSM模型的缺点在于：使用word hashing会造成冲突，因为不同的单词有可能产生同样的n-gram；采用词袋模型，损失了上下文结构信息。</p>
 <h2 id="cdssm模型介绍">CDSSM模型介绍</h2>
 <p>CDSSM是DSSM的改进，在DSSM中，由于采用词袋模型来表示输入的query与document，完全丧失了句子本身应有的上下文结构信息，而CDSSM采用词n-gram与卷积池化操作，捕获上下文关系。模型图如下：👇</p>
-<p><img src="/2020/05/01/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-DSSM-CDSSM/CDSSM.jpg" style="zoom: 45%;"></p>
+<p><img src="/.io//CDSSM.jpg" style="zoom: 45%;"></p>
 <p><strong>Query/document：</strong>输入的query与doc句子，并且使用了<code>&lt;s&gt;</code>进行填充，保证进行卷积的时候，前后都有词。</p>
 <p><strong>Sliding window</strong> 是定义滑动窗口对输入的句子做n-gram,来获取word-n-gram，文章用的tri-gram。</p>
 <p><strong>word-n-gram layer</strong> 是经过滑窗处理后的word-n-gram 数据。</p>

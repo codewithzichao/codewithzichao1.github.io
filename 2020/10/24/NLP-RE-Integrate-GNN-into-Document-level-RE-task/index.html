@@ -52,27 +52,27 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="这篇博客主要是讲解图神经网络在Document-level关系抽取上的应用，共讲解4篇论文：《Inter-sentence Relation Extraction with Document-level Graph Convolutional Neural Network》、《Connecting the Dots: Document-level Neural Relation Extractio">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/GCNN_model.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/GCNN_result.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/EoG_model.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/EoG_result.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/EoG.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/EoG_result2.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/EoG_ablation.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/LSR_node_constructor.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/LSR_dynamic_reasoner.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/LSR_result.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/LSR_CDR_GDA.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/GAIN_model.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/GAIN_result.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/GAIN_result_2.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//GCNN_model.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//GCNN_result.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//EoG_model.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//EoG_result.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//EoG.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//EoG_result2.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//EoG_ablation.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//LSR_node_constructor.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//LSR_dynamic_reasoner.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//LSR_result.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//LSR_CDR_GDA.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//GAIN_model.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//GAIN_result.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//GAIN_result_2.jpg">
 <meta property="article:published_time" content="2020-10-24T14:09:30.000Z">
 <meta property="article:modified_time" content="2020-11-01T15:50:14.612Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="Document-level RE">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/GCNN_model.jpg">
+<meta name="twitter:image" content="http://codewithzichao.github.io/.io//GCNN_model.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/">
 
@@ -313,7 +313,7 @@
 <p>文档级关系抽取的难点在于：我们往往需要抽取的entity pair是span across multi-sentences，所以我们必须对entity的local、non-local、semantic、dependency等信息进行提取和建模。这篇paper提出的GCNN，正是以word为node，words之间的local与non-local dependency作为edge，来构建document-level graph，从而解决文档级关系抽取问题。</p>
 <h3 id="model">Model</h3>
 <p>先放图～</p>
-<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/GCNN_model.jpg"></p>
+<p><img src="/.io//GCNN_model.jpg"></p>
 <p>GCNN模型分为4部分：<strong>input layer、graph construction、GCNN layer、MIL-based relation classification。</strong></p>
 <ul>
 <li><p><strong>task definition：</strong>给定一个document <span class="math inline">\(t\)</span>: <span class="math inline">\([w_1,w_2,...,w_n]\)</span>，<span class="math inline">\(e_1,e_2\)</span>是<span class="math inline">\(t\)</span>中的两个entity，我们的目标是：提取出<span class="math inline">\(e_1\)</span>与<span class="math inline">\(e_2\)</span>之间的relation。</p></li>
@@ -339,7 +339,7 @@ scores(e^{head},e^{tail})=log\sum_{i\in E^{head},j\in E^{tail}}exp((x^{head}_iR)
 <ol type="1">
 <li><p>数据集：CDR、CHR(这种两个biochemistry领域的document-level 关系抽取数据集)</p></li>
 <li><p>结果</p>
-<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/GCNN_result.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//GCNN_result.jpg" style="zoom:50%;"></p>
 <p>结果就不分析了，没什么好分析的，总的来说，GCNN中规中矩吧，没有太出色的地方，缺点在于：构建了异质图，但是却没有考虑到不同类型的edge的作用；对于mention的处理不够好；logical reasoning几乎没有另外处理，纯靠GCNN；edge的构建需要其他的工具，不一定准确；对于word representation的表示不够。</p></li>
 </ol>
 <h2 id="connecting-the-dots-document-level-neural-relation-extraction-with-edge-oriented-graphsemnlp2019">Connecting the Dots: Document-level Neural Relation Extraction with Edge-oriented Graphs(EMNLP2019)</h2>
@@ -347,7 +347,7 @@ scores(e^{head},e^{tail})=log\sum_{i\in E^{head},j\in E^{tail}}exp((x^{head}_iR)
 <p>这篇paper也是解决document-level relation extraction问题，提出的模型基于以下几个发现：1. 之前很多的graph based model都是基于node的，然而作者发现entity 之间的relation，可以通过节点之间路径来形成唯一的edge representation，从而更好地得到表达；2.每一个target entity的mentions对于entity之间的relation是非常重要的。这篇paper提出的EoG模型很好地解决了这两个问题。</p>
 <h3 id="model-1">Model</h3>
 <p>先放图～</p>
-<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/EoG_model.jpg"></p>
+<p><img src="/.io//EoG_model.jpg"></p>
 <p>EoG模型分为四部分：<strong>sentence encdoing layer、graph construction、inference layer、classification layer。</strong></p>
 <ul>
 <li><p><strong>task definition：</strong>给定标注好的document(entity与mentions)，目标是抽取出所有entity pair的relation。</p></li>
@@ -391,14 +391,14 @@ y=softmax(W_ce_{EE}+b_c)
 <ol type="1">
 <li><p>数据集：CDR、GDA</p></li>
 <li><p>实验结果：</p>
-<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/EoG_result.jpg"></p>
-<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/EoG.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//EoG_result.jpg"></p>
+<p><img src="/.io//EoG.jpg" style="zoom:50%;"></p>
 <p>结果没什么好看的，主要来看一下ablation。</p></li>
 <li><p>ablation</p>
 <p>EoG模型做了一些消融实验。首先是对EoG(full)、EoG(NoInf)、EoG(Sent)在不同长度的entity pair进行实验：</p>
-<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/EoG_result2.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//EoG_result2.jpg" style="zoom:50%;"></p>
 <p>可以看到，当entity pair之间相差4句以上时，结果明显要好，这说明原始的EoG忽略了一些重要节点之间的交互信息，那么能不能让模型自动选择哪些节点要交互，哪些节点不要交互呢？(在LSR就是这么做的)除此之外，作者还对不同的compnent进行了消融实验。如下：</p>
-<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/EoG_ablation.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//EoG_ablation.jpg" style="zoom:50%;"></p>
 <p>从结果可以看到，去掉SS对结果影响巨大，这说明对于document-level RE，提取inter-sentence之间的交互信息是非常重要的，另外，MM似乎对结果影响最小，但是我认为MM对于entity pair的relation identification是非常重要的，只是EoG里面构造的方式不对，在之后的GAIN模型里面，可以看到MM对结果提升巨大，当然构建方式不一样。</p></li>
 <li><p>当然了，最后还做了一些bad case的分析，有三种：使用and相连接的entity，model无法找到她们之间的relation；缺少coreference；3.不完全的实体链接。个人觉得EoG模型是一个非常好的开端，提供了很多思路，值得细细品读。</p></li>
 </ol>
@@ -412,7 +412,7 @@ y=softmax(W_ce_{EE}+b_c)
 <p>LSR模型分为三部分：<strong>node constructor、dynamic reasoner、classifer。</strong></p>
 <ul>
 <li><p><strong>node constructor：</strong>这一部分分为两小部分：context encoding与node extraction，主要就是对document中的所有word进行编码，并得到graph所有类型的node的representation。先放图·</p>
-<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/LSR_node_constructor.jpg"></p>
+<p><img src="/.io//LSR_node_constructor.jpg"></p>
 <ul>
 <li><p>Context encoding：对于给定的document <span class="math inline">\(d\)</span>，我们将其输入到一个encoder中(BILSTM/BERT etc)，得到contextual representation。</p></li>
 <li><p>node extraction：在LSR中，有三种node：mention node、entity node以及meta dependancy path node。mention node表示的是一个sentence中entity的所有的mention，其表示是该mention中的所有word的representation的平均；entity node指的是entity node，其表示是所有mention node的representation的平均；MDP表示一个句子中所有mention的最短依赖路径集，在MDP元依赖路径中，mention和单词的表示分别被提取为提及节点和MDP节点。(说实话，不是很懂MDP。🧐)</p>
@@ -421,7 +421,7 @@ y=softmax(W_ce_{EE}+b_c)
 </blockquote></li>
 </ul></li>
 <li><p><strong>dynamic reasoner：</strong>这一部分就是inference，因为在EoG里面，已经证明了没有inference对最终结果影响还是蛮大的。主要分为两部分：<strong>structure induction与multi-hop reasioning</strong>。先放图～</p>
-<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/LSR_dynamic_reasoner.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//LSR_dynamic_reasoner.jpg" style="zoom:50%;"></p>
 <ul>
 <li><p>structure induction：这一部分主要是用来学习文档图的结构，从而得到文档图的邻接矩阵，从而以便使用GCN来进行aggregate。公式如下： <span class="math display">\[
 s_{ij}=(tanh(W_pu_i)^TW_b(tanh(W_cu_j)) \\
@@ -446,9 +446,9 @@ P(r|e_i,e_j)=\sigma(e_i^TW_ee_j+b_e)
 <ol type="1">
 <li><p>数据集：CDR、GDA、DocRED</p></li>
 <li><p>结果</p>
-<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/LSR_result.jpg"></p>
+<p><img src="/.io//LSR_result.jpg"></p>
 <p>从在DocRED上的结果来看，可以说是非常好。我们在来看一下其在CDR与GDA数据集上的结果。</p>
-<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/LSR_CDR_GDA.jpg"></p>
+<p><img src="/.io//LSR_CDR_GDA.jpg"></p>
 <p>在没有MDP节点的情况下，取得了SOTA，说明MDP的作用一般。总的来说，LSR模型确实很新颖，但是follow的价值一般。</p></li>
 </ol>
 <h2 id="double-graph-based-reasoning-for-document-level-relation-extractionemnlp2020">Double Graph Based Reasoning for Document-level Relation Extraction(EMNLP2020)</h2>
@@ -456,7 +456,7 @@ P(r|e_i,e_j)=\sigma(e_i^TW_ee_j+b_e)
 <p>这篇paper也是继承了EoG模型，主要解决三个问题：1.一个relation的subject与object可能位于不同的sentence，不能仅仅利用一个句子来得到relation；2.同一个entity可能会出现在不同的sentence当中，因此需要利用cross-sentence context information，从而更好的表示entity；3.很多relation需要logical reasoning(main issue)。为此提出了GAIN模型。个人认为这篇paper的模型比较优雅，挺好的。</p>
 <h3 id="model-3">Model</h3>
 <p>先放图～</p>
-<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/GAIN_model.jpg"></p>
+<p><img src="/.io//GAIN_model.jpg"></p>
 <p>GAIN模型分为四部分：<strong>encoding module、mention-level graph aggregation module、entity-level graph aggregation module、classification module。</strong></p>
 <ul>
 <li><p><strong>task definition：</strong>给定一篇含有<span class="math inline">\(N\)</span>个sentence的documnt：<span class="math inline">\(\cal D=\{s_i\}_{i=1}^{N}，s_i=\{w_j\}_{j=1}^{M}\)</span>，以及<span class="math inline">\(P\)</span>个entity：<span class="math inline">\(\cal E=\{e_i\}_{i=1}^{P},e_i=\{m_j\}_{j=1}^{Q}\)</span>，其中<span class="math inline">\(e_i\)</span>表示第<span class="math inline">\(i\)</span>个entity，<span class="math inline">\(m_j\)</span>表示第<span class="math inline">\(i\)</span>个entity的第<span class="math inline">\(j\)</span>个mention。我们的目标是entity之间的relation。</p></li>
@@ -484,9 +484,9 @@ P(r|e_h,e_t)=sigmoid(W_b\sigma(W_aI_{h,t}+b_a)+b_b)
 <ol type="1">
 <li><p>数据集：DocRED</p></li>
 <li><p>实验结果</p>
-<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/GAIN_result.jpg"></p>
+<p><img src="/.io//GAIN_result.jpg"></p>
 <p>从结果上看，GAIN的效果是令人惊艳的。我们再来看看ablation，如下：</p>
-<p><img src="/2020/10/24/NLP-RE-Integrate-GNN-into-Document-level-RE-task/GAIN_result_2.jpg"></p>
+<p><img src="/.io//GAIN_result_2.jpg"></p>
 <p>从消融实验来看，可以发现各个模块对于结果的话影响都是非常巨大的，很优雅，没有多余的设计。</p>
 <p>目前来看，主要的处理：encoding？怎么构建图，才能够利用好mention、entity、sentence、document的信息（edge-oriented or node-oriented）？heterogeneous graph的处理？logical reasoning的处理？长期建模很重要，怎么更好地处理？</p></li>
 </ol>

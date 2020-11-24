@@ -52,14 +52,14 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="这篇博客讲解一下IJCAI2019的一篇关于text style transfer的论文：《A Dual Reinforcement Learning Framework for Unsupervised Text Style Transfer》。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/28/NLP-TST-DualRL-model/model.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//model.jpg">
 <meta property="article:published_time" content="2020-10-27T17:09:23.000Z">
 <meta property="article:modified_time" content="2020-11-10T07:03:58.173Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="DualRL">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/2020/10/28/NLP-TST-DualRL-model/model.jpg">
+<meta name="twitter:image" content="http://codewithzichao.github.io/.io//model.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/10/28/NLP-TST-DualRL-model/">
 
@@ -299,7 +299,7 @@
 <p>无监督文本风格转换任务指的是：在没有对齐语料的基础上，将文本从原来的style转换到目标的style，并且保持其content不发生改变。目前的主流的做法是：two-step，即：首先将content从原始的style中分离，然后再将content与目标的style进行融合。two-step的思想实践起来又可以分为两种思路：(implicit seperation)第一种是通过对抗训练得到style-independent context rep vector，然后再输入到style-dependent decoder中进行改写；(explicit seperation)第二种是直接移除一些style attribute word，然后寄那个句子输入到generation model中。但是这两种方法都有缺陷。第一种方法的缺陷在于：没有评价标准能够来知道separation的结果到底怎么养，这样的话，很有可能会导致content preservation很差，另一个就是可解释性也很差；第二种方法的缺陷在于：应用场景很有限，因为很多句子中并没有很显式的style attribute word。通过这样的一个分析，我们会有一个疑问：style与content的separation是必须的吗？所以这篇paper的核心思想就是：在不分离style与content的基础上，来做无监督文本风格转换。</p>
 <h2 id="model">Model</h2>
 <p>先放图～</p>
-<p><img src="/2020/10/28/NLP-TST-DualRL-model/model.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//model.jpg" style="zoom:50%;"></p>
 <p>这篇paper提出的dualRL模型</p>
 <h2 id="experiment">Experiment</h2>
 <h2 id="references">References</h2>

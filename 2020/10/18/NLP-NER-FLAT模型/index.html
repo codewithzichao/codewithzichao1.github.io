@@ -52,19 +52,19 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="近期会更新一系列NER的paper解读，计划2周时间将NER的重要的论文刷完，有一个想做的事情嘻嘻😁。这篇博客主要讲解一下《FLAT: Chinese NER Using Flat-Lattice Transformer》论文，即：FLAT模型，这是今年ACL2020上NER任务的SOTA，个人觉得模型设计上非常优雅，非常值得一读，预测以后会成为比赛的标配🧐。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/FLAT.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/params_MSRA+ontonotes.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/prams_weibo+resume.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/result.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/bert.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/speed.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//FLAT.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//params_MSRA+ontonotes.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//prams_weibo+resume.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//result.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//bert.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//speed.jpg">
 <meta property="article:published_time" content="2020-10-18T05:52:20.000Z">
 <meta property="article:modified_time" content="2020-10-19T05:40:18.502Z">
 <meta property="article:author" content="zichao">
 <meta property="article:tag" content="NLP">
 <meta property="article:tag" content="FLAT">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/FLAT.jpg">
+<meta name="twitter:image" content="http://codewithzichao.github.io/.io//FLAT.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/">
 
@@ -304,7 +304,7 @@
 <p>对于中文NER任务，词汇增强是有效提升效果的方法之一。LatticeLSTM是词汇增强的典型模型。但是这种Lattice结构，其模型结构比较复杂，并且由于lexicon word插入位置的动态性，导致LatticeLSTM模型无法并行，所以LatticeLSTM无法很好的利用GPU加速，其training以及inference的速度非常慢。所以怎么既能够很好的融入lexicon信息，同时又能够在不降低效果甚至提升效果的同时，大幅提升training以及inference的速度，这就是FLAT模型提出的背景。目前在NER中，处理lattice结构的方式有两大类：1. 设计一个框架，能够兼容词汇信息的输入，典型的模型有：LatticeLSTM、LRCNN，这种模型的缺点是无法对长期依赖进行建模；2.将lattice结构转换为graph结构，典型的模型有：LGN、CGN，这种模型的缺点是：1.序列结构和graph结构还是有一定的差别；2.通常需要使用RNN来捕获顺序信息。而FLAT基于transformer，能够很好的解决上述的问题，但是vanilla transformer对于位置信息的捕捉其实是很弱的，很多实验表明transformer对于NER这种对于位置信息要求很高的任务，并不是很适合，所以怎么解决这个问题，具体的将在下面几节介绍。</p>
 <h2 id="flat模型介绍">FLAT模型介绍</h2>
 <p>先放模型图～</p>
-<p><img src="/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/FLAT.jpg"></p>
+<p><img src="/.io//FLAT.jpg"></p>
 <p>上图是FLAT模型的整体结构。整体结构就是transformer的encoder部分+CRF。主要的改进就是在position encoding部分，因为transformer使用的是self-attnetion，这种点积的方式，破坏了transformer的距离感知和方向感知性。具体怎么改呢？下面具体介绍。</p>
 <ol type="1">
 <li><p>在FLAT中，将lattice结构转换为flat 结构。怎么做呢？每一个character以及mathced lexicon word都有head index与tail index。这样的话，我们就将lattice转换为flat结构，而且由于有了head index与tail index，所以转换是可以逆转的。</p></li>
@@ -325,15 +325,15 @@ d\in \{d_{ij}^{hh},d_{ij}^{ht},d_{ij}^{th},d_{ij}^{tt}\}
 <ol type="1">
 <li><p>数据集：OntoNotes、MSRA、Weibo、Resume</p></li>
 <li><p>参数设置：</p>
-<p><img src="/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/params_MSRA+ontonotes.jpg" style="zoom:50%;"></p>
-<p><img src="/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/prams_weibo+resume.jpg" style="zoom:50%;"></p></li>
+<p><img src="/.io//params_MSRA+ontonotes.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//prams_weibo+resume.jpg" style="zoom:50%;"></p></li>
 <li><p>实验结果</p>
 <p>我们首先来看一下FLAT以及其他的模型在四个数据集上的表现，如下图所示。从结果可以看到，FLAT的结果都超过了之前提出的模型。</p>
-<p><img src="/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/result.jpg"></p>
+<p><img src="/.io//result.jpg"></p>
 <p>我们看一下加上了BERT之后的结果，如下图所示。NB!以后比赛可以搞起来了就不一定是BERT+BILSTM+CRF了，也可以是是BERT+FLAT+CRF，不过词汇表在其中还是占了大部分作用，以后要用的好的话，就得制作词汇表了。🧐</p>
-<p><img src="/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/bert.jpg" style="zoom:80%;"></p>
+<p><img src="/.io//bert.jpg" style="zoom:80%;"></p>
 <p>我们再来看一下推理速度，如下图所示。在batch的情况下，inferance的速度比其他模型快上好几倍，FLAT nb！这个实验另外让我非常惊奇的是，原始的LatticeLSTM的code是不能batch训练的，但是这篇paper的作者自己手撸了一个batch的LatticeLSTM，向大佬低头，有空去看看具体是怎么做到的。<a target="_blank" rel="noopener" href="https://github.com/LeeSureman/Batch_Parallel_LatticeLSTM">code</a></p>
-<p><img src="/2020/10/18/NLP-NER-FLAT%E6%A8%A1%E5%9E%8B/speed.jpg"></p></li>
+<p><img src="/.io//speed.jpg"></p></li>
 </ol>
 <h2 id="参考文献">参考文献</h2>
 <p>《FLAT: Chinese NER Using Flat-Lattice Transformer》</p>

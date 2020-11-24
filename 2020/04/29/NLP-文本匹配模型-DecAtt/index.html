@@ -52,7 +52,7 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="正式开始看文本匹配的东西啦！文本匹配对NLPer来说是很重要的，不管是最后是做对话、推荐、搜索，文本匹配都是必不可少的。当然啦，BERT系列的模型出来之后，其实传统的深度学习模型效果是远远比不上的。不过这些预训练模型效果好是好，但是训练代价昂贵，当然啦，有人会说，现在已经有剪枝、量化、蒸馏这样的方法来减小预训练模型的大小，从而降低训练所需的代价(所以说模型压缩、加速这个方向还是很有前景的🤩咦，好">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/04/29/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-DecAtt/decAtt模型架构.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//decAtt模型架构.jpg">
 <meta property="article:published_time" content="2020-04-29T14:53:29.000Z">
 <meta property="article:modified_time" content="2020-05-12T12:25:53.675Z">
 <meta property="article:author" content="zichao">
@@ -60,7 +60,7 @@
 <meta property="article:tag" content="tensorflow2">
 <meta property="article:tag" content="DecAtt">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/2020/04/29/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-DecAtt/decAtt模型架构.jpg">
+<meta name="twitter:image" content="http://codewithzichao.github.io/.io//decAtt模型架构.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/04/29/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-DecAtt/">
 
@@ -302,7 +302,7 @@
 <h3 id="decatt模型架构">DecAtt模型架构</h3>
 <p>首先，定义训练集<span class="math inline">\(\{a^{(n)},b^{(n)},y^{(n)}\}_{n=1}^{N}\)</span>，其中<span class="math inline">\(a^{(n)}\)</span>表示第n个样本的premise，即：<span class="math inline">\(a^{(n)}=(a_3^{(n)},a_1^{(n)},a_3^{(n)},...,a_{l_a}^{(n)})\)</span>，<span class="math inline">\(l_a\)</span>表示是A句子的长度，其中每一个token的维度为<span class="math inline">\(d\)</span>；<span class="math inline">\(b^{(n)}\)</span>表示第n个样本的hypothesis，即<span class="math inline">\(b^{(n)}=(b_1^{(n)},b_2^{(n)},b_3^{(n)},...,b_{l_b}^{(n)})\)</span>，<span class="math inline">\(l_b\)</span>表示是B句子的长度，其中每一个token的维度为<span class="math inline">\(d\)</span>；<span class="math inline">\(y^{(n)}\)</span>表示第n个样本的标签向量，即<span class="math inline">\(y^{(n)}=(y_1^{(n)},y_2^{(n)},y_3^{(n)}...,y_C^{(n)})\)</span>，所以<span class="math inline">\(y^{(n)}\)</span>是一个C维的one-hot向量。</p>
 <p>DecAtt模型总共分为三部分：<strong>Attend、Compare、Aggregate</strong>。模型结构图如下：</p>
-<p><img src="/2020/04/29/NLP-%E6%96%87%E6%9C%AC%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%9E%8B-DecAtt/decAtt模型架构.jpg" style="zoom: 67%;"></p>
+<p><img src="/.io//decAtt模型架构.jpg" style="zoom: 67%;"></p>
 <h4 id="attend">Attend</h4>
 <p>对A与B句子的token，计算它们之间的attention weights。公式如下： <span class="math display">\[
 e_{ij}=F^·(\hat a_i,\hat b_j)=F(\hat a_i)^TF(\hat b_j)

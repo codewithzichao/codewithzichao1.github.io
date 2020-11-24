@@ -52,19 +52,19 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="隐马尔可夫模型(HMM)，是一个可用来解决标注问题的生成模型，在自然语言处理、语音识别等领域有着广泛的应用。本篇博客将详细地介绍HMM模型的三个问题与解决算法，包括：前向-后向算法、Baum-Welch算法以及大名鼎鼎的Viterbi算法。最后，并采用python以及hmmlearn库这两种方式，来对HMM模型进行实现。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/0.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/1.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/3.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/4.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/5.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/6.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/7.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/8.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/11.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/10.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/9.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/12.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/13.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//0.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//1.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//3.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//4.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//5.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//6.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//7.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//8.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//11.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//10.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//9.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//12.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//13.jpg">
 <meta property="article:published_time" content="2020-02-23T03:57:46.000Z">
 <meta property="article:modified_time" content="2020-02-24T07:42:51.435Z">
 <meta property="article:author" content="zichao">
@@ -73,7 +73,7 @@
 <meta property="article:tag" content="scikit-learn">
 <meta property="article:tag" content="HMM">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/0.jpg">
+<meta name="twitter:image" content="http://codewithzichao.github.io/.io//0.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/">
 
@@ -307,7 +307,7 @@
 <p>隐马尔可夫模型(HMM)，属于概率图模型。它的原理，总结起来就是三句话：<strong>一个模型，两个假设，三个问题(算法)</strong>。下面就讲一介绍。</p>
 <h3 id="一个模型">一个模型</h3>
 <p>HMM模型描述的是一个隐藏的马尔可夫链生成不可观测的状态序列，再由状态序列生成观测序列的过程。在这里，我们需要定义一些符号。我们将状态序列记为：<span class="math inline">\(I=\{i_1,i_2,...,i_T\}\)</span>，其中<span class="math inline">\(T\)</span>表示序列的长度，所有的状态变量的取值集合记做：<span class="math inline">\(Q=\{q_1,q_2,...,q_N\}\)</span>，其中<span class="math inline">\(N\)</span>表示状态取值的总数。我们将观测序列记为：<span class="math inline">\(O=\{o_1,o_2,...,o_T\}\)</span>，其中<span class="math inline">\(T\)</span>表示序列的长度，所有的观测变量的取值集合记做：<span class="math inline">\(V=\{v_1,v_2,...,v_M\}\)</span>。记HMM模型的参数为：<span class="math inline">\(\lambda=(\pi,A,B)\)</span>。其中，<span class="math inline">\(\pi\)</span>表示初始概率分布，<span class="math inline">\(A\)</span>表示状态转移矩阵；<span class="math inline">\(B\)</span>表示观测概率分布。具体它的概率图如下：</p>
-<p><img src="/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/0.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//0.jpg" style="zoom:50%;"></p>
 <h3 id="两个假设">两个假设</h3>
 <p>HMM模型中有两个假设：<strong>齐次马尔可夫假设</strong>、<strong>观测独立性假设</strong>。</p>
 <p><strong>齐次马尔可夫假设</strong>。在给定<span class="math inline">\(i_t\)</span>的情况下，<span class="math inline">\(i_{t+1}\)</span>与<span class="math inline">\(i_{t-1}\)</span>以及之前的状态变量无关。即： <span class="math display">\[
@@ -324,27 +324,27 @@ P(o_t|o_1,o_2,...,o_{t-1},i_1,i_2,...,i_t)=P(o_t|i_t)
 <h2 id="evaluation问题的求解">Evaluation问题的求解</h2>
 <p>关于Evaluation问题的求解，有两种算法：<strong>前向算法与后向算法。</strong>其实，最后结果是一样，只是求解过程不太一样。在这里，我将直接给出推导过程。</p>
 <p>首先需要化简<span class="math inline">\(P(O|\lambda)\)</span>。如下：</p>
-<p><img src="/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/1.jpg" style="zoom: 50%;"></p>
+<p><img src="/.io//1.jpg" style="zoom: 50%;"></p>
 <p>所以我们可以看到，公式：<span class="math inline">\(P(O|\lambda)=\mathop{\sum}\limits_{I}\prod_{t=1}^{T}b_{i_t}(o_t) \pi (a_{i_1})\prod_{t=2}^{T}a_{i_{t-1},i_{t-2}}\)</span>。其计算复杂度为：<span class="math inline">\(O(TN^T)\)</span>。当T很大的时候，计算复杂度是以指数形式增长的，所以近乎是不可解的。所以，我们必须找新的算法来解决这个问题。</p>
 <h3 id="前向算法">前向算法</h3>
 <p>使用前向算法，得出递推公式，如下：</p>
-<p><img src="/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/3.jpg" style="zoom: 67%;"></p>
+<p><img src="/.io//3.jpg" style="zoom: 67%;"></p>
 <p>所以，我们可以得到递推公式：<span class="math inline">\(\alpha_{t+1}(i)=\mathop{\sum}\limits_{j=1}^{N}\alpha_t(j)a_{ji}b_i(o_{t+1})\)</span>。又<span class="math inline">\(\alpha_1(i)=\pi_ib_i(o_1)\)</span>，<span class="math inline">\(P(O|\lambda)=\mathop{\sum}\limits_{i=1}^{N}\alpha_T(i)\)</span>。那么我们就可以求出<span class="math inline">\(p(O|\lambda)\)</span>的值了。</p>
-<p><img src="/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/4.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//4.jpg" style="zoom:50%;"></p>
 <h3 id="后向算法">后向算法</h3>
 <p>除了使用前向算法，后向算法也是求解<span class="math inline">\(P(O|\lambda)\)</span>的一种方法。递推公式的推导如下：</p>
-<p><img src="/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/5.jpg" style="zoom:67%;"></p>
-<p><img src="/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/6.jpg" style="zoom:67%;"></p>
+<p><img src="/.io//5.jpg" style="zoom:67%;"></p>
+<p><img src="/.io//6.jpg" style="zoom:67%;"></p>
 <p>所以，我们得到了递推公式：<span class="math inline">\(\beta_t(i)=\mathop{\sum}\limits_{j=1}^{N}b_j(o_{t+1})\beta_{t+1}(j)\)</span>。又<span class="math inline">\(\beta_T(i)=1\)</span>，<span class="math inline">\(P(O|\lambda)=\mathop{\sum}\limits_{i=1}^{N}\pi_ib_i(o_1)\beta_1(i)\)</span>。那么我们就可以求出<span class="math inline">\(P(O|\lambda)\)</span>的值了。</p>
-<p><img src="/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/7.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//7.jpg" style="zoom:50%;"></p>
 <h2 id="learning问题的求解">Learning问题的求解</h2>
 <p>所谓的Learning问题，其实就是求<span class="math inline">\(\lambda=\mathop{argmax}\limits_{\lambda}P(O|\lambda)\)</span>。那么，直接求的话，我们会发现这个式子是没有解析解的。所以，在HMM模型中，采用Baum-Welch算法，也就是EM算法来解决这个问题。</p>
 <h3 id="baum-welch算法em算法">Baum-Welch算法(EM算法)</h3>
 <p>Baum-Welch算法推导如下：</p>
-<p><img src="/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/8.jpg" style="zoom:67%;"></p>
-<p><img src="/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/11.jpg" style="zoom:50%;"></p>
-<p><img src="/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/10.jpg" style="zoom:50%;"></p>
-<p><img src="/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/9.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//8.jpg" style="zoom:67%;"></p>
+<p><img src="/.io//11.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//10.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//9.jpg" style="zoom:50%;"></p>
 <h2 id="decoding问题的求解">Decoding问题的求解</h2>
 <p>所谓的decoding问题，就是：给定模型参数<span class="math inline">\(\lambda\)</span>与观测序列<span class="math inline">\(O\)</span>，求最大概率的状态变量<span class="math inline">\(I\)</span>。即：<span class="math inline">\(I=\mathop{argmax}\limits_{I}P(I|O)\)</span>。在HMM中，我们使用Viterbi算法来求解，实际上是一种动态规划的思想，非常简单。</p>
 <h3 id="viterbi算法">Viterbi算法</h3>
@@ -357,8 +357,8 @@ P(o_t|o_1,o_2,...,o_{t-1},i_1,i_2,...,i_t)=P(o_t|i_t)
 <p>我们定义<span class="math inline">\(\psi_t(i)\)</span>表示t时刻状态为你<span class="math inline">\(q_i\)</span>的所有单个路径中概率最大的路径的第<span class="math inline">\(t-1\)</span>个节点。公式如下： <span class="math display">\[
 \psi_t(i)=\mathop{argmax}\limits_{1&lt;=j&lt;=N}\delta_{t-1}(j)a_{ji}
 \]</span> 整理如下：</p>
-<p><img src="/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/12.jpg" style="zoom:50%;"></p>
-<p><img src="/2020/02/23/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-%E9%9A%90%E9%A9%AC%E5%B0%94%E5%8F%AF%E5%A4%AB%E6%A8%A1%E5%9E%8B%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/13.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//12.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//13.jpg" style="zoom:50%;"></p>
 <p>至此，HMM模型，理论部分就讲完了🎉～</p>
 <h2 id="hmm模型的实现">HMM模型的实现</h2>
 <p>把模型实现一遍才算是真正的吃透了这个模型呀。在这里，我采取了python以及hmmlearn库这两种方式来实现HMM模型，我的github里面可以下在到所有的代码，欢迎访问我的github，也欢迎大家star和fork。附上<strong>GitHub地址: <a target="_blank" rel="noopener" href="https://github.com/codewithzichao/Machine_Learning_Code">《统计学习方法》及常规机器学习模型实现</a></strong>。具体代码如下</p>

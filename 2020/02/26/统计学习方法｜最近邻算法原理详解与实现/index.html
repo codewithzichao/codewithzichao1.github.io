@@ -52,8 +52,8 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="KNN算法是一种较为简单的分类算法（也可用于回归问题），其可以实现多分类问题。本篇博客将详细地讲解KNN算法，并采用python与scikit-learn库两种方式，对KNN算法进行实现。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/26/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%EF%BD%9C%E6%9C%80%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/0.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/26/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%EF%BD%9C%E6%9C%80%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/1.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//0.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//1.jpg">
 <meta property="article:published_time" content="2020-02-26T09:33:33.000Z">
 <meta property="article:modified_time" content="2020-02-27T14:25:19.811Z">
 <meta property="article:author" content="zichao">
@@ -62,7 +62,7 @@
 <meta property="article:tag" content="scikit-learn">
 <meta property="article:tag" content="KNN">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/2020/02/26/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%EF%BD%9C%E6%9C%80%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/0.jpg">
+<meta name="twitter:image" content="http://codewithzichao.github.io/.io//0.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/02/26/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%EF%BD%9C%E6%9C%80%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/">
 
@@ -322,14 +322,14 @@ y=argmax_{c_j}\sum_{x_i\in N_k(x)}I(y_i=c_j)
 <p>其实，介绍完三要素后，KNN算法算是完成了。但是我们来思考一下KNN算法。我们每预测一个实例，都需要计算其与训练集所有实例的距离，并且从中取出K个实例。如果说，数据是高维的，并且训练集非常的大(mnist训练数据集中，有60000个)，那么计算就会变得非常的慢。如果说测试集也非常大的话，那么所花费的时候就会更长。为了解决这个问题，就有人提出了kdtree。<strong>注意：这里的k说的是对k维空间进行划分，与K值不是一个概念！</strong></p>
 <p><strong>所谓的kdtree，就是将特征空间划分为多个区域，如果说一些区域离待预测的实例的距离太远，那么就可以放弃掉这些区域，这样就大大减小了比较次数，提高了计算效率。</strong></p>
 <p>那我们具体来剖析一下kdtree。它其实是BST的变体。BST，相信只要学过数据结构，应该都非常熟悉。<strong>BST的左子树都比起父节点的值要小，其右子树都比父节点的值要大。</strong>但是在BST中，所有节点都是一维数据，而在，kdtree中，所有节点都是多维数据。下面举个例子来说明kdtree是怎么工作的(《统计学习方法》中其实并没有讲地特别清楚😩)：</p>
-<p><img src="/2020/02/26/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%EF%BD%9C%E6%9C%80%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/0.jpg"></p>
+<p><img src="/.io//0.jpg"></p>
 <p>譬如说有集合<span class="math inline">\(\{(2,3)，(5,4)，(9,6)，(4,7)，(8,1)，(7,2)\}\)</span>。那么kdtree构建过程如下：</p>
 <ul>
 <li>构建根节点时，此时的切分维度为<span class="math inline">\(x\)</span>，集合在x维从小到大排序为<span class="math inline">\((2,3)，(4,7)，(5,4)，(7,2)，(8,1)，(9,6)\)</span>；它的中值为(7,2)。**注意：2,4,5,7,8,9在数学中的中值为(5 + 7)/2=6，但因该算法的中值需在点集合之内，所以中值计算用的是 $len(points)//2=3, points[3]=(7,2) <span class="math inline">\(）。**所以，\)</span>(2,3)，(4,7)，(5,4)<span class="math inline">\(挂在\)</span>(7,2)<span class="math inline">\(节点的左子树，\)</span>(8,1)，(9,6)<span class="math inline">\(挂在\)</span>(7,2)$节点的右子树。</li>
 <li>构建<span class="math inline">\((7,2)\)</span>节点的左子树时，点集合<span class="math inline">\((2,3)，(4,7)[\)</span>]()，(5,4)此时的切分维度为y，中值为<span class="math inline">\((5,4)\)</span>作为分割平面，<span class="math inline">\((2,3)\)</span>挂在其左子树，<span class="math inline">\((4,7)\)</span>挂在其右子树。</li>
 <li>构建<span class="math inline">\((7,2)\)</span>节点的右子树时，点集合<span class="math inline">\((8,1)，(9,6)\)</span>此时的切分维度也为y，中值为<span class="math inline">\((9,6)\)</span>作为分割平面，<span class="math inline">\((8,1)\)</span>挂在其左子树。至此kd tree构建完成。使用二维空间画出来的话，如下：</li>
 </ul>
-<p><img src="/2020/02/26/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95%EF%BD%9C%E6%9C%80%E8%BF%91%E9%82%BB%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/1.jpg"></p>
+<p><img src="/.io//1.jpg"></p>
 <p>OK，当构建完kdtree之后，那么<strong>如何对其进行搜索呢？</strong></p>
 <ul>
 <li><p>我们来查找点<span class="math inline">\((2.1,3.1)\)</span>，在<span class="math inline">\((7,2)\)</span>点测试到达<span class="math inline">\((5,4)\)</span>，在<span class="math inline">\((5,4)\)</span>点测试到达<span class="math inline">\((2,3)\)</span>，然后search_path中的结点为&lt;(7,2), (5,4), (2,3)&gt;，从search_path中取出<span class="math inline">\((2,3)\)</span>作为当前最佳结点nearest, dist为<span class="math inline">\(0.141\)</span>；</p></li>

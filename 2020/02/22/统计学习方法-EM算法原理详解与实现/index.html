@@ -52,11 +52,11 @@
 <meta property="og:site_name" content="codewithzichao">
 <meta property="og:description" content="EM算法，中文名叫期望最大算法，主要用来求解含有隐变量的概率模型的参数。在高斯混合模型(GMM)、隐马尔可夫模型(HMM)中都有应用(在HMM模型中叫做Baum-Welch算法)。本篇博客将对EM算法的原理以及高斯混合模型(GMM)进行详细地讲解，并对其采用python与scikit-learn库这两种方式进行实现。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/22/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-EM%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/0.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/22/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-EM%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/1.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/22/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-EM%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/2.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/22/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-EM%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/KL散度.jpg">
-<meta property="og:image" content="http://codewithzichao.github.io/2020/02/22/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-EM%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/3.jpeg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//0.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//1.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//2.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//KL散度.jpg">
+<meta property="og:image" content="http://codewithzichao.github.io/.io//3.jpeg">
 <meta property="article:published_time" content="2020-02-22T08:43:12.000Z">
 <meta property="article:modified_time" content="2020-06-25T12:48:38.246Z">
 <meta property="article:author" content="zichao">
@@ -66,7 +66,7 @@
 <meta property="article:tag" content="EM算法">
 <meta property="article:tag" content="GMM">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://codewithzichao.github.io/2020/02/22/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-EM%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/0.jpg">
+<meta name="twitter:image" content="http://codewithzichao.github.io/.io//0.jpg">
 
 <link rel="canonical" href="http://codewithzichao.github.io/2020/02/22/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-EM%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/">
 
@@ -302,12 +302,12 @@
 <p>那么，非常显然，我们不能像估计普通的概率模型的参数的方式来估计三个硬币正面朝上的概率。因为，中间选择B或者C的结果我们并不知道，也就是根据观察到的结果，我们不知道每次A的结果是正面还是反面。这就说明问题中含有了隐变量。这个时候，<strong>就需要新的算法来估计像这种含有隐变量的概率模型的参数</strong>。所以，EM算法应运而生。</p>
 <h2 id="em算法的推导">EM算法的推导</h2>
 <p>首先，我直接给出整个EM算法，然后再给出推导过程。</p>
-<p><img src="/2020/02/22/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-EM%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/0.jpg" style="zoom:50%;"></p>
-<p><img src="/2020/02/22/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-EM%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/1.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//0.jpg" style="zoom:50%;"></p>
+<p><img src="/.io//1.jpg" style="zoom:50%;"></p>
 <p>此外，收敛条件如下： <span class="math display">\[
 ||\theta^{(i+1)}-\theta^{(i)}||&lt;\varepsilon_1, ||Q(\theta^{(i+1)},\theta^{(i)})-Q(\theta^{(i)},\theta^{(i)})||&lt;\varepsilon_2
 \]</span> <strong>下面给出推导过程（推导过程可能与《统计学习方法》不一样，其实道理是一样的）：</strong></p>
-<p><img src="/2020/02/22/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-EM%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/2.jpg"></p>
+<p><img src="/.io//2.jpg"></p>
 <p>OK，那么，我们现在得到了如下式子： <span class="math display">\[
 L(\theta)&gt;=ELBO,\\
 ELBO=\sum_{z}P(Z|Y,\theta)log\frac {P(Y,Z|\theta)}{P(Z|Y,\theta)}
@@ -320,11 +320,11 @@ Q(\theta,\theta^{(i)})=\sum_{z}P(Z|Y,\theta^{(i)})log{P(Y,Z|\theta)},\\
 \theta^{(i+1)}==\mathop{argmax}\limits_{\theta}Q(\theta,\theta^{(i)})
 \]</span> 是不是与最开始给出的EM算法一摸一样了🤩？到此，推导完毕🎉～</p>
 <p>还有另外一种推导方法，使用KL散度来做(个人认为这种推导过程会更好理解一些)，具体推导过程如下：</p>
-<p><img src="/2020/02/22/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-EM%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/KL散度.jpg"></p>
+<p><img src="/.io//KL散度.jpg"></p>
 <p>有几个需要注意的地方：<strong>EM算法对初值敏感，也就是说取不同的初值<span class="math inline">\(\theta^{(0)}\)</span>，那么结果会不一样；另外，EM算法不能保证全局最优。</strong></p>
 <h2 id="em算法的收敛性证明">EM算法的收敛性证明</h2>
 <p>其实，知道EM算法的推导就差不多了。但是，实际上，还有一个问题就是：<strong>这样迭代更新，是否能够保证对数似然函数<span class="math inline">\(L(\theta)\)</span>能收敛呢？</strong>证明过程如下:</p>
-<p><img src="/2020/02/22/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95-EM%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0/3.jpeg"></p>
+<p><img src="/.io//3.jpeg"></p>
 <p>OK，证明完毕🎉～当然，EM算法的一个典型应用就是GMM模型，这个之后有时间再写一篇文章吧～</p>
 <h2 id="em算法的实现">EM算法的实现</h2>
 <p>把模型实现一遍才算是真正的吃透了这个模型呀。在这里，我采取了python来实现EM算法，以及scikit-learn库来实现GMM模型。我的github里面可以下在到所有的代码，欢迎访问我的github，也欢迎大家star和fork。附上<strong>GitHub地址: <a target="_blank" rel="noopener" href="https://github.com/codewithzichao/Machine_Learning_Code">《统计学习方法》及常规机器学习模型实现</a></strong>。具体代码如下</p>
