@@ -2311,8 +2311,8 @@ R^{l}=attentiveModule(R^{l},U_{i}^{l},U_{i}^{l})
       </categories>
       <tags>
         <tag>NLP</tag>
-        <tag>tensorflow2</tag>
         <tag>DAM</tag>
+        <tag>tensorflow2</tag>
       </tags>
   </entry>
   <entry>
@@ -2398,8 +2398,8 @@ e_{2,i,j}=P_{u_i}^TAP_{r_j}
       </categories>
       <tags>
         <tag>NLP</tag>
-        <tag>DUA</tag>
         <tag>tensorflow2</tag>
+        <tag>DUA</tag>
       </tags>
   </entry>
   <entry>
@@ -3863,8 +3863,8 @@ maximize \ L_3=L_2+\lambda L_1
       </categories>
       <tags>
         <tag>NLP</tag>
-        <tag>BERT</tag>
         <tag>python</tag>
+        <tag>BERT</tag>
         <tag>ELMo</tag>
         <tag>GPT</tag>
         <tag>ALBERT</tag>
@@ -4052,8 +4052,8 @@ min \ OBJ=\mathop{min}\limits_{w,b}\sum_{i=1}^{N}log(exp(-y_i(w^Tx_i+b))+\frac {
         <category>机器学习</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>机器学习</tag>
+        <tag>python</tag>
         <tag>FM模型</tag>
         <tag>FFM模型</tag>
         <tag>Logistic Regression</tag>
@@ -4085,8 +4085,8 @@ min \ OBJ=\mathop{min}\limits_{w,b}\sum_{i=1}^{N}log(exp(-y_i(w^Tx_i+b))+\frac {
         <category>机器学习</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>机器学习</tag>
+        <tag>python</tag>
         <tag>Logistic Regression</tag>
         <tag>softmax</tag>
       </tags>
@@ -4142,8 +4142,8 @@ L^{*(t)}=-\frac{1}{2}\mathop{\sum}\limits_{j=1}^{T}\frac{G_j^2}{H_j+\lambda}+\ga
         <category>机器学习</category>
       </categories>
       <tags>
-        <tag>python</tag>
         <tag>机器学习</tag>
+        <tag>python</tag>
         <tag>集成学习</tag>
         <tag>XGBoost</tag>
         <tag>GBDT</tag>
@@ -5119,9 +5119,9 @@ FFN(x)=max(0,xW_1+b_1)W_2+b_2.
       </categories>
       <tags>
         <tag>NLP</tag>
-        <tag>self-attention</tag>
         <tag>Attention</tag>
         <tag>深度学习</tag>
+        <tag>self-attention</tag>
         <tag>Transformer</tag>
       </tags>
   </entry>
