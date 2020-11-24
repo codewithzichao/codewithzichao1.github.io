@@ -2311,8 +2311,8 @@ R^{l}=attentiveModule(R^{l},U_{i}^{l},U_{i}^{l})
       </categories>
       <tags>
         <tag>NLP</tag>
-        <tag>DAM</tag>
         <tag>tensorflow2</tag>
+        <tag>DAM</tag>
       </tags>
   </entry>
   <entry>
@@ -2398,8 +2398,8 @@ e_{2,i,j}=P_{u_i}^TAP_{r_j}
       </categories>
       <tags>
         <tag>NLP</tag>
-        <tag>tensorflow2</tag>
         <tag>DUA</tag>
+        <tag>tensorflow2</tag>
       </tags>
   </entry>
   <entry>
